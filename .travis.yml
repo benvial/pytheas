@@ -9,9 +9,11 @@ install:
   - pip install -r requirements.txt
   - pip install .
 before_script:
+  - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
+  - echo $TRAVIS_PYTHON_MAJOR_VERSION
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/bin
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/lib
-  - export PYTHONPATH=$PYTHONPATH:$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_VERSION/site-packages
+  - export PYTHONPATH=$PYTHONPATH:$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
   - echo $PATH
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
