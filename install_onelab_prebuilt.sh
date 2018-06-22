@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-export ONELAB_PATH=$PROGRAMS_PATH/onelab_prebuilt
-rm -rf $ONELAB_PATH
-mkdir $ONELAB_PATH
+export ONELAB_PATH=$TRAVIS_BUILD_DIR
 cd $ONELAB_PATH
 mkdir bin
 # gmsh
