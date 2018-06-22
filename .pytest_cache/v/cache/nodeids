@@ -1,5 +1,0 @@
-[
-  "tests/test_material_bnds.py::test_bounds",
-  "tests/test_material_bnds.py::test_vals",
-  "tests/test_nlopt.py::test_nlopt_import"
-]

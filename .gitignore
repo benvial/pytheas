@@ -84,3 +84,4 @@ assets/
 _build/
 gen_modules/
 auto_examples/
+.pytest_cache/
