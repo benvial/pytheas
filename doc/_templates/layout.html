@@ -1,0 +1,114 @@
+{# Import the theme's layout. #}
+{% extends "!layout.html" %}
+
+{% block body %}
+  {% block header %}
+    {% if pagename == 'index' %}
+      <section class="color-header">
+          <div class="container">
+
+              <img src="{{ pathto('_static/' + logo, 1) }}" alt="pytheas">
+              <h1>pytheas</h1>
+              <h4>Open source computational photonics</h4>
+          </div>
+      </section>
+    {% else %}
+  <p></p>
+
+    {% endif %}
+    {{ super() }}
+
+  {% endblock %}
+  
+
+
+  {%- block footer %}
+  <div class="container">
+    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+  <footer class="footer">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <!-- <h2 class="logo"><a href="#"> LOGO </a></h2> -->
+                </div>
+                <div class="col-sm-3">
+                  <div class="foot-fa">
+
+                    <a href="#">
+                      <i class="fab fa-python"></i>
+                      pip install me
+                    </a>
+                  </div>
+
+                </div>
+                <div class="col-sm-3">
+                  <div class="foot-fa">
+
+                    <a href="#">
+                      <i class="fab fa-github fa-1x"></i>
+                      fork me on github
+                    </a>
+                  </div>
+                </div>
+
+
+            </div>
+            
+        </div>
+        <div class="footer-copyright">
+          <p>
+          {%- if show_copyright %}
+            {%- if hasdoc('copyright') %}
+              {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}<br/>
+            {%- else %}
+              {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}<br/>
+            {%- endif %}
+          {%- endif %}
+          {%- if last_updated %}
+            {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}<br/>
+          {%- endif %}
+          {%- if show_sphinx %}
+            {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}<br/>
+          {%- endif %}
+          
+          </p>
+
+        </div>
+
+    <!-- <div class="container">
+        <div class="text-center center-block">
+          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-python fa-3x">pip install me</i></a>
+          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-github fa-3x">fork me on github</i></a>
+      </div>
+
+    </div> -->
+    <!-- <div class="container">
+      <p class="pull-right">
+        <a href="#">Back to top</a>
+        {% if theme_source_link_position == "footer" %}
+          <br/>
+          {% include "sourcelink.html" %}
+        {% endif %}
+      </p>
+      <p>
+      {%- if show_copyright %}
+        {%- if hasdoc('copyright') %}
+          {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}.{% endtrans %}<br/>
+        {%- else %}
+          {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}.{% endtrans %}<br/>
+        {%- endif %}
+      {%- endif %}
+      {%- if last_updated %}
+        {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}.{% endtrans %}<br/>
+      {%- endif %}
+      {%- if show_sphinx %}
+        {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}<br/>
+      {%- endif %}
+      </p>
+    </div> -->
+  </footer>
+  {%- endblock %}
+
+{% endblock %}

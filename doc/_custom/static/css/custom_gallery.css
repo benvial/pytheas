@@ -1,0 +1,78 @@
+div.sphx-glr-download a {
+    background-color: rgb(161, 152, 164);
+    background-image: none;
+    border-radius: 0px;
+    border: 0px solid rgb(161, 152, 164);
+    color: #fcfcfc;
+    display: inline-block;
+    display: table-caption;
+    font-weight: bold;
+    padding: 0.3ex;
+    text-align: center;
+}
+
+div.sphx-glr-download a:hover {
+    box-shadow: none;
+    text-decoration: none;
+    background-image: none;
+    background-color: rgb(112, 105, 115);
+}
+
+div.sphx-glr-download code.download {
+    display: inline-block;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+    border: none;
+    background: none;
+    color: #fff;
+    font-family: Play;
+}
+
+.sphx-glr-thumbcontainer {
+    background: #fff;
+    border: solid #e1e4e5 1px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 0px;
+    box-shadow: none;
+    float: left;
+    margin: 5px;
+    min-height: 230px;
+    padding-top: 5px;
+    position: relative;
+}
+
+/*.sphx-glr-thumbcontainer {
+    border-radius: 0px;
+}*/
+
+
+.sphx-glr-script-out .highlight pre {
+    background-color: #faf8ed;
+    border: 0;
+    max-height: 30em;
+    overflow: auto;
+    padding-left: 1ex;
+    margin: 0px;
+    word-break: break-word;
+}
+
+.sphx-glr-signature {
+    visibility: hidden;
+}
+
+.sphx-glr-thumbcontainer:hover {
+  opacity: 1;
+  transition: .5s ease;
+  /*background-color: #a13152;*/
+  border: none;
+  box-shadow: 0 0 15px rgba(113, 113, 113, 0.5);
+  /*box-shadow: none;*/
+}
+
+.rst-content .section > img, .rst-content .section > a > img {
+    margin-bottom: 24px;
+    background: #fff;
+    border: solid #e1e4e5 1px;
+}
