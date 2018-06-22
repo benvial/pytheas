@@ -16,4 +16,5 @@ export INSTALL_PATH=$TRAVIS_BUILD_DIR
             --without-guile --without-matlab --without-octave
 make
 make install
+cd ..
 rm -rf nlopt
