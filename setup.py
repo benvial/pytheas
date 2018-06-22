@@ -9,8 +9,5 @@ setup(
     author="Benjamin Vial",
     author_email="benjamin.vial84@gmail.com",
     license="MIT",
-    packages=find_packages(),
-    install_requires=["matplotlib", "numpy", "scipy", "parse", "pyyaml",
-                      "scoop", "seaborn", "termcolor",
-                      "PyQt5"],
+    packages=find_packages()
 )
