@@ -2,7 +2,9 @@ language: python
 python:
   - "3.6"
 before_install:
-  - sudo apt-get install -y python-nlopt
+  - ./install_nlopt.sh
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/lib
+  - export PYTHONPATH=$PYTHONPATH:$TRAVIS_BUILD_DIR/lib/$TRAVIS_PYTHON_VERSION/site-packages
 # command to install dependencies
 install:
   - pip install -r requirements.txt
