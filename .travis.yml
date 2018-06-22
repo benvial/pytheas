@@ -12,6 +12,9 @@ before_script:
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/bin
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$TRAVIS_BUILD_DIR/lib
   - export PYTHONPATH=$PYTHONPATH:$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_VERSION/site-packages
+  - echo $PATH
+  - echo $PYTHONPATH
+  - echo $LD_LIBRARY_PATH
 # command to run tests
 script:
   - pytest # or py.test for Python versions 3.5 and below
