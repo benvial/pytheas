@@ -4,6 +4,7 @@ python:
 before_install:
   - ./install_onelab_prebuilt.sh
   - ./install_swig.sh
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_nlopt.sh
 # command to install dependencies
 install:
@@ -12,7 +13,6 @@ install:
 before_script:
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - echo $TRAVIS_PYTHON_MAJOR_VERSION
-  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
   - echo $PATH
