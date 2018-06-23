@@ -1,24 +1,37 @@
 language: python
 python:
   - "3.6"
-before_install:
-  - ./install_onelab_prebuilt.sh
-  - ./install_swig.sh
-  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
-  - ./install_nlopt.sh
+# before_install:
+#   - ./install_onelab_prebuilt.sh
+#   - ./install_swig.sh
+#   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
+#   - ./install_nlopt.sh
 # command to install dependencies
 install:
+  
+  - mkdir $TRAVIS_BUILD_DIR/opt
   - pip install -r requirements.txt
   - pip install .
-before_script:
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
+  - ./install_onelab_prebuilt.sh
+  - ./install_swig.sh
+  - ./install_nlopt.sh
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - echo $TRAVIS_PYTHON_MAJOR_VERSION
   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
-  - echo $PATH
-  - echo $PYTHONPATH
-  - echo $LD_LIBRARY_PATH
+
   - ls $TRAVIS_BUILD_DIR/opt/lib
+
+# before_script:
+#   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
+#   - echo $TRAVIS_PYTHON_MAJOR_VERSION
+#   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib
+#   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
+#   - echo $PATH
+#   - echo $PYTHONPATH
+#   - echo $LD_LIBRARY_PATH
+#   - ls $TRAVIS_BUILD_DIR/opt/lib
 # command to run tests
 script:
   - pytest
