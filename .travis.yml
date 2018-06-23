@@ -2,6 +2,7 @@ language: python
 python:
   - "3.6"
 before_install:
+  - sudo apt-get install -y swig
   - ./install_onelab_prebuilt.sh
   - ./install_nlopt.sh
 # command to install dependencies
