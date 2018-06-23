@@ -21,10 +21,12 @@ install:
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
   - mkdir $TRAVIS_BUILD_DIR/opt
-  - while read requirement; do conda install --yes $requirement; done < requirements.txt
-  # - pip install -r requirements.txt
-  # - pip install .
-  - python setup.py install
+  
+  - conda install --yes -n test-environment pip
+  # - while read requirement; do conda install --yes $requirement; done < requirements.txt
+  - pip install -r requirements.txt
+  - pip install .
+  # - python setup.py install
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
   - ./install_swig.sh
