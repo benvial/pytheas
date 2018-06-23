@@ -18,13 +18,13 @@ install:
   # Useful for debugging any issues with conda
   - conda info -a
   # Replace dep1 dep2 ... with your dependencies
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION dep1 dep2 ...
+  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
   - source activate test-environment
   - mkdir $TRAVIS_BUILD_DIR/opt
-  # - pip install -r requirements.txt
-  # - pip install .
+  - pip install -r requirements.txt
+  - pip install .
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
-  # - ./install_onelab_prebuilt.sh
+  - ./install_onelab_prebuilt.sh
   - ./install_swig.sh
   - ./install_nlopt.sh
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
@@ -44,5 +44,5 @@ install:
 #   - echo $LD_LIBRARY_PATH
 #   - ls $TRAVIS_BUILD_DIR/opt/lib
 # command to run tests
-# script:
-#   - pytest
+script:
+  - pytest
