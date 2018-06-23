@@ -17,16 +17,14 @@ install:
   - conda update -q conda
   # Useful for debugging any issues with conda
   - conda info -a
-  # Replace dep1 dep2 ... with your dependencies
   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-  - source activate test-environment
-  - mkdir $TRAVIS_BUILD_DIR/opt
-  
   - conda install --yes -n test-environment pip
+  - source activate test-environment
   # - while read requirement; do conda install --yes $requirement; done < requirements.txt
+  # - python setup.py install
   - pip install -r requirements.txt
   - pip install .
-  # - python setup.py install
+  - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
   - ./install_swig.sh
