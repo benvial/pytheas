@@ -8,11 +8,16 @@ before_install:
 install:
   - pip install -r requirements.txt
   - pip install .
-env:
-  - TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
-  - PATH=$PATH:$TRAVIS_BUILD_DIR/bin
-  - LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib
-  - PYTHONPATH=$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
+before_script:
+  - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
+  - echo $TRAVIS_PYTHON_MAJOR_VERSION
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR/bin
+  - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib
+  - export PYTHONPATH=$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
+  - echo $PATH
+  - echo $PYTHONPATH
+  - echo $LD_LIBRARY_PATH
+  - ls $TRAVIS_BUILD_DIR/lib  
 # command to run tests
 script:
   - pytest # or py.test for Python versions 3.5 and below
