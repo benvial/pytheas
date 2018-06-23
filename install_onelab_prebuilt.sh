@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-export ONELAB_PATH=$TRAVIS_BUILD_DIR
+export ONELAB_PATH=$TRAVIS_BUILD_DIR/opt
+mkdir $ONELAB_PATH
 cd $ONELAB_PATH
 mkdir bin
 

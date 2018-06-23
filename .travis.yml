@@ -12,13 +12,13 @@ install:
 before_script:
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - echo $TRAVIS_PYTHON_MAJOR_VERSION
-  - export PATH=$PATH:$TRAVIS_BUILD_DIR/bin
-  - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib
-  - export PYTHONPATH=$TRAVIS_BUILD_DIR/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
+  - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib
+  - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages
   - echo $PATH
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
-  - ls $TRAVIS_BUILD_DIR/lib
+  - ls $TRAVIS_BUILD_DIR/opt/lib
 # command to run tests
 script:
   - pytest # or py.test for Python versions 3.5 and below
