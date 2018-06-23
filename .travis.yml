@@ -17,7 +17,7 @@ before_script:
   - echo $PATH
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
-  - ls $TRAVIS_BUILD_DIR/lib  
+  - ls $TRAVIS_BUILD_DIR/lib
 # command to run tests
 script:
   - pytest # or py.test for Python versions 3.5 and below
