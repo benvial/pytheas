@@ -19,7 +19,7 @@ env:
 
 
 install:
-  - sudo apt-get update
+  # - sudo apt-get update
   # - sudo apt-get install getdp gmsh
   # - pip uninstall --yes numpy
   # We do this conditionally because it saves us some downloading if the
@@ -45,7 +45,7 @@ install:
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
-  # - ./install_onelab_prebuilt.sh
+  - ./install_onelab_prebuilt.sh
   # - ./install_nlopt.sh
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib:LD_LIBRARY_PATH
