@@ -58,17 +58,15 @@ div.sphx-glr-download code.download {
     word-break: break-word;
 }
 
-.sphx-glr-signature {
+/* .sphx-glr-signature {
     visibility: hidden;
-}
+} */
 
 .sphx-glr-thumbcontainer:hover {
   opacity: 1;
   transition: .5s ease;
-  /*background-color: #a13152;*/
   border: none;
   box-shadow: 0 0 15px rgba(113, 113, 113, 0.5);
-  /*box-shadow: none;*/
 }
 
 .rst-content .section > img, .rst-content .section > a > img {
@@ -80,11 +78,20 @@ div.sphx-glr-download code.download {
 
 .alert-info {
     background-image: none;
-    background-color: rgb(209, 197, 212);
+    background-color: #fff;
     border-color: #fff;
-    color: #7a7a7a;
+    color: #40363C;
     border-radius: 0px;
     border: 0px;
+    border-left: 4px solid rgb(194, 105, 89);
+    border-right: none;
+    padding-left: -4px;
     box-shadow: none;
     text-decoration: italic;
+}
+
+.sphx-glr-thumbcontainer[tooltip]:hover::before,
+.sphx-glr-thumbcontainer[tooltip]:hover::after,
+ {
+background-color: #40363C; 
 }
