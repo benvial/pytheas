@@ -68,6 +68,7 @@ sphinx_gallery_conf = {
     'gallery_dirs': 'auto_examples',
     # directory where function granular galleries are stored
     'backreferences_dir': 'gen_modules/backreferences',
+    'default_thumb_file': '../assets/logo_pytheas.png',
     # Modules for which function level galleries are created.
     'doc_module': 'pytheas'}
 
@@ -304,7 +305,7 @@ html_sidebars = {'auto_examples/index': ['localtoc.html'],
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'aotomatdoc'
+htmlhelp_basename = 'pytheasdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
