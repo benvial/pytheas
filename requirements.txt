@@ -3,9 +3,6 @@ seaborn
 parse
 matplotlib
 termcolor
-sphinx_bootstrap_theme
-setuptools
-sphinx_gallery
 scipy
 PyQt5
 PyYAML
