@@ -33,7 +33,7 @@ install:
   - conda info -a
   - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
   - source activate testenv
-  - conda install --yes -n testenv cython swig pytest
+  - conda install --yes -n testenv cython swig pytest pytest-cov
   # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   - pip install -r requirements.txt
   - pip install -e .
@@ -46,7 +46,7 @@ install:
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
 script: #run tests
-  - pytest -s
+  - pytest -s --cov=./
   
 after_success: #make the doc and push to gh-pages the run code coverage analysis
   - set -e
