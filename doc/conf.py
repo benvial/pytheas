@@ -49,7 +49,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.githubpages',
     # 'numpydoc',
-    'sphinx_issues',
+    # 'sphinx_issues',
 ]
 
 
