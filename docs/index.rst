@@ -1,19 +1,9 @@
-.. pytheas documentation master file, created by
-   sphinx-quickstart on Tue Jun  6 20:04:57 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-
-
+.. pytheas documentation master file
 
 .. title:: Home
 
-
-
 .. include:: ../README.rst
   :start-after: inclusion-marker-do-not-remove
-
-
 
 .. raw:: html
   
@@ -37,19 +27,9 @@
   </div>
 
 
-
 .. toctree::
    :maxdepth: 2
    :hidden:
 
    reference
    auto_examples/index
-
-
-
-.. Indices and tables
-.. ==================
-..
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-.. * :ref:`search`

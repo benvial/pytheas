@@ -1,5 +1,4 @@
 
-
 .. image:: https://travis-ci.org/benvial/pytheas.svg?branch=master
    :target: https://travis-ci.org/benvial/pytheas
    :alt: Travis CI build status (Linux)
@@ -11,10 +10,7 @@
 Python Electromagnetic Analysis and Simulation with the Finite Element Method
 -----------------------------------------------------------------------------
 
-
-
 .. inclusion-marker-do-not-remove
-
 
 Pytheas is a python package for creating, running and postprocessing
 electrodynamic simulations. It is based on the open source onelab 
