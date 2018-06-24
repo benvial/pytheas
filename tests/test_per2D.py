@@ -72,15 +72,12 @@ def test_per2D():
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     fem.getdp_verbose = 4
-    fem.gms_verbose = 4
+    fem.gmsh_verbose = 4
     fem.python_verbose = 1
 
     ##############################################################################
     # We then initialize the model (copying files, etc...) and mesh the unit
     # cell using gmsh
-
-    fem.getdp_verbose = 0
-    fem.gmsh_verbose = 0
 
     fem.initialize()
     mesh = fem.make_mesh()

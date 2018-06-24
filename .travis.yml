@@ -43,16 +43,16 @@ install:
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
-  - ./install_nlopt.sh
+  # - ./install_nlopt.sh
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib:LD_LIBRARY_PATH
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
 script:
   - pytest -s
-  - set -e
-  - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow
-  - cd docs
-  - make html
-  - cd ..
-  - doctr deploy . --built-docs docs/_build/html
+  # - set -e
+  # - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow
+  # - cd docs
+  # - make html
+  # - cd ..
+  # - doctr deploy . --built-docs docs/_build/html
