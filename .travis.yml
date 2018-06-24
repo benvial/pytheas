@@ -10,6 +10,12 @@ branches:
 notifications:
   email: false
   
+env:
+  global:
+    # Doctr deploy key for benvial/pytheas
+    - secure: "TYrr93kJk/7VfPglkfdh/dV4HGachKPfPq8Q3ulkV/2kBczNR396uruBElPG1clbvKs7JVKQZjmGcjqEsXBN5wkELuaeZ4szWszbiiLt3GWVwXGSgVoN3yK/DauI7y4bqDPsrqbCm5zvRhYGlSW+HiV/skjZrrlPj5LrmViNSkZdz9TyhSiK3gq1hvuxU0/odYZQ8w2CGJwFhH+QYS1OrI17FAMv7mxFF3ImEFkWLZJiNprKltZG3btiFWOOLrFOxjCfo3U78ifLJspw0fqPzpulYnwzVZj8cGMrLzv3pUEG0A//3kTy+0k5PZ8/yUqtZAzYCVHjgzduAH2F0Ip6BLo8qNYVvHh728gP9x5rSbyWvoO5u6gKAiKl36b0quqkBtMjHOWwEhsm0Sb72Hi4O6OyBgN2KqWWKbanYXPtfwUpksyTshJXOpOM7K8G9Ffld6yeHwgC+lMN4jfl92OWwpDSgH0Mc7EUaOrnP/2vexdIUm5DRlrYprzdaqyPMI9syy2HuGftGlJgMJuYF0UqVBPgW0tJU/qD5OAwMnmKJlFv6/llHRakRoQ9847bVcwXM/ZDpeZOYBS+yvYJ3bvZdNxkM1QkMyQidQwo4F7K2JGeHEjTYO2Q7FqycUyxAgNzTf7/Sgu2VTJwmxV0jAVFEftm2trZjfEKHh2L2nE4d8I="
+
+
 install:
   # - sudo apt-get update
   # - pip uninstall --yes numpy
@@ -33,7 +39,7 @@ install:
   # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   # - python setup.py install
   - pip install -r requirements.txt 
-  # - pip install numpy --upgrade
+  - pip install sphinx_bootstrap_theme sphinx_gallery
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
@@ -45,3 +51,9 @@ install:
 
 script:
   - pytest
+  - set -e
+  - pip install doctr
+  - cd doc
+  - make html
+  - cd ..
+  - doctr deploy . --built-docs doc/_build/html

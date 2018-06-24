@@ -1,8 +1,7 @@
 numpy
-seaborn
-parse
-matplotlib
-termcolor
 scipy
-PyQt5
+matplotlib
+seaborn
+termcolor
 PyYAML
+parse
