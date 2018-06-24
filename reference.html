@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>User guide &#8212; pytheas</title>
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/gallery.css" type="text/css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom_styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom_gallery.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/custom_pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/custom.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pytheas.periodic2D.FemModel" href="gen_modules/pytheas.periodic2D.FemModel.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+    
+  <p></p>
+
+    
+    
+
+  
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html"><span><img src="_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="./reference.html">Documentation</a></li>
+                <li><a href="./auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#indices-and-search">Indices and search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">User guide</a><ul>
+<li><a class="reference internal" href="#module-pytheas.periodic2D"><code class="docutils literal notranslate"><span class="pre">pytheas.periodic2D</span></code>: 2D metamaterials</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pytheas.scatt2D"><code class="docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code>: 2D scattering</a><ul>
+<li><a class="reference internal" href="#id1">Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-search">Indices and search</a></li>
+</ul>
+
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <span class="target" id="aotomat-api-reference"></span><div class="section" id="user-guide">
+<h1>User guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<p>The complete project is documented for every submodule.</p>
+<div class="section" id="module-pytheas.periodic2D">
+<span id="pytheas-periodic2d-2d-metamaterials"></span><h2><a class="reference internal" href="#module-pytheas.periodic2D" title="pytheas.periodic2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.periodic2D</span></code></a>: 2D metamaterials<a class="headerlink" href="#module-pytheas.periodic2D" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pytheas.periodic2D" title="pytheas.periodic2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.periodic2D</span></code></a> module implements the resolution of the
+scalar wave equation for TE and TM polarization for
+mono-periodic stuctures in 2D:</p>
+<ul class="simple">
+<li>subject to an incident plane wave (diffraction problem) and calculation
+of the diffraction efficiencies, absorption and energy balance.</li>
+<li>eigenvalues and eigenmodes (modal analysis)</li>
+</ul>
+<div class="section" id="classes">
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="gen_modules/pytheas.periodic2D.FemModel.html#pytheas.periodic2D.FemModel" title="pytheas.periodic2D.FemModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">periodic2D.FemModel</span></code></a>([analysis,&nbsp;pola,&nbsp;A,&nbsp;…])</td>
+<td>A class for a finite element model of a 2D mono-periodic medium.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="module-pytheas.scatt2D">
+<span id="pytheas-scatt2d-2d-scattering"></span><h2><a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a>: 2D scattering<a class="headerlink" href="#module-pytheas.scatt2D" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a> module implements the resolution of the
+scalar wave equation for TE and TM polarization in 2D:</p>
+<ul class="simple">
+<li>subject to an incident plane wave or line source (diffraction problem)</li>
+<li>eigenvalues and eigenmodes (modal analysis)</li>
+</ul>
+<div class="section" id="id1">
+<h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="gen_modules/pytheas.scatt2D.FemModel.html#pytheas.scatt2D.FemModel" title="pytheas.scatt2D.FemModel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scatt2D.FemModel</span></code></a>()</td>
+<td>A class for a finite element model of a 2D medium</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="indices-and-search">
+<h1>Indices and search<a class="headerlink" href="#indices-and-search" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+  <div class="container">
+    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+  <footer class="footer">
+        <div class="container">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <!-- <h2 class="logo"><a href="#"> LOGO </a></h2> -->
+                </div>
+                <div class="col-sm-3">
+                  <div class="foot-fa">
+
+                    <a href="#">
+                      <i class="fab fa-python"></i>
+                      pip install me
+                    </a>
+                  </div>
+
+                </div>
+                <div class="col-sm-3">
+                  <div class="foot-fa">
+
+                    <a href="#">
+                      <i class="fab fa-github fa-1x"></i>
+                      fork me on github
+                    </a>
+                  </div>
+                </div>
+
+
+            </div>
+            
+        </div>
+        <div class="footer-copyright">
+          <p>
+              &copy; Copyright 2017-2018, Benjamin Vial.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+          
+          </p>
+
+        </div>
+
+    <!-- <div class="container">
+        <div class="text-center center-block">
+          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-python fa-3x">pip install me</i></a>
+          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-github fa-3x">fork me on github</i></a>
+      </div>
+
+    </div> -->
+    <!-- <div class="container">
+      <p class="pull-right">
+        <a href="#">Back to top</a>
+        
+      </p>
+      <p>
+          &copy; Copyright 2017-2018, Benjamin Vial.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+      </p>
+    </div> -->
+  </footer>
+  </body>
+</html>

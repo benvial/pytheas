@@ -1,0 +1,12 @@
+:mod:`pytheas.scatt2D`.FemModel
+======================================
+
+.. currentmodule:: pytheas.scatt2D
+
+.. autoclass:: FemModel
+
+.. include:: backreferences/pytheas.scatt2D.FemModel.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>
