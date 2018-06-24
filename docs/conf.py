@@ -68,7 +68,7 @@ sphinx_gallery_conf = {
     'gallery_dirs': 'auto_examples',
     # directory where function granular galleries are stored
     'backreferences_dir': 'gen_modules/backreferences',
-    'default_thumb_file': '../assets/logo_pytheas.png',
+    'default_thumb_file': 'assets/logo_pytheas.png',
     # Modules for which function level galleries are created.
     'doc_module': 'pytheas'}
 
@@ -102,6 +102,16 @@ master_doc = 'index'
 project = u'pytheas'
 copyright = u'2017-%s, Benjamin Vial' % date.today().year
 author = u'Benjamin Vial'
+
+
+html_context = {
+'show_gh_fork': True,
+'ghrepo': u'benvial/pytheas',
+'show_pip_install': False,
+'piplink': ''
+}
+
+
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -289,10 +299,10 @@ html_sidebars = {'auto_examples/index': ['localtoc.html'],
 #html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-#html_show_sphinx = True
+html_show_sphinx = True
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
-#html_show_copyright = True
+html_show_copyright = True
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the

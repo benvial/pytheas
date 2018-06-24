@@ -67,8 +67,8 @@ def test_per2D():
     fem.lambda_mesh = 0.6 * mum  #: flt: incident wavelength
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
     #: where n is the refractive index of the medium
-    fem.parmesh_des = 3
-    fem.parmesh = 3
+    fem.parmesh_des = 11
+    fem.parmesh = 11
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     fem.getdp_verbose = 4

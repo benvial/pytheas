@@ -8,17 +8,17 @@ mkdir bin
 echo "INSTALLING GMSH"
 echo '----------------'
 # gmsh
-wget -c http://gmsh.info/bin/Linux/gmsh-git-Linux64.tgz
-tar -xvf gmsh-git-Linux64.tgz
-rm gmsh-git-Linux64.tgz
-mv gmsh-git-Linux64/bin/gmsh $ONELAB_PATH/bin
-rm -rf gmsh-git-Linux64
+wget -c http://gmsh.info/bin/Linux/gmsh-3.0.6-Linux64.tgz -O gmsh.tgz
+tar -xvf gmsh.tgz
+rm gmsh.tgz
+mv gmsh-3.0.6-Linux64/bin/gmsh $ONELAB_PATH/bin
+rm -rf gmsh
 
 echo "INSTALLING GETDP"
 echo '----------------'
 # getdp
-wget -c http://getdp.info/bin/Linux/getdp-git-Linux64c.tgz
-tar -xvf getdp-git-Linux64c.tgz
-rm getdp-git-Linux64c.tgz
-mv getdp-git-Linux64/bin/getdp $ONELAB_PATH/bin
-rm -rf getdp-git-Linux64
+wget -c http://getdp.info/bin/Linux/getdp-2.11.3-Linux64c.tgz -O getdp.tgz
+tar -xvf getdp.tgz
+rm getdp.tgz
+mv getdp-2.11.3-Linux64/bin/getdp $ONELAB_PATH/bin
+rm -rf getdp
