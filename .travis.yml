@@ -20,10 +20,6 @@ env:
 
 install:
   # - sudo apt-get update
-  # - sudo apt-get install getdp gmsh
-  # - pip uninstall --yes numpy
-  # We do this conditionally because it saves us some downloading if the
-  # version is the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
     else
@@ -34,28 +30,29 @@ install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda update -q conda
-  # Useful for debugging any issues with conda
   - conda info -a
   - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
   - source activate testenv
   - conda install --yes -n testenv cython swig pytest
   # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
-  # - python setup.py install
   - pip install -r requirements.txt
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
-  # - ./install_nlopt.sh
+  - ./install_nlopt.sh
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib:LD_LIBRARY_PATH
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
-script:
+script: #run tests
   - pytest -s
+  
+after_success: #make the doc and push to gh-pages the run code coverage analysis
   - set -e
-  - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow
+  - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow codecov
   - cd docs
   - make html
   - cd ..
   - doctr deploy . --built-docs docs/_build/html
+  - codecov

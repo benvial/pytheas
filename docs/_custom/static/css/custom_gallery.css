@@ -58,9 +58,9 @@ div.sphx-glr-download code.download {
     word-break: break-word;
 }
 
-/* .sphx-glr-signature {
+.sphx-glr-signature {
     visibility: hidden;
-} */
+}
 
 .sphx-glr-thumbcontainer:hover {
   opacity: 1;
@@ -94,4 +94,9 @@ div.sphx-glr-download code.download {
 .sphx-glr-thumbcontainer[tooltip]:hover::after,
  {
 background-color: #40363C; 
+}
+
+
+.sphx-glr-script-out .highlight pre {
+    background-color: #e9e1e9;
 }
