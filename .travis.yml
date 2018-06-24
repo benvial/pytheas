@@ -17,7 +17,7 @@ env:
 
 
 install:
-  # - sudo apt-get update
+  - sudo apt-get update
   # - pip uninstall --yes numpy
   # We do this conditionally because it saves us some downloading if the
   # version is the same.
