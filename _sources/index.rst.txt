@@ -5,19 +5,49 @@
 
 
 
+
 .. title:: Home
 
 
+   
+Pytheas is a python package for creating, running and postprocessing
+electrodynamic simulations. It is based on the open source onelab 
+bundle for creating geometries, meshing (gmsh) and solving 
+the underlying partial differential equations with the finite 
+element method (getdp).
+It features built in models of:
+
+- periodic media in 2D and 3D with computation of diffraction efficiencies
+- scattering analysis in 2D and 3D
+- bloch mode analysis of metamaterials
+- treatment of open geometries with perfectly matched layers
+- tools to define arbitrary permittivity distributions
+- quasi-normal mode analysis
+- two scale convergence homogenization
+- tools for topology optimization in 2D
+- built-in refractive index database
+
+
 .. raw:: html
-
-  <h3> A python package using open source numerical tools
-   to study and optimize electromagnetic devices and materials.
-   </h3>
-
-
-   <a type="button" class="btn btn-primary" href="reference.html">
-   Read the doc
-   </a>
+  
+  <div class="clearer">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="button">
+          <a type="button" class="btn btn-primary" href="reference.html">
+            Read the doc
+          </a>
+          </p>
+          </div> 
+          <div class="col-md-6">
+          <p class="button">
+          <a type="button" class="btn btn-primary" href="auto_examples/index.html">
+            Browse examples
+          </a>
+          </p>
+        </div> 
+    </div>
+  </div>
 
 
 

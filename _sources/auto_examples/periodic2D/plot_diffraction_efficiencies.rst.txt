@@ -1,10 +1,10 @@
 .. note::
     :class: sphx-glr-download-link-note
 
-    Click :ref:`here <sphx_glr_download_auto_examples_periodic2D___plot_diffraction_efficiencies.py>` to download the full example code
+    Click :ref:`here <sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py>` to download the full example code
 .. rst-class:: sphx-glr-example-title
 
-.. _sphx_glr_auto_examples_periodic2D___plot_diffraction_efficiencies.py:
+.. _sphx_glr_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
 
 
 Simulating diffraction by a 2D metamaterial
@@ -33,6 +33,11 @@ First we import the :py:mod:`femmodel` module and some utility functions:
     from pytheas.periodic2D import FemModel, utils
 
 
+
+
+
+
+
 Then we need to instanciate the class :py:class:`FemModel`:
 
 
@@ -41,6 +46,11 @@ Then we need to instanciate the class :py:class:`FemModel`:
 
 
     fem = FemModel()
+
+
+
+
+
 
 
 The model consist of a single unit cell with quasi-periodic boundary conditions
@@ -92,6 +102,11 @@ We define here the opto-geometric parameters:
 
 
 
+
+
+
+
+
 We then initialize the model (copying files, etc...) and mesh the unit
 cell using gmsh
 
@@ -105,6 +120,11 @@ cell using gmsh
 
     fem.initialize()
     mesh = fem.make_mesh()
+
+
+
+
+
 
 
 We use the :py:mod:`genmat` module to generate a material pattern
@@ -128,6 +148,14 @@ We use the :py:mod:`genmat` module to generate a material pattern
 
 
 
+
+
+.. image:: /auto_examples/periodic2D/images/sphx_glr_plot_diffraction_efficiencies_001.png
+    :class: sphx-glr-single-img
+
+
+
+
 We now assign the permittivity
 
 
@@ -137,6 +165,11 @@ We now assign the permittivity
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.matprop_pattern = matprop
+
+
+
+
+
 
 
 Now we're ready to compute the solution!
@@ -149,6 +182,11 @@ Now we're ready to compute the solution!
     fem.compute_solution()
 
 
+
+
+
+
+
 Finally we compute the diffraction efficiencies, absorption and energy balance
 
 
@@ -158,6 +196,18 @@ Finally we compute the diffraction efficiencies, absorption and energy balance
 
     effs_TE = fem.diffraction_efficiencies()
     print("efficiencies TE", effs_TE)
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    efficiencies TE {'R': 0.6211041345785192, 'T': 0.22865897491724108, 'Q': 0.1635944609994113, 'B': 1.0133575704951716}
 
 
 It is fairly easy to switch to TM polarization:
@@ -172,10 +222,22 @@ It is fairly easy to switch to TM polarization:
     effs_TM = fem.diffraction_efficiencies()
     print("efficiencies TM", effs_TM)
 
-**Total running time of the script:** ( 0 minutes  0.000 seconds)
 
 
-.. _sphx_glr_download_auto_examples_periodic2D___plot_diffraction_efficiencies.py:
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    efficiencies TM {'R': 0.4328988879579107, 'T': 0.4694257545635199, 'Q': 0.08455294909823927, 'B': 0.9868775916196699}
+
+
+**Total running time of the script:** ( 0 minutes  4.596 seconds)
+
+
+.. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
 
 
 .. only :: html
@@ -187,13 +249,13 @@ It is fairly easy to switch to TM polarization:
 
   .. container:: sphx-glr-download
 
-     :download:`Download Python source code: __plot_diffraction_efficiencies.py <__plot_diffraction_efficiencies.py>`
+     :download:`Download Python source code: plot_diffraction_efficiencies.py <plot_diffraction_efficiencies.py>`
 
 
 
   .. container:: sphx-glr-download
 
-     :download:`Download Jupyter notebook: __plot_diffraction_efficiencies.ipynb <__plot_diffraction_efficiencies.ipynb>`
+     :download:`Download Jupyter notebook: plot_diffraction_efficiencies.ipynb <plot_diffraction_efficiencies.ipynb>`
 
 
 .. only:: html
