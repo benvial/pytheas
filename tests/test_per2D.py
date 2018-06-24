@@ -7,6 +7,7 @@ from pytheas.material import genmat
 from pytheas import periodic2D
 from pytheas.periodic2D import FemModel, utils
 
+
 def test_per2D():
     # -*- coding: utf-8 -*-
     """
@@ -20,11 +21,8 @@ def test_per2D():
     ##############################################################################
     # First we import the :py:mod:`femmodel` module and some utility functions:
 
-
     # Code source: Benjamin Vial
     # License: MIT
-
-
 
     ##############################################################################
     # Then we need to instanciate the class :py:class:`FemModel`:
@@ -73,7 +71,9 @@ def test_per2D():
     fem.parmesh = 13
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
-
+    fem.getdp_verbose = 4
+    fem.gms_verbose = 4
+    fem.python_verbose = 1
 
     ##############################################################################
     # We then initialize the model (copying files, etc...) and mesh the unit
@@ -99,7 +99,6 @@ def test_per2D():
     mat.pattern = mat.discrete_pattern
     fig, ax = plt.subplots()
     mat.plot_pattern(fig, ax, cmap=cmap)
-
 
     ##############################################################################
     # We now assign the permittivity

@@ -49,7 +49,7 @@ install:
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
 script:
-  - pytest
+  - pytest -s
   - set -e
   - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow
   - cd docs

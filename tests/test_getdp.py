@@ -1,7 +1,9 @@
 
-import os
-
+import subprocess
 
 def test_getdp():
-    rc = os.system("getdp --info")
-    assert rc == 0
+    proc = subprocess.Popen(["getdp", "--info"], stdout=subprocess.PIPE, shell=True)
+    (out, err) = proc.communicate()
+    print("output: \n", out)
+    print("error: \n", err)
+    assert err is None
