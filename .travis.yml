@@ -39,7 +39,7 @@ install:
   # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   # - python setup.py install
   - pip install -r requirements.txt 
-  - pip install sphinx sphinx_bootstrap_theme sphinx_gallery
+  - pip install sphinx sphinx_bootstrap_theme sphinx_gallery Pillow
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
