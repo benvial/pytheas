@@ -47,7 +47,6 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx_gallery.gen_gallery',
     'sphinx.ext.autodoc',
-    'sphinx.ext.githubpages',
     # 'numpydoc',
     # 'sphinx_issues',
 ]
