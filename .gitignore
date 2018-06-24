@@ -76,11 +76,8 @@ aotomat/tools/bin/sge.sh
 
 # data, tmp and pycache #
 ###################
-data/
 tmp/
 __pycache__/
-saved/
-assets/
 _build/
 gen_modules/
 auto_examples/
