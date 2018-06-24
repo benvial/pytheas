@@ -5,10 +5,10 @@ div.sphx-glr-download a {
     border: 0px solid rgb(161, 152, 164);
     color: #fcfcfc;
     display: inline-block;
-    display: table-caption;
     font-weight: bold;
-    padding: 0.3ex;
+    padding: 1em;
     text-align: center;
+    font-size: 20px;
 }
 
 div.sphx-glr-download a:hover {
@@ -75,4 +75,16 @@ div.sphx-glr-download code.download {
     margin-bottom: 24px;
     background: #fff;
     border: solid #e1e4e5 1px;
+}
+
+
+.alert-info {
+    background-image: none;
+    background-color: rgb(209, 197, 212);
+    border-color: #fff;
+    color: #7a7a7a;
+    border-radius: 0px;
+    border: 0px;
+    box-shadow: none;
+    text-decoration: italic;
 }
