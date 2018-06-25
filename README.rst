@@ -14,8 +14,8 @@ Python Electromagnetic Analysis and Simulation with the Finite Element Method
 
 Pytheas is a `Python <http://www.python.org/>`_ package for creating,
 running and postprocessing electrodynamic simulations. It is based on open
-source software `Gmsh <http://www.gmsh.info/>`_. for creating
-geometries and mesh generation, and `GetDP <http://www.getdp.info/>`_. for solving
+source software `Gmsh <http://www.gmsh.info/>`_ for creating
+geometries and mesh generation, and `GetDP <http://www.getdp.info/>`_ for solving
 the underlying partial differential equations with the finite
 element method.
 

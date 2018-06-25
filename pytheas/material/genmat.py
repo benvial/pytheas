@@ -111,7 +111,7 @@ class MaterialDensity:
         fig.colorbar(im, fraction=0.046, pad=0.04)
 
 
-    def fourrier_pattern(self, c, scale=(1,1)):
+    def fourrier_pattern(self, c, scale=(1,1), norma=True):
         Xg, Yg, Zg = self.mat_grid
         Xn = 1 * Xg / (self.n_x - 1) - 1 / 2
         Yn = 1 * Yg / (self.n_y - 1) - 1 / 2
@@ -138,9 +138,11 @@ class MaterialDensity:
         #     PAT = 0.5*(PAT  + (np.flipud(PAT)))
         # else:
         #     pass
+        # PAT = PAT/np.sqrt((Nhx-1)/2*(Nhy-1)/2)
         PAT = np.real(PAT)
         PAT = self.make_sym(PAT)
-        PAT = normalize(PAT)
+        if norma:
+            PAT = normalize(PAT)
         PAT = make_discrete_pattern(PAT, self._threshold_val)
         return PAT
 
