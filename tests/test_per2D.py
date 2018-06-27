@@ -62,7 +62,7 @@ def test_per2D():
     fem.eps_layer2 = 1  #: flt: permittivity layer 2
     fem.eps_des = 1  #: flt: permittivity layer design
     fem.lambda0 = 0.6 * mum  #: flt: incident wavelength
-    fem.theta_deg = 0.   #: flt: incident angle
+    fem.theta_deg = 0.  #: flt: incident angle
     fem.pola = "TE"  #: str: polarization (TE or TM)
     fem.lambda_mesh = 0.6 * mum  #: flt: incident wavelength
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
@@ -87,7 +87,7 @@ def test_per2D():
 
     genmat.np.random.seed(100)
     mat = genmat.MaterialDensity()  # instanciate
-    mat.n_x, mat.n_y, mat.n_z = 2**7, 2**7, 1  # sizes
+    mat.n_x, mat.n_y, mat.n_z = 2 ** 7, 2 ** 7, 1  # sizes
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials

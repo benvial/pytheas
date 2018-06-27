@@ -10,14 +10,23 @@ tag:
 	git tag v$(VERSION)
 	git push --tags
 
-upload: setup.py
+pipy: setup.py
 	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
 	rm -f dist/*
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel --universal
 	twine upload dist/*
 
-publish: tag upload
+
+gh:
+	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
+	@echo "Pushing to github..."
+	git add -A
+	@read -p "Enter commit message: " MSG; \
+	git commit -a -m "$$MSG"
+	git push
+
+publish: tag pipy
 
 clean:
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
@@ -25,4 +34,6 @@ clean:
 
 lint:
 	flake8 setup.py pytheas/ tests/*.py
-	black --check setup.py pytheas/ tests/*.py
+
+style:
+	black setup.py pytheas/ tests/*.py

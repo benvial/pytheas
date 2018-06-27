@@ -15,7 +15,7 @@ def read(fname):
     return codecs.open(os.path.join(base_dir, fname), encoding="utf-8").read()
 
 
-with open('requirements.txt') as f:
+with open("requirements.txt") as f:
     required = f.read().splitlines()
 
 
