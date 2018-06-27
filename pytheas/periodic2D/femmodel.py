@@ -107,14 +107,31 @@ class FemModel(BaseFEM):
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
 
-    def __init__(self, analysis="diffraction", pola="TE",
-                 A=1, lambda0=1, lambda_mesh=1, theta_deg=0,
-                 d=0.8, h_sup=1, h_sub=1, h_layer1=0.1, h_layer2=0.1,
-                 h_des=1., h_pmltop=1., h_pmlbot=1., a_pml=1, b_pml=1,
-                 eps_sup=1 - 0 * 1j, eps_sub=1 - 0 * 1j, eps_layer1=1 - 0 * 1j,
-                 eps_layer2=1 - 0 * 1j, eps_des=1 - 0 * 1j,
-                 eps_incl=1 - 0 * 1j,
-                 ):
+    def __init__(
+        self,
+        analysis="diffraction",
+        pola="TE",
+        A=1,
+        lambda0=1,
+        lambda_mesh=1,
+        theta_deg=0,
+        d=0.8,
+        h_sup=1,
+        h_sub=1,
+        h_layer1=0.1,
+        h_layer2=0.1,
+        h_des=1.,
+        h_pmltop=1.,
+        h_pmlbot=1.,
+        a_pml=1,
+        b_pml=1,
+        eps_sup=1 - 0 * 1j,
+        eps_sub=1 - 0 * 1j,
+        eps_layer1=1 - 0 * 1j,
+        eps_layer2=1 - 0 * 1j,
+        eps_des=1 - 0 * 1j,
+        eps_incl=1 - 0 * 1j,
+    ):
 
         super().__init__()
         self.analysis = analysis
@@ -330,7 +347,7 @@ class FemModel(BaseFEM):
         if filetype is "txt":
             mode = femio.load_timetable(self.tmp_dir + "/EigenVectors.txt")
             u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
-            u = (mode.reshape((self.Niy, self.Nix, self.neig)))
+            u = mode.reshape((self.Niy, self.Nix, self.neig))
             for imode in range(self.neig):
                 u1[:, :, imode] = np.flipud(u[:, :, imode]).T
             return u1
@@ -351,19 +368,19 @@ class FemModel(BaseFEM):
         else:
             nu = 1 / self.eps_sub
         order_shift = 0
-        No_ordre = np.linspace(-self.N_d_order + order_shift,
-                               self.N_d_order + order_shift,
-                               2 * self.N_d_order + 1)
+        No_ordre = np.linspace(
+            -self.N_d_order + order_shift,
+            self.N_d_order + order_shift,
+            2 * self.N_d_order + 1,
+        )
         x_slice = sc.linspace(-self.d / 2, self.d / 2, self.npt_integ)
-        y_slice_t = sc.linspace(self.ycut_sub_min, self.ycut_sub_max,
-                                self.nb_slice)
-        y_slice_r = sc.linspace(self.ycut_sup_min, self.ycut_sup_max,
-                                self.nb_slice)
+        y_slice_t = sc.linspace(self.ycut_sub_min, self.ycut_sub_max, self.nb_slice)
+        y_slice_r = sc.linspace(self.ycut_sup_min, self.ycut_sup_max, self.nb_slice)
         k_sub = 2 * pi * sc.sqrt(self.eps_sub) / self.lambda0
         k_sup = 2 * pi * sc.sqrt(self.eps_sup) / self.lambda0
         alpha_sup = -k_sup * sc.sin(self.theta)
-        beta_sup = sc.sqrt(k_sup**2 - alpha_sup**2)
-        beta_sub = sc.sqrt(k_sub**2 - alpha_sup**2)
+        beta_sup = sc.sqrt(k_sup ** 2 - alpha_sup ** 2)
+        beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)
         s_t = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
         s_r = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
         Aeff_t = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
@@ -372,13 +389,15 @@ class FemModel(BaseFEM):
         field_diff_t, field_diff_r = self.postpro_fields_cuts()
 
         field_diff_t = np.transpose(
-            field_diff_t.reshape(self.npt_integ, self.nb_slice, order="F"))
+            field_diff_t.reshape(self.npt_integ, self.nb_slice, order="F")
+        )
         field_diff_r = np.transpose(
-            field_diff_r.reshape(self.npt_integ, self.nb_slice, order="F"))
+            field_diff_r.reshape(self.npt_integ, self.nb_slice, order="F")
+        )
         alphat_t = alpha_sup + 2 * pi / (self.d) * No_ordre
         alphat_r = alpha_sup + 2 * pi / (self.d) * No_ordre
-        betat_sup = np.conj(sc.sqrt(k_sup**2 - alphat_r**2))
-        betat_sub = np.conj(sc.sqrt(k_sub**2 - alphat_t**2))
+        betat_sup = np.conj(sc.sqrt(k_sup ** 2 - alphat_r ** 2))
+        betat_sub = np.conj(sc.sqrt(k_sub ** 2 - alphat_t ** 2))
         for m1 in range(0, self.nb_slice):
             slice_t = field_diff_t[m1, :]
             slice_r = field_diff_r[m1, :]
@@ -390,13 +409,14 @@ class FemModel(BaseFEM):
                 s_r[k] = sc.trapz(slice_r * expalpha_r, x=x_slice) / self.d
 
             Aeff_t[m1, :] = s_t * sc.exp(-1j * betat_sub * (y_slice_t[m1]))
-            Aeff_r[m1, :] = s_r * sc.exp(1j * betat_sup * (
-                y_slice_r[m1] - (self.ycut_sup_min - self.scan_dist)))
+            Aeff_r[m1, :] = s_r * sc.exp(
+                1j * betat_sup * (y_slice_r[m1] - (self.ycut_sup_min - self.scan_dist))
+            )
 
         # Aeff_r = -np.conj(Aeff_r)
 
-        Beff_t = (np.abs(Aeff_t))**2 * betat_sub / beta_sup * nu
-        Beff_r = (np.abs(Aeff_r))**2 * betat_sup / beta_sup
+        Beff_t = (np.abs(Aeff_t)) ** 2 * betat_sub / beta_sup * nu
+        Beff_r = (np.abs(Aeff_r)) ** 2 * betat_sup / beta_sup
 
         # print(Aeff_r)
 
@@ -411,12 +431,20 @@ class FemModel(BaseFEM):
         B = T + R + Q  # energy balance
         if self.python_verbose:
             print("  Energy balance")
-            print("    R            = ", "%0.6f" % R,
-                  "     (std slice2slice =", "%0.6e" %
-                  sc.std(np.sum(Aeff_r.real, axis=1)), ")")
-            print("    T            = ", "%0.6f" % T,
-                  "     (std slice2slice =", "%0.6e" %
-                  sc.std(np.sum(Aeff_t.real, axis=1)), ")")
+            print(
+                "    R            = ",
+                "%0.6f" % R,
+                "     (std slice2slice =",
+                "%0.6e" % sc.std(np.sum(Aeff_r.real, axis=1)),
+                ")",
+            )
+            print(
+                "    T            = ",
+                "%0.6f" % T,
+                "     (std slice2slice =",
+                "%0.6e" % sc.std(np.sum(Aeff_t.real, axis=1)),
+                ")",
+            )
             print("    Q            = ", "%0.6f" % Q)
             print("    ------------------------")
             print("    Total        = ", "%0.6f" % (B))
@@ -438,7 +466,7 @@ class FemModel(BaseFEM):
         coef = np.exp(-1j * k0 * np.sin(self.theta) * self.d)
         qtper = qt
         for i in range(self.nper - 1):
-            qtper = np.row_stack((qtper, qt * coef**(i + 1)))
+            qtper = np.row_stack((qtper, qt * coef ** (i + 1)))
         return qtper
 
     def periodize(self, qt):
@@ -447,66 +475,90 @@ class FemModel(BaseFEM):
             qtper = np.row_stack((qtper, qt))
         return qtper
 
-    def plot_field_and_pattern(self,
-                               fig,
-                               ax,
-                               field,
-                               pattern,
-                               cmap_div,
-                               cmap_mat,
-                               cbar=True,
-                               vmin=None,
-                               vmax=None):
+    def plot_field_and_pattern(
+        self,
+        fig,
+        ax,
+        field,
+        pattern,
+        cmap_div,
+        cmap_mat,
+        cbar=True,
+        vmin=None,
+        vmax=None,
+    ):
 
         self.print_progress("Plotting field map")
-        x = np.linspace(self.nper * self.domX_L, self.nper *
-                        self.domX_R, self.nper * self.Nix)
+        x = np.linspace(
+            self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+        )
         y = np.linspace(self.domY_B, self.domY_T, self.Niy)
         # xx, yy = np.meshgrid(x, y)
-        extent = (self.nper * self.domX_L, self.nper *
-                  self.domX_R, self.domY_B, self.domY_T)
+        extent = (
+            self.nper * self.domX_L,
+            self.nper * self.domX_R,
+            self.domY_B,
+            self.domY_T,
+        )
 
         im1 = ax.imshow(
             field.T,
-            interpolation='bilinear',
+            interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,
             vmax=vmax,
-            extent=extent)
+            extent=extent,
+        )
         if cbar:
             fig.colorbar(im1, fraction=0.046, pad=0.04)
         ax.imshow(
             pattern.T,
-            interpolation='None',
+            interpolation="None",
             cmap=cmap_mat,
             alpha=0.4,
-            extent=(self.nper * self.domX_L, self.nper * self.domX_R, self.h_layer1,
-                    self.h_layer1 + self.h_des))
+            extent=(
+                self.nper * self.domX_L,
+                self.nper * self.domX_R,
+                self.h_layer1,
+                self.h_layer1 + self.h_des,
+            ),
+        )
         ax.imshow(
             field.T,
             alpha=0.,
-            interpolation='bilinear',
+            interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,
             vmax=vmax,
-            extent=(self.nper * self.domX_L, self.nper * self.domX_R, self.domY_B,
-                    self.domY_T))
+            extent=(
+                self.nper * self.domX_L,
+                self.nper * self.domX_R,
+                self.domY_B,
+                self.domY_T,
+            ),
+        )
         ax.set_ylim((self.domY_B, self.domY_T))
 
     def plot_pattern_per(self, fig, ax, pattern, nper, cmap):
         im1 = ax.imshow(
             pattern.T,
             cmap=cmap,
-            extent=(-self.nper * self.d / 2, self.nper * self.d / 2, self.h_layer1,
-                    self.h_layer1 + self.h_des))
+            extent=(
+                -self.nper * self.d / 2,
+                self.nper * self.d / 2,
+                self.h_layer1,
+                self.h_layer1 + self.h_des,
+            ),
+        )
         fig.colorbar(im1, fraction=0.046, pad=0.04)
 
     def plot_fieldv_streamlines(self, ax, vx, vy, cmap):
         self.print_progress("Plotting vector field streamlines")
-        x = np.linspace(self.nper * self.domX_L, self.nper *
-                        self.domX_R, self.nper * self.Nix)
+        x = np.linspace(
+            self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+        )
         y = np.linspace(self.domY_B, self.domY_T, self.Niy)
-        vlognorm = (np.sqrt(np.abs(vx)**2 + np.abs(vy)**2)).T
+        vlognorm = (np.sqrt(np.abs(vx) ** 2 + np.abs(vy) ** 2)).T
         Ndens = 1
         density = [Ndens * self.nper, Ndens * self.Niy / self.Nix]
         lw = 3 * vlognorm / vlognorm.max()
@@ -515,9 +567,10 @@ class FemModel(BaseFEM):
             y,
             vx.T,
             vy.T,
-            color='k',
+            color="k",
             linewidth=lw,
             cmap=cmap,
             density=density,
-            arrowstyle="Fancy")
+            arrowstyle="Fancy",
+        )
         ax.set_ylim((self.domY_B, self.domY_T))

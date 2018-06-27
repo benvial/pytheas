@@ -1,4 +1,5 @@
 import warnings
+
 warnings.filterwarnings("ignore", ".*GUI is implemented.*")
 import numpy as np
 import matplotlib
@@ -25,31 +26,31 @@ from matplotlib.ticker import MaxNLocator
 
 plt.ion()
 
-matplotlib.rcParams['xtick.major.size'] = 6
-matplotlib.rcParams['xtick.major.width'] = 0.7
-matplotlib.rcParams['xtick.minor.size'] = 0
-matplotlib.rcParams['xtick.minor.width'] = 0
-matplotlib.rcParams['ytick.major.size'] = 6
-matplotlib.rcParams['ytick.major.width'] = 0.7
-matplotlib.rcParams['ytick.minor.size'] = 0
-matplotlib.rcParams['ytick.minor.width'] = 0
-matplotlib.rcParams['savefig.dpi'] = 600
-matplotlib.rcParams['lines.linewidth'] = 1.5
+matplotlib.rcParams["xtick.major.size"] = 6
+matplotlib.rcParams["xtick.major.width"] = 0.7
+matplotlib.rcParams["xtick.minor.size"] = 0
+matplotlib.rcParams["xtick.minor.width"] = 0
+matplotlib.rcParams["ytick.major.size"] = 6
+matplotlib.rcParams["ytick.major.width"] = 0.7
+matplotlib.rcParams["ytick.minor.size"] = 0
+matplotlib.rcParams["ytick.minor.width"] = 0
+matplotlib.rcParams["savefig.dpi"] = 600
+matplotlib.rcParams["lines.linewidth"] = 1.5
 # matplotlib.rcParams['axes.linewidth'] = 0.7
-matplotlib.rcParams['axes.labelsize'] = 'medium'
-matplotlib.rcParams['legend.fontsize'] = 'small'
-matplotlib.rcParams['font.size'] = 12
-matplotlib.rcParams['axes.titlesize'] = 'medium'
-matplotlib.rcParams['xtick.labelsize'] = 'x-small'
-matplotlib.rcParams['ytick.labelsize'] = 'x-small'
+matplotlib.rcParams["axes.labelsize"] = "medium"
+matplotlib.rcParams["legend.fontsize"] = "small"
+matplotlib.rcParams["font.size"] = 12
+matplotlib.rcParams["axes.titlesize"] = "medium"
+matplotlib.rcParams["xtick.labelsize"] = "x-small"
+matplotlib.rcParams["ytick.labelsize"] = "x-small"
 
-rc = {'axes.linewidth': 0.7}
+rc = {"axes.linewidth": 0.7}
 sns.set_style("ticks", rc=rc)
 # sns.set_context("poster", font_scale=1)
 
-color1 = '#f4a688'
-color2 = '#8d9db6'
-color3 = '#27ae60'
+color1 = "#f4a688"
+color2 = "#8d9db6"
+color3 = "#27ae60"
 
 aotomat_green = "#31a180"
 aotomat_purple = "#a13152"
@@ -124,9 +125,10 @@ def cmap_discretize(cmap, N):
     colors_rgba = cmap(colors_i)
     indices = np.linspace(0, 1., N + 1)
     cdict = {}
-    for ki, key in enumerate(('red', 'green', 'blue')):
-        cdict[key] = [(indices[i], colors_rgba[i - 1, ki], colors_rgba[i, ki])
-                      for i in range(N + 1)]
+    for ki, key in enumerate(("red", "green", "blue")):
+        cdict[key] = [
+            (indices[i], colors_rgba[i - 1, ki], colors_rgba[i, ki])
+            for i in range(N + 1)
+        ]
     # Return colormap object.
-    return matplotlib.colors.LinearSegmentedColormap(cmap.name + "_%d" % N,
-                                                     cdict, 1024)
+    return matplotlib.colors.LinearSegmentedColormap(cmap.name + "_%d" % N, cdict, 1024)

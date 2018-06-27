@@ -1,11 +1,17 @@
 
-.. image:: https://travis-ci.org/benvial/pytheas.svg?branch=master
+.. image:: https://img.shields.io/travis/benvial/pytheas/master.svg?style=for-the-badge
    :target: https://travis-ci.org/benvial/pytheas
    :alt: Travis CI build status (Linux)
 
-.. image:: https://codecov.io/github/benvial/pytheas/coverage.svg?branch=master
+.. image:: https://img.shields.io/codecov/c/github/benvial/pytheas.svg?style=for-the-badge
    :target: https://codecov.io/github/benvial/pytheas?branch=master
    :alt: Code Coverage
+
+.. image:: https://img.shields.io/codacy/grade/cd4027f2672e467ab4ee2c72d593f2c3.svg?style=for-the-badge
+   :target: https://app.codacy.com/app/benvial/pytheas/dashboard
+   :alt: Codacy grade
+
+
 
 Python Electromagnetic Analysis and Simulation with the Finite Element Method
 -----------------------------------------------------------------------------

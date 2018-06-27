@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import pytheas.tools.femio as femio
 from termcolor import colored
+
 pi = np.pi
 
 
@@ -61,7 +62,6 @@ class TwoScaleFEM2D:
     dom_des = 1000  #: design domain number (check .geo/.pro files)
 
     # postprocessing -------------------------------------------------
-
 
     @property
     def geom_filename(self):
@@ -123,16 +123,14 @@ class TwoScaleFEM2D:
     def content_par(self):
         return femio.make_inputs(self.param_dict)
 
-
     def print_progress(self, s):
         if self.python_verbose:
-            if (self.getdp_verbose>=3 or self.gmsh_verbose is 4):
+            if self.getdp_verbose >= 3 or self.gmsh_verbose is 4:
                 sep = "-" * 51 + "\n"
             else:
                 sep = ""
-            toprint = sep + colored(s, 'green')
+            toprint = sep + colored(s, "green")
             print(toprint)
-
 
     def initialize(self):
         self.print_progress("Initialization")
@@ -194,28 +192,27 @@ class TwoScaleFEM2D:
         posname = "eps_des"
         self.print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
-            des_ID, eps_des, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(eps_des_pos,  posname + ".pos", dirname=self.tmp_dir)
+            des_ID, eps_des, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(eps_des_pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_pos(self, des_ID, val, posname):
         ## create a pos file to be read by getdp
         self.print_progress("Creating pos file " + posname + ".pos")
         pos = femio.make_pos(
-            des_ID, val, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(pos,  posname + ".pos", dirname=self.tmp_dir)
-
+            des_ID, val, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_mesh(self):
         self.print_progress("Meshing model")
-        femio.mesh_model(
-            self.path_mesh, self.path_geo, verbose=self.gmsh_verbose)
+        femio.mesh_model(self.path_mesh, self.path_geo, verbose=self.gmsh_verbose)
         content_mesh = femio.get_content(self.path_mesh)
         return content_mesh
 
     def make_mesh_pos(self, els, nodes):
         self.print_progress("Retrieving mesh content")
-        return femio.make_content_mesh_pos(nodes, els, self.dom_des,
-                                           self.celltype)
+        return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
     def compute_solution(self, **kwargs):
         self.print_progress("Computing solution")
@@ -228,18 +225,19 @@ class TwoScaleFEM2D:
             self.path_mesh,
             verbose=self.getdp_verbose,
             path_pos=self.path_pos,
-            argstr=argstr)
+            argstr=argstr,
+        )
 
     def ppstr(self, postop):
-        return femio.postprostring(postop, self.path_pro, self.path_mesh,
-                                   self.path_pos, self.getdp_verbose)
+        return femio.postprostring(
+            postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
+        )
 
     def postpro_choice(self, name, filetype):
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
         else:
-            raise TypeError(
-                "Wrong filetype specified: choose between txt and pos")
+            raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def postprocessing(self):
         self.print_progress("Postprocessing")
@@ -263,8 +261,6 @@ class TwoScaleFEM2D:
         self.print_progress("Postprocessing fields")
         self.postpro_choice("postop_fields", filetype)
 
-
-
     def make_fdens(self, pattern):
         self.print_progress("Making density function")
         n_x, n_y, n_z = pattern.shape
@@ -278,8 +274,7 @@ class TwoScaleFEM2D:
         y = np.linspace(y0 + dy / 2, y1 - dy / 2, n_y)
         xx, yy, zz = np.meshgrid(x, y, z)
         points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
-        fdens = sc.interpolate.NearestNDInterpolator(points,
-                                                     pattern.T.flatten())
+        fdens = sc.interpolate.NearestNDInterpolator(points, pattern.T.flatten())
         return fdens
 
     def assign_material(self, mat, matprop, density, lambda0):
@@ -292,17 +287,14 @@ class TwoScaleFEM2D:
                 ncomplex = ri.get_complex_index(lambda0, matprop[i])
             else:
                 ncomplex = matprop[i]
-            eps_nodes[density == mat.threshold_val[i]] = ncomplex**2
-            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex**2
+            eps_nodes[density == mat.threshold_val[i]] = ncomplex ** 2
+            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex ** 2
         return eps_nodes, eps_pattern
-
-
 
     def open_gmsh_gui(self, pos_list=["*.pos"]):
         self.print_progress("Opening gmsh GUI")
         p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
-
 
 
 if __name__ == "__main__":

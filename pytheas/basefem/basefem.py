@@ -28,7 +28,7 @@ from ..tools import femio
 # from custom_inherit import DocInheritMeta
 #
 # class BaseFEM(metaclass=DocInheritMeta(style="numpy")):
-class BaseFEM():
+class BaseFEM:
     """Base class for Finite Element models
 
     Parameters
@@ -139,11 +139,11 @@ class BaseFEM():
 
     def print_progress(self, s):
         if self.python_verbose:
-            if (self.getdp_verbose >= 3 or self.gmsh_verbose is 4):
+            if self.getdp_verbose >= 3 or self.gmsh_verbose is 4:
                 sep = "-" * 51 + "\n"
             else:
                 sep = ""
-            toprint = sep + colored(s, 'green')
+            toprint = sep + colored(s, "green")
             print(toprint)
 
     def initialize(self):
@@ -160,8 +160,7 @@ class BaseFEM():
         # create tmp geo file
         femio.maketmp(self.content_geo, "geometry.geo", dirname=self.tmp_dir)
         # create tmp geo file for background mesh
-        femio.maketmp(self.content_bg_mesh,
-                      "bg_mesh.geo", dirname=self.tmp_dir)
+        femio.maketmp(self.content_bg_mesh, "bg_mesh.geo", dirname=self.tmp_dir)
         # create tmp pro file
         femio.maketmp(self.content_pro, "main.pro", dirname=self.tmp_dir)
         # if self.inclusion_flag:
@@ -186,7 +185,7 @@ class BaseFEM():
 
     def make_param_dict(self):
         param_dict = dict()
-        attr_list = [i for i in dir(self) if i[:1] != '_']
+        attr_list = [i for i in dir(self) if i[:1] != "_"]
         attr_list = [i for i in attr_list if not callable(getattr(self, i))]
         for key, val in self.__dict__.items():
             if key.startswith("eps_"):
@@ -219,8 +218,9 @@ class BaseFEM():
         return filename + "_" + str(self.ID) + "." + extension
 
     def make_inclusion(self, points, **kwargs):
-        femio.points2geo(points, "lc_incl",
-                         output_path=self.inclusion_filename, **kwargs)
+        femio.points2geo(
+            points, "lc_incl", output_path=self.inclusion_filename, **kwargs
+        )
 
     def get_design_nodes(self):
         self.print_progress("Retrieving nodes")
@@ -235,37 +235,39 @@ class BaseFEM():
         posname = "eps_des"
         self.print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
-            des_ID, _eps_des, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(eps_des_pos,  posname + ".pos", dirname=self.tmp_dir)
+            des_ID, _eps_des, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(eps_des_pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_pos(self, des_ID, val, posname):
         # create a pos file to be read by getdp
         self.print_progress("Creating pos file " + posname + ".pos")
         pos = femio.make_pos(
-            des_ID, val, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(pos,  posname + ".pos", dirname=self.tmp_dir)
+            des_ID, val, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_mesh(self, other_option=" -cpu"):
         self.print_progress("Meshing model")
         femio.mesh_model(
-            self.path_mesh, self.path_geo, verbose=self.gmsh_verbose,
-            other_option=other_option)
+            self.path_mesh,
+            self.path_geo,
+            verbose=self.gmsh_verbose,
+            other_option=other_option,
+        )
         self.content_mesh = femio.get_content(self.path_mesh)
         self.nodes, self.els, self.des = self.get_mesh_info()
         return self.content_mesh
 
-
     def make_mesh_pos(self, els, nodes):
         self.print_progress("Retrieving mesh content")
-        return femio.make_content_mesh_pos(nodes, els, self.dom_des,
-                                           self.celltype)
+        return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
     def compute_solution(self, **kwargs):
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
-        self.print_progress("Computing solution: " +
-                            self.analysis + " problem")
+        self.print_progress("Computing solution: " + self.analysis + " problem")
         if self.analysis == "diffraction":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
@@ -299,18 +301,19 @@ class BaseFEM():
             self.path_mesh,
             verbose=self.getdp_verbose,
             path_pos=self.path_pos,
-            argstr=argstr)
+            argstr=argstr,
+        )
 
     def ppstr(self, postop):
-        return femio.postprostring(postop, self.path_pro, self.path_mesh,
-                                   self.path_pos, self.getdp_verbose)
+        return femio.postprostring(
+            postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
+        )
 
     def postpro_choice(self, name, filetype):
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
         else:
-            raise TypeError(
-                "Wrong filetype specified: choose between txt and pos")
+            raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def get_qty(self, filename):
         file_path = os.path.join(self.tmp_dir, filename)
@@ -330,10 +333,9 @@ class BaseFEM():
         dx, dy = x[1] - x[0], y[1] - y[0]
         x = np.linspace(x0 + dx / 2, x1 - dx / 2, n_x)
         y = np.linspace(y0 + dy / 2, y1 - dy / 2, n_y)
-        xx, yy, zz = np.meshgrid(x, y, z, indexing='ij')
+        xx, yy, zz = np.meshgrid(x, y, z, indexing="ij")
         points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
-        fdens = sc.interpolate.NearestNDInterpolator(points,
-                                                     pattern.flatten())
+        fdens = sc.interpolate.NearestNDInterpolator(points, pattern.flatten())
         return fdens
 
     def assign_material(self, mat, matprop, density, lambda0):
@@ -346,10 +348,9 @@ class BaseFEM():
                 ncomplex = ri.get_complex_index(lambda0, matprop[i])
             else:
                 ncomplex = matprop[i]
-            eps_nodes[density == mat.threshold_val[i]] = ncomplex**2
-            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex**2
+            eps_nodes[density == mat.threshold_val[i]] = ncomplex ** 2
+            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex ** 2
         return eps_nodes, eps_pattern
-
 
     def get_mesh_info(self):
         # get nodes and elements and their IDs in the design domain
@@ -367,8 +368,6 @@ class BaseFEM():
             des = nodes_ID, nodes_coords
         return nodes, els, des
 
-
-
     def register_pattern(self, pattern, threshold_val):
         self.pattern = pattern
         self.threshold_val = threshold_val
@@ -382,11 +381,11 @@ class BaseFEM():
     def update_epsilon_value(self):
         self.print_progress("Assigning materials")
         # assign the permittivity
-        self._eps_des, self.eps_pattern = assign_epsilon(self.pattern, self.matprop_pattern,
-                                                   self.threshold_val, self.density)
+        self._eps_des, self.eps_pattern = assign_epsilon(
+            self.pattern, self.matprop_pattern, self.threshold_val, self.density
+        )
         # create a pos file to be read by getdp
         self.path_pos = self.make_eps_pos(self.des[0], self._eps_des)
-
 
     def open_gmsh_gui(self, pos_list=["*.pos"]):
         self.print_progress("Opening gmsh GUI")
@@ -394,11 +393,10 @@ class BaseFEM():
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
 
 
-
 def assign_epsilon(pattern, matprop, threshold_val, density):
     _eps_des = np.zeros_like(density, dtype=complex)
     eps_pattern = np.zeros_like(pattern, dtype=complex)
     for ncomplex, thres in zip(matprop, threshold_val):
-        _eps_des[density == thres] = ncomplex**2
-        eps_pattern[pattern == thres] = ncomplex**2
+        _eps_des[density == thres] = ncomplex ** 2
+        eps_pattern[pattern == thres] = ncomplex ** 2
     return _eps_des, eps_pattern

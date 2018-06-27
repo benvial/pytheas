@@ -1,13 +1,15 @@
 import numpy as np
 from scipy import ndimage
+
 pi = np.pi
+
 
 class MaterialDensity:
     """A class for generating material densities"""
 
-    n_x = 2**8
-    n_y = 2**8
-    n_z = 2**8
+    n_x = 2 ** 8
+    n_y = 2 ** 8
+    n_z = 2 ** 8
     nb_threshold = 2
     ratio_filter = 8
     xsym = False
@@ -22,7 +24,7 @@ class MaterialDensity:
         X = np.arange(0, self.n_x, 1)
         Y = np.arange(0, self.n_y, 1)
         Z = np.arange(0, self.n_z, 1)
-        return np.meshgrid(X, Y, Z, indexing='ij')
+        return np.meshgrid(X, Y, Z, indexing="ij")
 
     @property
     def mat_rand(self):
@@ -36,24 +38,24 @@ class MaterialDensity:
     def make_sym(self, p):
         if not self.sym8:
             if self.xsym:
-                p[-int(self.n_x / 2):, :,
-                  :] = np.flipud(p[0:int(self.n_x / 2), :, :])
+                p[-int(self.n_x / 2) :, :, :] = np.flipud(
+                    p[0 : int(self.n_x / 2), :, :]
+                )
             if self.ysym:
-                p[:, -int(self.n_y / 2):,
-                  :] = np.fliplr(p[:, 0:int(self.n_y / 2), :])
+                p[:, -int(self.n_y / 2) :, :] = np.fliplr(
+                    p[:, 0 : int(self.n_y / 2), :]
+                )
 
         if self.zsym:
-            p[:, -int(self.n_y / 2):,
-              :] = np.fliplr(p[:, 0:int(self.n_y / 2), :])
+            p[:, -int(self.n_y / 2) :, :] = np.fliplr(p[:, 0 : int(self.n_y / 2), :])
         if self.sym8:
             assert self.n_x == self.n_y, "x and y sampling must be the same!"
-            p1 = p[0:int(self.n_x / 2), 0:int(self.n_y / 2), :]
+            p1 = p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :]
             p1 = 0.5 * (p1 + np.transpose(p1, axes=[1, 0, 2]))
-            p[0:int(self.n_x / 2), 0:int(self.n_y / 2), :] = p1
-            p[0:int(self.n_x / 2), -int(self.n_y / 2):, :] = np.fliplr(p1)
-            p[-int(self.n_x / 2):, 0:int(self.n_y / 2), :] = np.flipud(p1)
-            p[-int(self.n_x / 2):, -int(self.n_y / 2)
-                   :, :] = np.flipud(np.fliplr(p1))
+            p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :] = p1
+            p[0 : int(self.n_x / 2), -int(self.n_y / 2) :, :] = np.fliplr(p1)
+            p[-int(self.n_x / 2) :, 0 : int(self.n_y / 2), :] = np.flipud(p1)
+            p[-int(self.n_x / 2) :, -int(self.n_y / 2) :, :] = np.flipud(np.fliplr(p1))
         if self.indep_z:
             p = np.dstack([p[:, :, 0]] * self.n_z)
 
@@ -100,18 +102,26 @@ class MaterialDensity:
     @property
     def discrete_pattern(self):
         return make_discrete_pattern(self.normalized_pattern, self._threshold_val)
+
     #
 
-    def plot_pattern(self, fig, ax, extent=None, interpolation=None, cmap="Blues", indexz=0):
+    def plot_pattern(
+        self, fig, ax, extent=None, interpolation=None, cmap="Blues", indexz=0
+    ):
         mask = self.discrete_pattern[:, :, indexz]
-        im = ax.imshow(np.fliplr(mask).T, interpolation=interpolation,
-                       cmap=cmap, vmin=0, vmax=1, extent=extent)
+        im = ax.imshow(
+            np.fliplr(mask).T,
+            interpolation=interpolation,
+            cmap=cmap,
+            vmin=0,
+            vmax=1,
+            extent=extent,
+        )
         ax.set_axis_off()
-        ax.set_title('material distribution')
+        ax.set_title("material distribution")
         fig.colorbar(im, fraction=0.046, pad=0.04)
 
-
-    def fourrier_pattern(self, c, scale=(1,1), norma=True):
+    def fourrier_pattern(self, c, scale=(1, 1), norma=True):
         Xg, Yg, Zg = self.mat_grid
         Xn = 1 * Xg / (self.n_x - 1) - 1 / 2
         Yn = 1 * Yg / (self.n_y - 1) - 1 / 2
@@ -119,10 +129,10 @@ class MaterialDensity:
         Nhx, Nhy = c.shape
         for ix in range(Nhx):
             for iy in range(Nhy):
-                kx = 2 * pi * (-Nhx/2 + 1/2 + ix)
-                ky = 2 * pi * (-Nhy/2 + 1/2 + iy)
+                kx = 2 * pi * (-Nhx / 2 + 1 / 2 + ix)
+                ky = 2 * pi * (-Nhy / 2 + 1 / 2 + iy)
                 xsi = scale[0] * kx * Xn + scale[1] * ky * Yn
-                p = c[ix, iy] * np.exp(1j*xsi)
+                p = c[ix, iy] * np.exp(1j * xsi)
                 PAT += p
         # # PAT = PAT[:, :, 0]
         # if self.sym8:
@@ -147,18 +157,16 @@ class MaterialDensity:
         return PAT
 
 
-
-
-
 def multi_period(pat, npx, npy):
     patper = pat
-    for ix in range(npx-1):
+    for ix in range(npx - 1):
         patper = np.vstack((patper, pat))
     patper1 = patper
-    for iy in range(npy-1):
+    for iy in range(npy - 1):
         patper1 = np.hstack((patper1, patper))
 
     return patper1
+
 
 def normalize(im):
     return (im - im.min()) / (im.max() - im.min())
@@ -166,7 +174,6 @@ def normalize(im):
 
 def filter_pattern(p, sigma):
     return ndimage.gaussian_filter(p, sigma, order=0)
-
 
 
 def make_discrete_pattern(im, threshold_val):
@@ -192,7 +199,7 @@ def ell_shapes(mat_grid, rloc=[0, 0, 0], rwidth=[0.1, 0.1, 0.1], m=2):
         rcoords = 0
         if N[i] is not 1:
             rcoords = mat_grid[i] / (N[i] - 1) - 0.5
-        coords1 += ((rcoords - rloc[i]) / (1 * rwidth[i]))**m
+        coords1 += ((rcoords - rloc[i]) / (1 * rwidth[i])) ** m
     # return np.exp(-sum(coords1))
     # return np.exp(-coords1)
     return coords1 < 1
@@ -211,8 +218,9 @@ def ell_shapes_array(Nb, mat_grid, rloc, rwidth, m=2):
     return b
 
 
-def random_fibers(f, mat_grid, d0=0.1, dr_ratio=0.3,
-                  touching=True, touching_ratio=0.01, m=2):
+def random_fibers(
+    f, mat_grid, d0=0.1, dr_ratio=0.3, touching=True, touching_ratio=0.01, m=2
+):
     b = 0
     n = 0
     F = -1
@@ -270,20 +278,21 @@ def random_fibers(f, mat_grid, d0=0.1, dr_ratio=0.3,
         d_f = np.abs(F - f)
         # print(F)
         # print(d_f)
-        cond_stop = (d_f > tol_f)
+        cond_stop = d_f > tol_f
         # print(cond_stop)
     b[b != 0] = 1
     return b, F
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from pytheas.tools.plottools import *
+
     # plt.close("all")
     plt.clf()
     np.random.seed(12)
 
     mat = MaterialDensity()
-    mat.n_x, mat.n_y, mat.n_z = 2**8, 2**8, 1
+    mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1
 
     mat.p_seed = np.random.random((mat.n_x, mat.n_y, mat.n_z))
     mat.nb_threshold = 4

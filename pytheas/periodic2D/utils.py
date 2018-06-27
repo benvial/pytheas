@@ -24,8 +24,7 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
     pattern = mat_tmp.pattern
     nodes, els, des = get_mesh_info(fem)
     if not lc_des:
-        lc_des = 1 * fem.lambda_mesh / \
-            (fem.parmesh_des * np.sqrt(fem.eps_des.real))
+        lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
     if not par:
         # par = [[0.1], [0.4], [1]]
@@ -37,10 +36,12 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         # pattern1 = mat.filtered_pattern
         grad_pat = np.gradient(pattern[:, :, 0])
         grad_pat_x, grad_pat_y = grad_pat[0] / 1, grad_pat[1] / 1
-        grad_pat_norm = np.sqrt(grad_pat_x**2 + grad_pat_y**2).reshape(
-            pattern.shape)
-        grad_pat_norm = genmat.filter_pattern(grad_pat_norm,
-                                              smooth_factor * mat_tmp.sigma)
+        grad_pat_norm = np.sqrt(grad_pat_x ** 2 + grad_pat_y ** 2).reshape(
+            pattern.shape
+        )
+        grad_pat_norm = genmat.filter_pattern(
+            grad_pat_norm, smooth_factor * mat_tmp.sigma
+        )
         grad_pat_norm = normalize(grad_pat_norm)
         thres_grad = 1e-1
         grad_pat_norm[grad_pat_norm > thres_grad] = 1
@@ -62,11 +63,11 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         path_size_mesh = fem.make_pos(nodes[0], density_grad, "size_mesh")
         fem.type_des = "elements"
         # if it == 0:
-        femio.mesh_model(fem.path_mesh, fem.path_bg_mesh,
-                         verbose=fem.gmsh_verbose)
+        femio.mesh_model(fem.path_mesh, fem.path_bg_mesh, verbose=fem.gmsh_verbose)
         bgm = "-bgm " + path_size_mesh
-        femio.mesh_model(fem.path_mesh, fem.path_geo,
-                         other_option=bgm, verbose=fem.gmsh_verbose)
+        femio.mesh_model(
+            fem.path_mesh, fem.path_geo, other_option=bgm, verbose=fem.gmsh_verbose
+        )
         nodes, els, des = get_mesh_info(fem)
         fem.content_mesh = fem.make_mesh_pos(els, nodes)
         # plt.clf()
@@ -118,22 +119,19 @@ def plot_spectrum(lambda_range, eff):
     xplot = lambda_range
     # plt.plot(xplot, np.sum(R, axis=1), label='R', color='#0077b3')
     # plt.plot(xplot, np.sum(T, axis=1), label='T', color='#cc3300')
-    plt.plot(xplot, R, label='R', color='#0077b3')
-    plt.plot(xplot, T, label='T', color='#cc3300')
-    plt.plot(xplot, Q, label='A', color='#77b300')
-    plt.plot(xplot, B, label='B', color='#666666')
-    plt.title('diffraction efficiencies spectrum')
+    plt.plot(xplot, R, label="R", color="#0077b3")
+    plt.plot(xplot, T, label="T", color="#cc3300")
+    plt.plot(xplot, Q, label="A", color="#77b300")
+    plt.plot(xplot, B, label="B", color="#666666")
+    plt.title("diffraction efficiencies spectrum")
     plt.legend(loc=0)
-    plt.xlabel(r'Wavelength $\lambda_0$ (nm)')
-    plt.ylabel(r'Diffraction efficiencies')
+    plt.xlabel(r"Wavelength $\lambda_0$ (nm)")
+    plt.ylabel(r"Diffraction efficiencies")
 
 
-def meromorphic_expansion(fem,
-                          eigval,
-                          deg_poly,
-                          Nlambda,
-                          lambdai_min=None,
-                          lambdai_max=None):
+def meromorphic_expansion(
+    fem, eigval, deg_poly, Nlambda, lambdai_min=None, lambdai_max=None
+):
     # ###------ meromorphic expansion of r and t--------
     fem.cplx_effs = True
     reson = eigval / (2 * pi)
@@ -161,7 +159,7 @@ def meromorphic_expansion(fem,
     for o in reson:
         f.append(1 / (oi - o))
     for n in range(deg_poly + 1):
-        f.append(oi**n)
+        f.append(oi ** n)
 
     param = lambdai
     eff = lambda_sweep(fem, param)
@@ -180,8 +178,8 @@ def meromorphic_expansion(fem,
         T_mod += coefs_T[i] / (o_mod - o)
         i += 1
     for n in range(deg_poly + 1):
-        R_mod += coefs_R[i] * o_mod**n
-        T_mod += coefs_T[i] * o_mod**n
+        R_mod += coefs_R[i] * o_mod ** n
+        T_mod += coefs_T[i] * o_mod ** n
         i += 1
     Rparam = np.array(Rparam).ravel()
     Tparam = np.array(Tparam).ravel()
@@ -209,14 +207,15 @@ def plot_epsilon(fem, pattern, matprop):
         cmap=cmap,
         vmin=0,
         vmax=1,
-        extent=extent)
+        extent=extent,
+    )
     cbar = plt.colorbar(ticks=np.linspace(0, 1, nmat))
     plt.clim(-1 / (nmat + 1), 1 + 1 / (nmat + 1))
     # cbarlabels = ['%01f %+01fi' % (i.real, i.imag) for i in matprop]
     # cbarlabels =  [r'%.2f %+.2f $10^{-3} i$' % (i.real, 1e3*i.imag) for i in matprop]
     # cbarlabels = [r'%.3f %+.3fi' % (i.real, i.imag) for i in matprop]
     cbarlabels = [
-        r'%.1f %+.1f $10^{-2} i$' % ((i**2).real, 1e2 * (i**2).imag)
+        r"%.1f %+.1f $10^{-2} i$" % ((i ** 2).real, 1e2 * (i ** 2).imag)
         for i in matprop
     ]
     cbar.ax.set_yticklabels(cbarlabels)

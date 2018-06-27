@@ -4,8 +4,10 @@ import nlopt
 from pytheas.tools.plottools import *
 import numpy as np
 import scipy as sc
+
 # from scipy.interpolate import splev, splrep
 from scipy.interpolate import PchipInterpolator  # mono_cubic_interp
+
 
 class TopologyOptimization:
     """A class for topology optimization
@@ -29,7 +31,7 @@ class TopologyOptimization:
     Nitmax = 8  # maximum number of global iterations
     Nit = 0  # initialize global iteration number
     N0 = 0
-    beta = 1   # projection parameter
+    beta = 1  # projection parameter
     rfilt = 0  # filter radius
     filt_weight = "gaussian"
     plotconv = False
@@ -42,7 +44,7 @@ class TopologyOptimization:
 
     @property
     def thres(self):
-        return np.linspace(0, 1, self.nthres + 1)[1:(self.nthres)]
+        return np.linspace(0, 1, self.nthres + 1)[1 : (self.nthres)]
 
     @property
     def p_interp(self):
@@ -51,15 +53,16 @@ class TopologyOptimization:
     def simp(self, p):
         # k = min(self.nthres - 1, 3)
         if self.nthres == 2:
-            out = (self.eps_interp[1] - self.eps_interp[0]
-                   ) * p**self.m + self.eps_interp[0]
+            out = (
+                self.eps_interp[1] - self.eps_interp[0]
+            ) * p ** self.m + self.eps_interp[0]
         else:
             # tsimp_re = splrep(self.p_interp, self.eps_interp.real, k=k)
             # tsimp_im = splrep(self.p_interp, self.eps_interp.imag, k=k)
             # out = splev(p, tsimp_re) + 1j*splev(p, tsimp_im)
             tsimp_re = PchipInterpolator(self.p_interp, self.eps_interp.real)
             tsimp_im = PchipInterpolator(self.p_interp, self.eps_interp.imag)
-            out = tsimp_re(p**self.m) + 1j * tsimp_im(p**self.m)
+            out = tsimp_re(p ** self.m) + 1j * tsimp_im(p ** self.m)
         return out
 
     def proj(self, x):
@@ -68,7 +71,7 @@ class TopologyOptimization:
             ptmp = np.tanh(self.beta * (x - thres)) / (np.tanh(thres * self.beta))
             # p += self.normalize(ptmp)
             p += ptmp
-        p = (p + self.nthres - 1) / (2*self.nthres - 2)
+        p = (p + self.nthres - 1) / (2 * self.nthres - 2)
 
         return p
         # return x
@@ -101,14 +104,17 @@ class TopologyOptimization:
     def weight_filt(self, x, y, xe, ye):
         D = norm_vec(x - xe, y - ye)
         if self.filt_weight is "gaussian":
-            w = np.exp(-0.5 * (2 * D / self.rfilt)**2)
+            w = np.exp(-0.5 * (2 * D / self.rfilt) ** 2)
         elif self.filt_weight is "linear":
             w = self.rfilt - D
         elif self.filt_weight is "constant":
             w = 1.
         else:
             raise ValueError(
-                "Wrong weight type '{0}'. Available weights are 'gaussian', 'linear' or 'constant'".format(self.filt_weight))
+                "Wrong weight type '{0}'. Available weights are 'gaussian', 'linear' or 'constant'".format(
+                    self.filt_weight
+                )
+            )
         return w
 
     def filter_param(self, p, xdes, ydes):
@@ -166,6 +172,7 @@ class TopologyOptimization:
         f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
         x0 = [f(x, y) for x, y in zip(xdes, ydes)]
         return np.array(x0).ravel()
+
     #
     # def grid2mesh(self, x_grid, y_grid, val_grid, xdes, ydes):
     #     f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
@@ -231,8 +238,9 @@ class TopologyOptimization:
         return goal
 
     def sensitivity(self, p, xdes, ydes, adjoint, deq_deps, filt=True, proj=True):
-        sens = self.dg_dp + adjoint * deq_deps * \
-            self.depsilon_dp(p, xdes, ydes, filt=filt, proj=proj)
+        sens = self.dg_dp + adjoint * deq_deps * self.depsilon_dp(
+            p, xdes, ydes, filt=filt, proj=proj
+        )
         if self.log_opt:
             p_min = 1e-3
             p_thres = np.copy(p)
@@ -240,47 +248,53 @@ class TopologyOptimization:
             sens /= p_thres
         return sens
 
-    def plot_design(self, ax, xdes, ydes, varplot, x_grid, y_grid, typeplot="interp", **kwargs):
+    def plot_design(
+        self, ax, xdes, ydes, varplot, x_grid, y_grid, typeplot="interp", **kwargs
+    ):
         if typeplot is "tri":
             triang = matplotlib.tri.Triangulation(xdes, ydes)
             xmid = xdes[triang.triangles].mean(axis=1)
             ymid = ydes[triang.triangles].mean(axis=1)
-            cf = ax.tripcolor(triang, varplot, shading='flat', cmap=cmap)
+            cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":
-            varplot = self.mesh2grid(
-                xdes, ydes, varplot, x_grid, y_grid, **kwargs)
+            varplot = self.mesh2grid(xdes, ydes, varplot, x_grid, y_grid, **kwargs)
             cf = ax.imshow(np.flipud(varplot), cmap=cmap)
         else:
-            raise TypeError(
-                "Wrong typeplot specified: choose between interp and tri")
+            raise TypeError("Wrong typeplot specified: choose between interp and tri")
         cbar = plt.colorbar(cf, fraction=0.046, pad=0.04)
         # ax.set_title(r'Permittivity $\varepsilon$ in the design domain')
         ax.axis("image")
-        ax.axis('off')
+        ax.axis("off")
 
     def plot_convergence(self, ax, OBJ):
         if len(OBJ) > 20:
-            styleplot = '-'
+            styleplot = "-"
         else:
-            styleplot = '-o'
+            styleplot = "-o"
 
         x_obj = list(range(len(OBJ)))
         ax.plot(x_obj, OBJ, styleplot, color=aotomat_purple)
         ax.fill_between(x_obj, OBJ, 0., color=aotomat_purple, alpha=0.2)
-        ax.set_title('Convergence: ' + 'global iteration = ' + str(self.Nit) +
-                     ', current iteration = ' + str(len(OBJ) - 1))
-        ax.set_xlabel(r'iteration number $N$')
-        ax.set_ylabel(r'objective $\varphi$')
+        ax.set_title(
+            "Convergence: "
+            + "global iteration = "
+            + str(self.Nit)
+            + ", current iteration = "
+            + str(len(OBJ) - 1)
+        )
+        ax.set_xlabel(r"iteration number $N$")
+        ax.set_ylabel(r"objective $\varphi$")
         # ax4.grid(True)
 
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.axis("tight")
 
-    def plot_while_solving(self, varplot, xdes, ydes, x_grid, y_grid, OBJ,
-                           title="", **kwargs):
+    def plot_while_solving(
+        self, varplot, xdes, ydes, x_grid, y_grid, OBJ, title="", **kwargs
+    ):
         # print("beta = ", beta)
         plt.clf()
-        ax1 = plt.subplot(211, aspect='equal')
+        ax1 = plt.subplot(211, aspect="equal")
         self.plot_design(ax1, xdes, ydes, varplot, x_grid, y_grid, **kwargs)
         ax1.set_title(title)
         ax2 = plt.subplot(212)
@@ -310,10 +324,9 @@ class TopologyOptimization:
         elif self.typeopt is "min":
             opt.set_min_objective(f_obj)
         else:
-            raise TypeError(
-                "Wrong typeopt specified: choose between max and min")
-        #opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,2,0), 1e-8)
-        #opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,-1,1), 1e-8)
+            raise TypeError("Wrong typeopt specified: choose between max and min")
+        # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,2,0), 1e-8)
+        # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,-1,1), 1e-8)
         opt.set_maxeval(self.maxeval)
         opt.set_stopval(self.stopval)
         opt.set_xtol_rel(self.ptol_rel)
@@ -325,7 +338,7 @@ class TopologyOptimization:
             print("\n")
             print("Global iteration =  %s" % self.Nit)
             print("#" * 60)
-            self.beta = 2**self.Nit
+            self.beta = 2 ** self.Nit
             # optimize it!
             popt = opt.optimize(p0)
             opt_f = opt.last_optimum_value()
@@ -396,4 +409,4 @@ class TopologyOptimization:
 
 
 def norm_vec(x, y):
-    return np.sqrt((x)**2 + (y)**2)
+    return np.sqrt((x) ** 2 + (y) ** 2)

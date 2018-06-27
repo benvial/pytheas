@@ -58,15 +58,25 @@ def mesh_model(path_mesh, path_geo, dim=[1, 2], verbose=0, other_option=""):
     for d in dim:
         str_dim += " -" + str(d)
     # print(str_dim)
-    subprocess.call("gmsh -v " + str(verbose) + " " + path_geo  + " "
-                    + str_dim + " " + other_option + " -o " +
-                    path_mesh, shell=True)
+    subprocess.call(
+        "gmsh -v "
+        + str(verbose)
+        + " "
+        + path_geo
+        + " "
+        + str_dim
+        + " "
+        + other_option
+        + " -o "
+        + path_mesh,
+        shell=True,
+    )
 
 
 def get_nodes(path_mesh, physical_ID, celltype):
     points, cells, point_data, cell_data, field_data = gmsh_io.read(path_mesh)
     phys_ID = cell_data[celltype]["physical"]
-    domain = (phys_ID == physical_ID)
+    domain = phys_ID == physical_ID
     cell = cells[celltype]
     els_nodes_ID = cell[domain]
     nodes_ID_domain = np.unique(els_nodes_ID.flatten())
@@ -78,7 +88,7 @@ def get_elements(path_mesh, physical_ID, celltype):
     points, cells, point_data, cell_data, field_data = gmsh_io.read(path_mesh)
     phys_ID = cell_data[celltype]["physical"]
     geom_ID = cell_data[celltype]["geometrical"]
-    domain = (phys_ID == physical_ID)
+    domain = phys_ID == physical_ID
     n = 1
     for k in cell_data.keys():
         if k is celltype:
@@ -93,15 +103,18 @@ def get_elements(path_mesh, physical_ID, celltype):
     return el_ID, el_center, els_nodes_ID + 1, geom_ID_dom
 
 
-def solve_problem(resolution,
-                  path_pro,
-                  path_mesh,
-                  path_pos=None,
-                  verbose=0,
-                  argstr=""):
-    solve_str = "getdp -v " \
-        + str(verbose) + " " + path_pro + " -pre " + resolution + " "\
-        + " -msh  " + path_mesh
+def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, argstr=""):
+    solve_str = (
+        "getdp -v "
+        + str(verbose)
+        + " "
+        + path_pro
+        + " -pre "
+        + resolution
+        + " "
+        + " -msh  "
+        + path_mesh
+    )
     if path_pos:
         solve_str += " -gmshread " + path_pos
     subprocess.call(solve_str + " -cal -v2 " + argstr, shell=True)
@@ -110,13 +123,13 @@ def solve_problem(resolution,
 def make_content_mesh_pos(nodes, els, dom, celltype):
     nodes_ID, nodes_coords = nodes
     els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
-    s = '$MeshFormat\n2.2 0 8\n$EndMeshFormat\n'
+    s = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
     nnodes = len(nodes_ID)
     s += "$Nodes\n"
     s += str(nnodes) + "\n"
     for i in range(nnodes):
         x, y, z = nodes_coords[i]
-        s += str(nodes_ID[i]) + " " + str(x) + " " + str(y) + " " + str(z) +  "\n"
+        s += str(nodes_ID[i]) + " " + str(x) + " " + str(y) + " " + str(z) + "\n"
     s += "$EndNodes\n"
     nels = len(els_ID)
     s += "$Elements\n"
@@ -128,7 +141,16 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
             s1 = str(3)
         elif celltype is "tetra":
             s1 = str(4)
-        s += str(els_ID[i]) + " " + s1 + " 2 " + str(dom) + " " + str(geom_ID_dom[i]) + " "
+        s += (
+            str(els_ID[i])
+            + " "
+            + s1
+            + " 2 "
+            + str(dom)
+            + " "
+            + str(geom_ID_dom[i])
+            + " "
+        )
         for j in els_nodes_ID[i]:
             s += str(j) + " "
         s += "\n"
@@ -140,7 +162,7 @@ def make_pos(ID, data, content_mesh, viewname, type="nodes"):
     s = content_mesh
     # type = "elements_nodes"
     if not s:
-        s = '$MeshFormat\n2.2 0 8\n$EndMeshFormat\n'
+        s = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
     N = len(ID)
     if type is "nodes":
         str_start, str_end = "$NodeData\n", "$EndNodeData\n"
@@ -152,11 +174,10 @@ def make_pos(ID, data, content_mesh, viewname, type="nodes"):
         raise TypeError("Wrong type specified: choose between nodes and elements")
     for dat, name in zip([data.real, data.imag], ["_real", "_imag"]):
         s += str_start
-        s += "1\n\"" + viewname + name + "\"\n1\n0\n3\n0\n1\n" + str(
-            N) + "\n"
+        s += '1\n"' + viewname + name + '"\n1\n0\n3\n0\n1\n' + str(N) + "\n"
         for idf, value in zip(ID, dat):
             if type is "elements_nodes":
-                s += str(int(idf)) + " 3 " + (str(value.real) + " ")*3 + "\n"
+                s += str(int(idf)) + " 3 " + (str(value.real) + " ") * 3 + "\n"
             else:
                 s += str(int(idf)) + " " + str(value.real) + "\n"
         s += str_end
@@ -164,8 +185,18 @@ def make_pos(ID, data, content_mesh, viewname, type="nodes"):
 
 
 def open_gmsh(path_mesh, path_geo, pos_list=[], verbose=2):
-    subprocess.call("gmsh " + path_geo + " " + path_mesh + " " +
-              " ".join(pos_list)  + " -v " + str(verbose) + " &", shell=True)
+    subprocess.call(
+        "gmsh "
+        + path_geo
+        + " "
+        + path_mesh
+        + " "
+        + " ".join(pos_list)
+        + " -v "
+        + str(verbose)
+        + " &",
+        shell=True,
+    )
 
 
 def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
@@ -187,8 +218,16 @@ def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
 
     """
     path_res = path_pro[:-4] + ".res"
-    s = "getdp -v " + str(verbose) + " " + path_pro + " -res " + path_res \
-        + " -msh " + path_mesh
+    s = (
+        "getdp -v "
+        + str(verbose)
+        + " "
+        + path_pro
+        + " -res "
+        + path_res
+        + " -msh "
+        + path_mesh
+    )
     if path_pos:
         s += " -gmshread " + path_pos
     s += " -pos " + postop + " -v2"
@@ -197,53 +236,55 @@ def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
 
 def load_node_table(filename):
     nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)
-    values = np.loadtxt(
-        filename, usecols=[1], skiprows=1) + 1j * np.loadtxt(
-            filename, usecols=[2], skiprows=1)
+    values = np.loadtxt(filename, usecols=[1], skiprows=1) + 1j * np.loadtxt(
+        filename, usecols=[2], skiprows=1
+    )
     return nodenumber, values
 
 
 def load_table(filename):
-    return np.loadtxt(
-        filename, usecols=[3]) + 1j * np.loadtxt(
-            filename, usecols=[4])
+    return np.loadtxt(filename, usecols=[3]) + 1j * np.loadtxt(filename, usecols=[4])
 
 
 def load_table_vect(filename):
-    comp_x = np.loadtxt(
-        filename, skiprows=0, usecols=[8]) + 1j * np.loadtxt(
-            filename, skiprows=0, usecols=[11])
-    comp_y = np.loadtxt(
-        filename, skiprows=0, usecols=[9]) + 1j * np.loadtxt(
-            filename, skiprows=0, usecols=[12])
-    comp_z = np.loadtxt(
-        filename, skiprows=0, usecols=[10]) + 1j * np.loadtxt(
-            filename, skiprows=0, usecols=[13])
+    comp_x = np.loadtxt(filename, skiprows=0, usecols=[8]) + 1j * np.loadtxt(
+        filename, skiprows=0, usecols=[11]
+    )
+    comp_y = np.loadtxt(filename, skiprows=0, usecols=[9]) + 1j * np.loadtxt(
+        filename, skiprows=0, usecols=[12]
+    )
+    comp_z = np.loadtxt(filename, skiprows=0, usecols=[10]) + 1j * np.loadtxt(
+        filename, skiprows=0, usecols=[13]
+    )
     return comp_x, comp_y, comp_z
 
 
 def load_timetable(filename):
-    return np.loadtxt(
-        filename, usecols=[5]) + 1j * np.loadtxt(
-            filename, usecols=[6])
+    return np.loadtxt(filename, usecols=[5]) + 1j * np.loadtxt(filename, usecols=[6])
 
 
 def points2geo(points, lc_incl, output_path="./tmp.geo", startpoint=1000):
     x, y = points
-    fout = open(output_path, 'w')
-    #lc_name = "%s_lc" % filename[0:3]
+    fout = open(output_path, "w")
+    # lc_name = "%s_lc" % filename[0:3]
     # Format
     # Point(1) = {0, 0, 0, lc};
-    #fout.write("%s = 0.005;\n" % lc_name)
+    # fout.write("%s = 0.005;\n" % lc_name)
     j = startpoint
     n_lines = len(x)
     for i in range(n_lines):
-        outputline = "Point(%i) = { %8.8f, %8.8f, %8.8f, %s};\n " \
-            % (j, x[i], y[i], 0, lc_incl)
+        outputline = "Point(%i) = { %8.8f, %8.8f, %8.8f, %s};\n " % (
+            j,
+            x[i],
+            y[i],
+            0,
+            lc_incl,
+        )
         j = j + 1
         fout.write(outputline)
     # gmsh bspline format
     # Write out splinefit line
-    fout.write("Spline(%i) = {%i:%i};\n"
-               % (startpoint, startpoint, startpoint + n_lines - 1))
+    fout.write(
+        "Spline(%i) = {%i:%i};\n" % (startpoint, startpoint, startpoint + n_lines - 1)
+    )
     fout.close

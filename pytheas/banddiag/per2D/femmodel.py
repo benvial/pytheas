@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import pytheas.tools.femio as femio
 from termcolor import colored
+
 pi = np.pi
 
 
@@ -29,7 +30,6 @@ class BandsFEM2D:
     content_mesh = ""
     tmp_dir = "./tmp"
     path_pos = None
-
 
     #
     # mesh_filename = "mesh.msh"  #: str: mesh filename
@@ -60,7 +60,6 @@ class BandsFEM2D:
     #: int: number of eigenvalues
     neig = 6
 
-
     #: int: number of x points for postprocessing field maps
     Nix = 51
 
@@ -81,9 +80,10 @@ class BandsFEM2D:
     @property
     def parmesh_des(self):
         return self.parmesh
+
     @property
     def Niy(self):
-        return self.Nix * int(self.dy/self.dx)
+        return self.Nix * int(self.dy / self.dx)
 
     @property
     def geom_filename(self):
@@ -145,16 +145,14 @@ class BandsFEM2D:
     def content_par(self):
         return femio.make_inputs(self.param_dict)
 
-
     def print_progress(self, s):
         if self.python_verbose:
-            if (self.getdp_verbose>=3 or self.gmsh_verbose is 4):
+            if self.getdp_verbose >= 3 or self.gmsh_verbose is 4:
                 sep = "-" * 51 + "\n"
             else:
                 sep = ""
-            toprint = sep + colored(s, 'green')
+            toprint = sep + colored(s, "green")
             print(toprint)
-
 
     def initialize(self):
         self.print_progress("Initialization")
@@ -220,28 +218,27 @@ class BandsFEM2D:
         posname = "eps_des"
         self.print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
-            des_ID, eps_des, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(eps_des_pos,  posname + ".pos", dirname=self.tmp_dir)
+            des_ID, eps_des, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(eps_des_pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_pos(self, des_ID, val, posname):
         ## create a pos file to be read by getdp
         self.print_progress("Creating pos file " + posname + ".pos")
         pos = femio.make_pos(
-            des_ID, val, self.content_mesh, posname, type=self.type_des)
-        return femio.maketmp(pos,  posname + ".pos", dirname=self.tmp_dir)
-
+            des_ID, val, self.content_mesh, posname, type=self.type_des
+        )
+        return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_mesh(self):
         self.print_progress("Meshing model")
-        femio.mesh_model(
-            self.path_mesh, self.path_geo, verbose=self.gmsh_verbose)
+        femio.mesh_model(self.path_mesh, self.path_geo, verbose=self.gmsh_verbose)
         content_mesh = femio.get_content(self.path_mesh)
         return content_mesh
 
     def make_mesh_pos(self, els, nodes):
         self.print_progress("Retrieving mesh content")
-        return femio.make_content_mesh_pos(nodes, els, self.dom_des,
-                                           self.celltype)
+        return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
     def compute_solution(self, **kwargs):
         self.print_progress("Computing solution")
@@ -260,23 +257,23 @@ class BandsFEM2D:
             self.path_mesh,
             verbose=self.getdp_verbose,
             path_pos=self.path_pos,
-            argstr=argstr)
+            argstr=argstr,
+        )
 
     def ppstr(self, postop):
-        return femio.postprostring(postop, self.path_pro, self.path_mesh,
-                                   self.path_pos, self.getdp_verbose)
+        return femio.postprostring(
+            postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
+        )
 
     def postpro_choice(self, name, filetype):
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
         else:
-            raise TypeError(
-                "Wrong filetype specified: choose between txt and pos")
+            raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def postpro_fields(self, filetype="txt"):
         self.print_progress("Postprocessing fields")
         self.postpro_choice("postop_fields", filetype)
-
 
     def get_field_map(self, name):
         field = femio.load_table(self.tmp_dir + "/" + name)
@@ -311,8 +308,7 @@ class BandsFEM2D:
         y = np.linspace(y0 + dy / 2, y1 - dy / 2, n_y)
         xx, yy, zz = np.meshgrid(x, y, z)
         points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
-        fdens = sc.interpolate.NearestNDInterpolator(points,
-                                                     pattern.T.flatten())
+        fdens = sc.interpolate.NearestNDInterpolator(points, pattern.T.flatten())
         return fdens
 
     def assign_material(self, mat, matprop, density, lambda0):
@@ -325,88 +321,115 @@ class BandsFEM2D:
                 ncomplex = ri.get_complex_index(lambda0, matprop[i])
             else:
                 ncomplex = matprop[i]
-            eps_nodes[density == mat.threshold_val[i]] = ncomplex**2
-            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex**2
+            eps_nodes[density == mat.threshold_val[i]] = ncomplex ** 2
+            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex ** 2
         return eps_nodes, eps_pattern
-
-
 
     def open_gmsh_gui(self, pos_list=["*.pos"]):
         self.print_progress("Opening gmsh GUI")
         p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
 
-    def plot_field_and_pattern(self,
-                               fig,
-                               ax,
-                               field,
-                               pattern,
-                               cmap_div,
-                               cmap_mat,
-                               cbar=True,
-                               vmin=None,
-                               vmax=None):
+    def plot_field_and_pattern(
+        self,
+        fig,
+        ax,
+        field,
+        pattern,
+        cmap_div,
+        cmap_mat,
+        cbar=True,
+        vmin=None,
+        vmax=None,
+    ):
 
         self.print_progress("Plotting field map")
-        x = np.linspace(self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix)
+        x = np.linspace(
+            self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+        )
         y = np.linspace(self.domY_B, self.domY_T, self.Niy)
         # xx, yy = np.meshgrid(x, y)
-        extent = (self.nper * self.domX_L, self.nper * self.domX_R, self.domY_B, self.domY_T)
+        extent = (
+            self.nper * self.domX_L,
+            self.nper * self.domX_R,
+            self.domY_B,
+            self.domY_T,
+        )
 
         im1 = ax.imshow(
             field.T,
-            interpolation='bilinear',
+            interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,
             vmax=vmax,
-            extent=extent)
+            extent=extent,
+        )
         if cbar:
             fig.colorbar(im1, fraction=0.046, pad=0.04)
         ax.imshow(
             pattern.T,
-            interpolation='None',
+            interpolation="None",
             cmap=cmap_mat,
             alpha=0.33,
-            extent=(self.nper * self.domX_L, self.nper * self.domX_R, self.h_layer1,
-                    self.h_layer1 + self.h_des))
+            extent=(
+                self.nper * self.domX_L,
+                self.nper * self.domX_R,
+                self.h_layer1,
+                self.h_layer1 + self.h_des,
+            ),
+        )
         ax.imshow(
             field,
             alpha=0.,
-            interpolation='bilinear',
+            interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,
             vmax=vmax,
-            extent=(self.nper * self.domX_L, self.nper * self.domX_R, self.domY_B,
-                    self.domY_T))
+            extent=(
+                self.nper * self.domX_L,
+                self.nper * self.domX_R,
+                self.domY_B,
+                self.domY_T,
+            ),
+        )
         ax.set_ylim((self.domY_B, self.domY_T))
 
     def points_kspace(self, N):
         Gamma = [0., 0.]
-        X = [ 1., 0.]
+        X = [1., 0.]
         M = [1., 1.]
         ngx = N
-        Gamma_X = np.array([ np.linspace(Gamma[0], X[0], ngx) ,  np.linspace(Gamma[1], X[1], ngx) ])
+        Gamma_X = np.array(
+            [np.linspace(Gamma[0], X[0], ngx), np.linspace(Gamma[1], X[1], ngx)]
+        )
 
         nxm = N
-        X_M =  np.array([ np.linspace(X[0], M[0], nxm) ,  np.linspace(X[1], M[1], nxm) ])
+        X_M = np.array([np.linspace(X[0], M[0], nxm), np.linspace(X[1], M[1], nxm)])
 
-        X_M = np.delete(X_M,0,axis = 1)
+        X_M = np.delete(X_M, 0, axis=1)
 
         nmg = N
-        M_Gamma =  np.array([ np.linspace(M[0], Gamma[0], nmg) ,  np.linspace(M[1], Gamma[1], nmg) ])
-        M_Gamma = np.delete(M_Gamma,0,axis = 1)
-        bandsx =  np.append(np.append(Gamma_X[0,:], X_M[0,:]),M_Gamma[0,:])
-        bandsy =  np.append(np.append(Gamma_X[1,:], X_M[1,:]),M_Gamma[1,:])
+        M_Gamma = np.array(
+            [np.linspace(M[0], Gamma[0], nmg), np.linspace(M[1], Gamma[1], nmg)]
+        )
+        M_Gamma = np.delete(M_Gamma, 0, axis=1)
+        bandsx = np.append(np.append(Gamma_X[0, :], X_M[0, :]), M_Gamma[0, :])
+        bandsy = np.append(np.append(Gamma_X[1, :], X_M[1, :]), M_Gamma[1, :])
 
-        K1 =  np.linspace(0, self.dx, ngx)
+        K1 = np.linspace(0, self.dx, ngx)
 
-        K2 =  np.linspace(self.dx, self.dx + self.dy, nxm)
-        K2 = np.delete(K2,0)
-        K3 =  np.linspace(self.dx + self.dy, self.dx + self.dy + np.sqrt(self.dx**2 + self.dy**2), nmg)
-        K3 = np.delete(K3,0)
-        Kplot = np.append(np.append(K1,K2),K3)
+        K2 = np.linspace(self.dx, self.dx + self.dy, nxm)
+        K2 = np.delete(K2, 0)
+        K3 = np.linspace(
+            self.dx + self.dy,
+            self.dx + self.dy + np.sqrt(self.dx ** 2 + self.dy ** 2),
+            nmg,
+        )
+        K3 = np.delete(K3, 0)
+        Kplot = np.append(np.append(K1, K2), K3)
         K = np.array((bandsx, bandsy)).T
         return K, Kplot
+
 
 if __name__ == "__main__":
     print("This is the femmodel module")

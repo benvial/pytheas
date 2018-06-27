@@ -56,7 +56,7 @@ class FemModel(BaseFEM):
         self.waist = 1.5
 
         # opto-geometric parameters  -------------------------------------------
-        self.h_pml = 2.   #: flt: thickness pml
+        self.h_pml = 2.  #: flt: thickness pml
         self.hx_des = 2.  #: flt: x - thickness scattering box (design)
         self.hy_des = 2.  #: flt: y - thickness scattering box
         self.a_pml = 1  #: flt: PMLs parameter, real part
@@ -76,8 +76,12 @@ class FemModel(BaseFEM):
         self.M_fs = 3
         self.Nibox_x = 500  #: int: number of x interpolation points on the design box
         self.Nibox_y = 500  #: int: number of y interpolation points on the design box
-        self.Nin2f_x = 500  #: int: number of x interpolation points for near to far field calculations
-        self.Nin2f_y = 500  #: int: number of y interpolation points for near to far field calculations
+        self.Nin2f_x = (
+            500
+        )  #: int: number of x interpolation points for near to far field calculations
+        self.Nin2f_y = (
+            500
+        )  #: int: number of y interpolation points for near to far field calculations
         self.rat_n2f = 0.95
 
         #: int: number of y slices points
@@ -110,7 +114,6 @@ class FemModel(BaseFEM):
     def corners_des(self):
         return -self.hx_des / 2, +self.hx_des / 2, -self.hy_des / 2, +self.hy_des / 2
 
-
     @property
     def domX_L(self):
         return -self.hx_des / 2 - self.space2pml_L
@@ -127,23 +130,21 @@ class FemModel(BaseFEM):
     def domY_T(self):
         return self.hy_des / 2 + self.space2pml_T
 
-
-
     @property
     def Xn2f_L(self):
-        return self.domX_L*self.rat_n2f
+        return self.domX_L * self.rat_n2f
 
     @property
     def Xn2f_R(self):
-        return self.domX_R*self.rat_n2f
+        return self.domX_R * self.rat_n2f
 
     @property
     def Yn2f_B(self):
-        return self.domY_B*self.rat_n2f
+        return self.domY_B * self.rat_n2f
 
     @property
     def Yn2f_T(self):
-        return self.domY_T*self.rat_n2f
+        return self.domY_T * self.rat_n2f
 
     @property
     def theta(self):
@@ -182,48 +183,54 @@ class FemModel(BaseFEM):
         u_out, vx_out, vy_out = {}, {}, {}
         for i in ["T", "L", "R", "B"]:
             u = femio.load_timetable(self.tmp_dir + "/field_n2f_{0}.out".format(i))
-            vx = femio.load_timetable(self.tmp_dir + "/field_dual_x_n2f_{0}.out".format(i))
-            vy = femio.load_timetable(self.tmp_dir + "/field_dual_y_n2f_{0}.out".format(i))
+            vx = femio.load_timetable(
+                self.tmp_dir + "/field_dual_x_n2f_{0}.out".format(i)
+            )
+            vy = femio.load_timetable(
+                self.tmp_dir + "/field_dual_y_n2f_{0}.out".format(i)
+            )
             if self.analysis == "modal":
-                if (i=="T") or (i=="B"):
+                if (i == "T") or (i == "B"):
                     n = self.Nin2f_x
                 else:
                     n = self.Nin2f_y
                 u = u.reshape((n, self.neig))
                 vx = vx.reshape((n, self.neig))
                 vy = vy.reshape((n, self.neig))
-            u_out[i]=u
-            vx_out[i]=vx
-            vy_out[i]=vy
+            u_out[i] = u
+            vx_out[i] = vx
+            vy_out[i] = vy
         return u_out, vx_out, vy_out
-
 
     def normalized_scs(self, ff, theta):
 
-        xi = np.linspace(self.Xn2f_L,self.Xn2f_R, self.Nin2f_x)
-        yi = np.linspace(self.Yn2f_B,self.Yn2f_T, self.Nin2f_y)
-        nu0 = np.sqrt(self.mu0/self.epsilon0)
-        k0 = 2*pi/self.lambda0
+        xi = np.linspace(self.Xn2f_L, self.Xn2f_R, self.Nin2f_x)
+        yi = np.linspace(self.Yn2f_B, self.Yn2f_T, self.Nin2f_y)
+        nu0 = np.sqrt(self.mu0 / self.epsilon0)
+        k0 = 2 * pi / self.lambda0
 
         s = np.sin(theta)
         c = -np.cos(theta)
 
-        x = {"T": xi, "L":self.Xn2f_L, "R": self.Xn2f_R, "B":xi}
-        y = {"T": self.Yn2f_T, "L":yi, "R": yi, "B":self.Yn2f_B}
-        nx = {"T": 0, "L":-1, "R": 1, "B":0}
-        ny = {"T": 1, "L":0, "R": 0, "B":-1}
+        x = {"T": xi, "L": self.Xn2f_L, "R": self.Xn2f_R, "B": xi}
+        y = {"T": self.Yn2f_T, "L": yi, "R": yi, "B": self.Yn2f_B}
+        nx = {"T": 0, "L": -1, "R": 1, "B": 0}
+        ny = {"T": 1, "L": 0, "R": 0, "B": -1}
         Ez, Hx, Hy = ff
 
         I = 0
         for loc in ["T", "L", "R", "B"]:
-            if (loc=="T") or (loc=="B"):
+            if (loc == "T") or (loc == "B"):
                 l = xi
             else:
-                l=yi
-            expo = np.exp(-1j*k0*(x[loc]*s + y[loc] * c))
-            J  = (nu0*(nx[loc] * Hy[loc] - ny[loc] * Hx[loc]) - (ny[loc] * c + nx[loc] *s)*Ez[loc]) * expo
+                l = yi
+            expo = np.exp(-1j * k0 * (x[loc] * s + y[loc] * c))
+            J = (
+                nu0 * (nx[loc] * Hy[loc] - ny[loc] * Hx[loc])
+                - (ny[loc] * c + nx[loc] * s) * Ez[loc]
+            ) * expo
             I += np.trapz(J, l)
-        return np.abs(I)**2/(8*pi)
+        return np.abs(I) ** 2 / (8 * pi)
 
     def postpro_fields(self, filetype="txt"):
         self.print_progress("Postprocessing fields")
@@ -267,8 +274,9 @@ class FemModel(BaseFEM):
 
     def postpro_fourrier_coefs_angle(self):
         self.print_progress("Fourrier coefficients for coupling")
-        subprocess.call(self.ppstr(
-            "postop_coupling_coeffs_fourrier_series"), shell=True)
+        subprocess.call(
+            self.ppstr("postop_coupling_coeffs_fourrier_series"), shell=True
+        )
         filename = self.tmp_dir + "/coupling_coeffs_fs.txt"
         tmp = femio.load_timetable(filename)
         return tmp.reshape((2 * self.M_fs + 1, self.neig))
@@ -288,7 +296,7 @@ class FemModel(BaseFEM):
         if filetype is "txt":
             mode = femio.load_timetable(self.tmp_dir + "/EigenVectors.txt")
             u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
-            u = (mode.reshape((self.Niy, self.Nix, self.neig)))
+            u = mode.reshape((self.Niy, self.Nix, self.neig))
             for imode in range(self.neig):
                 u1[:, :, imode] = np.flipud(u[:, :, imode]).T
             return u1
@@ -298,15 +306,14 @@ class FemModel(BaseFEM):
         subprocess.call(self.ppstr("postop_mode_coupling"), shell=True)
         filename = self.tmp_dir + "/mode_coupling.txt"
         tmp = femio.load_timetable(filename)
-        return tmp#.reshape((self.Ni_theta, self.neig))
-
+        return tmp  # .reshape((self.Ni_theta, self.neig))
 
     def postpro_modal_coupling_int(self):
         self.print_progress("QNMs coupling coeffs integrand")
         subprocess.call(self.ppstr("postop_mode_coupling_int"), shell=True)
         mode = femio.load_timetable(self.tmp_dir + "/mode_coupling_int.txt")
         u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
-        u = (mode.reshape((self.Niy, self.Nix, self.neig)))
+        u = mode.reshape((self.Niy, self.Nix, self.neig))
         for imode in range(self.neig):
             u1[:, :, imode] = np.flipud(u[:, :, imode]).T
         return u1

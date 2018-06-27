@@ -17,7 +17,6 @@ Forked from this repository_: github.com/cinek810/refractiveindex.info.
 """
 
 
-
 from scipy.interpolate import interp1d
 import sys
 from parse import *
@@ -32,10 +31,11 @@ database_path = os.path.join(path, "database", "data")
 
 def yaml_extract(yamlFile):
     filename = os.path.join(database_path, yamlFile)
-    yamlStream = open(filename, 'r')
+    yamlStream = open(filename, "r")
     allData = yaml.load(yamlStream)
     materialData = allData["DATA"][0]
     return yamlStream, allData, materialData
+
 
 # This function is designed to return refractive index for specified lambda
 # for file in "tabluated n " format
@@ -46,7 +46,7 @@ def getDataN(yamlFile, lamb):
     matLambda = []
     matN = []
     # in this type of material read data line by line
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {n:g}", line)
         try:
             n = parsed["n"]
@@ -54,13 +54,13 @@ def getDataN(yamlFile, lamb):
             matN.append(n)
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matN = np.array(matN)
     matK = np.zeros_like(matN)
 
-    if len(matLambda)==1:
+    if len(matLambda) == 1:
         return matN + 1j * matK
     else:
         interN = interp1d(matLambda, matN)
@@ -76,7 +76,7 @@ def getDataK(yamlFile, lamb):
     matLambda = []
     matK = []
     # in this type of material read data line by line
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {k:g}", line)
         try:
             k = parsed["k"]
@@ -84,31 +84,32 @@ def getDataK(yamlFile, lamb):
             matK.append(k)
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matK = np.array(matK)
     matN = np.zeros_like(matK)
 
-    if len(matLambda)==1:
+    if len(matLambda) == 1:
         return matN + 1j * matK
     else:
         interN = interp1d(matLambda, matN)
         interK = interp1d(matLambda, matK)
         return interN(lamb) + 1j * interK(lamb)
 
+
 def getRangeN(yamlFile):
     yamlStream, allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated n"
     # in this type of material read data line by line
     matLambda = []
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {n:g}", line)
         try:
             matLambda.append(parsed["l"])
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
     return (min(matLambda), max(matLambda))
 
 
@@ -117,14 +118,15 @@ def getRangeK(yamlFile):
     assert materialData["type"] == "tabulated k"
     # in this type of material read data line by line
     matLambda = []
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {k:g}", line)
         try:
             matLambda.append(parsed["l"])
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
     return (min(matLambda), max(matLambda))
+
 
 def getDataNK(yamlFile, lamb):
     """This function is designed to return refractive index for specified lambda
@@ -135,7 +137,7 @@ def getDataNK(yamlFile, lamb):
     matN = []
     matK = []
     # in this type of material read data line by line
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {n:g} {k:g}", line)
         try:
             n = parsed["n"]
@@ -145,19 +147,18 @@ def getDataNK(yamlFile, lamb):
             matK.append(k)
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matN = np.array(matN)
     matK = np.array(matK)
 
-    if len(matLambda)==1:
+    if len(matLambda) == 1:
         return matN + 1j * matK
     else:
         interN = interp1d(matLambda, matN)
         interK = interp1d(matLambda, matK)
         return interN(lamb) + 1j * interK(lamb)
-
 
 
 def getRangeNK(yamlFile):
@@ -166,13 +167,13 @@ def getRangeNK(yamlFile):
     assert materialData["type"] == "tabulated nk"
     # in this type of material read data line by line
     matLambda = []
-    for line in materialData["data"].split('\n'):
+    for line in materialData["data"].split("\n"):
         parsed = parse("{l:g} {n:g} {k:g}", line)
         try:
             matLambda.append(parsed["l"])
         except TypeError as e:
             pass
-            #sys.stderr.write("TypeError occured:"+str(e)+"\n")
+            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
     return (min(matLambda), max(matLambda))
 
 
@@ -188,7 +189,7 @@ def getDataF1(yamlFile, lamb):
     epsi = 0
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            epsi = epsi + ((coeff[i] * lamb**2) / (lamb**2 - coeff[i + 1]**2))
+            epsi = epsi + ((coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1] ** 2))
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
@@ -212,7 +213,7 @@ def getDataF2(yamlFile, lamb):
     epsi = 0
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            epsi = epsi + ((coeff[i] * lamb**2) / (lamb**2 - coeff[i + 1]))
+            epsi = epsi + ((coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1]))
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
@@ -236,10 +237,9 @@ def getDataF3(yamlFile, lamb):
     epsi = coeff[0]
     if min(lamb) >= dataRange[0] and max(lamb) <= dataRange[1]:
         for i in range(1, np.size(coeff), 2):
-            epsi = epsi + coeff[i] * lamb**coeff[i + 1]
+            epsi = epsi + coeff[i] * lamb ** coeff[i + 1]
     else:
-        raise Exception(
-            "OutOfBands")
+        raise Exception("OutOfBands")
 
     n = []
     for ep in epsi:
@@ -259,19 +259,21 @@ def getDataF4(yamlFile, lamb):
     for i in range(0, len(coeff2)):
         coeff[i] = coeff2[i]
 
-   # print(coeff)
+    # print(coeff)
 
     epsi = coeff[0]
     if min(lamb) >= dataRange[0] and max(lamb) <= dataRange[1]:
-        epsi = epsi + coeff[1] * lamb**coeff[2] / (lamb**2 - coeff[3]**coeff[4])
-        epsi = epsi + coeff[5] * lamb**coeff[6] / (lamb**2 - coeff[7]**coeff[8])
-        epsi = epsi + coeff[9] * lamb**coeff[10]
-        epsi = epsi + coeff[11] * lamb**coeff[12]
-        epsi = epsi + coeff[13] * lamb**coeff[14]
-        epsi = epsi + coeff[15] * lamb**coeff[16]
+        epsi = epsi + coeff[1] * lamb ** coeff[2] / (lamb ** 2 - coeff[3] ** coeff[4])
+        epsi = epsi + coeff[5] * lamb ** coeff[6] / (lamb ** 2 - coeff[7] ** coeff[8])
+        epsi = epsi + coeff[9] * lamb ** coeff[10]
+        epsi = epsi + coeff[11] * lamb ** coeff[12]
+        epsi = epsi + coeff[13] * lamb ** coeff[14]
+        epsi = epsi + coeff[15] * lamb ** coeff[16]
     else:
-        raise Exception("OutOfBands", "No data for this material(" +
-                        yamlFile + " )for lambda=" + str(lamb))
+        raise Exception(
+            "OutOfBands",
+            "No data for this material(" + yamlFile + " )for lambda=" + str(lamb),
+        )
 
     n = []
     for ep in epsi:
@@ -291,7 +293,7 @@ def getDataF5(yamlFile, lamb):
     n = coeff[0]
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            n = n + (coeff[i] * lamb**coeff[i + 1])
+            n = n + (coeff[i] * lamb ** coeff[i + 1])
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
@@ -311,7 +313,7 @@ def getDataF6(yamlFile, lamb):
     n = coeff[0] + 1
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            n = n + coeff[i] / (coeff[i + 1] - lamb**(-2))
+            n = n + coeff[i] / (coeff[i + 1] - lamb ** (-2))
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
@@ -330,15 +332,16 @@ def getDataF7(yamlFile, lamb):
 
     n = coeff[0]
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
-        n +=  coeff[1] / (lamb**2 - 0.028)
-        n +=  coeff[2] / (lamb**2 - 0.028)**2
+        n += coeff[1] / (lamb ** 2 - 0.028)
+        n += coeff[2] / (lamb ** 2 - 0.028) ** 2
         for i in range(3, np.size(coeff)):
-            n +=  coeff[i] * lamb**(2*(i-2))
+            n += coeff[i] * lamb ** (2 * (i - 2))
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
 
     return n
+
 
 # this function is desined to get data from files in formula8 format
 def getDataF8(yamlFile, lamb):
@@ -351,14 +354,15 @@ def getDataF8(yamlFile, lamb):
 
     A = coeff[0]
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
-        A += coeff[1] * lamb**2 / (lamb**2 - coeff[2])
-        A += coeff[3] * lamb**2
+        A += coeff[1] * lamb ** 2 / (lamb ** 2 - coeff[2])
+        A += coeff[3] * lamb ** 2
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
 
-    n = ((1 + 2*A) / (1 - A))**0.5
+    n = ((1 + 2 * A) / (1 - A)) ** 0.5
     return n
+
 
 # this function is desined to get data from files in formula9 format
 def getDataF9(yamlFile, lamb):
@@ -371,18 +375,19 @@ def getDataF9(yamlFile, lamb):
 
     epsi = coeff[0]
     if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
-        epsi += coeff[1] / (lamb**2 - coeff[2])
-        epsi += coeff[3] * (lamb - coeff[4]) / ((lamb - coeff[4])**2 * + coeff[5])
+        epsi += coeff[1] / (lamb ** 2 - coeff[2])
+        epsi += coeff[3] * (lamb - coeff[4]) / ((lamb - coeff[4]) ** 2 * +coeff[5])
 
     else:
         raise Exception("OutOfBands", "No data for this material for this l")
 
-    n = epsi**0.5
+    n = epsi ** 0.5
     return n
 
 
 def Error(BaseException):
     pass
+
 
 # this is general function to check data type, and run appropriate actions
 
@@ -415,13 +420,12 @@ def getData(yamlFile, lamb):
     elif materialData["type"] == "formula 9":
         return getDataF9(yamlFile, lamb)
     else:
-        #	raise Error("UnsupportedDataType:This data type is currnetly not supported");
+        # 	raise Error("UnsupportedDataType:This data type is currnetly not supported");
         return np.zeros_like(lamb)
 
 
 def getRange(yamlFile):
     yamlStream, allData, materialData = yaml_extract(yamlFile)
-
 
     if materialData["type"] == "tabulated nk":
         return getRangeNK(yamlFile)
