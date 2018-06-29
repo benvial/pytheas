@@ -1,10 +1,9 @@
 
 import numpy as np
 import nlopt
-from pytheas.tools.plottools import *
 import numpy as np
 import scipy as sc
-
+from pytheas.tools.plottools import *
 # from scipy.interpolate import splev, splrep
 from scipy.interpolate import PchipInterpolator  # mono_cubic_interp
 
@@ -249,7 +248,7 @@ class TopologyOptimization:
         return sens
 
     def plot_design(
-        self, ax, xdes, ydes, varplot, x_grid, y_grid, typeplot="interp", **kwargs
+        self, ax, xdes, ydes, varplot, x_grid, y_grid, typeplot="interp", cmap=None, **kwargs
     ):
         if typeplot is "tri":
             triang = matplotlib.tri.Triangulation(xdes, ydes)
@@ -273,8 +272,8 @@ class TopologyOptimization:
             styleplot = "-o"
 
         x_obj = list(range(len(OBJ)))
-        ax.plot(x_obj, OBJ, styleplot, color=aotomat_purple)
-        ax.fill_between(x_obj, OBJ, 0., color=aotomat_purple, alpha=0.2)
+        ax.plot(x_obj, OBJ, styleplot, color="red")
+        ax.fill_between(x_obj, OBJ, 0., color="gray", alpha=0.2)
         ax.set_title(
             "Convergence: "
             + "global iteration = "
