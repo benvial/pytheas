@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>pytheas.periodic2D.FemModel</title>
+    <title>pytheas.periodic2D.FemModel &#8212; pytheas 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
@@ -128,31 +128,31 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>analysis</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>, </em><em>default &quot;diffraction&quot;</em>) – Analysis type: either “diffraction” (plane wave) or
+<li><strong>analysis</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;diffraction&quot;</em>) – Analysis type: either “diffraction” (plane wave) or
 “modal” (spectral problem)</li>
-<li><strong>pola</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>, </em><em>default &quot;TE&quot;</em>) – Polarization case: either “TE” (E along z) or “TM” (H along z)</li>
-<li><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Incident plane wave amplitude</li>
-<li><strong>lambda0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Incident plane wave wavelength in free space</li>
-<li><strong>lambda_mesh</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Wavelength to use for meshing</li>
-<li><strong>theta_deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 0</em>) – Incident plane wave angle (in degrees).
+<li><strong>pola</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;TE&quot;</em>) – Polarization case: either “TE” (E along z) or “TM” (H along z)</li>
+<li><strong>A</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Incident plane wave amplitude</li>
+<li><strong>lambda0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Incident plane wave wavelength in free space</li>
+<li><strong>lambda_mesh</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Wavelength to use for meshing</li>
+<li><strong>theta_deg</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 0</em>) – Incident plane wave angle (in degrees).
 Light comes from the top (travels along -y if normal incidence,
 <code class="docutils literal notranslate"><span class="pre">theta_deg=0</span></code> is set)</li>
-<li><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 0.8</em>) – Periodicity</li>
-<li><strong>h_sup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness superstrate</li>
-<li><strong>h_sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness substrate</li>
-<li><strong>h_layer1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 0.1</em>) – Thickness layer 1</li>
-<li><strong>h_layer2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 0.1</em>) – Thickness layer 2</li>
-<li><strong>h_des</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness layer design</li>
-<li><strong>h_pmltop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness pml top</li>
-<li><strong>h_pmlbot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness pml bot</li>
-<li><strong>a_pml</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – PMLs complex y-stretching parameter, real part</li>
-<li><strong>b_pml</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)"><em>float</em></a><em>, </em><em>default 1</em>) – PMLs complex y-stretching parameter, imaginary part</li>
-<li><strong>eps_sup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity superstrate</li>
-<li><strong>eps_sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity substrate</li>
-<li><strong>eps_layer1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer 1</li>
-<li><strong>eps_layer2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer 2</li>
-<li><strong>eps_des</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer design</li>
-<li><strong>eps_incl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.6)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity inclusion</li>
+<li><strong>d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 0.8</em>) – Periodicity</li>
+<li><strong>h_sup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness superstrate</li>
+<li><strong>h_sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness substrate</li>
+<li><strong>h_layer1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 0.1</em>) – Thickness layer 1</li>
+<li><strong>h_layer2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 0.1</em>) – Thickness layer 2</li>
+<li><strong>h_des</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness layer design</li>
+<li><strong>h_pmltop</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness pml top</li>
+<li><strong>h_pmlbot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – Thickness pml bot</li>
+<li><strong>a_pml</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – PMLs complex y-stretching parameter, real part</li>
+<li><strong>b_pml</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)"><em>float</em></a><em>, </em><em>default 1</em>) – PMLs complex y-stretching parameter, imaginary part</li>
+<li><strong>eps_sup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity superstrate</li>
+<li><strong>eps_sub</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity substrate</li>
+<li><strong>eps_layer1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer 1</li>
+<li><strong>eps_layer2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer 2</li>
+<li><strong>eps_des</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity layer design</li>
+<li><strong>eps_incl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#complex" title="(in Python v3.7)"><em>complex</em></a><em>, </em><em>default</em><em> (</em><em>1 - 0 * 1j</em><em>)</em>) – Permittivity inclusion</li>
 </ul>
 </td>
 </tr>
@@ -198,7 +198,7 @@ Light comes from the top (travels along -y if normal incidence,
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Q</strong> – Absorption coefficient</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.6)">float</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a></td>
 </tr>
 </tbody>
 </table>
@@ -212,7 +212,7 @@ Light comes from the top (travels along -y if normal incidence,
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.6)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
 get_field_map in python) or “pos” to be read by gmsh/getdp.</td>
 </tr>
 </tbody>
