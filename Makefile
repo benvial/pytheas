@@ -28,6 +28,9 @@ gh:
 
 publish: tag pipy
 
+test:
+	pytest -s --cov=./
+
 clean:
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
 	@rm -rf pygmsh.egg-info/ build/ dist/ tmp/

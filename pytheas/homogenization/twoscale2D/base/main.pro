@@ -6,8 +6,14 @@ Include "parameters.dat";
 
 Group {
     // Domains
-    cell         = Region[1000];
-    Omega          = Region[{cell}];
+    host         = Region[1000];
+
+    If (inclusion_flag)
+      incl          = Region[2000];
+      Omega          = Region[{host, incl}];
+    Else
+      Omega          = Region[{host}];
+    EndIf
 
     // Boundaries
   	SurfBlochLeft   = Region[101];
@@ -21,7 +27,14 @@ Group {
 // #############################################################################
 
 Function{
-    epsilonr[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+  If (inclusion_flag)
+    epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+    epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
+  Else
+    /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
+    epsilonr[host]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+  EndIf
+
 		If (y_flag)
 			E[] = Vector[0,1,0] ;
 		Else

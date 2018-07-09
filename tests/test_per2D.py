@@ -8,42 +8,8 @@ from pytheas import periodic2D
 from pytheas.periodic2D import FemModel, utils
 
 
-def test_per2D():
-    # -*- coding: utf-8 -*-
-    """
-    Simulating diffraction by a 2D metamaterial
-    ===========================================
-
-    Finite element simulation of the diffraction of a plane wave a mono-periodic
-    grating and calculation of diffraction efficiencies.
-    """
-
-    ##############################################################################
-    # First we import the :py:mod:`femmodel` module and some utility functions:
-
-    # Code source: Benjamin Vial
-    # License: MIT
-
-    ##############################################################################
-    # Then we need to instanciate the class :py:class:`FemModel`:
-
+def model(verbose=False):
     fem = FemModel()
-
-    ##############################################################################
-    # The model consist of a single unit cell with quasi-periodic boundary conditions
-    # in the :math:`x` direction enclosed with perfectly matched layers (PMLs)
-    # in the :math:`y` direction to truncate the semi infinite media. From top to bottom:
-    #
-    # - PML top
-    # - superstrate (incident medium)
-    # - layer 1
-    # - design layer: this is the layer containing the periodic pattern, can be continuous or discrete
-    # - layer 2
-    # - substrate
-    # - PML bottom
-    #
-    # We define here the opto-geometric parameters:
-
     # opto-geometric parameters  -------------------------------------------
     mum = 1e-6  #: flt: the scale of the problem (here micrometers)
     fem.d = 0.4 * mum  #: flt: period
@@ -71,55 +37,50 @@ def test_per2D():
     fem.parmesh = 11
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
-    fem.getdp_verbose = 4
-    fem.gmsh_verbose = 4
-    fem.python_verbose = 1
-
-    ##############################################################################
-    # We then initialize the model (copying files, etc...) and mesh the unit
-    # cell using gmsh
-
+    if verbose:
+        fem.getdp_verbose = 4
+        fem.gmsh_verbose = 4
+        fem.python_verbose = 1
     fem.initialize()
-    mesh = fem.make_mesh()
+    fem.make_mesh()
+    return fem
 
-    ##############################################################################
-    # We use the :py:mod:`genmat` module to generate a material pattern
-
+def aatest_per2D():
+    fem = model()
     genmat.np.random.seed(100)
     mat = genmat.MaterialDensity()  # instanciate
     mat.n_x, mat.n_y, mat.n_z = 2 ** 7, 2 ** 7, 1  # sizes
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials
-    matprop = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
+    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
     mat._threshold_val = np.random.permutation(mat.threshold_val)
     mat.pattern = mat.discrete_pattern
-    fig, ax = plt.subplots()
-    mat.plot_pattern(fig, ax, cmap=cmap)
-
-    ##############################################################################
-    # We now assign the permittivity
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
-    fem.matprop_pattern = matprop
-
-    ##############################################################################
-    # Now we're ready to compute the solution!
-
     fem.compute_solution()
-
-    ##############################################################################
-    # Finally we compute the diffraction efficiencies, absorption and energy balance
-
     effs_TE = fem.diffraction_efficiencies()
-    print("efficiencies TE", effs_TE)
-
-    ##############################################################################
-    # It is fairly easy to switch to TM polarization:
-
     fem.pola = "TM"
     fem.compute_solution()
     effs_TM = fem.diffraction_efficiencies()
     print("efficiencies TM", effs_TM)
+    rc = 0
+    assert rc == 0
+
+def test_ref_mesh():
+    fem = model()
+    genmat.np.random.seed(100)
+    mat = genmat.MaterialDensity()  # instanciate
+    mat.n_x, mat.n_y, mat.n_z = 2 ** 7, 2 ** 7, 1  # sizes
+    mat.xsym = True  # symmetric with respect to x?
+    mat.p_seed = mat.mat_rand  # fix the pattern random seed
+    mat.nb_threshold = 3  # number of materials
+    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
+    mat._threshold_val = np.random.permutation(mat.threshold_val)
+    mat.pattern = mat.discrete_pattern
+    fem = utils.refine_mesh(fem, mat)
+    fem.register_pattern(mat.pattern, mat._threshold_val)
+    fem.compute_solution()
+    fem.open_gmsh_gui()
     rc = 0
     assert rc == 0

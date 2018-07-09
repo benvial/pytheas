@@ -20,25 +20,30 @@ def between_range(x, xmin, xmax):
 
 def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
     mat_tmp = mat
-    mat_tmp.ratio_filter = [22, 22, 1]
+    mat_tmp.ratio_filter = [20, 20, 20]
     pattern = mat_tmp.pattern
     nodes, els, des = get_mesh_info(fem)
     if not lc_des:
-        lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
+        lc_des = 1 * fem.lambda_mesh / \
+            (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
     if not par:
         # par = [[0.1], [0.4], [1]]
-        par = [[0.5, 0.4, 0.2], [0.5, 0.3, 0.2], [1, 1, 1]]
+        par = [[1, 0.8, 0.7], [0.2, 0.15, 0.1], [0.6, 0.8, 1]]
     it = 0
     for smooth_factor, fc_min, fc_max in zip(*par):
         # break
         lc_min, lc_max = lc_des * fc_min, lc_des * fc_max
         # pattern1 = mat.filtered_pattern
-        grad_pat = np.gradient(pattern[:, :, 0])
-        grad_pat_x, grad_pat_y = grad_pat[0] / 1, grad_pat[1] / 1
-        grad_pat_norm = np.sqrt(grad_pat_x ** 2 + grad_pat_y ** 2).reshape(
-            pattern.shape
-        )
+        if fem.dim is 2:
+            grad_pat = np.gradient(pattern[:, :, 0])
+            grad_pat_norm = np.sqrt(
+                grad_pat[0] ** 2 + grad_pat[1] ** 2).reshape(pattern.shape)
+        else:
+            grad_pat = np.gradient(pattern)
+            grad_pat_norm = np.sqrt(
+                grad_pat[0] ** 2 + grad_pat[1] ** 2 + grad_pat[2] ** 2)
+
         grad_pat_norm = genmat.filter_pattern(
             grad_pat_norm, smooth_factor * mat_tmp.sigma
         )
@@ -46,9 +51,14 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         thres_grad = 1e-1
         grad_pat_norm[grad_pat_norm > thres_grad] = 1
         grad_pat_norm[grad_pat_norm <= thres_grad] = 0
+        grad_pat_norm = genmat.filter_pattern(
+            grad_pat_norm, smooth_factor * mat_tmp.sigma
+        )
+
         grad_pat_norm = 1 - normalize(grad_pat_norm)
         # grad_pat_norm = genmat.make_discrete_pattern(grad_pat_norm, np.linspace(0,1,2))
         grad_pat_norm = between_range(grad_pat_norm, lc_min, lc_max)
+        # for i in range(np.shape(grad_pat)[-1]): plt.clf, plt.imshow(grad_pat_norm[:,:,i]), plt.pause(0.01)
 
         if periodic:
             lc_bnd = (lc_max + lc_min) / 2
@@ -63,11 +73,15 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         path_size_mesh = fem.make_pos(nodes[0], density_grad, "size_mesh")
         fem.type_des = "elements"
         # if it == 0:
-        femio.mesh_model(fem.path_mesh, fem.path_bg_mesh, verbose=fem.gmsh_verbose)
+        if fem.dim is 3:
+            dim = [1, 2, 3]
+        else:
+            dim = [1, 2]
+        femio.mesh_model(fem.path_mesh, fem.path_bg_mesh,
+                         verbose=fem.gmsh_verbose, dim=dim)
         bgm = "-bgm " + path_size_mesh
         femio.mesh_model(
-            fem.path_mesh, fem.path_geo, other_option=bgm, verbose=fem.gmsh_verbose
-        )
+            fem.path_mesh, fem.path_geo, other_option=bgm, verbose=fem.gmsh_verbose,  dim=dim)
         nodes, els, des = get_mesh_info(fem)
         fem.content_mesh = fem.make_mesh_pos(els, nodes)
         # plt.clf()
@@ -78,7 +92,8 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         it += 1
         if fem.gmsh_verbose:
             print("mesh refinement iteration :", it)
-    return fem, nodes, els, des
+        fem.nodes, fem.els, fem.des = nodes, els, des
+    return fem
 
 
 def get_mesh_info(fem):

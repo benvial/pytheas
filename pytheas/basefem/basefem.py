@@ -51,6 +51,9 @@ class BaseFEM:
         self.bg_mesh_filename_ = "bg_mesh.geo"
         # : bool: wether or not to use an inclusion geometry instead of a material distribution
         self.inclusion_flag = False
+        self.pola = None
+        self.adjoint = False
+
 
         self.inclusion_filename_ = "inclusion.geo"
         self.content_mesh = ""
@@ -67,6 +70,7 @@ class BaseFEM:
         #: flt: PMLs mesh parameter
         self.parmesh_pml = 7.
         self.parmesh_incl = 10.
+        self.dim = 2  #: dimension of the problem
         self.quad_mesh_flag = False
         self.type_des = "elements"
         #: int: number of x points for postprocessing field maps
@@ -248,10 +252,15 @@ class BaseFEM:
         return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
     def make_mesh(self, other_option=" -cpu"):
+        if self.dim == 3:
+            dim = [1, 2, 3]
+        else:
+            dim = [1, 2]
         self.print_progress("Meshing model")
         femio.mesh_model(
             self.path_mesh,
             self.path_geo,
+            dim=dim,
             verbose=self.gmsh_verbose,
             other_option=other_option,
         )
@@ -326,13 +335,22 @@ class BaseFEM:
     def make_fdens(self, pattern):
         self.print_progress("Making density function")
         n_x, n_y, n_z = pattern.shape
-        x0, x1, y0, y1 = self.corners_des
+        if len(self.corners_des) == 6:
+            x0, x1, y0, y1, z0, z1 = self.corners_des
+        else:
+            x0, x1, y0, y1 = self.corners_des
         x = np.linspace(x0, x1, n_x + 1)
         y = np.linspace(y0, y1, n_y + 1)
-        z = 0
         dx, dy = x[1] - x[0], y[1] - y[0]
+        if len(self.corners_des) == 6:
+            z = np.linspace(z0, z1, n_z + 1)
+            dz =  z[1] - z[0]
+        else:
+            z0, z1 = 0, 0
+            dz = 0
         x = np.linspace(x0 + dx / 2, x1 - dx / 2, n_x)
         y = np.linspace(y0 + dy / 2, y1 - dy / 2, n_y)
+        z = np.linspace(z0 + dz / 2, z1 - dz / 2, n_z)
         xx, yy, zz = np.meshgrid(x, y, z, indexing="ij")
         points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
         fdens = sc.interpolate.NearestNDInterpolator(points, pattern.flatten())
@@ -369,7 +387,7 @@ class BaseFEM:
         return nodes, els, des
 
     def register_pattern(self, pattern, threshold_val):
-        self.pattern = pattern
+        self.pattern_ = pattern
         self.threshold_val = threshold_val
         self.content_mesh = self.make_mesh_pos(self.els, self.nodes)
         # define a density function from a pattern
@@ -382,7 +400,7 @@ class BaseFEM:
         self.print_progress("Assigning materials")
         # assign the permittivity
         self._eps_des, self.eps_pattern = assign_epsilon(
-            self.pattern, self.matprop_pattern, self.threshold_val, self.density
+            self.pattern_, self.matprop_pattern, self.threshold_val, self.density
         )
         # create a pos file to be read by getdp
         self.path_pos = self.make_eps_pos(self.des[0], self._eps_des)
