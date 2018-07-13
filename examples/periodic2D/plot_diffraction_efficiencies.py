@@ -90,6 +90,7 @@ mat.xsym = True  # symmetric with respect to x?
 mat.p_seed = mat.mat_rand  # fix the pattern random seed
 mat.nb_threshold = 3  # number of materials
 matprop = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
+
 mat._threshold_val = np.random.permutation(mat.threshold_val)
 mat.pattern = mat.discrete_pattern
 fig, ax = plt.subplots()

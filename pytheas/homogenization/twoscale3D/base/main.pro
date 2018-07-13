@@ -195,7 +195,7 @@ PostProcessing {
 PostOperation {
 { Name postop_x; NameOfPostProcessing postpro_x ;
 Operation {
-	Print [ solutionx , OnElementsOf Omega, File "solutionx.pos" ];
+	/* Print [ solutionx , OnElementsOf Omega, File "solutionx.pos" ]; */
 	Print [ Phixx[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixx.txt"];
 	Print [ Phixy[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixy.txt"];
 	Print [ Phixz[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixz.txt"];
