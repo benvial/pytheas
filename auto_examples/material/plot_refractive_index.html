@@ -140,14 +140,11 @@ wavelength range to interpolate:</p>
 </div>
 <p>And finally plot it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lambdas</span> <span class="p">,</span> <span class="n">epsilon</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span> <span class="n">aotomat_green</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Re($\varepsilon$)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lambdas</span> <span class="p">,</span> <span class="n">epsilon</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span> <span class="n">aotomat_purple</span><span class="p">,</span>
-         <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Im($\varepsilon$)&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lambdas</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Re($\varepsilon$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lambdas</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span> <span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Im($\varepsilon$)&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\lambda$ ($\mu m$)&#39;</span><span class="p">)</span>
-<span class="n">name</span> <span class="o">=</span> <span class="n">yamlFile</span><span class="p">[</span><span class="mi">5</span><span class="p">:][:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;complex permittivity from &quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;complex permittivity from &quot;</span> <span class="o">+</span> <span class="n">yamlFile</span><span class="p">[</span><span class="mi">5</span><span class="p">:][:</span><span class="o">-</span><span class="mi">4</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -156,10 +153,14 @@ wavelength range to interpolate:</p>
 <table class="docutils citation" frame="void" id="jc1972" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[JC1972]</a></td><td>(P. B. Johnson and R. W. Christy. Optical constants of the noble metals, Phys. Rev. B 6, 4370-4379 (1972)).</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[JC1972]</a></td><td><dl class="first last docutils">
+<dt>(P. B. Johnson and R. W. Christy. Optical constants of the noble</dt>
+<dd>metals, Phys. Rev. B 6, 4370-4379 (1972)).</dd>
+</dl>
+</td></tr>
 </tbody>
 </table>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  2.933 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  2.714 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-material-plot-refractive-index-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" href="../../_downloads/plot_refractive_index.py" download=""><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_refractive_index.py</span></code></a></div>
@@ -199,7 +200,7 @@ wavelength range to interpolate:</p>
         <div class="footer-copyright">
           <p>
               &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
           
           </p>
 
@@ -219,7 +220,7 @@ wavelength range to interpolate:</p>
       </p>
       <p>
           &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.5.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
       </p>
     </div> -->
   </footer>

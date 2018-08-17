@@ -22,7 +22,7 @@ generating material patterns.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Retrieve and plot the refractive index of a material in the refractiveindex.info  data. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="Retrieve and plot the refractive index of a material in the refractiveindex.info data. ">
 
 .. only:: html
 
