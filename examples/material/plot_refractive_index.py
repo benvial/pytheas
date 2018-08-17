@@ -3,7 +3,7 @@
 Importing refractive index from a database
 ==========================================
 
-Retrieve and plot the refractive index of a material in the refractiveindex.info 
+Retrieve and plot the refractive index of a material in the refractiveindex.info
 data.
 """
 
@@ -39,20 +39,19 @@ epsilon = (ncomplex**2)
 # And finally plot it:
 
 plt.close('all')
-fig, ax = plt.subplots(1, figsize=(6,4))
-plt.plot(lambdas , epsilon.real, 'r-', c= aotomat_green,
-         label=r'Re($\varepsilon$)')
-plt.plot(lambdas , epsilon.imag, 'r--', c= aotomat_purple,
-         label=r'Im($\varepsilon$)')
+fig, ax = plt.subplots(1, figsize=(6, 4))
+plt.plot(lambdas, epsilon.real, 'r-', label=r'Re($\varepsilon$)')
+plt.plot(lambdas, epsilon.imag, 'b--', label=r'Im($\varepsilon$)')
 plt.xlabel(r'$\lambda$ ($\mu m$)')
-name = yamlFile[5:][:-4]
-plt.title("complex permittivity from " + name)
+plt.title("complex permittivity from " + yamlFile[5:][:-4])
 plt.legend(loc=0)
 plt.show()
 
 
 ############################################################################
+#
 # .. [JC1972]
-#          (P. B. Johnson and R. W. Christy. Optical constants of the noble metals, Phys. Rev. B 6, 4370-4379 (1972)).
+#          (P. B. Johnson and R. W. Christy. Optical constants of the noble
+#           metals, Phys. Rev. B 6, 4370-4379 (1972)).
 # .. _`Johnson and Christy`:
 #     https://doi.org/10.1103/PhysRevB.6.4370

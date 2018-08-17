@@ -79,23 +79,29 @@ class FemModel(BaseFEM):
         return femio.load_table(self.tmp_dir + "/Vol.txt")
 
     def get_int_inveps(self):
-        return femio.load_table(self.tmp_dir + "/I_inveps.txt")
+        Ixx = femio.load_table(self.tmp_dir + "/I_inveps_xx.txt")
+        Iyy = femio.load_table(self.tmp_dir + "/I_inveps_yy.txt")
+        return Ixx, Iyy
 
     def postpro_effective_permittivity(self):
         phi = self.get_phi()
-        int_inveps = self.get_int_inveps()
+        int_inveps_xx, int_inveps_yy = self.get_int_inveps()
         V = self.get_vol()
-        epsinv_eff = (int_inveps * np.eye(2) + phi) / V
+        epsinv_eff = (np.diag([int_inveps_xx, int_inveps_yy]) + phi) / V
         eps_eff = np.linalg.inv(epsinv_eff)
         return eps_eff
 
-    def compute_epsilon_eff(self):
+    def compute_epsilon_eff(self, postpro_fields=False):
         self.y_flag = False
         self.compute_solution()
         self.postprocessing()
+        if postpro_fields:
+            self.postpro_fields(filetype="pos")
         self.y_flag = True
         self.compute_solution()
         self.postprocessing()
+        if postpro_fields:
+            self.postpro_fields(filetype="pos")
         eps_eff = self.postpro_effective_permittivity()
         if self.python_verbose:
             print("#" * 33)

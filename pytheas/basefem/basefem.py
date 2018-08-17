@@ -23,11 +23,7 @@ import tempfile
 from termcolor import colored
 from ..tools import femio
 
-# import sys
-# sys.path.insert(0, '/home/bench/Codes/python/packages/custom_inherit')
-# from custom_inherit import DocInheritMeta
-#
-# class BaseFEM(metaclass=DocInheritMeta(style="numpy")):
+
 class BaseFEM:
     """Base class for Finite Element models
 
@@ -53,7 +49,6 @@ class BaseFEM:
         self.inclusion_flag = False
         self.pola = None
         self.adjoint = False
-
 
         self.inclusion_filename_ = "inclusion.geo"
         self.content_mesh = ""
@@ -164,7 +159,8 @@ class BaseFEM:
         # create tmp geo file
         femio.maketmp(self.content_geo, "geometry.geo", dirname=self.tmp_dir)
         # create tmp geo file for background mesh
-        femio.maketmp(self.content_bg_mesh, "bg_mesh.geo", dirname=self.tmp_dir)
+        femio.maketmp(self.content_bg_mesh,
+                      "bg_mesh.geo", dirname=self.tmp_dir)
         # create tmp pro file
         femio.maketmp(self.content_pro, "main.pro", dirname=self.tmp_dir)
         # if self.inclusion_flag:
@@ -234,9 +230,8 @@ class BaseFEM:
         self.print_progress("Retrieving elements")
         return femio.get_elements(self.path_mesh, self.dom_des, self.celltype)
 
-    def make_eps_pos(self, des_ID, _eps_des):
+    def make_eps_pos(self, des_ID, _eps_des, posname="eps_des"):
         # create a pos file to be read by getdp
-        posname = "eps_des"
         self.print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
             des_ID, _eps_des, self.content_mesh, posname, type=self.type_des
@@ -276,7 +271,8 @@ class BaseFEM:
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
-        self.print_progress("Computing solution: " + self.analysis + " problem")
+        self.print_progress("Computing solution: " +
+                            self.analysis + " problem")
         if self.analysis == "diffraction":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
@@ -322,7 +318,8 @@ class BaseFEM:
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
         else:
-            raise TypeError("Wrong filetype specified: choose between txt and pos")
+            raise TypeError(
+                "Wrong filetype specified: choose between txt and pos")
 
     def get_qty(self, filename):
         file_path = os.path.join(self.tmp_dir, filename)
@@ -344,7 +341,7 @@ class BaseFEM:
         dx, dy = x[1] - x[0], y[1] - y[0]
         if len(self.corners_des) == 6:
             z = np.linspace(z0, z1, n_z + 1)
-            dz =  z[1] - z[0]
+            dz = z[1] - z[0]
         else:
             z0, z1 = 0, 0
             dz = 0

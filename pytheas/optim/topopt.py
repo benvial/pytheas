@@ -43,7 +43,7 @@ class TopologyOptimization:
 
     @property
     def thres(self):
-        return np.linspace(0, 1, self.nthres + 1)[1 : (self.nthres)]
+        return np.linspace(0, 1, self.nthres + 1)[1: (self.nthres)]
 
     @property
     def p_interp(self):
@@ -67,7 +67,8 @@ class TopologyOptimization:
     def proj(self, x):
         p = 0
         for thres in self.thres:
-            ptmp = np.tanh(self.beta * (x - thres)) / (np.tanh(thres * self.beta))
+            ptmp = np.tanh(self.beta * (x - thres)) / \
+                (np.tanh(thres * self.beta))
             # p += self.normalize(ptmp)
             p += ptmp
         p = (p + self.nthres - 1) / (2 * self.nthres - 2)
@@ -256,10 +257,12 @@ class TopologyOptimization:
             ymid = ydes[triang.triangles].mean(axis=1)
             cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":
-            varplot = self.mesh2grid(xdes, ydes, varplot, x_grid, y_grid, **kwargs)
+            varplot = self.mesh2grid(
+                xdes, ydes, varplot, x_grid, y_grid, **kwargs)
             cf = ax.imshow(np.flipud(varplot), cmap=cmap)
         else:
-            raise TypeError("Wrong typeplot specified: choose between interp and tri")
+            raise TypeError(
+                "Wrong typeplot specified: choose between interp and tri")
         cbar = plt.colorbar(cf, fraction=0.046, pad=0.04)
         # ax.set_title(r'Permittivity $\varepsilon$ in the design domain')
         ax.axis("image")
@@ -323,7 +326,8 @@ class TopologyOptimization:
         elif self.typeopt is "min":
             opt.set_min_objective(f_obj)
         else:
-            raise TypeError("Wrong typeopt specified: choose between max and min")
+            raise TypeError(
+                "Wrong typeopt specified: choose between max and min")
         # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,2,0), 1e-8)
         # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,-1,1), 1e-8)
         opt.set_maxeval(self.maxeval)

@@ -32,7 +32,10 @@ Function{
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
   Else
     /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
-    epsilonr[host]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+    epsilonr_xx[host]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+    epsilonr_yy[host]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+
+    epsilonr[host] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],1];
   EndIf
 
 		If (y_flag)
@@ -148,14 +151,18 @@ Resolution {
 PostProcessing {
     { Name postpro; NameOfFormulation electrostat_scalar; NameOfSystem S;
             Quantity {
+              { Name epsilonr_xx; Value { Local { [CompXX[ epsilonr[]]] ; In Omega; Jacobian JVol; } } }
+              { Name epsilonr_yy; Value { Local { [CompYY[ epsilonr[]]] ; In Omega; Jacobian JVol; } } }
               { Name solution; Value { Local { [ {u}] ; In Omega; Jacobian JVol; } } }
 							{ Name vx; Value { Local {[CompX[{d u}]] ; In Omega; Jacobian JVol; } } }
 							{ Name vy; Value { Local {[CompY[{d u}]] ; In Omega; Jacobian JVol; } } }
               { Name Ix; Value { Integral { [CompX[1/epsilonr[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Iy; Value { Integral { [CompY[1/epsilonr[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-							{ Name I_inveps; Value { Integral { [CompXX[1/epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+							{ Name I_inveps_xx; Value { Integral { [CompXX[1/epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+          		{ Name I_inveps_yy; Value { Integral { [CompYY[1/epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-		     }
+
+         }
     }
 
 }
@@ -181,11 +188,46 @@ Operation {
 	EndIf
 		Print [ Ix[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixx.txt"];
 		Print [ Iy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixy.txt"];
-		Print [ I_inveps[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps.txt"];
+		Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
+		Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
 		Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Vol.txt"];
 	EndIf
 	}
 }
 
+
+}
+
+// #############################################################################
+
+PostOperation {
+    { Name postop_fields_pos; NameOfPostProcessing postpro ;
+        Operation {
+
+          Print [ epsilonr_xx , OnElementsOf Omega, File "epsilonr_xx.pos", Name "epsilonr_xx"];
+          Print [ epsilonr_yy , OnElementsOf Omega, File "epsilonr_yy.pos", Name "epsilonr_yy"];
+          If (y_flag)
+            Print [ solution , OnElementsOf Omega, File "uy.pos", Name "uy"];
+            Print [ vx , OnElementsOf Omega, File "vyx.pos", Name "vyx"];
+            Print [ vy , OnElementsOf Omega, File "vyy.pos", Name "vyy"];
+          Else
+            Print [ solution , OnElementsOf Omega, File "ux.pos", Name "ux"];
+            Print [ vx , OnElementsOf Omega, File "vxx.pos", Name "vxx"];
+            Print [ vy , OnElementsOf Omega, File "vxy.pos", Name "vxy"];
+          EndIf
+        	}
+    }
+    /* { Name postop_fields_txt; NameOfPostProcessing postpro ;
+        Operation {
+              Print [ v , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+              { Niy-1, Nix-1} ,Format SimpleTable, File "v.txt" ];
+              Print [ vx , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+              { Niy-1, Nix-1} ,Format SimpleTable, File "vx.txt" ];
+              Print [ vy , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+              { Niy-1, Nix-1} ,Format SimpleTable, File "vy.txt" ];
+
+
+        	}
+    } */
 
 }

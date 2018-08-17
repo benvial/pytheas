@@ -3,9 +3,6 @@
 # License: MIT
 
 
-# import pytheas.basefem.basefem as basefem
-# import importlib
-# importlib.reload(basefem)
 import os
 import subprocess
 import numpy as np

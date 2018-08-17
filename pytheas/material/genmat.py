@@ -38,24 +38,25 @@ class MaterialDensity:
     def make_sym(self, p):
         if not self.sym8:
             if self.xsym:
-                p[-int(self.n_x / 2) :, :, :] = np.flipud(
-                    p[0 : int(self.n_x / 2), :, :]
+                p[-int(self.n_x / 2):, :, :] = np.flipud(
+                    p[0: int(self.n_x / 2), :, :]
                 )
             if self.ysym:
-                p[:, -int(self.n_y / 2) :, :] = np.fliplr(
-                    p[:, 0 : int(self.n_y / 2), :]
+                p[:, -int(self.n_y / 2):, :] = np.fliplr(
+                    p[:, 0: int(self.n_y / 2), :]
                 )
 
         if self.zsym:
-            p[:, -int(self.n_y / 2) :, :] = np.fliplr(p[:, 0 : int(self.n_y / 2), :])
+            p[:, -int(self.n_y / 2):,
+              :] = np.fliplr(p[:, 0: int(self.n_y / 2), :])
         if self.sym8:
             assert self.n_x == self.n_y, "x and y sampling must be the same!"
-            p1 = p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :]
+            p1 = p[0: int(self.n_x / 2), 0: int(self.n_y / 2), :]
             p1 = 0.5 * (p1 + np.transpose(p1, axes=[1, 0, 2]))
-            p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :] = p1
-            p[0 : int(self.n_x / 2), -int(self.n_y / 2) :, :] = np.fliplr(p1)
-            p[-int(self.n_x / 2) :, 0 : int(self.n_y / 2), :] = np.flipud(p1)
-            p[-int(self.n_x / 2) :, -int(self.n_y / 2) :, :] = np.flipud(np.fliplr(p1))
+            p[0: int(self.n_x / 2), 0: int(self.n_y / 2), :] = p1
+            p[0: int(self.n_x / 2), -int(self.n_y / 2):, :] = np.fliplr(p1)
+            p[-int(self.n_x / 2):, 0: int(self.n_y / 2), :] = np.flipud(p1)
+            p[-int(self.n_x / 2):, -int(self.n_y / 2)              :, :] = np.flipud(np.fliplr(p1))
         if self.indep_z:
             p = np.dstack([p[:, :, 0]] * self.n_z)
 
@@ -219,7 +220,8 @@ def ell_shapes_array(Nb, mat_grid, rloc, rwidth, m=2):
 
 
 def random_fibers(
-    f, mat_grid, d0=0.1, dr_ratio=0.3, touching=True, touching_ratio=0.01, m=2
+    f, mat_grid, d0=0.1, dr_ratio=0.3, touching=True, touching_ratio=0.01, m=2,
+    tol_f=5e-3, itmax=1000,
 ):
     b = 0
     n = 0
@@ -228,7 +230,6 @@ def random_fibers(
     i0 = 0
     i1 = 0
     btmp_list = []
-    tol_f = 5e-3
     cond_stop = True
     while cond_stop:
         rloc = np.random.rand(3) - 0.5
@@ -236,7 +237,7 @@ def random_fibers(
         r0 = d0 / 2
         rwidth = r0 + 2 * (0.5 - 1 * np.random.rand(3)) * dr_ratio * r0
         rwidth[1] = rwidth[0]
-        rloc = rloc * (1 - 2 * max(rwidth)) * 0.99
+        # rloc = rloc * (1 - 2 * max(rwidth)) * 0.99
         btmp = ell_shapes(mat_grid, rloc=rloc, rwidth=rwidth, m=m)
         btmp_list.append(btmp)
         b += btmp
@@ -268,7 +269,7 @@ def random_fibers(
         i0 += 1
         # print("i0 = ", i0)
         # print("i1 = ", i1)
-        if i0 > 10000:
+        if i0 > itmax:
             print("restarting...")
             print(F)
             b = np.zeros_like(b)
