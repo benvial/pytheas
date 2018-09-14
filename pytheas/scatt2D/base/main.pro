@@ -114,6 +114,7 @@ Function{
       GF_tar[] = -j[]/4 * hankel2[0, k0*Rho_tar[]];
       u_i[Omega_i]=GF[];
       A_beam[] = 1;
+      grad_u_i[] = k0*j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[], Y[], 0];
     Else
       If (beam_flag)
         /* Xrot[] = $X * Sin[theta] + $Y * Cos[theta]; */
@@ -122,6 +123,7 @@ Function{
         u_i[Omega_i] = A_beam[] * PW[A, alpha0, beta0];
       Else
         u_i[Omega_i] = PW[A, alpha0, beta0];
+        grad_u_i[] = j[]*u_i[] * TensorDiag[alpha0, beta0,0.];
         A_beam[] = 1;
       EndIf
 
@@ -162,7 +164,7 @@ Function{
         weight[] = epsilonr[];
     Else
         dual_i[]        = Vector[ beta0, -alpha0, 0] *u_i[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
-        source_eps[]    =  j[]*(1/epsilonr_annex[]-1/epsilonr[])* u_i[]*TensorDiag[alpha0, beta0, 0.];
+        source_eps[]    =  (1/epsilonr_annex[]-1/epsilonr[])* grad_u_i[];
         source_mu[]     =  k0^2*(mur[]-mur_annex[])*u_i[];
         weight[] = mur[];
 
@@ -240,8 +242,8 @@ Function{
       Sdes[] = hx_des*hy_des;
       /* coef_obj[] =  1/(Scomp[] - Sdes[]); */
       coef_obj[] = 1/(SquNorm[ui_tar[]]*Pi*r_target^2);
-      objective[] = coef_obj[] *SquNorm[$1] ;
-      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1 ]); //d_objective_du *ElementVol[]
+      objective[] = coef_obj[] *SquNorm[$1 + u_i[]] ;
+      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1 + u_i[]]); //d_objective_du *ElementVol[]
 
 
       db_deps[] = -k0^2*u_i[];
@@ -249,15 +251,15 @@ Function{
       dEq_deps[] = db_deps[] - dA_deps[] * ($1);
     Else
       /* objective[] = absorption[$1] ; */
-      coef_obj[] = 1/(Pi*r_target^2);
-      objective[] = coef_obj[] *SquNorm[$1] ;
-      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1 ]); //d_objective_du *ElementVol[]
+      coef_obj[] = 1/(SquNorm[ui_tar[]]*Pi*r_target^2);
+      objective[] = coef_obj[] *SquNorm[$1 + u_i[]] ;
+      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1  + u_i[]]); //d_objective_du *ElementVol[]
 
       /* beta_Q[] = coef_obj[] /(omega0*epsilon0* (Re[CompXX[epsilonr[]]]^2 + Im[CompXX[epsilonr[]]]^2 ) ); */
       /* adj_source[] =  - 2 * beta_Q[] * ( Conj[$1 + dual_i[] * CompXX[epsilonr_annex[]] /CompXX[epsilonr[]] ]  ) ; // ElementVol[]; //d_objective_du *ElementVol[] */
-      db_deps[] = -j[]/CompXX[epsilonr[]]^2* u_i[] * TensorDiag[alpha0, beta0,0.];
+      db_deps[] = 1/CompXX[epsilonr[]]^2* grad_u_i[];
       dA_deps[] = -1/CompXX[epsilonr[]]^2;
-      dEq_deps[] = db_deps[] - dA_deps[] * ($1);
+      dEq_deps[] = db_deps[] - dA_deps[] * TensorDiag[CompX[$1], CompY[$1],0.];//($1);
     EndIf
 
 
@@ -465,7 +467,9 @@ PostProcessing {
               { Name Q  ; Value { Integral { [ absorption[{u}] ] ; In Omega_source    ; Integration Int_1 ; Jacobian JVol ; } } }
                 { Name abso_density   ; Value { Local { [ absorption[{u}] ]; In Omega_source; Jacobian JVol; } } }
             Else
-              { Name dEq_deps   ; Value { Local { [dEq_deps[{d u}]] ; In Omega; Jacobian JVol; } } }
+              /* { Name dEq_deps   ; Value { Local { [dEq_deps[{d u}]] ; In Omega; Jacobian JVol; } } } */
+              { Name dEq_deps_x   ; Value { Local { [CompXX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name dEq_deps_y   ; Value { Local { [CompYY[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
               { Name Q ; Value { Integral { [ absorption[{Grad u}] ] ; In Omega_source ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name abso_density   ; Value { Local {[ absorption[{Grad u}] ]; In Omega_source; Jacobian JVol; } } }
             EndIf
@@ -549,10 +553,20 @@ PostOperation {
 
     { Name postop_dEq_deps; NameOfPostProcessing postpro ;
         Operation {
-        If (nodes_flag)
-          Print[dEq_deps, OnElementsOf Omega_design ,  Format NodeTable, File "dEq_deps.txt" ];
+        If (TE_flag)
+          If (nodes_flag)
+            Print[dEq_deps, OnElementsOf Omega_design ,  Format NodeTable, File "dEq_deps.txt" ];
+          Else
+            Print[dEq_deps, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps.txt" ];
+          EndIf
         Else
-          Print[dEq_deps, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps.txt" ];
+          If (nodes_flag)
+            Print[dEq_deps_x, OnElementsOf Omega_design ,  Format NodeTable, File "dEq_deps_x.txt" ];
+            Print[dEq_deps_y, OnElementsOf Omega_design ,  Format NodeTable, File "dEq_deps_y.txt" ];
+          Else
+            Print[dEq_deps_x, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps_x.txt" ];
+            Print[dEq_deps_y, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps_y.txt" ];
+          EndIf
         EndIf
       }
     }

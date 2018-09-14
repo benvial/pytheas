@@ -322,4 +322,7 @@ class FemModel(BaseFEM):
         return self.get_qty("adjoint.txt")
 
     def get_deq_deps(self):
-        return self.get_qty("dEq_deps.txt")
+        if self.pola is "TE":
+            return self.get_qty("dEq_deps.txt")
+        else:
+            return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
