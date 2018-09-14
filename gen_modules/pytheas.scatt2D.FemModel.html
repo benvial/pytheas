@@ -8,18 +8,18 @@
     <title>pytheas.scatt2D.FemModel &#8212; pytheas 0.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/gallery.css" type="text/css" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/custom_styles.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/custom_gallery.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/css/custom_pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_pygments.css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/js/custom.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -114,62 +114,142 @@
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.A">
 <code class="descname">A</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.A" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – incident plane wave amplitude</p>
+<dd><p>incident plane wave amplitude</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Ni_theta">
 <code class="descname">Ni_theta</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Ni_theta" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of theta points for computing the angular dependance
+<dd><p>number of theta points for computing the angular dependance
 of the modal coupling coefficients</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Nibox_x">
 <code class="descname">Nibox_x</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Nibox_x" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of x interpolation points on the design box</p>
+<dd><p>number of x interpolation points on the design box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Nibox_y">
 <code class="descname">Nibox_y</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Nibox_y" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of y interpolation points on the design box</p>
+<dd><p>number of y interpolation points on the design box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Nin2f_x">
 <code class="descname">Nin2f_x</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Nin2f_x" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of x interpolation points for near to far field calculations</p>
+<dd><p>number of x interpolation points for near to far field calculations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Nin2f_y">
 <code class="descname">Nin2f_y</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Nin2f_y" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of y interpolation points for near to far field calculations</p>
+<dd><p>number of y interpolation points for near to far field calculations</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.Nix">
 <code class="descname">Nix</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.Nix" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of x points for postprocessing field maps</p>
+<dd><p>number of x points for postprocessing field maps</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.a_pml">
 <code class="descname">a_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.a_pml" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – PMLs parameter, real part</p>
+<dd><p>PMLs parameter, real part</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.analysis">
 <code class="descname">analysis</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.analysis" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – analysys type (either “diffraction” or “modal”)</p>
+<dd><p>analysys type (either “diffraction” or “modal”)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.b_pml">
 <code class="descname">b_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.b_pml" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – PMLs parameter, imaginary part</p>
+<dd><p>PMLs parameter, imaginary part</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -193,61 +273,141 @@ of the modal coupling coefficients</p>
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.eps_des">
 <code class="descname">eps_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.eps_des" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – permittivity scattering box</p>
+<dd><p>permittivity scattering box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.eps_host">
 <code class="descname">eps_host</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.eps_host" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – permittivity host</p>
+<dd><p>permittivity host</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.eps_incl">
 <code class="descname">eps_incl</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.eps_incl" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – permittivity inclusion</p>
+<dd><p>permittivity inclusion</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.eps_sub">
 <code class="descname">eps_sub</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.eps_sub" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – permittivity substrate</p>
+<dd><p>permittivity substrate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.h_pml">
 <code class="descname">h_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.h_pml" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – thickness pml</p>
+<dd><p>thickness pml</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.hx_des">
 <code class="descname">hx_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.hx_des" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – x - thickness scattering box (design)</p>
+<dd><p>x - thickness scattering box (design)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.hy_des">
 <code class="descname">hy_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.hy_des" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – y - thickness scattering box</p>
+<dd><p>y - thickness scattering box</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.lambda0">
 <code class="descname">lambda0</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.lambda0" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – incident plane wave wavelength in free space</p>
+<dd><p>incident plane wave wavelength in free space</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.lambda0search">
 <code class="descname">lambda0search</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.lambda0search" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – wavelength around which to search eigenvalues</p>
+<dd><p>wavelength around which to search eigenvalues</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.lambda_mesh">
 <code class="descname">lambda_mesh</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.lambda_mesh" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – wavelength to use for meshing</p>
+<dd><p>wavelength to use for meshing</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -259,35 +419,75 @@ of the modal coupling coefficients</p>
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.nb_slice">
 <code class="descname">nb_slice</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.nb_slice" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of y slices points
+<dd><p>number of y slices points
 for postprocessing diffraction efficiencies</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.neig">
 <code class="descname">neig</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.neig" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>int</em> – number of eigenvalues searched for in modal analysis</p>
+<dd><p>number of eigenvalues searched for in modal analysis</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.pola">
 <code class="descname">pola</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.pola" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>str</em> – polarisation of the incident plane wave
+<dd><p>polarisation of the incident plane wave
 (either “TE” or “TM”)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.scan_dist_ratio">
 <code class="descname">scan_dist_ratio</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.scan_dist_ratio" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – such that <cite>scan_dist  = min(h_sup, hsub)/scan_dist_ratio</cite></p>
+<dd><p>such that <cite>scan_dist  = min(h_sup, hsub)/scan_dist_ratio</cite></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.scatt2D.FemModel.theta_deg">
 <code class="descname">theta_deg</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.scatt2D.FemModel.theta_deg" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>flt</em> – incident plane wave angle (in degrees).
+<dd><p>incident plane wave angle (in degrees).
 Light comes from the top
 (travels along -y if normal incidence, <cite>theta_deg=0</cite> is set)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -336,7 +536,7 @@ Light comes from the top
         <div class="footer-copyright">
           <p>
               &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
           
           </p>
 
@@ -356,7 +556,7 @@ Light comes from the top
       </p>
       <p>
           &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.0.<br/>
       </p>
     </div> -->
   </footer>
