@@ -23,9 +23,9 @@ Line Loop(20) = {11, 12, 13, 14};
 
 
 Plane Surface(30) = {20};
-
+/* 
 Periodic Line { 13 } = { 11 } ;
-Periodic Line { 14 } = { 12 } ;
+Periodic Line { 14 } = { 12 } ; */
 
 Physical Line(101) = {11};		        // Bloch_LeftX-
 Physical Line(103) = {13};		        // Bloch_RightX+

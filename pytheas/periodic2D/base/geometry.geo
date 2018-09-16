@@ -50,15 +50,15 @@ If (quad_mesh_flag)
   out[] = Extrude{d,0,0}{Line{4};Recombine;};
   out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};};*/
 Else
-  /*out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};};*/
-  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};};
-  Periodic Line {1} = {8};
+  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};};
+  /* out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};}; */
+  /* Periodic Line {1} = {8};
   Periodic Line {2} = {12};
   Periodic Line {3} = {16};
   Periodic Line {4} = {20};
   Periodic Line {5} = {24};
   Periodic Line {6} = {28};
-  Periodic Line {7} = {32};
+  Periodic Line {7} = {32}; */
 EndIf
 
 tag_des = 23;

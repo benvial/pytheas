@@ -44,7 +44,9 @@ Periodic Line {3} = {7};
 Periodic Line {9} = {10};
 Periodic Line {12} = {11};
 */
-Periodic Line {4} = {2} ;
+
+/* #################################### */
+/* Periodic Line {4} = {2} ;
 Periodic Line {4} = {6} ;
 Periodic Line {4} = {8} ;
 
@@ -58,7 +60,11 @@ Periodic Line {9} = {12} ;
 
 Periodic Surface 24 {1,2,3,4} = 16 {5,6,7,8};
 Periodic Surface 14 {10,5,9,1} = 22 {11,-7,12,-3};
-Periodic Surface 18 {9,8,12,4} = 20 {10,-6,11,-2};
+Periodic Surface 18 {9,8,12,4} = 20 {10,-6,11,-2}; */
+
+/* #################################### */
+
+
 //Periodic Surface {14} = {22};
 //Periodic Surface {18} = {20};
 

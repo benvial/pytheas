@@ -31,10 +31,11 @@ def model(verbose=False):
     fem.theta_deg = 0.  #: flt: incident angle
     fem.pola = "TE"  #: str: polarization (TE or TM)
     fem.lambda_mesh = 0.6 * mum  #: flt: incident wavelength
+    fem.quad_mesh_flag = False
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
     #: where n is the refractive index of the medium
-    fem.parmesh_des = 11
-    fem.parmesh = 11
+    fem.parmesh_des = 15
+    fem.parmesh = 15
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     if verbose:
@@ -47,7 +48,7 @@ def model(verbose=False):
     return fem
 
 def test_per2D():
-    fem = model()
+    fem = model(verbose=False)
     genmat.np.random.seed(100)
     mat = genmat.MaterialDensity()  # instanciate
     mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1  # sizes
@@ -74,13 +75,13 @@ def test_per2D():
     fem.compute_solution()
     effs_TM = fem.diffraction_efficiencies()
     print("effs_TM = ", effs_TM)
+    effs_TE_ref =  {'R': 0.36359712785074194, 'T': 0.29643642218613037, 'Q': 0.3401719739778612, 'B': 1.0002055240147336}
+    effs_TM_ref =  {'R': 0.3009075804855116, 'T': 0.574923403118587, 'Q': 0.1243539942247755, 'B': 1.000184977828874}
 
-    effs_TE_ref =  {'R': 0.35212108489066807, 'T': 0.3291313222679924, 'Q': 0.3194047743364716, 'B': 1.0006571814951322}
-    effs_TM_ref =  {'R': 0.3026768036041567, 'T': 0.5738647454176121, 'Q': 0.124004043520582, 'B': 1.0005455925423508}
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
-        npt.assert_almost_equal(a, b, decimal=5)
+        npt.assert_almost_equal(a, b, decimal=3)
     for a, b in zip(effs_TM.values(), effs_TM_ref.values()):
-        npt.assert_almost_equal(a, b, decimal=5)
+        npt.assert_almost_equal(a, b, decimal=3)
 
 def test_ref_mesh():
     fem = model()
