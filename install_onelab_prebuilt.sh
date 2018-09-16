@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 
 export ONELAB_PATH=$TRAVIS_BUILD_DIR/opt
+export VERSION="stable"
+# export VERSION="dev"
+
+if [ $VERSION == "stable" ]; then
+  export GMSH_VERSION="4.0.1"
+  export GETDP_VERSION="3.0.2"
+elif [ $VERSION == "dev" ]; then
+  export GMSH_VERSION="git"
+  export GETDP_VERSION="git"
+else
+  exit
+fi
+
 mkdir $ONELAB_PATH
 cd $ONELAB_PATH
 mkdir bin
@@ -8,17 +21,17 @@ mkdir bin
 echo "INSTALLING GMSH"
 echo '----------------'
 # gmsh
-wget -c http://gmsh.info/bin/Linux/gmsh-4.0.1-Linux64.tgz -O gmsh.tgz
+wget -c http://gmsh.info/bin/Linux/gmsh-$GMSH_VERSION-Linux64.tgz -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
-mv gmsh-3.0.6-Linux64/bin/gmsh $ONELAB_PATH/bin
+mv gmsh-$GMSH_VERSION-Linux64/bin/gmsh $ONELAB_PATH/bin
 rm -rf gmsh
 
 echo "INSTALLING GETDP"
 echo '----------------'
 # getdp
-wget -c http://getdp.info/bin/Linux/getdp-3.0.2-Linux64c.tgz -O getdp.tgz
+wget -c http://getdp.info/bin/Linux/getdp-$GETDP_VERSION-Linux64c.tgz -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
-mv getdp-2.11.3-Linux64/bin/getdp $ONELAB_PATH/bin
+mv getdp-$GETDP_VERSION-Linux64/bin/getdp $ONELAB_PATH/bin
 rm -rf getdp
