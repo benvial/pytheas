@@ -1,4 +1,5 @@
 import pytheas.tools.gmsh_io as gmsh_io
+
 # from meshio import gmsh_io
 import os
 import subprocess
@@ -48,8 +49,9 @@ def maketmp(content, filename, dirname="", mode="w"):
     return path
 
 
-def mesh_model(path_mesh, path_geo, mesh_format = "msh2",
-               dim=[1, 2], verbose=0, other_option=""):
+def mesh_model(
+    path_mesh, path_geo, mesh_format="msh2", dim=[1, 2], verbose=0, other_option=""
+):
     """Mesh the model using Gmsh_
 
 
@@ -64,7 +66,8 @@ def mesh_model(path_mesh, path_geo, mesh_format = "msh2",
         "gmsh -v "
         + str(verbose)
         + " "
-        + "-format " + str(mesh_format)
+        + "-format "
+        + str(mesh_format)
         + " "
         + path_geo
         + " "

@@ -24,8 +24,7 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
     pattern = mat_tmp.pattern
     nodes, els, des = get_mesh_info(fem)
     if not lc_des:
-        lc_des = 1 * fem.lambda_mesh / \
-            (fem.parmesh_des * np.sqrt(fem.eps_des.real))
+        lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
     if not par:
         # par = [[0.1], [0.4], [1]]
@@ -37,12 +36,14 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         # pattern1 = mat.filtered_pattern
         if fem.dim is 2:
             grad_pat = np.gradient(pattern[:, :, 0])
-            grad_pat_norm = np.sqrt(
-                grad_pat[0] ** 2 + grad_pat[1] ** 2).reshape(pattern.shape)
+            grad_pat_norm = np.sqrt(grad_pat[0] ** 2 + grad_pat[1] ** 2).reshape(
+                pattern.shape
+            )
         else:
             grad_pat = np.gradient(pattern)
             grad_pat_norm = np.sqrt(
-                grad_pat[0] ** 2 + grad_pat[1] ** 2 + grad_pat[2] ** 2)
+                grad_pat[0] ** 2 + grad_pat[1] ** 2 + grad_pat[2] ** 2
+            )
 
         grad_pat_norm = genmat.filter_pattern(
             grad_pat_norm, smooth_factor * mat_tmp.sigma
@@ -77,11 +78,17 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
             dim = [1, 2, 3]
         else:
             dim = [1, 2]
-        femio.mesh_model(fem.path_mesh, fem.path_bg_mesh,
-                         verbose=fem.gmsh_verbose, dim=dim)
+        femio.mesh_model(
+            fem.path_mesh, fem.path_bg_mesh, verbose=fem.gmsh_verbose, dim=dim
+        )
         bgm = "-bgm " + path_size_mesh
         femio.mesh_model(
-            fem.path_mesh, fem.path_geo, other_option=bgm, verbose=fem.gmsh_verbose,  dim=dim)
+            fem.path_mesh,
+            fem.path_geo,
+            other_option=bgm,
+            verbose=fem.gmsh_verbose,
+            dim=dim,
+        )
         nodes, els, des = get_mesh_info(fem)
         fem.content_mesh = fem.make_mesh_pos(els, nodes)
         # plt.clf()

@@ -62,11 +62,16 @@ class FemModel(BaseFEM):
 
     celltype = "tetra"
 
-
-
     @property
     def corners_des(self):
-        return -self.dx / 2, +self.dx / 2, -self.dy / 2, +self.dy / 2, -self.dz / 2, +self.dz / 2
+        return (
+            -self.dx / 2,
+            +self.dx / 2,
+            -self.dy / 2,
+            +self.dy / 2,
+            -self.dz / 2,
+            +self.dz / 2,
+        )
 
     def make_param_dict(self):
         param_dict = super().make_param_dict()
@@ -91,28 +96,29 @@ class FemModel(BaseFEM):
                 path_pos=self.path_pos,
                 argstr=argstr,
             )
-            postop = 'postop_' + coord
+            postop = "postop_" + coord
             subprocess.call(self.ppstr(postop), shell=True)
-
 
     def compute_epsilon_eff(self):
         self.print_progress("Postprocessing")
         phi = np.zeros((3, 3), dtype=complex)
         i1 = 0
-        for ax1 in ('x', 'y', 'z'):
+        for ax1 in ("x", "y", "z"):
             i2 = 0
-            for ax2 in ('x', 'y', 'z'):
+            for ax2 in ("x", "y", "z"):
                 phi[i1, i2] = femio.load_timetable(
-                    self.tmp_dir + '/Phi' + ax1 + ax2 + '.txt')
+                    self.tmp_dir + "/Phi" + ax1 + ax2 + ".txt"
+                )
                 i2 += 1
             i1 += 1
-        int_eps = femio.load_timetable(self.tmp_dir + '/Inteps.txt')
+        int_eps = femio.load_timetable(self.tmp_dir + "/Inteps.txt")
         Vcell = self.dx * self.dy * self.dz
         eps_eff = 1 / Vcell * (int_eps * np.eye(3) - phi)
         if self.python_verbose:
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
         return eps_eff
+
     #
     # def postpro_fields(self, filetype="txt"):
     #     """ Compute the field maps and output to a file.

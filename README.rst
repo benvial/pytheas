@@ -7,11 +7,16 @@
    :target: https://codecov.io/github/benvial/pytheas?branch=master
    :alt: Code Coverage
 
-.. image:: https://img.shields.io/codacy/grade/cd4027f2672e467ab4ee2c72d593f2c3.svg?style=for-the-badge
+.. image:: https://img.shields.io/codacy/grade/e27821fb6289410b8f58338c7e0bc686.svg?style=for-the-badge
    :target: https://app.codacy.com/app/benvial/pytheas/dashboard
    :alt: Codacy grade
 
+.. image:: https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge
+   :alt: Licence: MIT
 
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
+   :alt: Code style: black
+   
 
 Python Electromagnetic Analysis and Simulation with the Finite Element Method
 -----------------------------------------------------------------------------
@@ -29,7 +34,7 @@ It features built in models of:
 
 - periodic media in 2D and 3D with computation of diffraction efficiencies
 - scattering analysis in 2D and 3D
-- bloch mode analysis of metamaterials
+- Bloch mode analysis of metamaterials
 - treatment of open geometries with perfectly matched layers
 - tools to define arbitrary permittivity distributions
 - quasi-normal mode analysis

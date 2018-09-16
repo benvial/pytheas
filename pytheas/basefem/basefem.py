@@ -159,8 +159,7 @@ class BaseFEM:
         # create tmp geo file
         femio.maketmp(self.content_geo, "geometry.geo", dirname=self.tmp_dir)
         # create tmp geo file for background mesh
-        femio.maketmp(self.content_bg_mesh,
-                      "bg_mesh.geo", dirname=self.tmp_dir)
+        femio.maketmp(self.content_bg_mesh, "bg_mesh.geo", dirname=self.tmp_dir)
         # create tmp pro file
         femio.maketmp(self.content_pro, "main.pro", dirname=self.tmp_dir)
         # if self.inclusion_flag:
@@ -271,8 +270,7 @@ class BaseFEM:
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
-        self.print_progress("Computing solution: " +
-                            self.analysis + " problem")
+        self.print_progress("Computing solution: " + self.analysis + " problem")
         if self.analysis == "diffraction":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
@@ -318,8 +316,7 @@ class BaseFEM:
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
         else:
-            raise TypeError(
-                "Wrong filetype specified: choose between txt and pos")
+            raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def get_qty(self, filename):
         file_path = os.path.join(self.tmp_dir, filename)

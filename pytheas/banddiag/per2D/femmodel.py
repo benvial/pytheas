@@ -84,6 +84,7 @@ class BandsFEM2D(BaseFEM):
             path_pos=self.path_pos,
             argstr=argstr,
         )
+
     def postpro_fields(self, filetype="txt"):
         self.print_progress("Postprocessing fields")
         self.postpro_choice("postop_fields", filetype)
@@ -108,7 +109,6 @@ class BandsFEM2D(BaseFEM):
     #         ev = femio.load_timetable(filename)
     #         return ev.reshape((self.Nix, self.Niy, self.neig))
 
-    
     def postpro_eigenvectors(self, filetype="txt"):
         self.print_progress("Retrieving eigenvectors")
         self.postpro_choice("postop_eigenvectors_" + self.pola, filetype)

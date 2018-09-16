@@ -8,6 +8,7 @@ from pytheas import periodic2D
 from pytheas.periodic2D import FemModel, utils
 import numpy.testing as npt
 
+
 def model(verbose=False):
     fem = FemModel()
     # opto-geometric parameters  -------------------------------------------
@@ -47,6 +48,7 @@ def model(verbose=False):
 
     return fem
 
+
 def test_per2D():
     fem = model(verbose=False)
     genmat.np.random.seed(100)
@@ -55,14 +57,13 @@ def test_per2D():
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 -0.01j]  # refractive index values
+    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
     mat._threshold_val = np.random.permutation(mat.threshold_val)
     mat.pattern = mat.discrete_pattern
 
-    lc_des = fem.lambda0 / (fem.eps_des.real**0.5*fem.parmesh_des)
+    lc_des = fem.lambda0 / (fem.eps_des.real ** 0.5 * fem.parmesh_des)
     par = [[0.5, 0.4, 0.3], [0.4, 0.3, 0.1], [0.8, 0.9, 1]]
     fem = utils.refine_mesh(fem, mat, lc_des=lc_des, par=par)
-
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()
@@ -75,13 +76,24 @@ def test_per2D():
     fem.compute_solution()
     effs_TM = fem.diffraction_efficiencies()
     print("effs_TM = ", effs_TM)
-    effs_TE_ref =  {'R': 0.36359712785074194, 'T': 0.29643642218613037, 'Q': 0.3401719739778612, 'B': 1.0002055240147336}
-    effs_TM_ref =  {'R': 0.3009075804855116, 'T': 0.574923403118587, 'Q': 0.1243539942247755, 'B': 1.000184977828874}
+    effs_TE_ref = {
+        "R": 0.36359712785074194,
+        "T": 0.29643642218613037,
+        "Q": 0.3401719739778612,
+        "B": 1.0002055240147336,
+    }
+    effs_TM_ref = {
+        "R": 0.3009075804855116,
+        "T": 0.574923403118587,
+        "Q": 0.1243539942247755,
+        "B": 1.000184977828874,
+    }
 
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
         npt.assert_almost_equal(a, b, decimal=3)
     for a, b in zip(effs_TM.values(), effs_TM_ref.values()):
         npt.assert_almost_equal(a, b, decimal=3)
+
 
 def test_ref_mesh():
     fem = model()
@@ -91,7 +103,7 @@ def test_ref_mesh():
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2 ]  # refractive index values
+    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
     mat._threshold_val = np.random.permutation(mat.threshold_val)
     mat.pattern = mat.discrete_pattern
     fem = utils.refine_mesh(fem, mat)

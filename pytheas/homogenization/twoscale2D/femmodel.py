@@ -7,6 +7,7 @@ from ...basefem import BaseFEM
 
 pi = np.pi
 
+
 class FemModel(BaseFEM):
     """A class for the two scale convergence homogenization of
     a 2D medium using a finite element model. See the base class :class:`BaseFEM`
@@ -15,10 +16,8 @@ class FemModel(BaseFEM):
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
 
-
     #: flt: caracteristic length of the problem (typically the period)
     l_carac = 1.0
-
 
     #: flt: global mesh parameter
     #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
@@ -27,8 +26,8 @@ class FemModel(BaseFEM):
     # opto-geometric parameters  -------------------------------------------
     dx = 1  #: flt: period x
     dy = 1  #: flt: period y
-    eps_host = 1-0j
-    eps_incl = 1-0j
+    eps_host = 1 - 0j
+    eps_incl = 1 - 0j
     dom_des = 1000  #: design domain number (check .geo/.pro files)
 
     y_flag = False
@@ -60,8 +59,6 @@ class FemModel(BaseFEM):
             path_pos=self.path_pos,
             argstr=argstr,
         )
-
-
 
     def postprocessing(self):
         self.print_progress("Postprocessing")
