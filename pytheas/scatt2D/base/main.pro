@@ -114,7 +114,7 @@ Function{
       GF_tar[] = -j[]/4 * hankel2[0, k0*Rho_tar[]];
       u_i[Omega_i]=GF[];
       A_beam[] = 1;
-      grad_u_i[] = k0*j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[], Y[], 0];
+      grad_u_i[] = k0*j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[]-xs, Y[]-ys, 0];
     Else
       If (beam_flag)
         /* Xrot[] = $X * Sin[theta] + $Y * Cos[theta]; */
@@ -160,7 +160,7 @@ Function{
         EndIf
 
         source_eps[]   =  k0^2*(epsilonr[]-epsilonr_annex[])*u_i[];
-        source_mu[]    =  (1/mur_annex[]-1/mur[])  * ( grad_A_beam[] + j[]* u_i[] * TensorDiag[alpha0, beta0, 0.] );
+        source_mu[]    =  (1/mur_annex[]-1/mur[])  * grad_u_i[] ;
         weight[] = epsilonr[];
     Else
         dual_i[]        = Vector[ beta0, -alpha0, 0] *u_i[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
