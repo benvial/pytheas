@@ -18,13 +18,15 @@ def between_range(x, xmin, xmax):
     return (xmax - xmin) * x + xmin
 
 
-def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
+def refine_mesh(fem, mat, lc_des=None, par=None, nmax=5, periodic_x=False,
+                periodic_y=False):
     mat_tmp = mat
     mat_tmp.ratio_filter = [20, 20, 20]
     pattern = mat_tmp.pattern
     nodes, els, des = get_mesh_info(fem)
     if not lc_des:
-        lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
+        lc_des = 1 * fem.lambda_mesh / \
+            (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
     if not par:
         # par = [[0.1], [0.4], [1]]
@@ -61,12 +63,14 @@ def refine_mesh(fem, mat, lc_des=None, par=None, periodic=False):
         grad_pat_norm = between_range(grad_pat_norm, lc_min, lc_max)
         # for i in range(np.shape(grad_pat)[-1]): plt.clf, plt.imshow(grad_pat_norm[:,:,i]), plt.pause(0.01)
 
-        if periodic:
-            lc_bnd = (lc_max + lc_min) / 2
-            grad_pat_norm[:, 0] = lc_bnd
-            grad_pat_norm[:, -1] = lc_bnd
-            grad_pat_norm[0, :] = lc_bnd
-            grad_pat_norm[-1, :] = lc_bnd
+        lc_bnd = lc_min  # (lc_max + lc_min) / 2
+        if periodic_y:
+
+            grad_pat_norm[:, :nmax] = lc_bnd
+            grad_pat_norm[:, -nmax:] = lc_bnd
+        if periodic_x:
+            grad_pat_norm[:nmax, :] = lc_bnd
+            grad_pat_norm[-nmax:, :] = lc_bnd
 
         fdens_grad = fem.make_fdens(grad_pat_norm)
         density_grad = fdens_grad(nodes[1])

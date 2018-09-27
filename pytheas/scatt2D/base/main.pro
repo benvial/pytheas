@@ -77,6 +77,8 @@ Function{
 
 
     // Permittivities
+    eps[] = -3 -0.01*j[];
+    mu[] = -3-0.01*j[];
 
 
     If (inclusion_flag)
@@ -84,8 +86,9 @@ Function{
       epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
       epsilonr_annex[incl]   = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
     Else
-      epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
-      /*epsilonr[design]         = TensorDiag[1,1,1];*/
+      /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
+      epsilonr[design]         = eps [] *TensorDiag[1,1,1];
+      /* epsilonr[design]         = TensorDiag[-1.1,-1.1, 1]; */
     EndIf
     epsilonr[host]            = Complex[eps_host_re, eps_host_im] * TensorDiag[1,1,1];
     epsilonr[Omega_pml]      = eps_host_re*TensorDiag[sz[]*sy[]/sx[],sx[]*sz[]/sy[],sx[]*sy[]/sz[]];
@@ -98,7 +101,8 @@ Function{
     // Permeabilities
     mur[Omega_pml]              = TensorDiag[sz[]*sy[]/sx[],sx[]*sz[]/sy[],sx[]*sy[]/sz[]];
     mur[host]                 = TensorDiag[1,1,1];
-    mur[design]              = TensorDiag[1,1,1];
+    /* mur[design]              = TensorDiag[1,1,1]; */
+    mur[design]              = mu[]*TensorDiag[1,1,1];
     mur_annex[Omega]         = TensorDiag[1,1,1];
     If (inclusion_flag)
       mur[incl]                 = TensorDiag[1,1,1];
@@ -114,13 +118,17 @@ Function{
       GF_tar[] = -j[]/4 * hankel2[0, k0*Rho_tar[]];
       u_i[Omega_i]=GF[];
       A_beam[] = 1;
-      grad_u_i[] = k0*j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[]-xs, Y[]-ys, 0];
+      grad_u_i[] = -k0 * j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[]-xs, Y[]-ys, 0];
     Else
       If (beam_flag)
         /* Xrot[] = $X * Sin[theta] + $Y * Cos[theta]; */
         Yrot[] = $X * Cos[theta] + $Y * Sin[theta];
         A_beam[] = Exp[- (Yrot[]^2)/(2 * waist^2) ];
-        u_i[Omega_i] = A_beam[] * PW[A, alpha0, beta0];
+        pw[] =  PW[A, alpha0, beta0];
+        u_i[Omega_i] = A_beam[] *pw[];
+        gradpw[] = j[]*pw[] * TensorDiag[alpha0, beta0,0.];
+        gradAbeam[] = -1/waist^2 * Yrot[] * A_beam[]* TensorDiag[Cos[theta], Sin[theta],0.];
+        grad_u_i[]  = A_beam[] * gradpw[] + gradAbeam[] * pw[];
       Else
         u_i[Omega_i] = PW[A, alpha0, beta0];
         grad_u_i[] = j[]*u_i[] * TensorDiag[alpha0, beta0,0.];
@@ -164,7 +172,7 @@ Function{
         weight[] = epsilonr[];
     Else
         dual_i[]        = Vector[ beta0, -alpha0, 0] *u_i[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
-        source_eps[]    =  (1/epsilonr_annex[]-1/epsilonr[])* grad_u_i[];
+        source_eps[]    =  (1/epsilonr_annex[]-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]])* grad_u_i[];
         source_mu[]     =  k0^2*(mur[]-mur_annex[])*u_i[];
         weight[] = mur[];
 
@@ -347,9 +355,11 @@ Formulation{
         If (TE_flag)
             Galerkin { [k0^2*CompZZ[epsilonr[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompXX[mur[]]]*Dof{Grad u} , {Grad u}];
+            Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompZZ[mur[]]]*Dof{Grad u} , {Grad u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($Source ? source[] : 0) , {u}];
+            Galerkin { [ ($Source ? source_eps[] : 0) , {u}];
+            In Omega_source; Jacobian JVol; Integration Int_1;  }
+            Galerkin { [ ($Source ? source_mu[] : 0) , {d u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             /* Galerkin { [ ($SourceAdj ? adj_source[{u}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  } */
@@ -358,9 +368,11 @@ Formulation{
         Else
             Galerkin { [k0^2*CompZZ[mur[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompXX[epsilonr[]]]*Dof{Grad u} , {Grad u}];
+            Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]]*Dof{Grad u} , {Grad u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($Source ? source[] : 0) , {Grad u}];
+            Galerkin { [ ($Source ? source_eps[] : 0) , {d u}];
+            In Omega_source; Jacobian JVol; Integration Int_1;  }
+            Galerkin { [ ($Source ? source_mu[] : 0) , {u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  }

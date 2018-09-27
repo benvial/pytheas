@@ -1,5 +1,5 @@
 Include "parameters.dat";
-/*Geometry.Tolerance = 1e-4 ;*/
+/* Geometry.Tolerance = 1e-7 ; */
 lc_des          = lambda_mesh/(parmesh_des*Sqrt[Fabs[eps_des_re]]);
 lc_layer1       = lambda_mesh/(parmesh*Sqrt[Fabs[eps_layer1_re]]);
 lc_layer2       = lambda_mesh/(parmesh*Sqrt[Fabs[eps_layer2_re]]);
@@ -33,50 +33,56 @@ Point(7)  = {-d/2., h_des  + h_layer1+ h_layer2 + h_sup         , 0. , lc_sup};
 Point(8)  = {-d/2., h_des  + h_layer1+ h_layer2 + h_sup +h_pmltop    , 0. , lc_pmltop};
 
 
-Line(1) = {1, 2};
-Line(2) = {2, 3};
-Line(3) = {3, 4};
-Line(4) = {4, 5};
-Line(5) = {5, 6};
-Line(6) = {6, 7};
-Line(7) = {7, 8};
+Curve(1) = {1, 2};
+Curve(2) = {2, 3};
+Curve(3) = {3, 4};
+Curve(4) = {4, 5};
+Curve(5) = {5, 6};
+Curve(6) = {6, 7};
+Curve(7) = {7, 8};
 
 
 If (quad_mesh_flag)
-  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Layers{d/lc_des};};
-  out[] = Extrude{d,0,0}{Line{4};Layers{d/lc_des};Recombine;};
-  out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};Layers{d/lc_des};};
-  /*out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};};
-  out[] = Extrude{d,0,0}{Line{4};Recombine;};
-  out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};};*/
-Else
-  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};};
-  /* out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};}; */
-  /* Periodic Line {1} = {8};
-  Periodic Line {2} = {12};
-  Periodic Line {3} = {16};
-  Periodic Line {4} = {20};
-  Periodic Line {5} = {24};
-  Periodic Line {6} = {28};
-  Periodic Line {7} = {32}; */
+  out[] = Extrude{d,0,0}{Curve{1};Curve{2};Curve{3};Layers{d/lc_des};};
+  out[] = Extrude{d,0,0}{Curve{4};Layers{d/lc_des};Recombine;};
+  out[] = Extrude{d,0,0}{Curve{5};Curve{6};Curve{7};Layers{d/lc_des};};
+  /*out[] = Extrude{d,0,0}{Curve{1};Curve{2};Curve{3};};
+  out[] = Extrude{d,0,0}{Curve{4};Recombine;};
+  out[] = Extrude{d,0,0}{Curve{5};Curve{6};Curve{7};};*/
+  Else
+    /* If (extrude_mesh_flag) */
+      /* out[] = Extrude{d,0,0}{Curve{1};Curve{2};Curve{3};Curve{4};Curve{5};Curve{6};Curve{7};Layers{d/lc_des};}; */
+    /* Else */
+      out[] = Extrude{d,0,0}{Curve{1};Curve{2};Curve{3};Curve{4};Curve{5};Curve{6};Curve{7};};
+    /* EndIf */
+
+
+    /* Periodic Curve {1} = {8};
+    Periodic Curve {2} = {12};
+    Periodic Curve {3} = {16};
+    Periodic Curve {4} = {20};
+    Periodic Curve {5} = {24};
+    Periodic Curve {6} = {28};
+    Periodic Curve {7} = {32}; */
+
 EndIf
 
 tag_des = 23;
 If (inclusion_flag)
   tag_des = 730;
   Include "inclusion.geo";
-  Line Loop(721) = {4, 22, -20, -18};
-  Line Loop(722) = {1000};
+  Curve Loop(721) = {4, 22, -20, -18};
+  Curve Loop(722) = {1000};
   Plane Surface(tag_des) = {721, 722};
   Plane Surface(731) = {722};
 EndIf
 
 
 
-Physical Line(101) = {1, 2, 3, 4, 5, 6, 7};          // Bloch_LeftX-
-Physical Line(102) = {8, 12, 16, 20, 24, 28, 32};    // Bloch_RightX+
-Physical Line(110) = {9, 34};                        // Dirichlet
-Physical Line(120) = {10,14,18,22,26,30};            // Continuity
+Physical Curve(101) = {1, 2, 3, 4, 5, 6, 7};          // Bloch_LeftX-
+Physical Curve(102) = {8, 12, 16, 20, 24, 28, 32};    // Bloch_RightX+
+Physical Curve(110) = {9, 34};                        // Dirichlet
+Physical Curve(120) = {10,14,18,22,26,30};            // Continuity
 
 Physical Surface(1000) = {11};        // PML_bot
 Physical Surface(2000) = {15};        // sub
@@ -99,6 +105,5 @@ Coherence;
 Coherence;
 Coherence;
 Coherence;
-/*Mesh.RemeshAlgorithm = 1; // automatic
-Mesh.RemeshParametrization = 7; // conformal finite element
-Mesh.Algorithm = 6; // Frontal*/
+Coherence Mesh;
+/* Mesh.Algorithm = 6; // Frontal */

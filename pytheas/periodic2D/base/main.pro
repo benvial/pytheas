@@ -89,7 +89,8 @@ Function{
       epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
       epsilonr_annex[incl]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
     Else
-        epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      /* epsilonr[design]         = -2* TensorDiag[1,1,1]; */
     EndIf
 
     epsilonr_annex[sup]      = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
@@ -138,15 +139,21 @@ Function{
         dual_i[]      = Vector[-beta_sup, alpha_sup, 0] *u_i[] / (omega0*mu0*CompXX[mur_annex[]])  ;
         dual_t[]      = Vector[-beta_sub, alpha_sup, 0] *u_t[] / (omega0*mu0*CompXX[mur_annex[]])  ;
         dual_r[]      = Vector[ beta_sup, alpha_sup, 0] *u_r[] / (omega0*mu0*CompXX[mur_annex[]])  ;
-        source[]      =  k0^2*(epsilonr[]-epsilonr_annex[])*u_1[];
+        source_eps[]      =  k0^2*(epsilonr[]-epsilonr_annex[])*u_1[];
+        xi[] = TensorDiag[CompYY[mur[]],CompXX[mur[]],CompZZ[mur[]]];
+        source_r[]    =  j[]*(1/mur_annex[]-1/xi[])* u_r[]*TensorDiag[alpha_sup, -beta_sup,0.];
+        source_i[]    =  j[]*(1/mur_annex[]-1/xi[])* u_i[]*TensorDiag[alpha_sup, beta_sup,0.];
+        source_mu[]      =  source_r[]+ source_i[];
         weight[] = epsilonr[];
     Else
         dual_i[]      = Vector[ beta_sup, -alpha_sup, 0] *u_i[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
         dual_t[]      = Vector[ beta_sub,  -alpha_sup, 0] *u_t[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
         dual_r[]      = Vector[-beta_sup,  -alpha_sup, 0] *u_r[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
-        source_r[]    =  j[]*(1/epsilonr_annex[]-1/epsilonr[])* u_r[]*TensorDiag[alpha_sup, -beta_sup,0.];
-        source_i[]    =  j[]*(1/epsilonr_annex[]-1/epsilonr[])* u_i[]*TensorDiag[alpha_sup, beta_sup,0.];
-        source[]      =  source_r[]+ source_i[];
+        source_mu[]      =  k0^2*(mur[]-mur_annex[])*u_1[];
+        xi[] = TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]];
+        source_r[]    =  j[]*(1/epsilonr_annex[]-1/xi[])* u_r[]*TensorDiag[alpha_sup, -beta_sup,0.];
+        source_i[]    =  j[]*(1/epsilonr_annex[]-1/xi[])* u_i[]*TensorDiag[alpha_sup, beta_sup,0.];
+        source_eps[]      =  source_r[]+ source_i[];
         weight[] = mur[];
     EndIf
 
@@ -323,9 +330,11 @@ Formulation{
         If (TE_flag)
             Galerkin { [k0^2*CompZZ[epsilonr[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompXX[mur[]]]*Dof{d u} , {d u}];
+            Galerkin { [-1/xi[]*Dof{d u} , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($Source ? source[] : 0) , {u}];
+            Galerkin { [ ($Source ? source_eps[] : 0) , {u}];
+            In Omega_source; Jacobian JVol; Integration Int_1;  }
+            Galerkin { [ ($Source ? source_mu[] : 0) , {d u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  }
@@ -334,9 +343,11 @@ Formulation{
         Else
             Galerkin { [k0^2*CompZZ[mur[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompXX[epsilonr[]]]*Dof{d u} , {d u}];
+            Galerkin { [-1/xi[]*Dof{d u} , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($Source ? source[] : 0) , {d u}];
+            Galerkin { [ ($Source ? source_mu[] : 0) , {u}];
+            In Omega_source; Jacobian JVol; Integration Int_1;  }
+            Galerkin { [ ($Source ? source_eps[] : 0) , {d u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1;  }

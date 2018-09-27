@@ -35,8 +35,8 @@ def model(verbose=False):
     fem.quad_mesh_flag = False
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
     #: where n is the refractive index of the medium
-    fem.parmesh_des = 15
-    fem.parmesh = 15
+    fem.parmesh_des = 10
+    fem.parmesh = 10
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     if verbose:
@@ -49,45 +49,40 @@ def model(verbose=False):
     return fem
 
 
-def test_per2D():
-    fem = model(verbose=False)
+def test_per2D(verbose=False):
+    fem = model(verbose=verbose)
     genmat.np.random.seed(100)
     mat = genmat.MaterialDensity()  # instanciate
     mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1  # sizes
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
+    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j,
+                           3 - 0.01j]  # refractive index values
     mat._threshold_val = np.random.permutation(mat.threshold_val)
     mat.pattern = mat.discrete_pattern
 
     lc_des = fem.lambda0 / (fem.eps_des.real ** 0.5 * fem.parmesh_des)
+    # par = [[0.5, 0.4, 0.15], [0.4, 0.3, 0.1], [0.1, 0.5, 1]]
     par = [[0.5, 0.4, 0.3], [0.4, 0.3, 0.1], [0.8, 0.9, 1]]
-    fem = utils.refine_mesh(fem, mat, lc_des=lc_des, par=par)
+    fem = utils.refine_mesh(fem, mat, lc_des=lc_des,
+                            par=par, periodic_x=True, nmax=10)
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()
     effs_TE = fem.diffraction_efficiencies()
-
-    print("effs_TE = ", effs_TE)
-    fem.postpro_fields(filetype="pos")
+    # print("effs_TE = ", effs_TE)
+    # fem.postpro_fields(filetype="pos")
     # fem.open_gmsh_gui()
     fem.pola = "TM"
     fem.compute_solution()
     effs_TM = fem.diffraction_efficiencies()
-    print("effs_TM = ", effs_TM)
-    effs_TE_ref = {
-        "R": 0.36359712785074194,
-        "T": 0.29643642218613037,
-        "Q": 0.3401719739778612,
-        "B": 1.0002055240147336,
-    }
-    effs_TM_ref = {
-        "R": 0.3009075804855116,
-        "T": 0.574923403118587,
-        "Q": 0.1243539942247755,
-        "B": 1.000184977828874,
-    }
+    # print("effs_TM = ", effs_TM)
+
+    effs_TE_ref = {'R': 0.34977599566487566, 'T': 0.33438882925399116,
+                   'Q': 0.3163139076312594, 'B': 1.000478732550126}
+    effs_TM_ref = {'R': 0.3022353667668741, 'T': 0.5741229561193087,
+                   'Q': 0.1241066400250166, 'B': 1.0004649629111995}
 
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
         npt.assert_almost_equal(a, b, decimal=3)

@@ -67,6 +67,7 @@ class BaseFEM:
         self.parmesh_incl = 10.
         self.dim = 2  #: dimension of the problem
         self.quad_mesh_flag = False
+        self.extrude_mesh_flag = False
         self.type_des = "elements"
         #: int: number of x points for postprocessing field maps
         self.Nix = 100
@@ -207,6 +208,7 @@ class BaseFEM:
         param_dict["inclusion_flag"] = int(self.inclusion_flag)
         param_dict["adjoint_flag"] = int(self.adjoint)
         param_dict["quad_mesh_flag"] = int(self.quad_mesh_flag)
+        param_dict["extrude_mesh_flag"] = int(self.extrude_mesh_flag)
         param_dict["nodes_flag"] = int(self.type_des == "nodes")
         return param_dict
 
@@ -245,7 +247,7 @@ class BaseFEM:
         )
         return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
-    def make_mesh(self, other_option=" -cpu"):
+    def make_mesh(self, other_option=""):
         if self.dim == 3:
             dim = [1, 2, 3]
         else:

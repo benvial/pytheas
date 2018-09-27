@@ -21,7 +21,11 @@ Group {
 // #############################################################################
 
 Function{
-    epsilonr[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+    /* epsilonr[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
+
+    epsilonr_xx[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+    epsilonr_yy[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+    epsilonr[Omega] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],1];
     dephx[] = Complex[ Cos[kx*dx]       , Sin[kx*dx]      ];
   	dephy[] = Complex[ Cos[ky*dy]       , Sin[ky*dy]      ];
     shift = (2*Pi/lambda0search)^2;
