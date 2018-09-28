@@ -596,7 +596,7 @@ PostOperation {
         Operation {
         Print [ u , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
         { Niy-1, Nix-1} ,Format SimpleTable, File "u.txt" ];
-        /* Print [ u_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+        Print [ u_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
         { Niy-1, Nix-1} ,Format SimpleTable, File "u_diff.txt" ];
         Print [ vx_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
         { Niy-1, Nix-1} ,Format SimpleTable, File "vx_diff.txt" ];
@@ -609,7 +609,7 @@ PostOperation {
         Print [ vy_tot , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
         { Niy-1, Nix-1} ,Format SimpleTable, File "vy_tot.txt" ];
         Print [ abso_density , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
-        { Niy-1, Nix-1} ,Format SimpleTable, File "abso_density.txt" ]; */
+        { Niy-1, Nix-1} ,Format SimpleTable, File "abso_density.txt" ];
       }
     }
 
