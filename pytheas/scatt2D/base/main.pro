@@ -86,8 +86,8 @@ Function{
       epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
       epsilonr_annex[incl]   = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
     Else
-      /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
-      epsilonr[design]         = eps [] *TensorDiag[1,1,1];
+      epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      /* epsilonr[design]         = eps [] *TensorDiag[1,1,1]; */
       /* epsilonr[design]         = TensorDiag[-1.1,-1.1, 1]; */
     EndIf
     epsilonr[host]            = Complex[eps_host_re, eps_host_im] * TensorDiag[1,1,1];
@@ -101,8 +101,8 @@ Function{
     // Permeabilities
     mur[Omega_pml]              = TensorDiag[sz[]*sy[]/sx[],sx[]*sz[]/sy[],sx[]*sy[]/sz[]];
     mur[host]                 = TensorDiag[1,1,1];
-    /* mur[design]              = TensorDiag[1,1,1]; */
-    mur[design]              = mu[]*TensorDiag[1,1,1];
+    mur[design]              = TensorDiag[1,1,1];
+    /* mur[design]              = mu[]*TensorDiag[1,1,1]; */
     mur_annex[Omega]         = TensorDiag[1,1,1];
     If (inclusion_flag)
       mur[incl]                 = TensorDiag[1,1,1];
