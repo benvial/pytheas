@@ -8,6 +8,17 @@ from pytheas.tools.plottools import *
 from scipy.interpolate import PchipInterpolator  # mono_cubic_interp
 
 
+def normalize(x0):
+    if x0.min() == x0.max():
+        return x0
+    else:
+        return (x0 - x0.min()) / (x0.max() - x0.min())
+
+
+def norm_vec(x, y):
+    return np.sqrt((x)**2 + (y)**2)
+
+
 class TopologyOptimization:
     """A class for topology optimization
 
@@ -45,6 +56,8 @@ class TopologyOptimization:
     nthres = 2
     log_opt = False
     dp = 1e-11
+    n_x, n_y, n_z = 100, 100, 1
+    force_xsym = False
     # obj_history = []
     # param_history = []
 
@@ -55,6 +68,13 @@ class TopologyOptimization:
     @property
     def p_interp(self):
         return np.linspace(0, 1, self.nthres)
+
+    @property
+    def grid(self):
+        xdes, ydes, zdes = self.fem.des[1].T
+        x1 = np.linspace(min(xdes), max(xdes), self.n_x)
+        y1 = np.linspace(min(ydes), max(ydes), self.n_y)
+        return x1, y1
 
     def simp(self, p):
         # k = min(self.nthres - 1, 3)
@@ -75,15 +95,12 @@ class TopologyOptimization:
         for thres in self.thres:
             ptmp = np.tanh(self.beta * (x - thres)) / (np.tanh(
                 thres * self.beta))
-            # p += self.normalize(ptmp)
+            # p += normalize(ptmp)
             p += ptmp
         p = (p + self.nthres - 1) / (2 * self.nthres - 2)
 
         return p
         # return x
-
-    # def proj(self, x):
-    #     return x
 
     def grad_simp(self, p):
         f = self.simp(p)
@@ -95,17 +112,9 @@ class TopologyOptimization:
         df = self.proj(p + self.dp)
         return (df - f) / self.dp
 
-    # def grad_simp(self, p):
-    #     return self.m * (self.eps_max - self.eps_min) * p**(self.m - 1)
-    #
-    #
-    # def grad_proj(self, x):
-    #     return 0.5*self.beta/(np.tanh(self.thres*self.beta))*(1 - np.tanh(self.beta*(x - self.thres))**2)
-
     # Filter
     def neighbourhood(self, xe, ye, xn, yn):
-        D = norm_vec(xn - xe, yn - ye)
-        return D <= self.rfilt
+        return norm_vec(xn - xe, yn - ye) <= self.rfilt
 
     def weight_filt(self, x, y, xe, ye):
         D = norm_vec(x - xe, y - ye)
@@ -121,7 +130,8 @@ class TopologyOptimization:
                 format(self.filt_weight))
         return w
 
-    def filter_param(self, p, xdes, ydes):
+    def filter_param(self, p):
+        xdes, ydes, zdes = self.fem.des[1].T
         if self.rfilt == 0:
             pfilt = p
         else:
@@ -135,78 +145,45 @@ class TopologyOptimization:
         return np.array(pfilt)
         # return np.array(p)
 
-    def grad_filter_param(self, p, xdes, ydes):
-        f = self.filter_param(p, xdes, ydes)
-        df = self.filter_param(p + self.dp, xdes, ydes)
+    def grad_filter_param(self, p):
+        xdes, ydes, zdes = self.fem.des[1].T
+        f = self.filter_param(p)
+        df = self.filter_param(p + self.dp)
         return (df - f) / self.dp
 
-    #
-    # def grad_filter_param(self, p, xdes, ydes):
-    #     if self.rfilt == 0:
-    #         dpfilt = np.ones_like(p)
-    #     else:
-    #         dpfilt = []
-    #         for xe, ye in zip(xdes, ydes):
-    #             Ne = self.neighbourhood(xe, ye, xdes, ydes)
-    #             xi, yi, pi = xdes[Ne], ydes[Ne], p[Ne]
-    #             we = self.weight_filt(xe, ye, xe, ye)
-    #             wi = self.weight_filt(xi, yi, xe, ye)
-    #             dptmp = we / sum(wi)
-    #             dpfilt.append(dptmp)
-    #     # return np.array(dpfilt)
-    #     return np.ones_like(p)
+    def make_xsym(self, qt, interp_method="cubic"):
+        qt = self.mesh2grid(qt, interp_method=interp_method)
+        qt = (qt + np.fliplr(qt)) / 2
+        return self.grid2mesh(qt, interp_method=interp_method)
 
-    def make_design_rect_grid(self, xdes, ydes, nx, ny):
-        x1 = np.linspace(min(xdes), max(xdes), nx)
-        y1 = np.linspace(min(ydes), max(ydes), ny)
-        return x1, y1
-
-    def normalize(self, x0):
-        if x0.min() == x0.max():
-            return x0
-        else:
-            return (x0 - x0.min()) / (x0.max() - x0.min())
-
-    def random_pattern(self, xdes, ydes, x_grid, y_grid, mat):
+    def random_pattern(self, mat):
         im = mat.filtered_pattern[:, :, 0].T
-        x0 = self.grid2mesh(x_grid, y_grid, im, xdes, ydes)
-        return self.normalize(x0)
+        x0 = self.grid2mesh(im)
+        return normalize(x0)
 
-    def grid2mesh(self, x_grid, y_grid, val_grid, xdes, ydes):
-        f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
+    def grid2mesh(self, val_grid, interp_method="cubic"):
+        xdes, ydes, zdes = self.fem.des[1].T
+        x_grid, y_grid = self.grid
+        f = sc.interpolate.interp2d(
+            x_grid, y_grid, val_grid, kind=interp_method)
         x0 = [f(x, y) for x, y in zip(xdes, ydes)]
         return np.array(x0).ravel()
 
-    #
-    # def grid2mesh(self, x_grid, y_grid, val_grid, xdes, ydes):
-    #     f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
-    #     i = 0
-    #     x0 = np.zeros_like(xdes)
-    #     for x, y in zip(xdes, ydes):
-    #         x0[i] = f(x, y)
-    #         i += 1
-    #     return x0
-
-    def mesh2grid(self, xdes, ydes, valdes, x_grid, y_grid, method="nearest"):
+    def mesh2grid(self, valdes, interp_method="cubic"):
+        xdes, ydes, zdes = self.fem.des[1].T
         points = np.vstack((xdes, ydes)).T
+        x_grid, y_grid = self.grid
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
-        v = sc.interpolate.griddata(points, valdes, (xg, yg), method=method)
+        v = sc.interpolate.griddata(
+            points, valdes, (xg, yg), method=interp_method)
         return v
+    #
 
-    # def nodes2el(self, xnodes, ynodes, valnodes, xels, yels, method="linear"):
-    #     points = np.vstack((xnodes, ynodes)).T
-    #     valnodes.flags.writeable = True
-    #     new_points = (xels, yels)
-    #     re = sc.interpolate.griddata(points, valnodes.real, new_points, method=method)
-    #     im = sc.interpolate.griddata(points, valnodes.imag, new_points, method=method)
-    #     # re = self.grid2mesh(xnodes, ynodes, valnodes.real, xels, yels)
-    #     # im = self.grid2mesh(xnodes, ynodes, valnodes.imag, xels, yels)
-    #     return re + 1j * im
-
-    def make_epsilon(self, p, xdes, ydes, filt=True, proj=True):
+    def make_epsilon(self, p, filt=True, proj=True):
+        xdes, ydes, zdes = self.fem.des[1].T
         if filt:
-            p_filt = self.filter_param(p, xdes, ydes)
+            p_filt = self.filter_param(p)
         else:
             p_filt = p
         if proj:
@@ -216,10 +193,10 @@ class TopologyOptimization:
         epsilon = self.simp(p_proj)
         return epsilon
 
-    def depsilon_dp(self, p, xdes, ydes, filt=True, proj=True):
+    def depsilon_dp(self, p, filt=True, proj=True):
         if filt:
-            p_filt = self.filter_param(p, xdes, ydes)
-            dpfilt_dp = self.grad_filter_param(p, xdes, ydes)
+            p_filt = self.filter_param(p)
+            dpfilt_dp = self.grad_filter_param(p)
         else:
             p_filt = p
             dpfilt_dp = np.ones_like(p)
@@ -233,50 +210,70 @@ class TopologyOptimization:
         depsilon_dpproj = self.grad_simp(p_proj)
         return depsilon_dpproj * dpproj_dpfilt * dpfilt_dp
 
-    def get_objective(self, fem):
-        g = fem.get_objective()
-        if self.log_opt:
-            goal = np.log(g)
-        else:
-            goal = g
+    def get_objective(self):
+        goal = self.fem.get_objective()
+        # if self.log_opt:
+        #     goal = np.log(goal)
         return goal
 
-    def sensitivity(self,
-                    p,
-                    xdes,
-                    ydes,
-                    adjoint,
-                    deq_deps,
-                    filt=True,
-                    proj=True):
+    def get_adjoint(self):
+        return self.fem.get_adjoint()
+
+    def get_deq_deps(self, interp_method="cubic"):
+        xdes, ydes, zdes = self.fem.des[1].T
+        deq_deps = self.fem.get_deq_deps()
+
+        if self.fem.pola is "TM":
+            x_grid, y_grid = self.grid
+
+            deq_deps_x, deq_deps_y = deq_deps
+            deq_deps_x = self.mesh2grid(
+                deq_deps_x,
+                interp_method=interp_method)
+            deq_deps_x_x = np.gradient(
+                deq_deps_x.T)[0] / np.gradient(x_grid)[0]
+
+            deq_deps_y = self.mesh2grid(
+                deq_deps_y,
+                interp_method=interp_method)
+            deq_deps_y_y = np.gradient(
+                deq_deps_y.T)[1] / np.gradient(y_grid)[0]
+
+            deq_deps = deq_deps_x_x.T + deq_deps_y_y.T
+
+            deq_deps_re = self.grid2mesh(deq_deps.real)
+            deq_deps_im = self.grid2mesh(deq_deps.imag)
+            deq_deps = deq_deps_re + 1j * deq_deps_im
+        return deq_deps
+
+    def get_sensitivity(self, p, filt=True, proj=True):
+        adjoint = self.get_adjoint()
+        deq_deps = self.get_deq_deps()
         sens = self.dg_dp + adjoint * deq_deps * self.depsilon_dp(
-            p, xdes, ydes, filt=filt, proj=proj)
-        if self.log_opt:
-            p_min = 1e-3
-            p_thres = np.copy(p)
-            p_thres[p <= p_min] = p_min
-            sens /= p_thres
-        return sens
+            p, filt=filt, proj=proj)
+        # if self.log_opt:
+        #     p_min = 1e-3
+        #     p_thres = np.copy(p)
+        #     p_thres[p <= p_min] = p_min
+        #     sens /= p_thres
+        return sens.real
 
     def plot_design(self,
                     ax,
-                    xdes,
-                    ydes,
                     varplot,
-                    x_grid,
-                    y_grid,
                     typeplot="interp",
                     cmap=None,
+                    extent=None,
                     **kwargs):
         if typeplot is "tri":
+            xdes, ydes, zdes = self.fem.des[1].T
             triang = matplotlib.tri.Triangulation(xdes, ydes)
             xmid = xdes[triang.triangles].mean(axis=1)
             ymid = ydes[triang.triangles].mean(axis=1)
             cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":
-            varplot = self.mesh2grid(xdes, ydes, varplot, x_grid, y_grid,
-                                     **kwargs)
-            cf = ax.imshow(np.flipud(varplot), cmap=cmap)
+            varplot = self.mesh2grid(varplot, **kwargs)
+            cf = ax.imshow(np.flipud(varplot), cmap=cmap, extent=extent)
         else:
             raise TypeError(
                 "Wrong typeplot specified: choose between interp and tri")
@@ -309,16 +306,12 @@ class TopologyOptimization:
 
     def plot_while_solving(self,
                            varplot,
-                           xdes,
-                           ydes,
-                           x_grid,
-                           y_grid,
                            title="",
                            **kwargs):
         # print("beta = ", beta)
         plt.clf()
         ax1 = plt.subplot(211, aspect="equal")
-        self.plot_design(ax1, xdes, ydes, varplot, x_grid, y_grid, **kwargs)
+        self.plot_design(ax1, varplot, **kwargs)
         ax1.set_title(title)
         ax2 = plt.subplot(212)
         self.plot_convergence(ax2)
@@ -431,6 +424,45 @@ class TopologyOptimization:
             p_thres[cond] = threshold_val[i]
         return p_thres
 
+    #
+    # def grad_filter_param(self, p, xdes, ydes):
+    #     if self.rfilt == 0:
+    #         dpfilt = np.ones_like(p)
+    #     else:
+    #         dpfilt = []
+    #         for xe, ye in zip(xdes, ydes):
+    #             Ne = self.neighbourhood(xe, ye, xdes, ydes)
+    #             xi, yi, pi = xdes[Ne], ydes[Ne], p[Ne]
+    #             we = self.weight_filt(xe, ye, xe, ye)
+    #             wi = self.weight_filt(xi, yi, xe, ye)
+    #             dptmp = we / sum(wi)
+    #             dpfilt.append(dptmp)
+    #     # return np.array(dpfilt)
+    #     return np.ones_like(p)
 
-def norm_vec(x, y):
-    return np.sqrt((x)**2 + (y)**2)
+    # def grid2mesh(self, x_grid, y_grid, val_grid, xdes, ydes):
+    #     f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
+    #     i = 0
+    #     x0 = np.zeros_like(xdes)
+    #     for x, y in zip(xdes, ydes):
+    #         x0[i] = f(x, y)
+    #         i += 1
+    #     return x0
+    # def nodes2el(self, xnodes, ynodes, valnodes, xels, yels, method="linear"):
+    #     points = np.vstack((xnodes, ynodes)).T
+    #     valnodes.flags.writeable = True
+    #     new_points = (xels, yels)
+    #     re = sc.interpolate.griddata(points, valnodes.real, new_points, method=method)
+    #     im = sc.interpolate.griddata(points, valnodes.imag, new_points, method=method)
+    #     # re = self.grid2mesh(xnodes, ynodes, valnodes.real, xels, yels)
+    #     # im = self.grid2mesh(xnodes, ynodes, valnodes.imag, xels, yels)
+    #     return re + 1j * im
+    # def proj(self, x):
+    #     return x
+
+    # def grad_simp(self, p):
+    #     return self.m * (self.eps_max - self.eps_min) * p**(self.m - 1)
+    #
+    #
+    # def grad_proj(self, x):
+    #     return 0.5*self.beta/(np.tanh(self.thres*self.beta))*(1 - np.tanh(self.beta*(x - self.thres))**2)

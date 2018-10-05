@@ -253,7 +253,7 @@ Function{
     Else
       db_deps[] = 1/CompXX[epsilonr[]]^2* grad_u_i[];
       dA_deps[] = -1/CompXX[epsilonr[]]^2;
-    
+
     EndIf
     dEq_deps[] = db_deps[] - dA_deps[] * ($1);
 

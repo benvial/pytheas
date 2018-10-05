@@ -47,63 +47,63 @@ PSourceInt4 = newp; Point(PSourceInt4) = {x_target, y_target - RadiusSourceIntY,
 
 
 
-Curve(1) = {1, 4};
-Curve(2) = {4, 3};
-Curve(3) = {3, 2};
-Curve(4) = {2, 1};
-Curve(5) = {9, 5};
-Curve(6) = {5, 10};
-Curve(7) = {10, 16};
-Curve(8) = {16, 8};
-Curve(9) = {8, 15};
-Curve(10) = {15, 13};
-Curve(11) = {13, 7};
-Curve(12) = {7, 14};
-Curve(13) = {14, 12};
-Curve(14) = {12, 6};
-Curve(15) = {6, 11};
-Curve(16) = {11, 9};
-Curve(17) = {9, 1};
-Curve(18) = {1, 10};
-Curve(19) = {16, 4};
-Curve(20) = {4, 15};
-Curve(21) = {13, 3};
-Curve(22) = {3, 14};
-Curve(23) = {11, 2};
-Curve(24) = {2, 12};
-/* Curve(25) = {17, 20};
-Curve(26) = {20, 19};
-Curve(27) = {19, 18}; */
-Curve(28) = {18, 17};
+Line(1) = {1, 4};
+Line(2) = {4, 3};
+Line(3) = {3, 2};
+Line(4) = {2, 1};
+Line(5) = {9, 5};
+Line(6) = {5, 10};
+Line(7) = {10, 16};
+Line(8) = {16, 8};
+Line(9) = {8, 15};
+Line(10) = {15, 13};
+Line(11) = {13, 7};
+Line(12) = {7, 14};
+Line(13) = {14, 12};
+Line(14) = {12, 6};
+Line(15) = {6, 11};
+Line(16) = {11, 9};
+Line(17) = {9, 1};
+Line(18) = {1, 10};
+Line(19) = {16, 4};
+Line(20) = {4, 15};
+Line(21) = {13, 3};
+Line(22) = {3, 14};
+Line(23) = {11, 2};
+Line(24) = {2, 12};
+/* Line(25) = {17, 20};
+Line(26) = {20, 19};
+Line(27) = {19, 18}; */
+Line(28) = {18, 17};
 
-Curve Loop(30) = {6, -18, -17, 5};
+Line Loop(30) = {6, -18, -17, 5};
 Plane Surface(30) = {30};
-Curve Loop(32) = {17, -4, -23, 16};
+Line Loop(32) = {17, -4, -23, 16};
 Plane Surface(32) = {32};
-Curve Loop(34) = {23, 24, 14, 15};
+Line Loop(34) = {23, 24, 14, 15};
 Plane Surface(34) = {34};
-Curve Loop(36) = {24, -13, -22, 3};
+Line Loop(36) = {24, -13, -22, 3};
 Plane Surface(36) = {36};
-Curve Loop(38) = {22, -12, -11, 21};
+Line Loop(38) = {22, -12, -11, 21};
 Plane Surface(38) = {38};
-Curve Loop(40) = {21, -2, 20, 10};
+Line Loop(40) = {21, -2, 20, 10};
 Plane Surface(40) = {40};
-Curve Loop(42) = {9, -20, -19, 8};
+Line Loop(42) = {9, -20, -19, 8};
 Plane Surface(42) = {42};
-Curve Loop(44) = {7, 19, -1, 18};
+Line Loop(44) = {7, 19, -1, 18};
 Plane Surface(44) = {44};
 
 
 
 If (quad_mesh_flag)
-  out[] = Extrude{hx_des,0,0}{Curve{28};Layers{hx_des/lc_des};Recombine;};
+  out[] = Extrude{hx_des,0,0}{Line{28};Layers{hx_des/lc_des};Recombine;};
 Else
-  /* out[] = Extrude{hx_des,0,0}{Curve{28};Layers{hx_des/lc_des};}; */
-  out[] = Extrude{hx_des,0,0}{Curve{28};};
+  /* out[] = Extrude{hx_des,0,0}{Line{28};Layers{hx_des/lc_des};}; */
+  out[] = Extrude{hx_des,0,0}{Line{28};};
 EndIf
 
 tag_des =  out[1];
-Curve Loop(tag_des) = {-28, 46, 45, -47}; //box
+Line Loop(tag_des) = {-28, 46, 45, -47}; //box
 
 If (inclusion_flag)
 loopholes={};
@@ -112,7 +112,7 @@ loopholes[0] = tag_des;
   tag_incl=1000*(k);
   /* name = Sprintf("ellipse", k); */
     Include Sprintf("ellipse%g.geo", k-1);
-    Curve Loop(tag_incl) = {tag_incl};
+    Line Loop(tag_incl) = {tag_incl};
     Plane Surface(tag_incl) = {tag_incl};
     loopholes[k]=tag_incl;
     /* Plane Surface(tag_des) = {tag_des, tag_incl}; */
@@ -125,7 +125,7 @@ Else
   /*Transfinite Surface(tag_des) = {tag_des};*/
 EndIf
 
-Curve Loop(47) = {1,2,3,4}; //host
+Line Loop(47) = {1,2,3,4}; //host
 
 
 Physical Surface(1) = {30,34,38,42}; //PML corners
@@ -141,7 +141,7 @@ If (inclusion_flag)
   	physloop[k]=1000*(k+1);
   EndFor
   Physical Surface(6) = physloop[];    //holes
-  /* Physical Curve(100) = {1000};  // incl Curve */
+  /* Physical Line(100) = {1000};  // incl Line */
 EndIf
 
 
@@ -152,7 +152,7 @@ If (target_flag)
   LSourceInt3 = newreg; Ellipse(LSourceInt3) = {PSourceInt3, PS, PSourceInt1, PSourceInt4};
   LSourceInt4 = newreg; Ellipse(LSourceInt4) = {PSourceInt4, PS, PSourceInt1, PSourceInt1};
 
-  LLSourceInt = newreg; Curve Loop(LLSourceInt) = {LSourceInt1, LSourceInt2, LSourceInt3, LSourceInt4};
+  LLSourceInt = newreg; Line Loop(LLSourceInt) = {LSourceInt1, LSourceInt2, LSourceInt3, LSourceInt4};
 
   SSourceExt = newreg; Plane Surface(SSourceExt) = {LLSourceInt};
 
@@ -164,17 +164,17 @@ Else
     Plane Surface(47) = {47, tag_des};
 EndIf
 
-Physical Curve(100) = {25};  //box bot
-Physical Curve(200) = {26};  //box right
-Physical Curve(300) = {27};  //box top
-Physical Curve(400) = {28};  //box left
+Physical Line(100) = {25};  //box bot
+Physical Line(200) = {26};  //box right
+Physical Line(300) = {27};  //box top
+Physical Line(400) = {28};  //box left
 
 Physical Point(10000) = {1};        // PrintPoint
 Physical Point(20000) = {PS};        // TargetPoint
 
 Coherence;Coherence;Coherence;Coherence;Coherence;
 /* Coherence; */
-/* Physical Curve(200) = {46};  //box Curve */
+/* Physical Line(200) = {46};  //box Line */
 /* Physical Point(10000) = {1};        // Printpoint
 Physical Point(20000) = {25};        // Sourcepoint */
 
