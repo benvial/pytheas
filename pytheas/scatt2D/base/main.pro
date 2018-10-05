@@ -1,3 +1,4 @@
+
 Include "parameters.dat";
 
 
@@ -118,7 +119,7 @@ Function{
       GF_tar[] = -j[]/4 * hankel2[0, k0*Rho_tar[]];
       u_i[Omega_i]=GF[];
       A_beam[] = 1;
-      grad_u_i[] = -k0 * j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * TensorDiag[X[]-xs, Y[]-ys, 0];
+      grad_u_i[] = -k0 * j[]/8 * (hankel2[-1, k0*Rho[]] - hankel2[1, k0*Rho[]]) / Rho[] * Vector[X[]-xs, Y[]-ys, 0];
     Else
       If (beam_flag)
         /* Xrot[] = $X * Sin[theta] + $Y * Cos[theta]; */
@@ -131,7 +132,7 @@ Function{
         grad_u_i[]  = A_beam[] * gradpw[] + gradAbeam[] * pw[];
       Else
         u_i[Omega_i] = PW[A, alpha0, beta0];
-        grad_u_i[] = j[]*u_i[] * TensorDiag[alpha0, beta0,0.];
+        grad_u_i[] = j[]*u_i[] * Vector[alpha0, beta0,0.];
         A_beam[] = 1;
       EndIf
 
@@ -172,7 +173,7 @@ Function{
         weight[] = epsilonr[];
     Else
         dual_i[]        = Vector[ beta0, -alpha0, 0] *u_i[] / (omega0*epsilon0*CompXX[epsilonr_annex[]]);
-        source_eps[]    =  (1/epsilonr_annex[]-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]])* grad_u_i[];
+        source_eps[]    =  (1/epsilonr_annex[]-1/epsilonr[])* grad_u_i[];
         source_mu[]     =  k0^2*(mur[]-mur_annex[])*u_i[];
         weight[] = mur[];
 
@@ -213,15 +214,15 @@ Function{
     EndFor*/
 
     coef_Q[] = 0.5 * epsilon0*omega0*Fabs[Im[CompZZ[epsilonr[]]]   ]  ;
-    /* coef_obj[] = coef_Q[];  // 1/(h_sub*Grad); */
+    /* coef_obj[] = coef_Q[];  // 1/(h_sub*d); */
 
 
     If (TE_flag)
-          dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(j[]*omega0*mu0*CompXX[mur[]]); // TE case H = dual[{Grad u}]
+          dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(j[]*omega0*mu0*CompXX[mur[]]); // TE case H = dual[{d u}]
           dual_tot[] = dual[$1] + dual_i[] * CompXX[mur_annex[]] /CompXX[mur[]] ;
           absorption[]  =  coef_Q[] * SquNorm[$1 + u_i[]] ;
     Else
-          dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(-j[]*omega0*epsilon0*CompXX[epsilonr[]]); // TM case E = dual[{Grad u}]
+          dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(-j[]*omega0*epsilon0*CompXX[epsilonr[]]); // TM case E = dual[{d u}]
           dual_tot[] = -dual[$1] + dual_i[] * CompXX[epsilonr_annex[]] /CompXX[epsilonr[]] ;
           absorption[]  =  coef_Q[] * ( SquNorm[  CompX[dual_tot[$1]] ] + SquNorm[CompY[dual_tot[$1]] ] );
 
@@ -242,33 +243,19 @@ Function{
     EndIf
 
     // Topology optimization
+    coef_obj[] = 1/(SquNorm[ui_tar[]]*Pi*r_target^2);
+    objective[] = coef_obj[] *SquNorm[$1 + u_i[]] ;
+    adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1 + u_i[]]); //d_objective_du *ElementVol[]
 
     If (TE_flag)
-      /* objective[] = absorption[$1] ;
-      adj_source[] = 2 * coef_obj[] *   Conj[($1 + u_i[]) ]; //d_objective_du *ElementVol[]
- */   Scomp[] = (domX_R - domX_L) * (domY_T - domY_B);
-      Sdes[] = hx_des*hy_des;
-      /* coef_obj[] =  1/(Scomp[] - Sdes[]); */
-      coef_obj[] = 1/(SquNorm[ui_tar[]]*Pi*r_target^2);
-      objective[] = coef_obj[] *SquNorm[$1 + u_i[]] ;
-      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1 + u_i[]]); //d_objective_du *ElementVol[]
-
-
       db_deps[] = -k0^2*u_i[];
       dA_deps[] = k0^2;
-      dEq_deps[] = db_deps[] - dA_deps[] * ($1);
     Else
-      /* objective[] = absorption[$1] ; */
-      coef_obj[] = 1/(SquNorm[ui_tar[]]*Pi*r_target^2);
-      objective[] = coef_obj[] *SquNorm[$1 + u_i[]] ;
-      adj_source_int[] =  -2 * coef_obj[] * (Conj[ $1  + u_i[]]); //d_objective_du *ElementVol[]
-
-      /* beta_Q[] = coef_obj[] /(omega0*epsilon0* (Re[CompXX[epsilonr[]]]^2 + Im[CompXX[epsilonr[]]]^2 ) ); */
-      /* adj_source[] =  - 2 * beta_Q[] * ( Conj[$1 + dual_i[] * CompXX[epsilonr_annex[]] /CompXX[epsilonr[]] ]  ) ; // ElementVol[]; //d_objective_du *ElementVol[] */
       db_deps[] = 1/CompXX[epsilonr[]]^2* grad_u_i[];
       dA_deps[] = -1/CompXX[epsilonr[]]^2;
-      dEq_deps[] = db_deps[] - dA_deps[] * TensorDiag[CompX[$1], CompY[$1],0.];//($1);
+    
     EndIf
+    dEq_deps[] = db_deps[] - dA_deps[] * ($1);
 
 
 }
@@ -355,7 +342,7 @@ Formulation{
         If (TE_flag)
             Galerkin { [k0^2*CompZZ[epsilonr[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompZZ[mur[]]]*Dof{Grad u} , {Grad u}];
+            Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompZZ[mur[]]]*Dof{d u} , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
             Galerkin { [ ($Source ? source_eps[] : 0) , {u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
@@ -368,7 +355,7 @@ Formulation{
         Else
             Galerkin { [k0^2*CompZZ[mur[]]*Dof{u} , {u}];
             In Omega; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]]*Dof{Grad u} , {Grad u}];
+            Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompZZ[epsilonr[]]]*Dof{d u} , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
             Galerkin { [ ($Source ? source_eps[] : 0) , {d u}];
             In Omega_source; Jacobian JVol; Integration Int_1;  }
@@ -388,12 +375,12 @@ Formulation{
       If (TE_flag)
           Galerkin {  DtDtDof[ -CompZZ[epsilonr[]]*Dof{u} , {u}];
           In Omega; Jacobian JVol; Integration Int_1;  }
-          Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompXX[mur[]]]*Dof{Grad u} , {Grad u}];
+          Galerkin { [-1/TensorDiag[CompYY[mur[]],CompXX[mur[]],CompXX[mur[]]]*Dof{d u} , {d u}];
           In Omega; Jacobian JVol; Integration Int_1; }
       Else
           Galerkin { DtDtDof[ -CompZZ[mur[]]*Dof{u} , {u}];
           In Omega; Jacobian JVol; Integration Int_1;  }
-          Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompXX[epsilonr[]]]*Dof{Grad u} , {Grad u}];
+          Galerkin { [-1/TensorDiag[CompYY[epsilonr[]],CompXX[epsilonr[]],CompXX[epsilonr[]]]*Dof{d u} , {d u}];
           In Omega; Jacobian JVol; Integration Int_1; }
       EndIf
       }
@@ -464,11 +451,11 @@ PostProcessing {
             { Name u_tot_norm    ; Value { Local { [Sqrt[ ({u}+u_i[])*Conj[({u}+u_i[]) ] ]       ] ; In Omega; Jacobian JVol; } } }
             { Name source    ; Value { Local { [CompZZ[source[]]]     ; In Omega; Jacobian JVol; } } }
             { Name u_tot_sqnorm    ; Value { Local { [ ({u}+u_i[])*Conj[({u}+u_i[]) ]       ] ; In Omega; Jacobian JVol; } } }
-            { Name vx_diff   ; Value { Local { [ CompX[dual[{Grad u}] ]      ] ; In Omega; Jacobian JVol; } } }
-            { Name vy_diff    ; Value { Local { [  CompY[ dual[{Grad u}]  ]    ] ; In Omega; Jacobian JVol; } } }
-            { Name vx_tot    ; Value { Local { [  CompX[dual_i[] + dual[{Grad u}]  ]         ] ; In Omega; Jacobian JVol; } } }
-            { Name vy_tot   ; Value { Local { [  CompY[dual_i[]   + dual[{Grad u}]  ]  ] ; In Omega; Jacobian JVol; } } }
-            { Name v_tot   ; Value { Local { [  dual_i[]   + dual[{Grad u}]   ] ; In Omega; Jacobian JVol; } } }
+            { Name vx_diff   ; Value { Local { [ CompX[dual[{d u}] ]      ] ; In Omega; Jacobian JVol; } } }
+            { Name vy_diff    ; Value { Local { [  CompY[ dual[{d u}]  ]    ] ; In Omega; Jacobian JVol; } } }
+            { Name vx_tot    ; Value { Local { [  CompX[dual_i[] + dual[{d u}]  ]         ] ; In Omega; Jacobian JVol; } } }
+            { Name vy_tot   ; Value { Local { [  CompY[dual_i[]   + dual[{d u}]  ]  ] ; In Omega; Jacobian JVol; } } }
+            { Name v_tot   ; Value { Local { [  dual_i[]   + dual[{d u}]   ] ; In Omega; Jacobian JVol; } } }
             { Name u_int    ; Value { Integral { [ {u}      ] ; In Omega; Integration Int_1; Jacobian JVol; } } }
             { Name u_elvol   ; Value { Local { [ {u} * ElementVol[]   ] ; In Omega; Jacobian JVol; } } }
             { Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -480,10 +467,10 @@ PostProcessing {
                 { Name abso_density   ; Value { Local { [ absorption[{u}] ]; In Omega_source; Jacobian JVol; } } }
             Else
               /* { Name dEq_deps   ; Value { Local { [dEq_deps[{d u}]] ; In Omega; Jacobian JVol; } } } */
-              { Name dEq_deps_x   ; Value { Local { [CompXX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
-              { Name dEq_deps_y   ; Value { Local { [CompYY[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
-              { Name Q ; Value { Integral { [ absorption[{Grad u}] ] ; In Omega_source ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name abso_density   ; Value { Local {[ absorption[{Grad u}] ]; In Omega_source; Jacobian JVol; } } }
+              { Name dEq_deps_x   ; Value { Local { [CompX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name dEq_deps_y   ; Value { Local { [CompY[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name Q ; Value { Integral { [ absorption[{d u}] ] ; In Omega_source ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name abso_density   ; Value { Local {[ absorption[{d u}] ]; In Omega_source; Jacobian JVol; } } }
             EndIf
             { Name n2f_field   ; Value { Local { [n2f_field[{u}]  ] ; In Omega; Jacobian JVol; } } }
             { Name n2f_field_dual_x   ; Value { Local { [CompX[n2f_field_dual[{d u}]] ] ; In Omega; Jacobian JVol; } } }
@@ -579,6 +566,9 @@ PostOperation {
             Print[dEq_deps_x, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps_x.txt" ];
             Print[dEq_deps_y, OnElementsOf Omega_design ,   Depth 0, Format SimpleTable, File "dEq_deps_y.txt" ];
           EndIf
+          /* Print[dEq_deps_x, OnElementsOf Omega_design ,   File "dEq_deps_x.pos" ];
+          Print[dEq_deps_y, OnElementsOf Omega_design ,  File "dEq_deps_y.pos" ]; */
+
         EndIf
       }
     }
@@ -627,8 +617,8 @@ PostOperation {
     /*{ Name postop_fields_cuts; NameOfPostProcessing postpro ;
       Operation {
       For i In {0:nb_slice-1}
-  	    Print[u_diff , OnLine {{-Grad/2,ycut_sup~{i},0}{Grad/2, ycut_sup~{i}, 0}} {npt_integ-1}, File > "sup_field_cuts.out",	Format SimpleTable];
-  	    Print[u_tot  , OnLine {{-Grad/2,ycut_sub~{i},0}{Grad/2, ycut_sub~{i}, 0}} {npt_integ-1}, File > "sub_field_cuts.out" ,	Format SimpleTable];
+  	    Print[u_diff , OnLine {{-d/2,ycut_sup~{i},0}{d/2, ycut_sup~{i}, 0}} {npt_integ-1}, File > "sup_field_cuts.out",	Format SimpleTable];
+  	    Print[u_tot  , OnLine {{-d/2,ycut_sub~{i},0}{d/2, ycut_sub~{i}, 0}} {npt_integ-1}, File > "sub_field_cuts.out" ,	Format SimpleTable];
       EndFor
       }
     }*/
