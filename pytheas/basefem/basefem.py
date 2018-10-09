@@ -14,7 +14,7 @@ Define, solve and postprocess a FEM model using Gmsh_ and GetDP_.
      http://getdp.info/
 """
 
-
+import shutil
 import os
 import subprocess
 import numpy as np
@@ -74,6 +74,8 @@ class BaseFEM:
         self.Niy = 100
         self.matprop_pattern = 0
         self.pattern = False
+        self.cplx_list = ["eps_"]
+        self.dom_des = 0
         self.param_dict = dict()
 
     @property
@@ -149,11 +151,8 @@ class BaseFEM:
     def initialize(self):
         self.print_progress("Initialization")
         # tmp_name = tmp_dir.split("/")[2]
-        try:
-            os.mkdir(self.tmp_dir)
-        except FileExistsError:
-            pass
-            # shutil.rmtree(tmp_dir)
+        self.mk_tmp_dir()
+
         # create tmp parameters files files
         self.param_dict = self.make_param_dict()
         femio.maketmp(self.content_par, "parameters.dat", dirname=self.tmp_dir)
@@ -182,15 +181,46 @@ class BaseFEM:
                 os.remove(os.path.join(self.tmp_dir, item))
             except OSError:
                 pass
+        return
+
+
+    def mk_tmp_dir(self):
+        try:
+            os.mkdir(self.tmp_dir)
+            if self.python_verbose:
+                print("Creating temporary directory {}".format(self.tmp_dir))
+        except FileExistsError as er:
+            if self.python_verbose:
+                print(er)
+                print("Writing inside...")
+            else:
+                pass
+        return
+
+
+    def rm_tmp_dir(self):
+        try:
+            shutil.rmtree(self.tmp_dir)
+            if self.python_verbose:
+                print("Removed temporary directory {}".format(self.tmp_dir))
+        except FileNotFoundError as er:
+            if self.python_verbose:
+                print(er)
+                print("Skipping...")
+            else:
+                pass
+        return
+
 
     def make_param_dict(self):
         param_dict = dict()
         attr_list = [i for i in dir(self) if i[:1] != "_"]
         attr_list = [i for i in attr_list if not callable(getattr(self, i))]
         for key, val in self.__dict__.items():
-            if key.startswith("eps_"):
-                if type(val) is float or type(val) is np.float64 or type(val) is int:
-                    self.__dict__[key] = complex(val)
+            for cpl in self.cplx_list:
+                if key.startswith(cpl):
+                    if type(val) is float or type(val) is np.float64 or type(val) is int:
+                        self.__dict__[key] = complex(val)
         for key in attr_list:
             val = getattr(self, key)
             if isinstance(val, complex):
