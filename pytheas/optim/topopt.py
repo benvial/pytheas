@@ -18,16 +18,35 @@ def normalize(x0):
 def norm_vec(x, y):
     return np.sqrt((x)**2 + (y)**2)
 
+def simp_(p, val, m=1):
+    nthres = len(val)
+    # k = min(self.nthres - 1, 3)
+    if nthres == 2:
+        out = (val[1] - val[0]) * p**m + val[0]
+    else:
+        p_interp = np.linspace(0, 1, nthres)
+        # tsimp_re = splrep(self.p_interp, self.eps_interp.real, k=k)
+        # tsimp_im = splrep(self.p_interp, self.eps_interp.imag, k=k)
+        # out = splev(p, tsimp_re) + 1j*splev(p, tsimp_im)
+        tsimp_re = PchipInterpolator(p_interp, val.real)
+        tsimp_im = PchipInterpolator(p_interp, val.imag)
+        out = tsimp_re(p**m) + 1j * tsimp_im(p**m)
+    return out
+
+
+
+
 
 class TopologyOptimization:
     """A class for topology optimization
 
     """
 
-    def __init__(self):
+    def __init__(self, fem):
         self.obj_history = []
         self.param_history = []
         self.tot_obj_history = []
+        self.fem = fem
 
     ###########################################
     ##########  OPTIMIZATION PARAMETERS  ######
@@ -52,14 +71,19 @@ class TopologyOptimization:
     filt_weight = "gaussian"
     plotconv = False
     dg_dp = 0
-    eps_min, eps_max = 1, 5
-    nthres = 2
+    eps_interp = np.array([1, 5])
+
     log_opt = False
     dp = 1e-11
     n_x, n_y, n_z = 100, 100, 1
     force_xsym = False
     # obj_history = []
     # param_history = []
+
+
+    @property
+    def nthres(self):
+        return len(self.eps_interp)
 
     @property
     def thres(self):
@@ -77,18 +101,9 @@ class TopologyOptimization:
         return x1, y1
 
     def simp(self, p):
-        # k = min(self.nthres - 1, 3)
-        if self.nthres == 2:
-            out = (self.eps_interp[1] -
-                   self.eps_interp[0]) * p**self.m + self.eps_interp[0]
-        else:
-            # tsimp_re = splrep(self.p_interp, self.eps_interp.real, k=k)
-            # tsimp_im = splrep(self.p_interp, self.eps_interp.imag, k=k)
-            # out = splev(p, tsimp_re) + 1j*splev(p, tsimp_im)
-            tsimp_re = PchipInterpolator(self.p_interp, self.eps_interp.real)
-            tsimp_im = PchipInterpolator(self.p_interp, self.eps_interp.imag)
-            out = tsimp_re(p**self.m) + 1j * tsimp_im(p**self.m)
-        return out
+        return simp_(p, self.eps_interp, m=self.m)
+
+
 
     def proj(self, x):
         p = 0
@@ -158,12 +173,17 @@ class TopologyOptimization:
 
     def random_pattern(self, mat):
         im = mat.filtered_pattern[:, :, 0].T
-        x0 = self.grid2mesh(im)
+        x_grid = np.linspace(self.grid[0][0], self.grid[0][-1], mat.n_x)
+        y_grid = np.linspace(self.grid[1][0], self.grid[1][-1], mat.n_y)
+        x0 = self.grid2mesh(im, grid=(x_grid, y_grid))
         return normalize(x0)
 
-    def grid2mesh(self, val_grid, interp_method="cubic"):
+    def grid2mesh(self, val_grid, grid=None, interp_method="cubic"):
         xdes, ydes, zdes = self.fem.des[1].T
-        x_grid, y_grid = self.grid
+        if grid:
+            x_grid, y_grid = grid
+        else:
+            x_grid, y_grid = self.grid
         f = sc.interpolate.interp2d(
             x_grid, y_grid, val_grid, kind=interp_method)
         x0 = [f(x, y) for x, y in zip(xdes, ydes)]
@@ -176,7 +196,7 @@ class TopologyOptimization:
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
         v = sc.interpolate.griddata(
-            points, valdes, (xg, yg), method=interp_method)
+            points, valdes, (xg, yg), method=interp_method, fill_value=0)
         return v
     #
 
@@ -206,7 +226,6 @@ class TopologyOptimization:
         else:
             p_proj = p_filt
             dpproj_dpfilt = np.ones_like(p)
-        epsilon = self.simp(p_proj)
         depsilon_dpproj = self.grad_simp(p_proj)
         return depsilon_dpproj * dpproj_dpfilt * dpfilt_dp
 
@@ -246,9 +265,9 @@ class TopologyOptimization:
             deq_deps = deq_deps_re + 1j * deq_deps_im
         return deq_deps
 
-    def get_sensitivity(self, p, filt=True, proj=True):
+    def get_sensitivity(self, p, filt=True, proj=True, interp_method="cubic"):
         adjoint = self.get_adjoint()
-        deq_deps = self.get_deq_deps()
+        deq_deps = self.get_deq_deps(interp_method=interp_method)
         sens = self.dg_dp + adjoint * deq_deps * self.depsilon_dp(
             p, filt=filt, proj=proj)
         # if self.log_opt:
