@@ -196,7 +196,7 @@ class TopologyOptimization:
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
         v = sc.interpolate.griddata(
-            points, valdes, (xg, yg), method=interp_method, fill_value=0)
+            points, valdes, (xg, yg), method=interp_method)
         return v
     #
 
@@ -302,7 +302,6 @@ class TopologyOptimization:
         ax.axis("off")
 
     def plot_convergence(self, ax):
-
         if self.Nit_tot > 20:
             styleplot = "-"
         else:
@@ -319,7 +318,6 @@ class TopologyOptimization:
         ax.set_xlabel(r"iteration number $N$")
         ax.set_ylabel(r"objective $\varphi$")
         # ax4.grid(True)
-
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.axis("tight")
 
