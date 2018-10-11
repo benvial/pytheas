@@ -36,7 +36,6 @@ Group {
     PrintPoint	=  Region[10000];
     TargetPoint	=  Region[10000];
 
-
     If (target_flag)
       Omega_target    = Region[{target_circle}];
     Else
