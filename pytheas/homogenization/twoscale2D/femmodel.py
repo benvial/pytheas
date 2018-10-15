@@ -15,23 +15,26 @@ class FemModel(BaseFEM):
     """
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
+    
+    def __init__(self):
+        super().__init__()
 
-    #: flt: caracteristic length of the problem (typically the period)
-    l_carac = 1.0
+        #: flt: caracteristic length of the problem (typically the period)
+        self.l_carac = 1.0
 
-    #: flt: global mesh parameter
-    #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
-    parmesh = 10.
+        #: flt: global mesh parameter
+        #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
+        self.parmesh = 10.
 
-    # opto-geometric parameters  -------------------------------------------
-    dx = 1  #: flt: period x
-    dy = 1  #: flt: period y
-    eps_host = 1 - 0j
-    eps_incl = 1 - 0j
-    dom_des = 1000  #: design domain number (check .geo/.pro files)
+        # opto-geometric parameters  -------------------------------------------
+        self.dx = 1  #: flt: period x
+        self.dy = 1  #: flt: period y
+        self.eps_host = 1 - 0j
+        self.eps_incl = 1 - 0j
+        self.dom_des = 1000  #: design domain number (check .geo/.pro files)
 
-    y_flag = False
-    save_solution = False
+        self.y_flag = False
+        self.save_solution = False
 
     @property
     def corners_des(self):
