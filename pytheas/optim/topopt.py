@@ -60,7 +60,7 @@ class TopologyOptimization:
     m = 1.  # interpolation order eps=(eps_min-eps_max)*x^m-eps_min
     ptol_rel = 1.0e-8
     ftol_rel = 1.0e-16
-    stopval = 1.0
+    stopval = None
     maxeval = 50  # maximum of function evaluation
     Nitmax = 8  # maximum number of global iterations
     Nit = 0  # initialize global iteration number
@@ -239,7 +239,6 @@ class TopologyOptimization:
         return self.fem.get_adjoint()
 
     def get_deq_deps(self, interp_method="cubic"):
-        xdes, ydes, zdes = self.fem.des[1].T
         deq_deps = self.fem.get_deq_deps()
 
         if self.fem.pola is "TM":
@@ -362,7 +361,8 @@ class TopologyOptimization:
         # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,2,0), 1e-8)
         # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,-1,1), 1e-8)
         opt.set_maxeval(self.maxeval)
-        opt.set_stopval(self.stopval)
+        if self.stopval:
+            opt.set_stopval(self.stopval)
         opt.set_xtol_rel(self.ptol_rel)
         opt.set_ftol_rel(self.ftol_rel)
         ################################################################
