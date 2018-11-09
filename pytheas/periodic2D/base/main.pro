@@ -636,7 +636,7 @@ PostOperation {
         Operation {
           Print [Normalization[Omega], OnElementsOf PrintPoint, Format TimeTable, File "NormsEigenVectors.txt"];
           }
-    }
+
 
 
     /* ----------- electrostat analysis --------------------*/
