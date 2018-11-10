@@ -636,11 +636,12 @@ PostOperation {
         Operation {
           Print [Normalization[Omega], OnElementsOf PrintPoint, Format TimeTable, File "NormsEigenVectors.txt"];
           }
+        }
 
 
 
     /* ----------- electrostat analysis --------------------*/
-    { Name postop_fields_electrostat_pos; NameOfPostProcessing postpro_electrostat ;
+    /* { Name postop_fields_electrostat_pos; NameOfPostProcessing postpro_electrostat ;
         Operation {
             Print [ source_electrostat   , OnElementsOf Omega, File "source_electrostat.pos" ];
             Print [ u   , OnElementsOf Omega_source, File "potential.pos" ];
@@ -659,7 +660,7 @@ PostOperation {
           Print [ norm_e , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
           { Niy-1, Nix-1} ,Format SimpleTable, File "norm_static_electric_field.txt" ];
         }
-    }
+    } */
 
 
 

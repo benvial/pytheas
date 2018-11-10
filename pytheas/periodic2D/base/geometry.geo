@@ -69,12 +69,21 @@ EndIf
 
 tag_des = 23;
 If (inclusion_flag)
-  tag_des = 730;
-  Include "inclusion.geo";
-  Curve Loop(721) = {4, 22, -20, -18};
-  Curve Loop(722) = {1000};
-  Plane Surface(tag_des) = {721, 722};
-  Plane Surface(731) = {722};
+Curve Loop(tag_des) = {4, 22, -20, -18};
+loopholes={};
+loopholes[0] = tag_des;
+  For k In {1:nb_incl}
+  tag_incl=1000*(k);
+    Include Sprintf("inclusion%g.geo", k-1);
+    Line Loop(tag_incl) = {tag_incl};
+    Plane Surface(tag_incl) = {tag_incl};
+    loopholes[k]=tag_incl;
+  EndFor
+
+  Plane Surface(tag_des+1) = loopholes[];
+
+Else
+  Plane Surface(tag_des+1) = {tag_des};
 EndIf
 
 
@@ -87,12 +96,17 @@ Physical Curve(120) = {10,14,18,22,26,30};            // Continuity
 Physical Surface(1000) = {11};        // PML_bot
 Physical Surface(2000) = {15};        // sub
 Physical Surface(3000) = {19};        // layer 1
-Physical Surface(4000) = {tag_des};        // layer des
+Physical Surface(4000) = {tag_des+1};        // layer des
 Physical Surface(5000) = {27};        // layer 2
 Physical Surface(6000) = {31};        // sup
 Physical Surface(7000) = {35};        // pmltop
 If (inclusion_flag)
-  Physical Surface(8000) = {731};        // inclusion
+physloop={};
+For k In {0:nb_incl-1:1}
+  physloop[k]=1000*(k+1);
+EndFor
+Physical Surface(8000) = physloop[]; 
+
 EndIf
 
 Physical Point(10000) = {1};        // PrintPoint
@@ -105,5 +119,4 @@ Coherence;
 Coherence;
 Coherence;
 Coherence;
-Coherence Mesh;
-/* Mesh.Algorithm = 6; // Frontal */
+Coherence Mesh; 

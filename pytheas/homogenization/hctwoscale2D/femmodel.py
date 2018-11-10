@@ -208,7 +208,7 @@ class FemModel(BaseFEM):
         self.print_progress("Retrieving eigenvector norms")
         subprocess.call(self.ppstr("postop_norm_eigenvectors"), shell=True)
         filename = self.tmp_dir + "/NormsEigenVectors.txt"
-        return femio.load_timetable(filename)
+        return np.sqrt(femio.load_timetable(filename))
 
 
 

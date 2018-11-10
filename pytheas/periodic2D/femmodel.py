@@ -155,6 +155,7 @@ class FemModel(BaseFEM):
         self.eps_des = eps_des
         self.eps_incl = eps_incl
         self.dom_des = 4000
+        self.nb_incl = 1
         # if not isinstance(self.eps_layer1, complex):
         #     raise TypeError("bar must be a complex number")
 
@@ -416,6 +417,7 @@ class FemModel(BaseFEM):
         Beff_r = (np.abs(Aeff_r)) ** 2 * betat_sup / beta_sup
 
         # print(Aeff_r)
+        # print(Aeff_t)
 
         rcplx = np.mean(Aeff_r, axis=0)
         tcplx = np.mean(Aeff_t, axis=0)
