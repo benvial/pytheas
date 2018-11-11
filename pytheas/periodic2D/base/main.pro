@@ -106,12 +106,12 @@ Function{
     mur[sup]                 = TensorDiag[1,1,1];
     mur[layer1]              = TensorDiag[1,1,1];
     mur[layer2]              = TensorDiag[1,1,1];
-    mur[design]              = TensorDiag[1,1,1];
+    mur[design]              =  Complex[mu_des_re,mu_des_im] *TensorDiag[1,1,1];
     mur[sub]                 = TensorDiag[1,1,1];
     mur[pmlbot]              = TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
     mur_annex[Omega]         = TensorDiag[1,1,1];
     If (inclusion_flag)
-      mur[incl]                 = TensorDiag[1,1,1];
+      mur[incl]                 =  Complex[mu_incl_re,mu_incl_im] * TensorDiag[1,1,1];
     EndIf
 
 

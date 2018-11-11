@@ -128,6 +128,8 @@ class FemModel(BaseFEM):
         eps_layer2=1 - 0 * 1j,
         eps_des=1 - 0 * 1j,
         eps_incl=1 - 0 * 1j,
+        mu_incl=1 - 0 * 1j,
+        mu_des=1 - 0 * 1j,
     ):
 
         super().__init__()
@@ -154,6 +156,8 @@ class FemModel(BaseFEM):
         self.eps_layer2 = eps_layer2
         self.eps_des = eps_des
         self.eps_incl = eps_incl
+        self.mu_incl = mu_incl
+        self.mu_des = mu_des
         self.dom_des = 4000
         self.nb_incl = 1
         # if not isinstance(self.eps_layer1, complex):
