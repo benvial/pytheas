@@ -267,14 +267,14 @@ class TopologyOptimization:
     def get_sensitivity(self, p, filt=True, proj=True, interp_method="cubic"):
         adjoint = self.get_adjoint()
         deq_deps = self.get_deq_deps(interp_method=interp_method)
-        sens = self.dg_dp + adjoint * deq_deps * self.depsilon_dp(
-            p, filt=filt, proj=proj)
+        sens = self.dg_dp + 1*np.real(adjoint * deq_deps * self.depsilon_dp(
+            p, filt=filt, proj=proj))
         # if self.log_opt:
         #     p_min = 1e-3
         #     p_thres = np.copy(p)
         #     p_thres[p <= p_min] = p_min
         #     sens /= p_thres
-        return sens.real
+        return sens
 
     def plot_design(self,
                     ax,
