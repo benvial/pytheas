@@ -64,6 +64,7 @@ class TopologyOptimization:
     maxeval = 50  # maximum of function evaluation
     Nitmax = 8  # maximum number of global iterations
     Nit = 0  # initialize global iteration number
+    Nit_loc = 0
     N0 = 0
     Nit_tot = 0
     beta = 1  # projection parameter
@@ -72,6 +73,7 @@ class TopologyOptimization:
     plotconv = False
     dg_dp = 0
     eps_interp = np.array([1, 5])
+    threshold_final = True
 
     log_opt = False
     dp = 1e-11
@@ -365,22 +367,50 @@ class TopologyOptimization:
             opt.set_stopval(self.stopval)
         opt.set_xtol_rel(self.ptol_rel)
         opt.set_ftol_rel(self.ftol_rel)
+        self.opt = opt
         ################################################################
         ############### OPTIMIZATION - global iterations ###############
         ################################################################
         for self.Nit in range(self.N0, self.N0 + self.Nitmax):
+            self.Nit_loc = 0
             print("\n")
             print("Global iteration =  %s" % self.Nit)
             print("#" * 60)
             self.beta = 2**self.Nit
             # optimize it!
-            popt = opt.optimize(p0)
-            opt_f = opt.last_optimum_value()
+
+            try:
+                popt = self.opt.optimize(p0)
+            except nlopt.ForcedStop:
+                print("forced stop...")
+                # print(self.tot_obj_history)
+                # print(self.Nit_loc)
+                # print(self.tot_obj_history[-self.Nit_loc:])
+                loc_obj = np.array(self.tot_obj_history[-self.Nit_loc:])
+                loc_vars = np.array(self.param_history[-self.Nit_loc:])
+                lb_ind = loc_vars >= self.opt.get_lower_bounds()
+                ub_ind = loc_vars <= self.opt.get_upper_bounds()
+                const_ind = np.all(lb_ind & ub_ind,axis=1)
+                loc_obj = loc_obj[const_ind]
+                loc_vars = loc_vars[const_ind]
+                if self.typeopt is "max":
+                    index = np.argmax(loc_obj)
+                else:
+                    index = np.argmin(loc_obj)
+
+                # print(loc_obj[index])
+                # print(loc_vars[index])
+                popt = loc_vars[index]
+
+
+            opt_f = self.opt.last_optimum_value()
+
+            print(popt)
             # print("optimum at ", popt)
             print("-" * 45)
             print("   optimum   = ", opt_f)
             # print("result code = ", opt.last_optimize_result())
-            result_code = opt.last_optimize_result()
+            result_code = self.opt.last_optimize_result()
             s0, s = self.opt_message(result_code)
             print(s0)
             print(s)
