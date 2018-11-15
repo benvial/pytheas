@@ -44,7 +44,7 @@ class FemModel(BaseFEM):
         #: flt : incident plane wave angle (in degrees).
         #: Light comes from the top
         #: (travels along -y if normal incidence, `theta_deg=0` is set)
-        self.theta_deg = 0.
+        self.theta_deg = 0.0
 
         #: line source position
         self.ls_flag = False
@@ -56,9 +56,9 @@ class FemModel(BaseFEM):
         self.waist = 1.5
 
         # opto-geometric parameters  -------------------------------------------
-        self.h_pml = 2.  #: flt: thickness pml
-        self.hx_des = 2.  #: flt: x - thickness scattering box (design)
-        self.hy_des = 2.  #: flt: y - thickness scattering box
+        self.h_pml = 2.0  #: flt: thickness pml
+        self.hx_des = 2.0  #: flt: x - thickness scattering box (design)
+        self.hy_des = 2.0  #: flt: y - thickness scattering box
         self.a_pml = 1  #: flt: PMLs parameter, real part
         self.b_pml = 1  #: flt: PMLs parameter, imaginary part
         self.eps_host = 1  #: flt: permittivity host
@@ -148,11 +148,11 @@ class FemModel(BaseFEM):
 
     @property
     def theta(self):
-        return pi / 180. * (self.theta_deg)
+        return pi / 180.0 * (self.theta_deg)
 
     @property
     def omega0(self):
-        return 2. * pi * self.cel / self.lambda0
+        return 2.0 * pi * self.cel / self.lambda0
 
     def make_param_dict(self):
         param_dict = super().make_param_dict()
@@ -208,7 +208,6 @@ class FemModel(BaseFEM):
         yi = np.linspace(self.Yn2f_B, self.Yn2f_T, self.Nin2f_y)
         nu0 = np.sqrt(self.mu0 / self.epsilon0)
         k0 = 2 * pi / self.lambda0
-
 
         x = {"T": xi, "L": self.Xn2f_L, "R": self.Xn2f_R, "B": xi}
         y = {"T": self.Yn2f_T, "L": yi, "R": yi, "B": self.Yn2f_B}

@@ -34,7 +34,7 @@ class BaseFEM:
     """
 
     epsilon0 = 8.854187817e-12  #: flt: vacuum permittivity
-    mu0 = 4. * np.pi * 1e-7  #: flt: vacuum permeability
+    mu0 = 4.0 * np.pi * 1e-7  #: flt: vacuum permeability
     cel = 1.0 / (np.sqrt(epsilon0 * mu0))  #: flt: speed of light in vacuum
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -59,12 +59,12 @@ class BaseFEM:
         self.python_verbose = 0  #: str: python verbose (int between 0 and 1)
         #: flt: global mesh parameter
         #: `MeshElementSize = lambda0/(parmesh*n)` `n`: refractive index
-        self.parmesh = 10.
+        self.parmesh = 10.0
         #: flt: design subdomain mesh parameter
-        self.parmesh_des = 10.
+        self.parmesh_des = 10.0
         #: flt: PMLs mesh parameter
-        self.parmesh_pml = 7.
-        self.parmesh_incl = 10.
+        self.parmesh_pml = 7.0
+        self.parmesh_incl = 10.0
         self.dim = 2  #: dimension of the problem
         self.quad_mesh_flag = False
         self.extrude_mesh_flag = False
@@ -159,7 +159,9 @@ class BaseFEM:
         # create tmp geo file
         femio.maketmp(self.content_geo, self.geom_filename_, dirname=self.tmp_dir)
         # create tmp geo file for background mesh
-        femio.maketmp(self.content_bg_mesh, self.bg_mesh_filename_, dirname=self.tmp_dir)
+        femio.maketmp(
+            self.content_bg_mesh, self.bg_mesh_filename_, dirname=self.tmp_dir
+        )
         # create tmp pro file
         femio.maketmp(self.content_pro, self.pro_filename_, dirname=self.tmp_dir)
         # if self.inclusion_flag:
@@ -183,7 +185,6 @@ class BaseFEM:
                 pass
         return
 
-
     def mk_tmp_dir(self):
         try:
             os.mkdir(self.tmp_dir)
@@ -196,7 +197,6 @@ class BaseFEM:
             else:
                 pass
         return
-
 
     def rm_tmp_dir(self):
         try:
@@ -211,7 +211,6 @@ class BaseFEM:
                 pass
         return
 
-
     def make_param_dict(self):
         param_dict = dict()
         attr_list = [i for i in dir(self) if i[:1] != "_"]
@@ -219,7 +218,11 @@ class BaseFEM:
         for key, val in self.__dict__.items():
             for cpl in self.cplx_list:
                 if key.startswith(cpl):
-                    if type(val) is float or type(val) is np.float64 or type(val) is int:
+                    if (
+                        type(val) is float
+                        or type(val) is np.float64
+                        or type(val) is int
+                    ):
                         self.__dict__[key] = complex(val)
         for key in attr_list:
             val = getattr(self, key)

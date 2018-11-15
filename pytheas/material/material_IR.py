@@ -17,28 +17,28 @@ def epsilon_IR(material, wavelength):
                     1.6,
                     1.696,
                     1.8,
-                    2.,
+                    2.0,
                     2.4373,
                     2.5,
                     2.7144,
-                    3.,
+                    3.0,
                     3.3033,
                     3.4188,
                     3.5,
-                    4.,
-                    5.,
-                    6.,
-                    7.,
-                    8.,
-                    9.,
-                    10.,
+                    4.0,
+                    5.0,
+                    6.0,
+                    7.0,
+                    8.0,
+                    9.0,
+                    10.0,
                     13.5,
                     14.5,
-                    15.,
-                    20.,
-                    25.,
+                    15.0,
+                    20.0,
+                    25.0,
                     30.3,
-                    50.,
+                    50.0,
                 ]
             )
             * 1e-6
@@ -83,7 +83,7 @@ def epsilon_IR(material, wavelength):
                 [
                     2.7144,
                     3.8,
-                    5.,
+                    5.0,
                     5.128,
                     5.263,
                     5.405,
@@ -100,7 +100,7 @@ def epsilon_IR(material, wavelength):
                     7.407,
                     7.692,
                     7.692,
-                    8.,
+                    8.0,
                     8.333,
                     8.889,
                     8.929,
@@ -111,7 +111,7 @@ def epsilon_IR(material, wavelength):
                     9.434,
                     9.615,
                     9.804,
-                    10.,
+                    10.0,
                     10.2,
                     10.31,
                     10.42,
@@ -156,12 +156,12 @@ def epsilon_IR(material, wavelength):
                     17.86,
                     18.52,
                     19.23,
-                    20.,
+                    20.0,
                     20.83,
                     21.74,
                     22.73,
                     23.81,
-                    25.,
+                    25.0,
                     25.64,
                     26.32,
                     27.03,
@@ -461,7 +461,7 @@ def epsilon_IR(material, wavelength):
 
 
 def epsilon_drude(metal, wavelength):
-    o = 1. / wavelength
+    o = 1.0 / wavelength
     if metal == "Au":
         ot = 2.15e4
         op = 7.28e6

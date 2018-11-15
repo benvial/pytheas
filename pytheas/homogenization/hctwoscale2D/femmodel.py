@@ -8,7 +8,6 @@ from ...basefem import BaseFEM
 pi = np.pi
 
 
-
 class FemModel(BaseFEM):
     """A class for the two scale convergence homogenization of
     a 2D medium using a finite element model. See the base class :class:`BaseFEM`
@@ -23,11 +22,11 @@ class FemModel(BaseFEM):
         #: flt: caracteristic length of the problem (typically the period)
         self.l_carac = 1.0
 
-        self.inclusion_flag=True
+        self.inclusion_flag = True
 
         #: flt: global mesh parameter
         #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
-        self.parmesh = 10.
+        self.parmesh = 10.0
 
         # opto-geometric parameters  -------------------------------------------
         self.dx = 1  #: flt: period x
@@ -39,7 +38,6 @@ class FemModel(BaseFEM):
         self.y_flag = False
         self.save_solution = False
         self.inclusion_filename_ = "inclusion.geo"
-
 
         self.neig = 10
         self.lambda0search = 100
@@ -110,7 +108,6 @@ class FemModel(BaseFEM):
             argstr=argstr,
         )
 
-
     def postprocessing(self):
         self.print_progress("Postprocessing")
         subprocess.call(self.ppstr("postop"), shell=True)
@@ -173,7 +170,6 @@ class FemModel(BaseFEM):
         self.print_progress("Postprocessing fields")
         self.postpro_choice("postop_fields", filetype)
 
-
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
         subprocess.call(self.ppstr("postop_eigenvalues"), shell=True)
@@ -189,7 +185,7 @@ class FemModel(BaseFEM):
         eigval = eigval[isort]
         eigvect = eigvect[:, :, (isort)]
         nms = self.postpro_norm_eigenvectors()
-        return eigval, eigvect/nms[isort]
+        return eigval, eigvect / nms[isort]
 
     def postpro_eigenvectors(self, filetype="txt"):
         self.print_progress("Retrieving eigenvectors")
@@ -209,8 +205,6 @@ class FemModel(BaseFEM):
         subprocess.call(self.ppstr("postop_norm_eigenvectors"), shell=True)
         filename = self.tmp_dir + "/NormsEigenVectors.txt"
         return np.sqrt(femio.load_timetable(filename))
-
-
 
     def postpro_coefs_mu(self):
         self.print_progress("Retrieving expansion coefficients")

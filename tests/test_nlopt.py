@@ -1,4 +1,3 @@
-
 import nlopt
 import sys
 

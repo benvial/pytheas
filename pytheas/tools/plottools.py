@@ -121,9 +121,9 @@ def cmap_discretize(cmap, N):
 
     if type(cmap) == str:
         cmap = plt.get_cmap(cmap)
-    colors_i = np.concatenate((np.linspace(0, 1., N), (0., 0., 0., 0.)))
+    colors_i = np.concatenate((np.linspace(0, 1.0, N), (0.0, 0.0, 0.0, 0.0)))
     colors_rgba = cmap(colors_i)
-    indices = np.linspace(0, 1., N + 1)
+    indices = np.linspace(0, 1.0, N + 1)
     cdict = {}
     for ki, key in enumerate(("red", "green", "blue")):
         cdict[key] = [

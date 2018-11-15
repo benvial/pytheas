@@ -1,4 +1,3 @@
-
 import numpy as np
 import nlopt
 from pytheas.tools.plottools import *
@@ -23,7 +22,7 @@ class TopologyOptimization:
     typeopt = "min"  # type of optimization "min" or "max"
     pmin = 0.0  # minimum value
     pmax = 1.0  # maximum value
-    m = 1.  # interpolation order eps=(eps_min-eps_max)*x^m-eps_min
+    m = 1.0  # interpolation order eps=(eps_min-eps_max)*x^m-eps_min
     ptol_rel = 1.0e-8
     ftol_rel = 1.0e-16
     stopval = 1.0

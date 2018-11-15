@@ -1,4 +1,3 @@
-
 from pytheas.tools import femio
 import numpy as np
 from pytheas.tools.plottools import *
@@ -18,15 +17,15 @@ def between_range(x, xmin, xmax):
     return (xmax - xmin) * x + xmin
 
 
-def refine_mesh(fem, mat, lc_des=None, par=None, nmax=5, periodic_x=False,
-                periodic_y=False):
+def refine_mesh(
+    fem, mat, lc_des=None, par=None, nmax=5, periodic_x=False, periodic_y=False
+):
     mat_tmp = mat
     mat_tmp.ratio_filter = [20, 20, 20]
     pattern = mat_tmp.pattern
     nodes, els, des = get_mesh_info(fem)
     if not lc_des:
-        lc_des = 1 * fem.lambda_mesh / \
-            (fem.parmesh_des * np.sqrt(fem.eps_des.real))
+        lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
     if not par:
         # par = [[0.1], [0.4], [1]]

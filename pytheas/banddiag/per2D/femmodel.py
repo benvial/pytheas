@@ -42,7 +42,7 @@ class BandsFEM2D(BaseFEM):
 
     #: flt: global mesh parameter
     #: `MeshElementSize = lambda0/(parmesh*n)`, `n`: refractive index
-    parmesh = 10.
+    parmesh = 10.0
     quad_mesh_flag = False
     type_des = "elements"
     y_flag = False
@@ -95,8 +95,7 @@ class BandsFEM2D(BaseFEM):
 
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppstr(
-            "postop_eigenvalues_" + self.pola), shell=True)
+        subprocess.call(self.ppstr("postop_eigenvalues_" + self.pola), shell=True)
         filename = self.tmp_dir + "/EV_" + self.pola + ".txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])
@@ -174,7 +173,7 @@ class BandsFEM2D(BaseFEM):
         )
         ax.imshow(
             field,
-            alpha=0.,
+            alpha=0.0,
             interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,
@@ -192,25 +191,22 @@ class BandsFEM2D(BaseFEM):
 
         kx0 = pi / self.dx
         ky0 = pi / self.dy
-        Gamma = [0., 0.]
-        X = [kx0, 0.]
+        Gamma = [0.0, 0.0]
+        X = [kx0, 0.0]
         M = [kx0, ky0]
         ngx = N
         Gamma_X = np.array(
-            [np.linspace(Gamma[0], X[0], ngx),
-             np.linspace(Gamma[1], X[1], ngx)]
+            [np.linspace(Gamma[0], X[0], ngx), np.linspace(Gamma[1], X[1], ngx)]
         )
 
         nxm = N
-        X_M = np.array([np.linspace(X[0], M[0], nxm),
-                        np.linspace(X[1], M[1], nxm)])
+        X_M = np.array([np.linspace(X[0], M[0], nxm), np.linspace(X[1], M[1], nxm)])
 
         X_M = np.delete(X_M, 0, axis=1)
 
         nmg = N
         M_Gamma = np.array(
-            [np.linspace(M[0], Gamma[0], nmg),
-             np.linspace(M[1], Gamma[1], nmg)]
+            [np.linspace(M[0], Gamma[0], nmg), np.linspace(M[1], Gamma[1], nmg)]
         )
         M_Gamma = np.delete(M_Gamma, 0, axis=1)
         bandsx = np.append(np.append(Gamma_X[0, :], X_M[0, :]), M_Gamma[0, :])

@@ -1,4 +1,3 @@
-
 from pytheas.material.refractiveindex import *
 
 

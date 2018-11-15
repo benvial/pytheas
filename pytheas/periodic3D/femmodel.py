@@ -44,7 +44,7 @@ class PeriodicMediumFEM3D:
     gmsh_verbose = 0  #: str: Gmsh verbose (int between 0 and 4)
     python_verbose = 1  #: str: python verbose (int between 0 and 1)
     epsilon0 = 8.854187817e-12  #: flt: vacuum permittivity
-    mu0 = 4. * pi * 1e-7  #: flt: vacuum permeability
+    mu0 = 4.0 * pi * 1e-7  #: flt: vacuum permeability
     #: flt: speed of light in vacuum
     cel = 1.0 / (sc.sqrt(epsilon0 * mu0))
 
@@ -56,18 +56,18 @@ class PeriodicMediumFEM3D:
     #: flt : incident plane wave angle (in degrees).
     #: Light comes from the top
     #: (travels along -y if normal incidence, `theta_deg=0` is set)
-    theta_deg = 0.
+    theta_deg = 0.0
     phi_deg = 0
     psi_deg = 0
     Deph = 0
 
     #: flt: global mesh parameter
     #: `MeshElementSize = lambda0/(parmesh*n)`, `n`: refractive index
-    parmesh = 10.
+    parmesh = 10.0
     #: flt: design subdomain mesh parameter
-    parmesh_des = 10.
+    parmesh_des = 10.0
     #: flt: PMLs mesh parameter
-    parmesh_pml = 7.
+    parmesh_pml = 7.0
 
     # opto-geometric parameters  -------------------------------------------
     #: flt: periods
@@ -79,8 +79,8 @@ class PeriodicMediumFEM3D:
     thick_L4 = 0.1  #: flt: thickSness layer 4
     thick_L5 = 0.1  #: flt: thickness layer 5
     thick_L6 = 0.1  #: flt: thickness layer 6 (substrate)
-    PML_top = 1.  #: flt: thickness pml top
-    PML_bot = 1.  #: flt: thickness pml bot
+    PML_top = 1.0  #: flt: thickness pml top
+    PML_bot = 1.0  #: flt: thickness pml bot
     #: flt: PMLs parameter, real part
     a_pml = 1  #: flt: PMLs parameter, real part
     b_pml = 1  #: flt: PMLs parameter, imaginary part
@@ -122,19 +122,19 @@ class PeriodicMediumFEM3D:
 
     @property
     def theta_0(self):
-        return pi / 180. * (self.theta_deg)
+        return pi / 180.0 * (self.theta_deg)
 
     @property
     def phi_0(self):
-        return pi / 180. * (self.phi_deg)
+        return pi / 180.0 * (self.phi_deg)
 
     @property
     def psi_0(self):
-        return pi / 180. * (self.psi_deg)
+        return pi / 180.0 * (self.psi_deg)
 
     @property
     def omega0(self):
-        return 2. * pi * self.cel / self.lambda0
+        return 2.0 * pi * self.cel / self.lambda0
 
     @property
     def param_dict(self):
@@ -641,13 +641,13 @@ class PeriodicMediumFEM3D:
         AR2 = np.zeros((1, 1), dtype=complex)[0, :]
         AT2 = np.zeros((1, 1), dtype=complex)[0, :]
 
-        omega = 2. * pi * self.cel / self.lambda0
-        k0 = 2. * pi / self.lambda0
+        omega = 2.0 * pi * self.cel / self.lambda0
+        k0 = 2.0 * pi / self.lambda0
         alpha0 = k0 * np.sin(self.theta_0) * np.cos(self.phi_0)
         beta0 = k0 * np.sin(self.theta_0) * np.sin(self.phi_0)
         gamma0 = k0 * np.cos(self.theta_0)
         gamma02 = sc.sqrt(k0 ** 2 - alpha0 ** 2 - beta0 ** 2)
-        Ae = 1.
+        Ae = 1.0
         Ah = Ae * sc.sqrt(self.epsilon0 / self.mu0)
 
         Ex0 = Ae * (
@@ -813,7 +813,7 @@ class PeriodicMediumFEM3D:
         TetR = np.dot(sc.linalg.inv(M2), known)
 
         layer_diopter[nb_layer_diopter - 1]["Psi"] = np.array(
-            [TetR[0], [0.], TetR[1], [0.]]
+            [TetR[0], [0.0], TetR[1], [0.0]]
         )
 
         layer_diopter[nb_layer_diopter - 2]["Psi"] = np.dot(
@@ -872,7 +872,7 @@ class PeriodicMediumFEM3D:
         )
 
         AR2[0] = (
-            1.
+            1.0
             / (layer_diopter[0]["gamma"] * layer_diopter[0]["gamma"])
             * (
                 (layer_diopter[0]["gamma"] ** 2 + alpha0 ** 2)
@@ -888,7 +888,7 @@ class PeriodicMediumFEM3D:
             )
         )
         AT2[0] = (
-            1.
+            1.0
             / (layer_diopter[0]["gamma"] * layer_diopter[nb_layer_diopter - 1]["gamma"])
             * (
                 (layer_diopter[nb_layer_diopter - 1]["gamma"] ** 2 + alpha0 ** 2)

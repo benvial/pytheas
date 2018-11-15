@@ -22,7 +22,7 @@ class FemModel(BaseFEM):
         l_carac=1.0,
         #: flt: global mesh parameter
         #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
-        parmesh=10.,
+        parmesh=10.0,
         # opto-geometric parameters  -------------------------------------------
         dx=1,  #: flt: period x
         dy=1,  #: flt: period y

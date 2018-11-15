@@ -117,9 +117,9 @@ class FemModel(BaseFEM):
         h_sub=1,
         h_layer1=0.1,
         h_layer2=0.1,
-        h_des=1.,
-        h_pmltop=1.,
-        h_pmlbot=1.,
+        h_des=1.0,
+        h_pmltop=1.0,
+        h_pmlbot=1.0,
         a_pml=1,
         b_pml=1,
         eps_sup=1 - 0 * 1j,
@@ -233,11 +233,11 @@ class FemModel(BaseFEM):
 
     @property
     def theta(self):
-        return pi / 180. * (self.theta_deg)
+        return pi / 180.0 * (self.theta_deg)
 
     @property
     def omega0(self):
-        return 2. * pi * self.cel / self.lambda0
+        return 2.0 * pi * self.cel / self.lambda0
 
     @property
     def N_d_order(self):
@@ -528,7 +528,7 @@ class FemModel(BaseFEM):
         )
         ax.imshow(
             field.T,
-            alpha=0.,
+            alpha=0.0,
             interpolation="bilinear",
             cmap=cmap_div,
             vmin=vmin,

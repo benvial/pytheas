@@ -15,7 +15,7 @@ class FemModel(BaseFEM):
     """
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
-    
+
     def __init__(self):
         super().__init__()
 
@@ -24,7 +24,7 @@ class FemModel(BaseFEM):
 
         #: flt: global mesh parameter
         #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
-        self.parmesh = 10.
+        self.parmesh = 10.0
 
         # opto-geometric parameters  -------------------------------------------
         self.dx = 1  #: flt: period x
