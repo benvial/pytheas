@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 export ONELAB_PATH=$TRAVIS_BUILD_DIR/opt
-export VERSION="stable"
-# export VERSION="dev"
+# export VERSION="stable"
+export VERSION="dev"
 
 if [ $VERSION == "stable" ]; then
   export GMSH_VERSION="4.0.1"

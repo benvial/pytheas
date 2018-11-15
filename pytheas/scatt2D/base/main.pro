@@ -671,6 +671,8 @@ PostOperation {
     { Name postop_field_on_point; NameOfPostProcessing postpro ;
         Operation {
             Print [u_tot, OnPoint {xpp, ypp, 0}, Format SimpleTable, File "u_tot_point.txt"];
+            Print [u_i, OnPoint {xpp, ypp, 0}, Format SimpleTable, File "u_i_point.txt"];
+            Print [u, OnPoint {xpp, ypp, 0}, Format SimpleTable, File "u_point.txt"];
 
           }
     }

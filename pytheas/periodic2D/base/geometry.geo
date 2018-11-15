@@ -68,8 +68,8 @@ If (quad_mesh_flag)
 EndIf
 
 tag_des = 23;
-If (inclusion_flag)
 Line Loop(tag_des) = {4, 22, -20, -18};
+If (inclusion_flag)
 loopholes={};
 loopholes[0] = tag_des;
   For k In {1:nb_incl}
@@ -105,7 +105,7 @@ physloop={};
 For k In {0:nb_incl-1:1}
   physloop[k]=1000*(k+1);
 EndFor
-Physical Surface(8000) = physloop[]; 
+Physical Surface(8000) = physloop[];
 
 EndIf
 
@@ -119,4 +119,4 @@ Coherence;
 Coherence;
 Coherence;
 Coherence;
-Coherence Mesh; 
+Coherence Mesh;

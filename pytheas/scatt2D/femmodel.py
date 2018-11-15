@@ -209,8 +209,6 @@ class FemModel(BaseFEM):
         nu0 = np.sqrt(self.mu0 / self.epsilon0)
         k0 = 2 * pi / self.lambda0
 
-        s = np.sin(theta)
-        c = -np.cos(theta)
 
         x = {"T": xi, "L": self.Xn2f_L, "R": self.Xn2f_R, "B": xi}
         y = {"T": self.Yn2f_T, "L": yi, "R": yi, "B": self.Yn2f_B}
@@ -218,19 +216,25 @@ class FemModel(BaseFEM):
         ny = {"T": 1, "L": 0, "R": 0, "B": -1}
         Ez, Hx, Hy = ff
 
-        I = 0
-        for loc in ["T", "L", "R", "B"]:
-            if (loc == "T") or (loc == "B"):
-                l = xi
-            else:
-                l = yi
-            expo = np.exp(-1j * k0 * (x[loc] * s + y[loc] * c))
-            J = (
-                nu0 * (nx[loc] * Hy[loc] - ny[loc] * Hx[loc])
-                - (ny[loc] * c + nx[loc] * s) * Ez[loc]
-            ) * expo
-            I += np.trapz(J, l)
-        return np.abs(I) ** 2 / (8 * pi)
+        Itheta = []
+        for t in theta:
+            s = np.sin(t)
+            c = -np.cos(t)
+
+            I = 0
+            for loc in ["T", "L", "R", "B"]:
+                if (loc == "T") or (loc == "B"):
+                    l = xi
+                else:
+                    l = yi
+                expo = np.exp(-1j * k0 * (x[loc] * s + y[loc] * c))
+                J = (
+                    nu0 * (nx[loc] * Hy[loc] - ny[loc] * Hx[loc])
+                    - (ny[loc] * c + nx[loc] * s) * Ez[loc]
+                ) * expo
+                I += np.trapz(J, l)
+            Itheta.append(I)
+        return np.abs(Itheta) ** 2 / (8 * pi)
 
     def postpro_fields(self, filetype="txt"):
         self.print_progress("Postprocessing fields")
@@ -242,8 +246,10 @@ class FemModel(BaseFEM):
 
     def get_field_point(self):
         subprocess.call(self.ppstr("postop_field_on_point"), shell=True)
-        field = femio.load_table(self.tmp_dir + "/" + "u_tot_point.txt")
-        return field
+        u_tot = femio.load_table(self.tmp_dir + "/" + "u_tot_point.txt")
+        u_i = femio.load_table(self.tmp_dir + "/" + "u_i_point.txt")
+        u = femio.load_table(self.tmp_dir + "/" + "u_point.txt")
+        return u, u_tot, u_i
 
     def get_objective(self):
         self.print_progress("Retrieving objective")

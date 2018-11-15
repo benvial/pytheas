@@ -41,7 +41,6 @@ Group {
     Else
       Omega_target    = Region[{host}];
     EndIf
-    /*Omega_target    = Region[{layer1}];*/
     Omega_design    = Region[{design}];
 
 
@@ -241,8 +240,14 @@ Function{
     S_host = (domX_R - domX_L)*(domY_T-domY_B) - hx_des*hy_des;
     xx[] = 1/(domX_R - domX_L)*(domY_T-domY_B);// - hx_des*hy_des/8;
     coef_obj[] = 1/(S_host);
-    objective[] = coef_obj[] *SquNorm[$1] ;
-    adj_source_int[] =  - 2 * coef_obj[] * (Conj[ $1 ]); //d_objective_du *ElementVol[]
+
+    If (host_flag)
+      objective[] = coef_obj[] *SquNorm[$1] ;
+      adj_source_int[] =  - 2 * coef_obj[] * (Conj[ $1 ]);
+    Else
+      objective[] = coef_obj[] *SquNorm[$1] ;
+      adj_source_int[] =   -2 * coef_obj[] * (Conj[ $1 ]);
+    EndIf
 
     If (TE_flag)
       db_deps[] = -k0^2*u_i[];

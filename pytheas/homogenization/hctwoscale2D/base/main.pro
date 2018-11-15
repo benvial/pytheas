@@ -32,8 +32,14 @@ Function{
   ksearch = 2.*Pi/lambda0search;
 
   If (inclusion_flag)
-    epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
-    epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
+    /* epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+    epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1]; */
+    epsilonr[host] = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+    epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+    epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+    epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
+    epsilonr[incl] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+
   Else
     /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
     epsilonr_xx[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
@@ -42,6 +48,8 @@ Function{
 
     epsilonr[Omega] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
   EndIf
+
+  xsi[] = TensorDiag[1/CompYY[epsilonr[]],1/CompXX[epsilonr[]],0];
 
 		If (y_flag)
 			E[] = Vector[0,1,0] ;
@@ -159,9 +167,9 @@ Formulation {
                 } */
 
     Equation {
-        		Galerkin { [1/epsilonr[] * Dof{d u} , {d u}];
+        		Galerkin { [xsi[] * Dof{d u} , {d u}];
                      		In host; Jacobian JVol; Integration Int_1; }
-            Galerkin { [1/epsilonr[] * E[] , {d u} ];
+            Galerkin { [xsi[] * E[] , {d u} ];
                   		In host; Jacobian JVol; Integration Int_1; }
                 }
             }
@@ -175,7 +183,7 @@ Formulation {
     		Quantity {{ Name phi; Type Local; NameOfSpace Hgrad_incl;}}
 
     Equation {
-      Galerkin {  DtDtDof[ -CompZZ[epsilonr[]]*Dof{phi} , {phi}];
+      Galerkin {  DtDtDof[ -epsilonr[]*Dof{phi} , {phi}];
       In incl; Jacobian JVol; Integration Int_1;  }
       Galerkin { [-Dof{d phi} , {d phi}];
       In incl; Jacobian JVol; Integration Int_1; }

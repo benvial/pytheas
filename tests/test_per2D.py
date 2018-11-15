@@ -35,8 +35,8 @@ def model(verbose=False):
     fem.quad_mesh_flag = False
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
     #: where n is the refractive index of the medium
-    fem.parmesh_des = 10
-    fem.parmesh = 10
+    fem.parmesh_des = 5
+    fem.parmesh = 5
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     if verbose:
@@ -66,23 +66,21 @@ def test_per2D(verbose=False):
     # par = [[0.5, 0.4, 0.15], [0.4, 0.3, 0.1], [0.1, 0.5, 1]]
     par = [[0.5, 0.4, 0.3], [0.4, 0.3, 0.1], [0.8, 0.9, 1]]
     fem = utils.refine_mesh(fem, mat, lc_des=lc_des,
-                            par=par, periodic_x=True, nmax=10)
+                            par=par, periodic_x=False, nmax=10)
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()
     effs_TE = fem.diffraction_efficiencies()
-    # print("effs_TE = ", effs_TE)
-    # fem.postpro_fields(filetype="pos")
-    # fem.open_gmsh_gui()
+    print("effs_TE = ", effs_TE)
     fem.pola = "TM"
     fem.compute_solution()
     effs_TM = fem.diffraction_efficiencies()
-    # print("effs_TM = ", effs_TM)
+    print("effs_TM = ", effs_TM)
 
-    effs_TE_ref = {'R': 0.34977599566487566, 'T': 0.33438882925399116,
-                   'Q': 0.3163139076312594, 'B': 1.000478732550126}
-    effs_TM_ref = {'R': 0.3022353667668741, 'T': 0.5741229561193087,
-                   'Q': 0.1241066400250166, 'B': 1.0004649629111995}
+    effs_TE_ref = {'R': 0.3528373505073045, 'T': 0.3274087995895207,
+                   'Q': 0.3262777713934278, 'B': 1.006523921490253}
+    effs_TM_ref = {'R': 0.2966385564434248, 'T': 0.5843153749078397,
+                   'Q': 0.1262830646121085, 'B': 1.007236995963373}
 
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
         npt.assert_almost_equal(a, b, decimal=3)
