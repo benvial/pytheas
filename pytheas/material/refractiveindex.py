@@ -21,6 +21,7 @@ from scipy.interpolate import interp1d
 import sys
 from parse import *
 import yaml
+from yaml.reader import Reader
 import numpy as np
 import cmath
 import os
@@ -29,10 +30,20 @@ path = os.path.dirname(os.path.abspath(__file__))
 database_path = os.path.join(path, "database", "data")
 
 
+def strip_invalid(s):
+    res = ''
+    for x in s:
+        if Reader.NON_PRINTABLE.match(x):
+            # res += '\\x{:x}'.format(ord(x))
+            continue
+        res += x
+    return res
+
 def yaml_extract(yamlFile):
     filename = os.path.join(database_path, yamlFile)
-    yamlStream = open(filename, "r")
-    allData = yaml.load(yamlStream)
+    with open(filename) as yamlStream:
+        c = yamlStream.read()
+        allData = yaml.load(strip_invalid(c))
     materialData = allData["DATA"][0]
     return yamlStream, allData, materialData
 
