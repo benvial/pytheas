@@ -1,15 +1,19 @@
-import numpy as np
-import scipy as sc
+# -*- coding: utf-8 -*-
+# Author: Benjamin Vial
+# License: MIT
+
+
 import os
 import subprocess
-import shutil
-import pytheas.tools.femio as femio
+import numpy as np
+import scipy as sc
+from ..tools import femio
+from ..basefem import BaseFEM
 
-# dir_path = os.path.dirname(os.path.abspath(__file__))
 pi = np.pi
 
 
-class PeriodicMediumFEM3D:
+class PeriodicMediumFEM3D(BaseFEM):
     """A class for a finite element model of a 3D bi-periodic
        medium using Gmsh_ and GetDP_.
 
@@ -20,93 +24,95 @@ class PeriodicMediumFEM3D:
     """
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
-    ID = "fem"  #: str: name of simulation
-    #: str: analisys type (either "diffraction" or "modal")
-    analysis = "diffraction"
-    # filenames
-    # name = "/home/bench/Codes/test/test2.geo"
-    name = "base/geometry.geo"
-    geom_filename = os.path.join(dir_path, name)  #: str: Gmsh geometry filename
-    pro_filename = os.path.join(dir_path, "base/main.pro")  #: str: GetDP pro filename
-    content_geo = femio.get_content(geom_filename)
-    content_pro = femio.get_content(pro_filename)
 
-    dom_des = 5000  # 2  #: design domain number (check .geo/.pro files)
+    def __init__(
+        self,
+        analysis="diffraction",
+        A=1,
+        lambda0=1,
+        theta_deg=0.0,
+        phi_deg=0,
+        psi_deg=0,
+        period_x=1,
+        period_y=1,
+        thick_L1=0.1,  #: flt: thickness layer 1 (superstrate)
+        thick_L2=0.1,  #: flt: thickness layer 2
+        thick_L3=0.1,  #: flt: thickness layer 3 (interp)
+        thick_L4=0.1,  #: flt: thickSness layer 4
+        thick_L5=0.1,  #: flt: thickness layer 5
+        thick_L6=0.1,  #: flt: thickness layer 6 (substrate)
+        PML_top=1.0,  # : flt: thickness pml top
+        PML_bot=1.0,  # : flt: thickness pml bot
+        a_pml=1,  #: flt: PMLs parameter, real part
+        b_pml=1,  #: flt: PMLs parameter, imaginary part
+        eps_L1=1 - 0 * 1j,  #: flt: permittivity layer 1 (superstrate)
+        eps_L2=1 - 0 * 1j,  #: flt: permittivity layer 2
+        eps_L3=1 - 0 * 1j,  #: flt: permittivity layer 3
+        eps_L4=1 - 0 * 1j,  #: flt: permittivity layer 4
+        eps_L5=1 - 0 * 1j,  #: flt: permittivity layer 5
+        eps_L6=1 - 0 * 1j,  #: flt: permittivity layer 6 (substrate)
+        el_order=1
+    ):
+        super().__init__()
 
-    tmp_dir = "./tmp"
-    path_pos = None
+        self.analysis = analysis
+        self.A = A
+        self.lambda0 = lambda0
+        self.theta_deg = theta_deg
+        self.phi_deg = phi_deg
+        self.psi_deg = psi_deg
 
-    el_order = 1
-    celltype = "tetra"
-    type_des = "nodes"
+        # opto-geometric parameters  -------------------------------------------
+        #: flt: periods
+        self.period_x = period_x
+        self.period_y = period_y
+        self.thick_L1 = thick_L1  #: flt: thickness layer 1 (superstrate)
+        self.thick_L2 = thick_L2  #: flt: thickness layer 2
+        self.thick_L3 = thick_L3  #: flt: thickness layer 3 (interp)
+        self.thick_L4 = thick_L4  #: flt: thickSness layer 4
+        self.thick_L5 = thick_L5  #: flt: thickness layer 5
+        self.thick_L6 = thick_L6  #: flt: thickness layer 6 (substrate)
+        self.PML_top = PML_top  #: flt: thickness pml top
+        self.PML_bot = PML_bot  #: flt: thickness pml bot
+        #: flt: PMLs parameter, real part
+        self.a_pml = a_pml  #: flt: PMLs parameter, real part
+        self.b_pml = b_pml  #: flt: PMLs parameter, imaginary part
+        self.eps_L1 = eps_L1  #: flt: permittivity layer 1 (superstrate)
+        self.eps_L2 = eps_L2  #: flt: permittivity layer 2
+        self.eps_L3 = eps_L3  #: flt: permittivity layer 3
+        self.eps_L4 = eps_L4  #: flt: permittivity layer 4
+        self.eps_L5 = eps_L5  #: flt: permittivity layer 5
+        self.eps_L6 = eps_L6  #: flt: permittivity layer 6 (substrate)
 
-    getdp_verbose = 0  #: str: GetDP verbose (int between 0 and 4)
-    gmsh_verbose = 0  #: str: Gmsh verbose (int between 0 and 4)
-    python_verbose = 1  #: str: python verbose (int between 0 and 1)
-    epsilon0 = 8.854187817e-12  #: flt: vacuum permittivity
-    mu0 = 4.0 * pi * 1e-7  #: flt: vacuum permeability
-    #: flt: speed of light in vacuum
-    cel = 1.0 / (sc.sqrt(epsilon0 * mu0))
+        self.el_order = el_order
+        self.bg_mesh = False
 
-    # Incident plane wave parameters
-    #: flt: incident plane wave amplitude
-    A = 1.0
-    #: flt: incident plane wave wavelength in free space
-    lambda0 = 1.0
-    #: flt : incident plane wave angle (in degrees).
-    #: Light comes from the top
-    #: (travels along -y if normal incidence, `theta_deg=0` is set)
-    theta_deg = 0.0
-    phi_deg = 0
-    psi_deg = 0
-    Deph = 0
+        # 2  #: design domain number (check .geo/.pro files)
+        self.dom_des = 5000
 
-    #: flt: global mesh parameter
-    #: `MeshElementSize = lambda0/(parmesh*n)`, `n`: refractive index
-    parmesh = 10.0
-    #: flt: design subdomain mesh parameter
-    parmesh_des = 10.0
-    #: flt: PMLs mesh parameter
-    parmesh_pml = 7.0
+        # postprocessing -------------------------------------------------
+        #: int: number of diffraction orders
+        #: for postprocessing diffraction efficiencies
+        self.N_d_order = 0
+        self.orders = False
+        self.cplx_effs = False
+        self.eff_verbose = False
+        #: int: number of x integration points
+        #: for postprocessing diffraction efficiencies
+        self.ninterv_integ = 60
+        #: int: number of z slices points
+        #: for postprocessing diffraction efficiencies
+        self.nb_slice = 3
+        #: flt:  such that `scan_dist  = min(h_sup, hsub)/scan_dist_ratio`
+        self.scan_dist_ratio = 5
+        
+        self.dim = 3
+        
+        self.adjoint = False
 
-    # opto-geometric parameters  -------------------------------------------
-    #: flt: periods
-    period_x = 1
-    period_y = 1
-    thick_L1 = 0.1  #: flt: thickness layer 1 (superstrate)
-    thick_L2 = 0.1  #: flt: thickness layer 2
-    thick_L3 = 0.1  #: flt: thickness layer 3 (interp)
-    thick_L4 = 0.1  #: flt: thickSness layer 4
-    thick_L5 = 0.1  #: flt: thickness layer 5
-    thick_L6 = 0.1  #: flt: thickness layer 6 (substrate)
-    PML_top = 1.0  #: flt: thickness pml top
-    PML_bot = 1.0  #: flt: thickness pml bot
-    #: flt: PMLs parameter, real part
-    a_pml = 1  #: flt: PMLs parameter, real part
-    b_pml = 1  #: flt: PMLs parameter, imaginary part
-    eps_L1 = 1  #: flt: permittivity layer 1 (superstrate)
-    eps_L2 = 1  #: flt: permittivity layer 2
-    eps_L3 = 1  #: flt: permittivity layer 3
-    eps_L4 = 1  #: flt: permittivity layer 4
-    eps_L5 = 1  #: flt: permittivity layer 5
-    eps_L6 = 1  #: flt: permittivity layer 6 (substrate)
-    incl_flag = False
-
-    # postprocessing -------------------------------------------------
-    #: int: number of diffraction orders
-    #: for postprocessing diffraction efficiencies
-    N_d_order = 0
-    orders = False
-    cplx_effs = False
-    eff_verbose = False
-    #: int: number of x integration points
-    #: for postprocessing diffraction efficiencies
-    ninterv_integ = 60
-    #: int: number of z slices points
-    #: for postprocessing diffraction efficiencies
-    nb_slice = 3
-    #: flt:  such that `scan_dist  = min(h_sup, hsub)/scan_dist_ratio`
-    scan_dist_ratio = 5
+    @property
+    def celltype(self):
+        return "tetra"
 
     @property
     def zmin_interp(self):
@@ -131,84 +137,21 @@ class PeriodicMediumFEM3D:
     @property
     def psi_0(self):
         return pi / 180.0 * (self.psi_deg)
-
+        
     @property
-    def omega0(self):
-        return 2.0 * pi * self.cel / self.lambda0
+    def corners_des(self):
+        return -self.period_x / 2, +self.period_x / 2, -self.period_y / 2, +self.period_y / 2, +self.zmin_interp, +self.zmax_interp
 
-    @property
-    def param_dict(self):
-        return self.make_param_dict()
-
-    @property
-    def path_geo(self):
-        return os.path.join(self.tmp_dir, "geometry.geo")
-
-    @property
-    def path_pro(self):
-        return os.path.join(self.tmp_dir, "main.pro")
-
-    @property
-    def path_mesh(self):
-        return os.path.join(self.tmp_dir, "mesh.msh")
-
-    @property
-    def content_par(self):
-        return femio.make_inputs(self.param_dict)
 
     # @property
     # def N_d_order(self):
     #     N = self.d/self.lambda0 * (sc.sqrt([self.eps_L1, self.eps_L6]) - np.sin(self.theta))
     #     return int(max(N))
 
-    def initialize(self):
-        try:
-            os.mkdir(self.tmp_dir)
-        except FileExistsError:
-            pass
-            # shutil.rmtree(tmp_dir)
-        # create tmp parameters files files
-        femio.maketmp(self.content_par, "parameters.dat", dirname=self.tmp_dir)
-        # create tmp geo file
-        femio.maketmp(self.content_geo, "geometry.geo", dirname=self.tmp_dir)
-        # create tmp geo file
-        femio.maketmp(self.content_pro, "main.pro", dirname=self.tmp_dir)
-
-    def update_params(self):
-        femio.maketmp(self.content_par, "parameters.dat", dirname=self.tmp_dir)
-
-    def cleanup(self):
-        os.remove("rm *.msh *.pre *.res *.dat *.txt *.pyc")
-
-    def open_gmsh_gui(self, pos_list=["*.pos"]):
-        p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
-        femio.open_gmsh(
-            self.path_mesh, self.path_geo, pos_list=p, verbose=self.gmsh_verbose
-        )
-        return
-
-    #
-    # def make_tmp_files(self):
-    #     path_pro = femio.maketmp(pro_merged, suffix=".pro", dir=self.tmp_dir)
-
     def make_param_dict(self):
+        param_dict = super().make_param_dict()
         layer_diopter = self.ancillary_problem()
-        param_dict = dict()
-        param_dict["parmesh"] = self.parmesh
-        param_dict["parmesh_des"] = self.parmesh_des
-        param_dict["parmesh_pml"] = self.parmesh_pml
-        param_dict["el_order"] = self.el_order
-        param_dict["lambda0"] = self.lambda0
-        param_dict["theta0"] = self.theta_0
-        param_dict["phi0"] = self.phi_0
-        param_dict["psi0"] = self.psi_0
-        param_dict["cel"] = self.cel
-        param_dict["mu0"] = self.mu0
-        param_dict["epsilon0"] = self.epsilon0
-        param_dict["a_pml"] = self.a_pml
-        param_dict["b_pml"] = self.b_pml
-        param_dict["period_x"] = self.period_x
-        param_dict["period_y"] = self.period_y
+        
         nb_layer = 6
         layer = []
         for k1 in range(0, nb_layer):
@@ -234,12 +177,8 @@ class PeriodicMediumFEM3D:
         for k in range(nb_layer - 3, -1, -1):
             layer[k]["hh"] = layer[k + 1]["hh"] + layer[k + 1]["thickness"]
         for i5 in range(0, nb_layer):
-            param_dict["eps_re_L_" + str(i5 + 1)] = layer[i5]["epsilon"].real
-            param_dict["eps_im_L_" + str(i5 + 1)] = layer[i5]["epsilon"].imag
-            param_dict["thick_L_" + str(i5 + 1)] = layer[i5]["thickness"]
-            param_dict["hh_L_" + str(i5 + 1)] = layer[i5]["hh"]
-        param_dict["PML_bot"] = self.PML_bot
-        param_dict["PML_top"] = self.PML_top
+            param_dict["thick_L" + str(i5 + 1)] = layer[i5]["thickness"]
+            param_dict["hh_L" + str(i5 + 1)] = layer[i5]["hh"]
         param_dict["PML_bot_hh"] = layer[-1]["hh"] - self.PML_bot
         param_dict["PML_top_hh"] = layer[0]["hh"] + self.thick_L1
         param_dict["Expj_subs_re"] = layer_diopter[1]["Psi"][0].real
@@ -272,39 +211,9 @@ class PeriodicMediumFEM3D:
         param_dict["gamma_super_re "] = layer_diopter[0]["gamma"].real
         param_dict["gamma_super_im "] = layer_diopter[0]["gamma"].imag
 
-        param_dict["ninterv_integ"] = self.ninterv_integ
-        param_dict["nb_slice"] = self.nb_slice
-        param_dict["scan_dist"] = self.scan_dist
-        param_dict["incl_flag"] = int(self.incl_flag)
-
         return param_dict
 
-    def get_design_nodes(self):
-        return femio.get_nodes(self.path_mesh, self.dom_des, self.celltype)
 
-    def get_design_elements(self):
-        return femio.get_elements(self.path_mesh, self.dom_des, self.celltype)
-
-    def make_eps_pos(self, des_ID, eps_des):
-        # create a pos file to be read by getdp
-        eps_des_pos = femio.make_pos(
-            des_ID, eps_des, self.content_mesh, "eps_des", type=self.type_des
-        )
-        return femio.maketmp(eps_des_pos, "eps_des.pos", dirname=self.tmp_dir)
-
-    def make_mesh_pos(self, els, nodes):
-        return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
-
-    def make_mesh(self, other_option=" -cpu"):
-        femio.mesh_model(
-            self.path_mesh,
-            self.path_geo,
-            dim=[1, 2, 3],
-            verbose=self.gmsh_verbose,
-            other_option=other_option,
-        )
-        content_mesh = femio.get_content(self.path_mesh)
-        return content_mesh
 
     def compute_solution(self, **kwargs):
         if self.analysis == "diffraction":
@@ -337,47 +246,6 @@ class PeriodicMediumFEM3D:
             argstr=argstr,
         )
 
-    def make_fdens(self, pattern):
-        n_x, n_y, n_z = pattern.shape
-        x = np.linspace(-self.period_x / 2, self.period_x / 2, n_x + 1)
-        y = np.linspace(-self.period_y / 2, self.period_y / 2, n_y + 1)
-        z = np.linspace(self.zmin_interp, self.zmax_interp, n_z + 1)
-        dx, dy, dz = x[1] - x[0], y[1] - y[0], z[1] - z[0]
-        x0, x1 = x[0], x[-1]
-        y0, y1 = y[0], y[-1]
-        z0, z1 = z[0], z[-1]
-        x = np.linspace(x0 + dx / 2, x1 - dx / 2, n_x)
-        y = np.linspace(y0 + dy / 2, y1 - dy / 2, n_y)
-        z = np.linspace(z0 + dz / 2, z1 - dz / 2, n_z)
-        xx, yy, zz = np.meshgrid(x, y, z)
-        points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
-        pat = pattern.reshape(n_x * n_y * n_z)
-        fdens = sc.interpolate.NearestNDInterpolator(points, pat)
-        return fdens
-
-    def assign_material(self, mat, matprop, density, lambda0):
-        pattern = mat.mat_rand
-        eps_nodes = np.zeros_like(density, dtype=complex)
-        eps_pattern = np.zeros_like(pattern, dtype=complex)
-        for i in range(mat.nb_threshold):
-            if isinstance(matprop[i], str):
-                ncomplex = ri.get_complex_index(lambda0, matprop[i])
-            else:
-                ncomplex = matprop[i]
-            eps_nodes[density == mat.threshold_val[i]] = ncomplex ** 2
-            eps_pattern[pattern == mat.threshold_val[i]] = ncomplex ** 2
-        return eps_nodes, eps_pattern
-
-    def ppstr(self, postop):
-        return femio.postprostring(
-            postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
-        )
-
-    def postpro_choice(self, name, filetype):
-        if filetype in {"pos", "txt"}:
-            subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
-        else:
-            raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def postpro_absorption(self):
         subprocess.call(self.ppstr("postopQ"), shell=True)
@@ -409,38 +277,28 @@ class PeriodicMediumFEM3D:
         return Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2
 
     def postpro_epsilon(self):
-        subprocess.call([self.ppstr("postop_epsilon") + " -order 2"], shell=True)
-
+        subprocess.call(
+            [self.ppstr("postop_epsilon") + " -order 2"], shell=True)
+    # 
     def postpro_fields(self, filetype="txt"):
         self.postpro_choice("postop_fields", filetype)
-
-    def get_field_map(self, name):
-        field = femio.load_table(self.tmp_dir + "/" + name)
-        return field.reshape((self.Niy, self.Nix)).T
-
-    def get_objective(self, run=False):
+    # 
+    # def get_field_map(self, name):
+    #     field = femio.load_table(self.tmp_dir + "/" + name)
+    #     return field.reshape((self.Niy, self.Nix)).T
+    # 
+    def get_objective(self):
+        self.print_progress("Retrieving objective")
         if not self.adjoint:
             subprocess.call(self.ppstr("postop_int_objective"), shell=True)
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):
-        return femio.load_node_table(self.tmp_dir + "/adjoint.txt")
+        return self.get_qty("adjoint.txt")
 
     def get_deq_deps(self):
-        return femio.load_node_table(self.tmp_dir + "/dEq_deps.txt")
+        return self.get_qty_vect("dEq_deps.txt")
 
-    def postpro_eigenvalues(self):
-        subprocess.call(self.ppstr("postop_eigenvalues"), shell=True)
-        filename = self.tmp_dir + "/EigenValues.txt"
-        re = np.loadtxt(filename, usecols=[1])
-        im = np.loadtxt(filename, usecols=[5])
-        return re + 1j * im
-
-    def postpro_eigenvectors(self, filetype="txt"):
-        self.postpro_choice("postop_eigenvectors", filetype)
-        if filetype is "txt":
-            ev = femio.load_timetable(self.tmp_dir + "/EigenVectors.txt")
-            return ev.reshape((self.Nix, self.Niy, self.neig))
 
     def diffraction_efficiencies(self):
         Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2 = self.postpro_fields_cuts()
@@ -477,8 +335,10 @@ class PeriodicMediumFEM3D:
             layer_diopter.append({})
         layer_diopter[0]["epsilon"] = self.eps_L1
         layer_diopter[1]["epsilon"] = self.eps_L6
-        layer_diopter[0]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[0]["epsilon"])
-        layer_diopter[1]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[1]["epsilon"])
+        layer_diopter[0]["kp"] = 2 * pi / lambda0 * \
+            sc.sqrt(layer_diopter[0]["epsilon"])
+        layer_diopter[1]["kp"] = 2 * pi / lambda0 * \
+            sc.sqrt(layer_diopter[1]["epsilon"])
         layer_diopter[0]["gamma"] = sc.sqrt(
             layer_diopter[0]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
         )
@@ -489,12 +349,14 @@ class PeriodicMediumFEM3D:
         for nt in range(0, Nb_ordre):
             for mt in range(0, Nb_ordre):
                 gammatt[nt, mt] = sc.sqrt(
-                    layer_diopter[-1]["kp"] ** 2 - alphat[nt] ** 2 - betat[mt] ** 2
+                    layer_diopter[-1]["kp"] ** 2 -
+                    alphat[nt] ** 2 - betat[mt] ** 2
                 )
         for nr in range(0, Nb_ordre):
             for mr in range(0, Nb_ordre):
                 gammatr[nr, mr] = sc.sqrt(
-                    layer_diopter[0]["kp"] ** 2 - alphat[nr] ** 2 - betat[mr] ** 2
+                    layer_diopter[0]["kp"] ** 2 -
+                    alphat[nr] ** 2 - betat[mr] ** 2
                 )
 
         for k11 in range(0, nb_slice):
@@ -531,12 +393,14 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m1] * y_r)
                         # ex_nm_r_inter[j1] = 1/period_y * np.trapz((Ex_r2[:,j1,k11])*expbeta,x=y_r)
                         ex_nm_r_inter[j1] = (
-                            1 / period_y * np.trapz((Ex_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y *
+                            np.trapz((Ex_r3[:, j1]) * expbeta, x=y_r)
                         )
                         # plt.plot np.trapz(y_t,(Ex_t[::-1,j1].transpose()*expbeta).conjugate()[::-1])
                     expalpha = np.exp(1j * alphat[n1] * x_t)
                     ex_nm_r[n1, m1] = (
-                        1 / period_x * np.trapz(ex_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x *
+                        np.trapz(ex_nm_r_inter * expalpha, x=x_r)
                     )
             for n2 in range(0, Nb_ordre):
                 for m2 in range(0, Nb_ordre):
@@ -544,11 +408,13 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m2] * y_t)
                         # ex_nm_t_inter[j1] = 1/period_y * np.trapz((Ex_t2[:,j1,k11])*expbeta,x=y_t)
                         ex_nm_t_inter[j1] = (
-                            1 / period_y * np.trapz((Ex_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y *
+                            np.trapz((Ex_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n2] * x_t)
                     ex_nm_t[n2, m2] = (
-                        1 / period_x * np.trapz(ex_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x *
+                        np.trapz(ex_nm_t_inter * expalpha, x=x_t)
                     )
             for n3 in range(0, Nb_ordre):
                 for m3 in range(0, Nb_ordre):
@@ -556,11 +422,13 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m3] * y_r)
                         # ey_nm_r_inter[j1] = 1/period_y * np.trapz((Ey_r2[:,j1,k11])*expbeta,x=y_r)
                         ey_nm_r_inter[j1] = (
-                            1 / period_y * np.trapz((Ey_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y *
+                            np.trapz((Ey_r3[:, j1]) * expbeta, x=y_r)
                         )
                     expalpha = np.exp(1j * alphat[n3] * x_t)
                     ey_nm_r[n3, m3] = (
-                        1 / period_x * np.trapz(ey_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x *
+                        np.trapz(ey_nm_r_inter * expalpha, x=x_r)
                     )
             for n4 in range(0, Nb_ordre):
                 for m4 in range(0, Nb_ordre):
@@ -568,11 +436,13 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m4] * y_t)
                         # ey_nm_t_inter[j1] = 1/period_y * np.trapz((Ey_t2[:,j1,k11])*expbeta,x=y_t)
                         ey_nm_t_inter[j1] = (
-                            1 / period_y * np.trapz((Ey_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y *
+                            np.trapz((Ey_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n4] * x_t)
                     ey_nm_t[n4, m4] = (
-                        1 / period_x * np.trapz(ey_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x *
+                        np.trapz(ey_nm_t_inter * expalpha, x=x_t)
                     )
             for n6 in range(0, Nb_ordre):
                 for m6 in range(0, Nb_ordre):
@@ -580,11 +450,13 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m6] * y_r)
                         # ez_nm_r_inter[j1] = 1/period_y * np.trapz((Ez_r2[:,j1,k11])*expbeta,x=y_r)
                         ez_nm_r_inter[j1] = (
-                            1 / period_y * np.trapz((Ez_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y *
+                            np.trapz((Ez_r3[:, j1]) * expbeta, x=y_r)
                         )
                     expalpha = np.exp(1j * alphat[n6] * x_t)
                     ez_nm_r[n6, m6] = (
-                        1 / period_x * np.trapz(ez_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x *
+                        np.trapz(ez_nm_r_inter * expalpha, x=x_r)
                     )
             for n7 in range(0, Nb_ordre):
                 for m7 in range(0, Nb_ordre):
@@ -592,11 +464,13 @@ class PeriodicMediumFEM3D:
                         expbeta = np.exp(1j * betat[m7] * y_t)
                         # ez_nm_t_inter[j1] = 1/period_y * np.trapz((Ez_t2[:,j1,k11])*expbeta,x=y_t)
                         ez_nm_t_inter[j1] = (
-                            1 / period_y * np.trapz((Ez_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y *
+                            np.trapz((Ez_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n7] * x_t)
                     ez_nm_t[n7, m7] = (
-                        1 / period_x * np.trapz(ez_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x *
+                        np.trapz(ez_nm_t_inter * expalpha, x=x_t)
                     )
             ####################
             for n8 in range(0, Nb_ordre):
@@ -605,9 +479,12 @@ class PeriodicMediumFEM3D:
                         1
                         / (layer_diopter[0]["gamma"] * gammatt[n8, m8])
                         * (
-                            +gammatt[n8, m8] ** 2 * np.abs(ex_nm_t[n8, m8]) ** 2
-                            + gammatt[n8, m8] ** 2 * np.abs(ey_nm_t[n8, m8]) ** 2
-                            + gammatt[n8, m8] ** 2 * np.abs(ez_nm_t[n8, m8]) ** 2
+                            +gammatt[n8, m8] ** 2 *
+                            np.abs(ex_nm_t[n8, m8]) ** 2
+                            + gammatt[n8, m8] ** 2 *
+                            np.abs(ey_nm_t[n8, m8]) ** 2
+                            + gammatt[n8, m8] ** 2 *
+                            np.abs(ez_nm_t[n8, m8]) ** 2
                         )
                     )
             for n9 in range(0, Nb_ordre):
@@ -616,9 +493,12 @@ class PeriodicMediumFEM3D:
                         1
                         / (layer_diopter[0]["gamma"] * gammatr[n9, m9])
                         * (
-                            +gammatr[n9, m9] ** 2 * np.abs(ex_nm_r[n9, m9]) ** 2
-                            + gammatr[n9, m9] ** 2 * np.abs(ey_nm_r[n9, m9]) ** 2
-                            + gammatr[n9, m9] ** 2 * np.abs(ez_nm_r[n9, m9]) ** 2
+                            +gammatr[n9, m9] ** 2 *
+                            np.abs(ex_nm_r[n9, m9]) ** 2
+                            + gammatr[n9, m9] ** 2 *
+                            np.abs(ey_nm_r[n9, m9]) ** 2
+                            + gammatr[n9, m9] ** 2 *
+                            np.abs(ez_nm_r[n9, m9]) ** 2
                         )
                     )
         Q = self.postpro_absorption()
@@ -685,7 +565,8 @@ class PeriodicMediumFEM3D:
         ####   SET Interface and transport matrices  ####
         #################################################
         for i_prop in range(0, nb_layer_diopter):
-            layer_diopter[i_prop]["kp"] = k0 * sc.sqrt(layer_diopter[i_prop]["epsilon"])
+            layer_diopter[i_prop]["kp"] = k0 * \
+                sc.sqrt(layer_diopter[i_prop]["epsilon"])
             layer_diopter[i_prop]["gamma"] = sc.sqrt(
                 layer_diopter[i_prop]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
             )
@@ -694,11 +575,13 @@ class PeriodicMediumFEM3D:
                 np.array(
                     [
                         [omega * layer_diopter[i_prop]["mu"] * self.mu0, 0, beta0],
-                        [0, omega * layer_diopter[i_prop]["mu"] * self.mu0, -alpha0],
+                        [0, omega * layer_diopter[i_prop]
+                            ["mu"] * self.mu0, -alpha0],
                         [
                             -beta0,
                             alpha0,
-                            -omega * layer_diopter[i_prop]["epsilon"] * self.epsilon0,
+                            -omega *
+                            layer_diopter[i_prop]["epsilon"] * self.epsilon0,
                         ],
                     ]
                 )
@@ -825,7 +708,8 @@ class PeriodicMediumFEM3D:
         )
         for i2 in range(1, nb_layer_diopter - 1):
             layer_diopter[(nb_layer_diopter - 2) - i2]["Psi"] = np.dot(
-                sc.linalg.inv(layer_diopter[(nb_layer_diopter - 2) - i2]["Pi"]),
+                sc.linalg.inv(
+                    layer_diopter[(nb_layer_diopter - 2) - i2]["Pi"]),
                 np.dot(
                     (layer_diopter[(nb_layer_diopter - 2) - i2 + 1]["Pi"]),
                     np.dot(
@@ -840,7 +724,8 @@ class PeriodicMediumFEM3D:
                 layer_diopter[i4]["gamma"]
                 * (
                     layer_diopter[i4]["M"][2, 0] * layer_diopter[i4]["Psi"][2]
-                    - layer_diopter[i4]["M"][2, 1] * layer_diopter[i4]["Psi"][0]
+                    - layer_diopter[i4]["M"][2, 1] *
+                    layer_diopter[i4]["Psi"][0]
                 ),
             )
             layer_diopter[i4]["Psi"] = np.append(
@@ -848,7 +733,8 @@ class PeriodicMediumFEM3D:
                 layer_diopter[i4]["gamma"]
                 * (
                     layer_diopter[i4]["M"][2, 1] * layer_diopter[i4]["Psi"][1]
-                    - layer_diopter[i4]["M"][2, 0] * layer_diopter[i4]["Psi"][3]
+                    - layer_diopter[i4]["M"][2, 0] *
+                    layer_diopter[i4]["Psi"][3]
                 ),
             )
 
@@ -883,7 +769,8 @@ class PeriodicMediumFEM3D:
                 * alpha0
                 * beta0
                 * np.real(
-                    layer_diopter[0]["Psi"][1] * layer_diopter[0]["Psi"][3].conjugate()
+                    layer_diopter[0]["Psi"][1] *
+                    layer_diopter[0]["Psi"][3].conjugate()
                 )
             )
         )
@@ -891,9 +778,11 @@ class PeriodicMediumFEM3D:
             1.0
             / (layer_diopter[0]["gamma"] * layer_diopter[nb_layer_diopter - 1]["gamma"])
             * (
-                (layer_diopter[nb_layer_diopter - 1]["gamma"] ** 2 + alpha0 ** 2)
+                (layer_diopter[nb_layer_diopter - 1]
+                 ["gamma"] ** 2 + alpha0 ** 2)
                 * abs(layer_diopter[nb_layer_diopter - 1]["Psi"][0]) ** 2
-                + (layer_diopter[nb_layer_diopter - 1]["gamma"] ** 2 + beta0 ** 2)
+                + (layer_diopter[nb_layer_diopter - 1]
+                   ["gamma"] ** 2 + beta0 ** 2)
                 * abs(layer_diopter[nb_layer_diopter - 1]["Psi"][2]) ** 2
                 + 2
                 * alpha0
@@ -909,7 +798,3 @@ class PeriodicMediumFEM3D:
         # hack
         layer_diopter[0]["Trans"] = AT2[0]
         return layer_diopter
-
-
-if __name__ == "__main__":
-    print("This is the femmodel module")

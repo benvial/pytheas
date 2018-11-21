@@ -252,19 +252,31 @@ def load_node_table(filename):
 def load_table(filename):
     return np.loadtxt(filename, usecols=[3]) + 1j * np.loadtxt(filename, usecols=[4])
 
+# def load_node_table_vect(filename):
+#     nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)
+#     values = np.loadtxt(filename, usecols=[1], skiprows=1) + 1j * np.loadtxt(
+#         filename, usecols=[2], skiprows=1
+#     )
+#     return nodenumber, values
 
 def load_table_vect(filename):
-    comp_x = np.loadtxt(filename, skiprows=0, usecols=[8]) + 1j * np.loadtxt(
-        filename, skiprows=0, usecols=[11]
-    )
-    comp_y = np.loadtxt(filename, skiprows=0, usecols=[9]) + 1j * np.loadtxt(
-        filename, skiprows=0, usecols=[12]
-    )
-    comp_z = np.loadtxt(filename, skiprows=0, usecols=[10]) + 1j * np.loadtxt(
-        filename, skiprows=0, usecols=[13]
-    )
-    return comp_x, comp_y, comp_z
+    vect = []
+    for i in range(3):
+        comp = 0
+        for j in range(2):
+            comp += np.loadtxt(filename, usecols=[3 + i + j*3]) * np.exp(j * 1j*np.pi/2)
+        vect.append(comp)
+    return vect
 
+def load_node_table_vect(filename):
+    nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)
+    vect = []
+    for i in range(3):
+        comp = 0
+        for j in range(2):
+            comp += np.loadtxt(filename, usecols=[1 + i + j*3], skiprows=1) * np.exp(j * 1j*np.pi/2)
+        vect.append(comp)
+    return nodenumber, vect
 
 def load_timetable(filename):
     return np.loadtxt(filename, usecols=[5]) + 1j * np.loadtxt(filename, usecols=[6])

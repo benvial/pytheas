@@ -1,44 +1,45 @@
 
 Include "parameters.dat";
 
-lc_pmltop       = lambda0/(parmesh_pml*Sqrt[Fabs[eps_L1_re]]);
-lc_layer1       = lambda0/(parmesh*Sqrt[Fabs[eps_L1_re]]);
-lc_layer2       = lambda0/(parmesh_des*Sqrt[Fabs[eps_L2_re]]);
-lc_layer3       = lambda0/(parmesh_des*Sqrt[Fabs[eps_L3_re]]);
-lc_layer4       = lc_layer3;//lambda0/(parmesh*Sqrt[Fabs[eps_L4_re]]);
-lc_layer5       = lambda0/(parmesh*Sqrt[Fabs[eps_L5_re]]);
-lc_layer6       = lambda0/(parmesh*Sqrt[Fabs[eps_L6_re]]);
-lc_pmlbot       = lambda0/(parmesh_pml*Sqrt[Fabs[eps_L6_re]]);
+
+lc_pmltop       = lambda0/(parmesh_pml*Sqrt[Fabs[eps_re_L_1]]);
+lc_layer1       = lambda0/(parmesh*Sqrt[Fabs[eps_re_L_1]]);
+lc_layer2       = lambda0/(parmesh_des*Sqrt[Fabs[eps_re_L_2]]);
+lc_layer3       = lambda0/(parmesh_des*Sqrt[Fabs[eps_re_L_3]]);
+lc_layer4       = lc_layer3;//lambda0/(parmesh*Sqrt[Fabs[eps_re_L_4]]);
+lc_layer5       = lambda0/(parmesh*Sqrt[Fabs[eps_re_L_5]]);
+lc_layer6       = lambda0/(parmesh*Sqrt[Fabs[eps_re_L_6]]);
+lc_pmlbot       = lambda0/(parmesh_pml*Sqrt[Fabs[eps_re_L_6]]);
 
 
 Point(1)  = {-period_x/2,-period_y/2, PML_bot_hh, lc_pmltop};
-Point(2)  = {-period_x/2, period_y/2, PML_bot_hh, lc_pmltop};
+Point(2)  = {period_x/2, -period_y/2, PML_bot_hh, lc_pmltop};
 Point(3)  = { period_x/2, period_y/2, PML_bot_hh, lc_pmltop};
-Point(4)  = { period_x/2,-period_y/2, PML_bot_hh, lc_pmltop};
-Point(5)  = {-period_x/2,-period_y/2, hh_L6, lc_layer6};
-Point(6)  = {-period_x/2, period_y/2, hh_L6, lc_layer6};
-Point(7)  = { period_x/2, period_y/2, hh_L6, lc_layer6};
-Point(8)  = { period_x/2,-period_y/2, hh_L6, lc_layer6};
-Point(9)  = {-period_x/2,-period_y/2, hh_L5, lc_layer5};
-Point(10) = {-period_x/2, period_y/2, hh_L5, lc_layer5};
-Point(11) = { period_x/2, period_y/2, hh_L5, lc_layer5};
-Point(12) = { period_x/2,-period_y/2, hh_L5, lc_layer5};
-Point(13) = {-period_x/2,-period_y/2, hh_L4, lc_layer4};
-Point(14) = {-period_x/2, period_y/2, hh_L4, lc_layer4};
-Point(15) = { period_x/2, period_y/2, hh_L4, lc_layer4};
-Point(16) = { period_x/2,-period_y/2, hh_L4, lc_layer4};
-Point(17) = {-period_x/2,-period_y/2, hh_L3, lc_layer3};
-Point(18) = {-period_x/2, period_y/2, hh_L3, lc_layer3};
-Point(19) = { period_x/2, period_y/2, hh_L3, lc_layer3};
-Point(20) = { period_x/2,-period_y/2, hh_L3, lc_layer3};
-Point(21) = {-period_x/2,-period_y/2, hh_L2, lc_layer2};
-Point(22) = {-period_x/2, period_y/2, hh_L2, lc_layer2};
-Point(23) = { period_x/2, period_y/2, hh_L2, lc_layer2};
-Point(24) = { period_x/2,-period_y/2, hh_L2, lc_layer2};
-Point(25) = {-period_x/2,-period_y/2, hh_L1, lc_layer1};
-Point(26) = {-period_x/2, period_y/2, hh_L1, lc_layer1};
-Point(27) = { period_x/2, period_y/2, hh_L1, lc_layer1};
-Point(28) = { period_x/2,-period_y/2, hh_L1, lc_layer1};
+Point(4)  = { -period_x/2,period_y/2, PML_bot_hh, lc_pmltop};
+/* Point(5)  = {-period_x/2,-period_y/2, hh_L_6, lc_layer6};
+Point(6)  = {-period_x/2, period_y/2, hh_L_6, lc_layer6};
+Point(7)  = { period_x/2, period_y/2, hh_L_6, lc_layer6};
+Point(8)  = { period_x/2,-period_y/2, hh_L_6, lc_layer6};
+Point(9)  = {-period_x/2,-period_y/2, hh_L_5, lc_layer5};
+Point(10) = {-period_x/2, period_y/2, hh_L_5, lc_layer5};
+Point(11) = { period_x/2, period_y/2, hh_L_5, lc_layer5};
+Point(12) = { period_x/2,-period_y/2, hh_L_5, lc_layer5};
+Point(13) = {-period_x/2,-period_y/2, hh_L_4, lc_layer4};
+Point(14) = {-period_x/2, period_y/2, hh_L_4, lc_layer4};
+Point(15) = { period_x/2, period_y/2, hh_L_4, lc_layer4};
+Point(16) = { period_x/2,-period_y/2, hh_L_4, lc_layer4};
+Point(17) = {-period_x/2,-period_y/2, hh_L_3, lc_layer3};
+Point(18) = {-period_x/2, period_y/2, hh_L_3, lc_layer3};
+Point(19) = { period_x/2, period_y/2, hh_L_3, lc_layer3};
+Point(20) = { period_x/2,-period_y/2, hh_L_3, lc_layer3};
+Point(21) = {-period_x/2,-period_y/2, hh_L_2, lc_layer2};
+Point(22) = {-period_x/2, period_y/2, hh_L_2, lc_layer2};
+Point(23) = { period_x/2, period_y/2, hh_L_2, lc_layer2};
+Point(24) = { period_x/2,-period_y/2, hh_L_2, lc_layer2};
+Point(25) = {-period_x/2,-period_y/2, hh_L_1, lc_layer1};
+Point(26) = {-period_x/2, period_y/2, hh_L_1, lc_layer1};
+Point(27) = { period_x/2, period_y/2, hh_L_1, lc_layer1};
+Point(28) = { period_x/2,-period_y/2, hh_L_1, lc_layer1};
 Point(29) = {-period_x/2,-period_y/2, PML_top_hh, lc_layer1};
 Point(30) = {-period_x/2, period_y/2, PML_top_hh, lc_layer1};
 Point(31) = { period_x/2, period_y/2, PML_top_hh, lc_layer1};
@@ -46,14 +47,41 @@ Point(32) = { period_x/2,-period_y/2, PML_top_hh, lc_layer1};
 Point(33) = {-period_x/2,-period_y/2, PML_top_hh+PML_top, lc_pmltop};
 Point(34) = {-period_x/2, period_y/2, PML_top_hh+PML_top, lc_pmltop};
 Point(35) = { period_x/2, period_y/2, PML_top_hh+PML_top, lc_pmltop};
-Point(36) = { period_x/2,-period_y/2, PML_top_hh+PML_top, lc_pmltop};
+Point(36) = { period_x/2,-period_y/2, PML_top_hh+PML_top, lc_pmltop}; */
 
 
-Line(1)  = {2, 1};
-Line(2)  = {1, 4};
-Line(3)  = {4, 3};
-Line(4)  = {3, 2};
-Line(5)  = {2, 6};
+Line(1)  = {1, 2};
+Line(2)  = {2, 3};
+Line(3)  = {3, 4};
+Line(4)  = {4, 1};
+
+Line Loop(105) = {1, 2, 3, 4};
+Plane Surface(170) = {105};
+
+//Transfinite surface:
+Transfinite Surface {170};
+Recombine Surface {170};
+
+Physical Volume(1000) = {1};
+pmlbot[] = Extrude {0, 0, PML_bot} {
+ Surface{170};
+ Layers{PML_bot/lc_pmlbot};
+ Recombine;
+};
+
+
+
+
+Physical Surface("front") = pmlbot[0];
+Physical Volume("internal") = pmlbot[1];
+Physical Surface("bottom") = pmlbot[2];
+Physical Surface("pmlbotXplus") = pmlbot[3];
+Physical Surface("top") = pmlbot[4];
+Physical Surface("pmlbotXminus") = pmlbot[5];
+Physical Surface("back") = {170};
+
+
+/* Line(5)  = {2, 6};
 Line(6)  = {6, 5};
 Line(7)  = {5, 8};
 Line(8)  = {8, 7};
@@ -116,8 +144,8 @@ Line(64) = {29,33};
 Line(65) = {28,32};
 Line(66) = {32,36};
 Line(67) = {27,31};
-Line(68) = {31,35};
-
+Line(68) = {31,35}; */
+/* 
 
 
 //Face 1
@@ -279,9 +307,7 @@ Physical Volume(6000) = {10019};  // layer L2
 Physical Volume(7000) = {10021};  // layer L1
 Physical Volume(8000) = {10023};  // PML top
 
-
-Physical Point(10000) = {1};  // PML top
-
+*/
 Mesh.Algorithm   = 1; // // 1=MeshAdapt, 5=Delaunay, 6=Frontal
 Mesh.Algorithm3D = 2; // // 1=Delaunay, 4=Frontal
-Mesh.Optimize = 1;
+Mesh.Optimize = 1; 

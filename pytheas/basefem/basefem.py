@@ -45,6 +45,7 @@ class BaseFEM:
         self.pro_filename_ = "main.pro"  #: str: GetDP pro filename
         #: str: Gmsh geo filename for background mesh
         self.bg_mesh_filename_ = "bg_mesh.geo"
+        self.bg_mesh = True
         # : bool: wether or not to use an inclusion geometry instead of a material distribution
         self.inclusion_flag = False
         self.pola = None
@@ -104,7 +105,10 @@ class BaseFEM:
 
     @property
     def content_bg_mesh(self):
-        return femio.get_content(self.bg_mesh_filename)
+        if self.bg_mesh:
+            return femio.get_content(self.bg_mesh_filename)
+        else:
+            return ""
 
     #
     # @property
@@ -159,9 +163,10 @@ class BaseFEM:
         # create tmp geo file
         femio.maketmp(self.content_geo, self.geom_filename_, dirname=self.tmp_dir)
         # create tmp geo file for background mesh
-        femio.maketmp(
-            self.content_bg_mesh, self.bg_mesh_filename_, dirname=self.tmp_dir
-        )
+        if self.bg_mesh:
+            femio.maketmp(
+                self.content_bg_mesh, self.bg_mesh_filename_, dirname=self.tmp_dir
+            )
         # create tmp pro file
         femio.maketmp(self.content_pro, self.pro_filename_, dirname=self.tmp_dir)
         # if self.inclusion_flag:
@@ -356,10 +361,17 @@ class BaseFEM:
     def get_qty(self, filename):
         file_path = os.path.join(self.tmp_dir, filename)
         if self.type_des is "nodes":
-            a = femio.load_node_table(file_path)[1]
+            return femio.load_node_table(file_path)[1]
         else:
-            a = femio.load_table(file_path)
-        return a
+            return femio.load_table(file_path)
+        
+    def get_qty_vect(self, filename):
+        file_path = os.path.join(self.tmp_dir, filename)
+        if self.type_des is "nodes":
+            return femio.load_node_table_vect(file_path)[1]
+        else:
+            return femio.load_table_vect(file_path)
+            
 
     def make_fdens(self, pattern):
         self.print_progress("Making density function")
