@@ -364,14 +364,13 @@ class BaseFEM:
             return femio.load_node_table(file_path)[1]
         else:
             return femio.load_table(file_path)
-        
+
     def get_qty_vect(self, filename):
         file_path = os.path.join(self.tmp_dir, filename)
         if self.type_des is "nodes":
             return femio.load_node_table_vect(file_path)[1]
         else:
             return femio.load_table_vect(file_path)
-            
 
     def make_fdens(self, pattern):
         self.print_progress("Making density function")

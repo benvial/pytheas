@@ -51,7 +51,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         eps_L4=1 - 0 * 1j,  #: flt: permittivity layer 4
         eps_L5=1 - 0 * 1j,  #: flt: permittivity layer 5
         eps_L6=1 - 0 * 1j,  #: flt: permittivity layer 6 (substrate)
-        el_order=1
+        el_order=1,
     ):
         super().__init__()
 
@@ -105,9 +105,9 @@ class PeriodicMediumFEM3D(BaseFEM):
         self.nb_slice = 3
         #: flt:  such that `scan_dist  = min(h_sup, hsub)/scan_dist_ratio`
         self.scan_dist_ratio = 5
-        
+
         self.dim = 3
-        
+
         self.adjoint = False
 
     @property
@@ -137,11 +137,17 @@ class PeriodicMediumFEM3D(BaseFEM):
     @property
     def psi_0(self):
         return pi / 180.0 * (self.psi_deg)
-        
+
     @property
     def corners_des(self):
-        return -self.period_x / 2, +self.period_x / 2, -self.period_y / 2, +self.period_y / 2, +self.zmin_interp, +self.zmax_interp
-
+        return (
+            -self.period_x / 2,
+            +self.period_x / 2,
+            -self.period_y / 2,
+            +self.period_y / 2,
+            +self.zmin_interp,
+            +self.zmax_interp,
+        )
 
     # @property
     # def N_d_order(self):
@@ -151,7 +157,7 @@ class PeriodicMediumFEM3D(BaseFEM):
     def make_param_dict(self):
         param_dict = super().make_param_dict()
         layer_diopter = self.ancillary_problem()
-        
+
         nb_layer = 6
         layer = []
         for k1 in range(0, nb_layer):
@@ -213,9 +219,8 @@ class PeriodicMediumFEM3D(BaseFEM):
 
         return param_dict
 
-
-
     def compute_solution(self, **kwargs):
+        self.update_params()
         if self.analysis == "diffraction":
             argstr = "-petsc_prealloc 500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
@@ -245,7 +250,6 @@ class PeriodicMediumFEM3D(BaseFEM):
             path_pos=self.path_pos,
             argstr=argstr,
         )
-
 
     def postpro_absorption(self):
         subprocess.call(self.ppstr("postopQ"), shell=True)
@@ -277,16 +281,17 @@ class PeriodicMediumFEM3D(BaseFEM):
         return Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2
 
     def postpro_epsilon(self):
-        subprocess.call(
-            [self.ppstr("postop_epsilon") + " -order 2"], shell=True)
-    # 
+        subprocess.call([self.ppstr("postop_epsilon") + " -order 2"], shell=True)
+
+    #
     def postpro_fields(self, filetype="txt"):
         self.postpro_choice("postop_fields", filetype)
-    # 
+
+    #
     # def get_field_map(self, name):
     #     field = femio.load_table(self.tmp_dir + "/" + name)
     #     return field.reshape((self.Niy, self.Nix)).T
-    # 
+    #
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
@@ -294,11 +299,10 @@ class PeriodicMediumFEM3D(BaseFEM):
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):
-        return self.get_qty("adjoint.txt")
+        return self.get_qty_vect("adjoint.txt")
 
     def get_deq_deps(self):
         return self.get_qty_vect("dEq_deps.txt")
-
 
     def diffraction_efficiencies(self):
         Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2 = self.postpro_fields_cuts()
@@ -335,10 +339,8 @@ class PeriodicMediumFEM3D(BaseFEM):
             layer_diopter.append({})
         layer_diopter[0]["epsilon"] = self.eps_L1
         layer_diopter[1]["epsilon"] = self.eps_L6
-        layer_diopter[0]["kp"] = 2 * pi / lambda0 * \
-            sc.sqrt(layer_diopter[0]["epsilon"])
-        layer_diopter[1]["kp"] = 2 * pi / lambda0 * \
-            sc.sqrt(layer_diopter[1]["epsilon"])
+        layer_diopter[0]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[0]["epsilon"])
+        layer_diopter[1]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[1]["epsilon"])
         layer_diopter[0]["gamma"] = sc.sqrt(
             layer_diopter[0]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
         )
@@ -349,14 +351,12 @@ class PeriodicMediumFEM3D(BaseFEM):
         for nt in range(0, Nb_ordre):
             for mt in range(0, Nb_ordre):
                 gammatt[nt, mt] = sc.sqrt(
-                    layer_diopter[-1]["kp"] ** 2 -
-                    alphat[nt] ** 2 - betat[mt] ** 2
+                    layer_diopter[-1]["kp"] ** 2 - alphat[nt] ** 2 - betat[mt] ** 2
                 )
         for nr in range(0, Nb_ordre):
             for mr in range(0, Nb_ordre):
                 gammatr[nr, mr] = sc.sqrt(
-                    layer_diopter[0]["kp"] ** 2 -
-                    alphat[nr] ** 2 - betat[mr] ** 2
+                    layer_diopter[0]["kp"] ** 2 - alphat[nr] ** 2 - betat[mr] ** 2
                 )
 
         for k11 in range(0, nb_slice):
@@ -393,14 +393,12 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m1] * y_r)
                         # ex_nm_r_inter[j1] = 1/period_y * np.trapz((Ex_r2[:,j1,k11])*expbeta,x=y_r)
                         ex_nm_r_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ex_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y * np.trapz((Ex_r3[:, j1]) * expbeta, x=y_r)
                         )
                         # plt.plot np.trapz(y_t,(Ex_t[::-1,j1].transpose()*expbeta).conjugate()[::-1])
                     expalpha = np.exp(1j * alphat[n1] * x_t)
                     ex_nm_r[n1, m1] = (
-                        1 / period_x *
-                        np.trapz(ex_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x * np.trapz(ex_nm_r_inter * expalpha, x=x_r)
                     )
             for n2 in range(0, Nb_ordre):
                 for m2 in range(0, Nb_ordre):
@@ -408,13 +406,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m2] * y_t)
                         # ex_nm_t_inter[j1] = 1/period_y * np.trapz((Ex_t2[:,j1,k11])*expbeta,x=y_t)
                         ex_nm_t_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ex_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y * np.trapz((Ex_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n2] * x_t)
                     ex_nm_t[n2, m2] = (
-                        1 / period_x *
-                        np.trapz(ex_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x * np.trapz(ex_nm_t_inter * expalpha, x=x_t)
                     )
             for n3 in range(0, Nb_ordre):
                 for m3 in range(0, Nb_ordre):
@@ -422,13 +418,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m3] * y_r)
                         # ey_nm_r_inter[j1] = 1/period_y * np.trapz((Ey_r2[:,j1,k11])*expbeta,x=y_r)
                         ey_nm_r_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ey_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y * np.trapz((Ey_r3[:, j1]) * expbeta, x=y_r)
                         )
                     expalpha = np.exp(1j * alphat[n3] * x_t)
                     ey_nm_r[n3, m3] = (
-                        1 / period_x *
-                        np.trapz(ey_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x * np.trapz(ey_nm_r_inter * expalpha, x=x_r)
                     )
             for n4 in range(0, Nb_ordre):
                 for m4 in range(0, Nb_ordre):
@@ -436,13 +430,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m4] * y_t)
                         # ey_nm_t_inter[j1] = 1/period_y * np.trapz((Ey_t2[:,j1,k11])*expbeta,x=y_t)
                         ey_nm_t_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ey_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y * np.trapz((Ey_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n4] * x_t)
                     ey_nm_t[n4, m4] = (
-                        1 / period_x *
-                        np.trapz(ey_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x * np.trapz(ey_nm_t_inter * expalpha, x=x_t)
                     )
             for n6 in range(0, Nb_ordre):
                 for m6 in range(0, Nb_ordre):
@@ -450,13 +442,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m6] * y_r)
                         # ez_nm_r_inter[j1] = 1/period_y * np.trapz((Ez_r2[:,j1,k11])*expbeta,x=y_r)
                         ez_nm_r_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ez_r3[:, j1]) * expbeta, x=y_r)
+                            1 / period_y * np.trapz((Ez_r3[:, j1]) * expbeta, x=y_r)
                         )
                     expalpha = np.exp(1j * alphat[n6] * x_t)
                     ez_nm_r[n6, m6] = (
-                        1 / period_x *
-                        np.trapz(ez_nm_r_inter * expalpha, x=x_r)
+                        1 / period_x * np.trapz(ez_nm_r_inter * expalpha, x=x_r)
                     )
             for n7 in range(0, Nb_ordre):
                 for m7 in range(0, Nb_ordre):
@@ -464,13 +454,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                         expbeta = np.exp(1j * betat[m7] * y_t)
                         # ez_nm_t_inter[j1] = 1/period_y * np.trapz((Ez_t2[:,j1,k11])*expbeta,x=y_t)
                         ez_nm_t_inter[j1] = (
-                            1 / period_y *
-                            np.trapz((Ez_t3[:, j1]) * expbeta, x=y_t)
+                            1 / period_y * np.trapz((Ez_t3[:, j1]) * expbeta, x=y_t)
                         )
                     expalpha = np.exp(1j * alphat[n7] * x_t)
                     ez_nm_t[n7, m7] = (
-                        1 / period_x *
-                        np.trapz(ez_nm_t_inter * expalpha, x=x_t)
+                        1 / period_x * np.trapz(ez_nm_t_inter * expalpha, x=x_t)
                     )
             ####################
             for n8 in range(0, Nb_ordre):
@@ -479,12 +467,9 @@ class PeriodicMediumFEM3D(BaseFEM):
                         1
                         / (layer_diopter[0]["gamma"] * gammatt[n8, m8])
                         * (
-                            +gammatt[n8, m8] ** 2 *
-                            np.abs(ex_nm_t[n8, m8]) ** 2
-                            + gammatt[n8, m8] ** 2 *
-                            np.abs(ey_nm_t[n8, m8]) ** 2
-                            + gammatt[n8, m8] ** 2 *
-                            np.abs(ez_nm_t[n8, m8]) ** 2
+                            +gammatt[n8, m8] ** 2 * np.abs(ex_nm_t[n8, m8]) ** 2
+                            + gammatt[n8, m8] ** 2 * np.abs(ey_nm_t[n8, m8]) ** 2
+                            + gammatt[n8, m8] ** 2 * np.abs(ez_nm_t[n8, m8]) ** 2
                         )
                     )
             for n9 in range(0, Nb_ordre):
@@ -493,12 +478,9 @@ class PeriodicMediumFEM3D(BaseFEM):
                         1
                         / (layer_diopter[0]["gamma"] * gammatr[n9, m9])
                         * (
-                            +gammatr[n9, m9] ** 2 *
-                            np.abs(ex_nm_r[n9, m9]) ** 2
-                            + gammatr[n9, m9] ** 2 *
-                            np.abs(ey_nm_r[n9, m9]) ** 2
-                            + gammatr[n9, m9] ** 2 *
-                            np.abs(ez_nm_r[n9, m9]) ** 2
+                            +gammatr[n9, m9] ** 2 * np.abs(ex_nm_r[n9, m9]) ** 2
+                            + gammatr[n9, m9] ** 2 * np.abs(ey_nm_r[n9, m9]) ** 2
+                            + gammatr[n9, m9] ** 2 * np.abs(ez_nm_r[n9, m9]) ** 2
                         )
                     )
         Q = self.postpro_absorption()
@@ -565,8 +547,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         ####   SET Interface and transport matrices  ####
         #################################################
         for i_prop in range(0, nb_layer_diopter):
-            layer_diopter[i_prop]["kp"] = k0 * \
-                sc.sqrt(layer_diopter[i_prop]["epsilon"])
+            layer_diopter[i_prop]["kp"] = k0 * sc.sqrt(layer_diopter[i_prop]["epsilon"])
             layer_diopter[i_prop]["gamma"] = sc.sqrt(
                 layer_diopter[i_prop]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
             )
@@ -575,13 +556,11 @@ class PeriodicMediumFEM3D(BaseFEM):
                 np.array(
                     [
                         [omega * layer_diopter[i_prop]["mu"] * self.mu0, 0, beta0],
-                        [0, omega * layer_diopter[i_prop]
-                            ["mu"] * self.mu0, -alpha0],
+                        [0, omega * layer_diopter[i_prop]["mu"] * self.mu0, -alpha0],
                         [
                             -beta0,
                             alpha0,
-                            -omega *
-                            layer_diopter[i_prop]["epsilon"] * self.epsilon0,
+                            -omega * layer_diopter[i_prop]["epsilon"] * self.epsilon0,
                         ],
                     ]
                 )
@@ -708,8 +687,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         )
         for i2 in range(1, nb_layer_diopter - 1):
             layer_diopter[(nb_layer_diopter - 2) - i2]["Psi"] = np.dot(
-                sc.linalg.inv(
-                    layer_diopter[(nb_layer_diopter - 2) - i2]["Pi"]),
+                sc.linalg.inv(layer_diopter[(nb_layer_diopter - 2) - i2]["Pi"]),
                 np.dot(
                     (layer_diopter[(nb_layer_diopter - 2) - i2 + 1]["Pi"]),
                     np.dot(
@@ -724,8 +702,7 @@ class PeriodicMediumFEM3D(BaseFEM):
                 layer_diopter[i4]["gamma"]
                 * (
                     layer_diopter[i4]["M"][2, 0] * layer_diopter[i4]["Psi"][2]
-                    - layer_diopter[i4]["M"][2, 1] *
-                    layer_diopter[i4]["Psi"][0]
+                    - layer_diopter[i4]["M"][2, 1] * layer_diopter[i4]["Psi"][0]
                 ),
             )
             layer_diopter[i4]["Psi"] = np.append(
@@ -733,8 +710,7 @@ class PeriodicMediumFEM3D(BaseFEM):
                 layer_diopter[i4]["gamma"]
                 * (
                     layer_diopter[i4]["M"][2, 1] * layer_diopter[i4]["Psi"][1]
-                    - layer_diopter[i4]["M"][2, 0] *
-                    layer_diopter[i4]["Psi"][3]
+                    - layer_diopter[i4]["M"][2, 0] * layer_diopter[i4]["Psi"][3]
                 ),
             )
 
@@ -769,8 +745,7 @@ class PeriodicMediumFEM3D(BaseFEM):
                 * alpha0
                 * beta0
                 * np.real(
-                    layer_diopter[0]["Psi"][1] *
-                    layer_diopter[0]["Psi"][3].conjugate()
+                    layer_diopter[0]["Psi"][1] * layer_diopter[0]["Psi"][3].conjugate()
                 )
             )
         )
@@ -778,11 +753,9 @@ class PeriodicMediumFEM3D(BaseFEM):
             1.0
             / (layer_diopter[0]["gamma"] * layer_diopter[nb_layer_diopter - 1]["gamma"])
             * (
-                (layer_diopter[nb_layer_diopter - 1]
-                 ["gamma"] ** 2 + alpha0 ** 2)
+                (layer_diopter[nb_layer_diopter - 1]["gamma"] ** 2 + alpha0 ** 2)
                 * abs(layer_diopter[nb_layer_diopter - 1]["Psi"][0]) ** 2
-                + (layer_diopter[nb_layer_diopter - 1]
-                   ["gamma"] ** 2 + beta0 ** 2)
+                + (layer_diopter[nb_layer_diopter - 1]["gamma"] ** 2 + beta0 ** 2)
                 * abs(layer_diopter[nb_layer_diopter - 1]["Psi"][2]) ** 2
                 + 2
                 * alpha0

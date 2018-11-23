@@ -46,7 +46,7 @@ Function{
 	beta0            = k0*Sin[theta_0]*Sin[phi_0];
 	gamma0           = k0*Cos[theta_0];
 	Pinc             =  0.5*Ae*Ae*Sqrt[epsilon0/mu0] * Cos[theta_0];
-	
+
 	epsilon[L_1]  = Complex[eps_L1_re , eps_L1_im] * TensorDiag[1,1,1];
 	epsilon[L_2]  = Complex[eps_L2_re , eps_L2_im] * TensorDiag[1,1,1];
 	epsilon[L_4]  = Complex[eps_L4_re , eps_L4_im] * TensorDiag[1,1,1];
@@ -55,10 +55,10 @@ Function{
 	epsilon[Omega_design]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
 	/*epsilon[Omega_design]          = Complex[eps_L3_re , eps_L3_im] * TensorDiag[1,1,1];*/
 
-	
+
 	mu[Omega_no_pml]       = TensorDiag[1,1,1];
 	nu[Omega_no_pml]       = TensorDiag[1,1,1];
-/* 
+/*
 	mu[L_3]       = TensorDiag[1,1,1];
 	nu[L_3]       = TensorDiag[1,1,1]; */
 
@@ -130,19 +130,19 @@ Function{
 		zcut_sub~{i} = hh_L6+thick_L6-scan_dist - i*(thick_L6-2*scan_dist)/(nb_slice-1);
 		zcut_sup~{i} = hh_L1+scan_dist           + i*(thick_L1-2*scan_dist)/(nb_slice-1);
 	EndFor
-	
-	
+
+
 	// Topology optimization
-	
+
 	  coef_obj[] =  1/(period_x*period_y*thick_L2);
 		objective[] = coef_obj[] * SquNorm[$1 + Ecm[] ];
 		adj_source_int[] = -2 * coef_obj[] * Conj[$1 + Ecm[]];
 		db_deps[] = -k0^2*Ecm[];
 		dA_deps[] = k0^2;
 		dEq_deps[] = db_deps[] - dA_deps[] * ($1);
-		
+
 		source_adj[] = Vector[0,0,0];
-		
+
 
 
 }
@@ -253,9 +253,13 @@ Resolution {
     }
     Operation {
 	Evaluate[$Source = 1, $SourceAdj = 0];
+	Evaluate[$t0=GetWallClockTime[]];
 	Generate[Maxwell]; Solve[Maxwell]; SaveSolution[Maxwell];
-	
+	Evaluate[$t1=GetWallClockTime[]-$t0];
+	Print[{$t1}, Format "direct: %g s"];
+
 	If (adjoint_flag)
+
 	PostOperation[postop_int_objective];
 	PostOperation[postop_dEq_deps];
 	PostOperation[postop_source_adj];
@@ -264,7 +268,12 @@ Resolution {
 	/* Evaluate[$source_adj = Vector[1,0,0]]; */
 
 	/* PostOperation[postop_source_adj_test]; */
+
+	Evaluate[$t0=GetWallClockTime[]];
 	GenerateRHSGroup[Maxwell, Omega_target]; SolveAgain[Maxwell] ; SaveSolution[Maxwell] ;
+	Evaluate[$t1=GetWallClockTime[]-$t0];
+ 	Print[{$t1}, Format "adjoint: %g s"];
+	  PostOperation[postop_adjoint];
 	EndIf
 
     }
@@ -289,7 +298,7 @@ PostProcessing {
               { Name Ecal_z; Value { Local { [ CompZ[{u}] ]; In Omega; Jacobian JVol; } } }
 							{ Name sadj_int_x_re  ; Value { Integral { [Re[ CompX[adj_source_int[{u}]] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
 							{ Name sadj_int  ; Value { Integral { [ adj_source_int[{u}] ] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
-							
+							{ Name Adj   ; Value { Local { [ {u}   ] ; In Omega; Jacobian JVol; } } }
 							{ Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
 							{ Name sadj_int_im  ; Value { Integral { [Im[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
 							{ Name int_objective  ; Value { Integral { [objective[{u}]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -325,7 +334,7 @@ PostOperation {
 			Print [ epsilon , OnElementsOf L_3, File "epsilon.pos"];
 				}
 		}
-		
+
 		{ Name postop_source_adj; NameOfPostProcessing postpro_diff ;
 				Operation {
 					Print[sadj_int, OnElementsOf Omega_target, StoreInField  2];
@@ -336,16 +345,16 @@ PostOperation {
 					 */
 						/* Print[sadj_int_re, OnElementsOf Omega_target, File "sadj_int_re.pos"]; */
 
-						
+
 			}
 		}
-		
+
 		/* { Name postop_source_adj_test; NameOfPostProcessing postpro_diff ;
 				Operation {
 							Print[source_adj_test, OnElementsOf Omega_target, File "source_adj_test.pos"];
 			}
 		} */
-		
+
 		{ Name postop_int_objective; NameOfPostProcessing postpro_diff ;
        Operation {
          /*Print [ u  , OnElementsOf Omega, File "u.pos" ];*/
@@ -353,8 +362,16 @@ PostOperation {
        }
     }
 
+		{ Name postop_adjoint; NameOfPostProcessing postpro_diff ;
+        Operation {
+        If (nodes_flag)
+          Print[Adj, OnElementsOf Omega_design ,  Format , LastTimeStepOnly, File "adjoint.txt" ];
+        Else
+          Print[Adj, OnElementsOf Omega_design , Depth 0, Format SimpleTable, LastTimeStepOnly, File "adjoint.txt" ];
+        EndIf
+      }
+    }
 
-		
 		    { Name postop_dEq_deps; NameOfPostProcessing postpro_diff ;
 		        Operation {
 		        If (nodes_flag)
