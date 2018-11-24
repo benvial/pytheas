@@ -2,8 +2,11 @@ import os
 
 
 def test_gmsh():
+    print("\n")
     rc = os.system("gmsh --info")
-    assert rc == 0
+    proc = subprocess.Popen(["getdp --info"], stdout=subprocess.PIPE, shell=True)
+    (out, err) = proc.communicate()
+    assert err is None
 
 
 def test_t1():

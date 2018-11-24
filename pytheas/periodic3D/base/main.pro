@@ -53,7 +53,7 @@ Function{
 	epsilon[L_5]  = Complex[eps_L5_re , eps_L5_im] * TensorDiag[1,1,1];
 	epsilon[L_6]  = Complex[eps_L6_re , eps_L6_im] * TensorDiag[1,1,1];
 	epsilon[Omega_design]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
-	/*epsilon[Omega_design]          = Complex[eps_L3_re , eps_L3_im] * TensorDiag[1,1,1];*/
+	/* epsilon[Omega_design]          = Complex[eps_L3_re , eps_L3_im] * TensorDiag[1,1,1]; */
 
 
 	mu[Omega_no_pml]       = TensorDiag[1,1,1];

@@ -281,7 +281,7 @@ Physical Volume(8000) = {10023};  // PML top
 
 
 Physical Point(10000) = {1};  // PML top
-
+/* 
 Mesh.Algorithm   = 1; // // 1=MeshAdapt, 5=Delaunay, 6=Frontal
 Mesh.Algorithm3D = 2; // // 1=Delaunay, 4=Frontal
-Mesh.Optimize = 1;
+Mesh.Optimize = 1; */
