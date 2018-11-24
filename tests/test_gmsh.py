@@ -1,10 +1,9 @@
 import os
-
+import subprocess
 
 def test_gmsh():
     print("\n")
-    rc = os.system("gmsh --info")
-    proc = subprocess.Popen(["getdp --info"], stdout=subprocess.PIPE, shell=True)
+    proc = subprocess.Popen(["gmsh --info"], stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     assert err is None
 
