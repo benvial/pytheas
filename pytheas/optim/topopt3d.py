@@ -108,9 +108,9 @@ class TopologyOptimization3D(TopologyOptimization):
         deq_deps = self.fem.get_deq_deps()
         return deq_deps
 
-    def get_sensitivity(self, p, filt=True, proj=True, interp_method="cubic"):
+    def get_sensitivity(self, p, filt=True, proj=True):
         adjoint = self.get_adjoint()
-        deq_deps = self.get_deq_deps(interp_method=interp_method)
+        deq_deps = self.get_deq_deps()
         dotprod = np.sum(np.array([adjoint[i] * deq_deps[i] for i in range(3)]), axis=0)
         sens = self.dg_dp + 1 * np.real(
             dotprod * self.depsilon_dp(p, filt=filt, proj=proj)

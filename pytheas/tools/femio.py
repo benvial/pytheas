@@ -148,6 +148,9 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
             s1 = str(3)
         elif celltype is "tetra":
             s1 = str(4)
+        elif celltype is "hexahedron":
+            s1 = str(8)
+            
         s += (
             str(els_ID[i])
             + " "
