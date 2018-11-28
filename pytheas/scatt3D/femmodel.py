@@ -10,6 +10,8 @@ import scipy as sc
 from ..tools import femio
 from ..basefem import BaseFEM
 
+from .geom import make_geom
+
 pi = np.pi
 
 
@@ -46,9 +48,9 @@ class ScattFEM3D(BaseFEM):
         h_pml=1,  #: flt: thickness PMLs
         a_pml=1,  #: flt: PMLs parameter, real part
         b_pml=1,  #: flt: PMLs parameter, imaginary part
-        eps_des =1 - 0 * 1j,  #: flt: permittivity design
-        eps_host =1 - 0 * 1j,  #: flt: permittivity host
-        eps_sph =1 - 0 * 1j,  #: flt: permittivity sphere
+        eps_des=1 - 0 * 1j,  #: flt: permittivity design
+        eps_host=1 - 0 * 1j,  #: flt: permittivity host
+        eps_sph=1 - 0 * 1j,  #: flt: permittivity sphere
         el_order=1,
     ):
         super().__init__()
@@ -67,18 +69,18 @@ class ScattFEM3D(BaseFEM):
         self.eps_des = eps_des
         self.eps_host = eps_host
         self.eps_sph = eps_sph
-        self.hx_des=hx_des
-        self.hy_des=hy_des
-        self.hz_des=hz_des
-        self.hx_box=hx_box
-        self.hy_box=hy_box
-        self.hz_box=hz_box
-        self.h_pml=h_pml
-        
-        self.x_sph=x_sph
-        self.y_sph=y_sph
-        self.z_sph=z_sph
-        self.R_sph=R_sph
+        self.hx_des = hx_des
+        self.hy_des = hy_des
+        self.hz_des = hz_des
+        self.hx_box = hx_box
+        self.hy_box = hy_box
+        self.hz_box = hz_box
+        self.h_pml = h_pml
+
+        self.x_sph = x_sph
+        self.y_sph = y_sph
+        self.z_sph = z_sph
+        self.R_sph = R_sph
 
         self.el_order = el_order
         self.bg_mesh = False
@@ -99,19 +101,16 @@ class ScattFEM3D(BaseFEM):
         self.dim = 3
 
         self.adjoint = False
-        self.recomb_des=True
-        
-        
+        self.recomb_des = True
 
     @property
     def celltype(self):
         if self.recomb_des:
+            make_geom(ext=True)
             return "hexahedron"
         else:
+            make_geom(ext=False)
             return "tetra"
-            
-
-
 
     @property
     def theta_0(self):
@@ -136,13 +135,13 @@ class ScattFEM3D(BaseFEM):
             +self.hz_des / 2,
         )
 
-
     def make_param_dict(self):
         param_dict = super().make_param_dict()
         return param_dict
 
     def compute_solution(self, **kwargs):
         self.update_params()
+        self.print_progress("Computing solution: this may take a while")
         if self.analysis == "diffraction":
             argstr = "-petsc_prealloc 500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
@@ -181,28 +180,8 @@ class ScattFEM3D(BaseFEM):
         )
         return Q.real
 
-    def postpro_fields_cuts(self):
-        npt_integ = self.ninterv_integ + 1
-        nb_slice = self.nb_slice
-        path_t = self.tmp_dir + "/Etot_XYcut.out"
-        path_r = self.tmp_dir + "/Edif_XYcut.out"
-        if os.path.isfile(path_t):
-            os.remove(path_t)
-        if os.path.isfile(path_r):
-            os.remove(path_r)
-        subprocess.call(self.ppstr("Ed") + " -order 2", shell=True)
-        Ex_t2, Ey_t2, Ez_t2 = femio.load_table_vect(path_t)
-        Ex_t2 = Ex_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-        Ey_t2 = Ey_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-        Ez_t2 = Ez_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-
-        Ex_r2, Ey_r2, Ez_r2 = femio.load_table_vect(path_r)
-        Ex_r2 = Ex_r2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-        Ey_r2 = Ey_r2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-        Ez_r2 = Ez_r2.reshape(npt_integ, npt_integ, nb_slice, order="F")
-        return Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2
-
     def postpro_epsilon(self):
+        self.print_progress("Postprocessing permittivity")
         subprocess.call([self.ppstr("postop_epsilon") + " -order 2"], shell=True)
 
     #
@@ -221,7 +200,9 @@ class ScattFEM3D(BaseFEM):
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):
+        self.print_progress("Retrieving adjoint")
         return self.get_qty_vect("adjoint.txt")
 
     def get_deq_deps(self):
+        self.print_progress("Retrieving dEq_deps")
         return self.get_qty_vect("dEq_deps.txt")

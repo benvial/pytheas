@@ -2,7 +2,7 @@ from .topopt import *
 
 
 def norm_vec(V):
-    return np.sqrt(V[0, :] ** 2 + V[1, :] ** 2 + V[2, :] ** 2)
+    return np.sqrt(np.sum(V ** 2, axis=0))
 
 
 class TopologyOptimization3D(TopologyOptimization):
@@ -45,30 +45,20 @@ class TopologyOptimization3D(TopologyOptimization):
             )
         return w
 
-    def filter_param(self, p):
+    def _filter_param(self, p):
+        self.fem.print_progress("Filtering")
         Xdes = np.array(self.fem.des[1].T)
         if self.rfilt == 0:
             pfilt = p
         else:
-            pfilt = []
-            for Xe in Xdes.T:
+            pfilt = np.zeros_like(p)
+            for i, Xe in enumerate(Xdes.T):
                 Ne = self.neighbourhood(Xe, Xdes)
-                Xi = np.zeros_like(Xdes)
-                pi = np.zeros_like(p)
-                for i, ne in enumerate(Ne):
-                    if ne:
-                        Xi[:, i] = Xdes[:, i]
-                        pi[i] = p[i]
-                wi = self.weight_filt(Xe, Xi)
-                ptmp = sum(wi * pi) / sum(wi)
-                pfilt.append(ptmp)
-        return np.array(pfilt)
-
-    def grad_filter_param(self, p):
-        xdes, ydes, zdes = self.fem.des[1].T
-        f = self.filter_param(p)
-        df = self.filter_param(p + self.dp)
-        return (df - f) / self.dp
+                Xneig = Xdes[:, Ne]
+                pneig = p[Ne]
+                w = self.weight_filt(Xe, Xneig)
+                pfilt[i] = np.sum(w * pneig) / np.sum(w)
+        return pfilt
 
     def make_xsym(self, qt, interp_method="cubic"):
         qt = self.mesh2grid(qt, interp_method=interp_method)
@@ -102,8 +92,6 @@ class TopologyOptimization3D(TopologyOptimization):
         v = sc.interpolate.griddata(points, valdes, (xg, yg), method=interp_method)
         return v
 
-
-
     def get_deq_deps(self):
         deq_deps = self.fem.get_deq_deps()
         return deq_deps
@@ -111,10 +99,9 @@ class TopologyOptimization3D(TopologyOptimization):
     def get_sensitivity(self, p, filt=True, proj=True):
         adjoint = self.get_adjoint()
         deq_deps = self.get_deq_deps()
+        _, depsilon_dp = self.make_epsilon(p, filt=filt, proj=proj, grad=True)
         dotprod = np.sum(np.array([adjoint[i] * deq_deps[i] for i in range(3)]), axis=0)
-        sens = self.dg_dp + 1 * np.real(
-            dotprod * self.depsilon_dp(p, filt=filt, proj=proj)
-        )
+        sens = self.dg_dp + 1 * np.real(dotprod * depsilon_dp)
         return sens
 
     def plot_design(
