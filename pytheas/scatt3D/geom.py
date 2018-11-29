@@ -278,6 +278,9 @@ def make_geom(ext=False):
     geom_oc.add_raw_code("Coherence;")
     geom_oc.add_raw_code("Coherence;")
 
+    geom_oc.add_raw_code("Mesh.Algorithm=6;")
+    geom_oc.add_raw_code("Mesh.Algorithm3D=4;")
+
     code = geom_oc.get_code().replace("'", "")
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
