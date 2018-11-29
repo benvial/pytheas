@@ -74,7 +74,6 @@ class TopologyOptimization3D(TopologyOptimization):
         return normalize(x0)
 
     def grid2mesh(self, val_grid, grid=None, interp_method="cubic"):
-        xdes, ydes, zdes = self.fem.des[1].T
         if grid:
             x_grid, y_grid = grid
         else:

@@ -6,7 +6,6 @@
 import os
 import subprocess
 import numpy as np
-import scipy as sc
 from ...tools import femio
 from ...basefem import BaseFEM
 
@@ -137,10 +136,11 @@ class BandsFEM2D(BaseFEM):
     ):
 
         self.print_progress("Plotting field map")
-        x = np.linspace(
-            self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
-        )
-        y = np.linspace(self.domY_B, self.domY_T, self.Niy)
+# x = np.linspace(
+#     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+# )
+# y = np.linspace(self.domY_B, self.domY_T, self.Niy)
+
         # xx, yy = np.meshgrid(x, y)
         extent = (
             self.nper * self.domX_L,

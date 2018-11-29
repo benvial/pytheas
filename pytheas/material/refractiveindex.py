@@ -267,11 +267,8 @@ def getDataF4(yamlFile, lamb):
     coeff = np.zeros(17)
     coeff2 = list(map(float, materialData["coefficients"].split()))
 
-    for i in range(0, len(coeff2)):
-        coeff[i] = coeff2[i]
-
-    # print(coeff)
-
+    for i, val in enumerate(coeff2):
+        coeff[i] = val
     epsi = coeff[0]
     if min(lamb) >= dataRange[0] and max(lamb) <= dataRange[1]:
         epsi = epsi + coeff[1] * lamb ** coeff[2] / (lamb ** 2 - coeff[3] ** coeff[4])
@@ -396,8 +393,8 @@ def getDataF9(yamlFile, lamb):
     return n
 
 
-def Error(BaseException):
-    pass
+# def Error(BaseException):
+#     pass
 
 
 # this is general function to check data type, and run appropriate actions

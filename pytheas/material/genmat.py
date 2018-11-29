@@ -122,7 +122,7 @@ class MaterialDensity:
         fig.colorbar(im, fraction=0.046, pad=0.04)
 
     def fourrier_pattern(self, c, scale=(1, 1), norma=True):
-        Xg, Yg, Zg = self.mat_grid
+        Xg, Yg, _ = self.mat_grid
         Xn = 1 * Xg / (self.n_x - 1) - 1 / 2
         Yn = 1 * Yg / (self.n_y - 1) - 1 / 2
         PAT = 0
@@ -192,7 +192,9 @@ def rot_z(t):
     return np.array([[c, -s, 0], [s, c, 0], [0, 0, 1]])
 
 
-def ell_shapes(mat_grid, rloc=[0, 0, 0], rwidth=[0.1, 0.1, 0.1], m=2):
+def ell_shapes(mat_grid, rloc=None, rwidth=None, m=2):
+    rloc = rloc or [0, 0, 0]
+    rwidth = rwidth or [0.1, 0.1, 0.1]
     coords1 = 0
     N = np.shape(mat_grid)[1:4]
     for i in range(3):

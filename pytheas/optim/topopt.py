@@ -8,6 +8,35 @@ from pytheas.tools.plottools import *
 from scipy.interpolate import PchipInterpolator  # mono_cubic_interp
 
 
+def opt_message(code):
+    if code >= 0:
+        s0 = "Successful termination"
+    else:
+        s0 = "Error"
+    if code == 1:
+        s = "Generic success return value."
+    elif code == 2:
+        s = "Optimization stopped because stopval was reached."
+    elif code == 3:
+        s = "Optimization stopped because ftol_rel or ftol_abs was reached."
+    elif code == 4:
+        s = "Optimization stopped because xtol_rel or xtol_abs was reached."
+    elif code == 5:
+        s = "Optimization stopped because maxeval was reached."
+    elif code == 6:
+        s = "Optimization stopped because maxtime was reached"
+    elif code == -1:
+        s = "Generic failure code."
+    elif code == -2:
+        s = "Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc)."
+    elif code == -3:
+        s = "Ran out of memory."
+    elif code == -4:
+        s = "Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.)"
+    elif code == -5:
+        s = "Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints."
+    return s0, s
+
 def normalize(x0):
     if x0.min() == x0.max():
         return x0
@@ -408,41 +437,14 @@ class TopologyOptimization:
             print("   optimum   = ", opt_f)
             # print("result code = ", opt.last_optimize_result())
             result_code = self.opt.last_optimize_result()
-            s0, s = self.opt_message(result_code)
+            s0, s = opt_message(result_code)
             print(s0)
             print(s)
             # re-initialize for next global iteration
             p0 = np.copy(popt)
         return popt, opt_f, opt
 
-    def opt_message(self, code):
-        if code >= 0:
-            s0 = "Successful termination"
-        else:
-            s0 = "Error"
-        if code == 1:
-            s = "Generic success return value."
-        elif code == 2:
-            s = "Optimization stopped because stopval was reached."
-        elif code == 3:
-            s = "Optimization stopped because ftol_rel or ftol_abs was reached."
-        elif code == 4:
-            s = "Optimization stopped because xtol_rel or xtol_abs was reached."
-        elif code == 5:
-            s = "Optimization stopped because maxeval was reached."
-        elif code == 6:
-            s = "Optimization stopped because maxtime was reached"
-        elif code == -1:
-            s = "Generic failure code."
-        elif code == -2:
-            s = "Invalid arguments (e.g. lower bounds are bigger than upper bounds, an unknown algorithm was specified, etc)."
-        elif code == -3:
-            s = "Ran out of memory."
-        elif code == -4:
-            s = "Halted because roundoff errors limited progress. (In this case, the optimization still typically returns a useful result.)"
-        elif code == -5:
-            s = "Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints."
-        return s0, s
+
 
     def threshold_design(self, f_obj, p):
         print("\n")
@@ -467,46 +469,3 @@ class TopologyOptimization:
             cond = np.logical_and(p >= threshold[i], p <= threshold[i + 1])
             p_thres[cond] = threshold_val[i]
         return p_thres
-
-    #
-    # def grad_filter_param(self, p, xdes, ydes):
-    #     if self.rfilt == 0:
-    #         dpfilt = np.ones_like(p)
-    #     else:
-    #         dpfilt = []
-    #         for xe, ye in zip(xdes, ydes):
-    #             Ne = self.neighbourhood(xe, ye, xdes, ydes)
-    #             xi, yi, pi = xdes[Ne], ydes[Ne], p[Ne]
-    #             we = self.weight_filt(xe, ye, xe, ye)
-    #             wi = self.weight_filt(xi, yi, xe, ye)
-    #             dptmp = we / sum(wi)
-    #             dpfilt.append(dptmp)
-    #     # return np.array(dpfilt)
-    #     return np.ones_like(p)
-
-    # def grid2mesh(self, x_grid, y_grid, val_grid, xdes, ydes):
-    #     f = sc.interpolate.interp2d(x_grid, y_grid, val_grid)
-    #     i = 0
-    #     x0 = np.zeros_like(xdes)
-    #     for x, y in zip(xdes, ydes):
-    #         x0[i] = f(x, y)
-    #         i += 1
-    #     return x0
-    # def nodes2el(self, xnodes, ynodes, valnodes, xels, yels, method="linear"):
-    #     points = np.vstack((xnodes, ynodes)).T
-    #     valnodes.flags.writeable = True
-    #     new_points = (xels, yels)
-    #     re = sc.interpolate.griddata(points, valnodes.real, new_points, method=method)
-    #     im = sc.interpolate.griddata(points, valnodes.imag, new_points, method=method)
-    #     # re = self.grid2mesh(xnodes, ynodes, valnodes.real, xels, yels)
-    #     # im = self.grid2mesh(xnodes, ynodes, valnodes.imag, xels, yels)
-    #     return re + 1j * im
-    # def proj(self, x):
-    #     return x
-
-    # def grad_simp(self, p):
-    #     return self.m * (self.eps_max - self.eps_min) * p**(self.m - 1)
-    #
-    #
-    # def grad_proj(self, x):
-    #     return 0.5*self.beta/(np.tanh(self.thres*self.beta))*(1 - np.tanh(self.beta*(x - self.thres))**2)

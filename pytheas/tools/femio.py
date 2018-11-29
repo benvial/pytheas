@@ -50,7 +50,7 @@ def maketmp(content, filename, dirname="", mode="w"):
 
 
 def mesh_model(
-    path_mesh, path_geo, mesh_format="msh2", dim=[1, 2], verbose=0, other_option=""
+    path_mesh, path_geo, mesh_format="msh2", dim=None, verbose=0, other_option=""
 ):
     """Mesh the model using Gmsh_
 
@@ -58,6 +58,7 @@ def mesh_model(
     .. _Gmsh:
         http://gmsh.info/
     """
+    dim = dim or [1, 2]
     str_dim = ""
     for d in dim:
         str_dim += " -" + str(d)
@@ -129,7 +130,7 @@ def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, arg
 
 def make_content_mesh_pos(nodes, els, dom, celltype):
     nodes_ID, nodes_coords = nodes
-    els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
+    els_ID, _, els_nodes_ID, geom_ID_dom = els
     s = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
     nnodes = len(nodes_ID)
     s += "$Nodes\n"
@@ -150,7 +151,6 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
             s1 = str(4)
         elif celltype is "hexahedron":
             s1 = str(8)
-            
         s += (
             str(els_ID[i])
             + " "
@@ -168,25 +168,25 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
     return s
 
 
-def make_pos(ID, data, content_mesh, viewname, type="nodes"):
+def make_pos(ID, data, content_mesh, viewname, celltype="nodes"):
     s = content_mesh
-    # type = "elements_nodes"
+    # celltype = "elements_nodes"
     if not s:
         s = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
     N = len(ID)
-    if type is "nodes":
+    if celltype is "nodes":
         str_start, str_end = "$NodeData\n", "$EndNodeData\n"
-    elif type is "elements":
+    elif celltype is "elements":
         str_start, str_end = "$ElementData\n", "$EndElementData\n"
-    elif type is "elements_nodes":
+    elif celltype is "elements_nodes":
         str_start, str_end = "$ElementNodeData\n", "$EndElementNodeData\n"
     else:
-        raise TypeError("Wrong type specified: choose between nodes and elements")
+        raise TypeError("Wrong celltype specified: choose between nodes and elements")
     for dat, name in zip([data.real, data.imag], ["_real", "_imag"]):
         s += str_start
         s += '1\n"' + viewname + name + '"\n1\n0\n3\n0\n1\n' + str(N) + "\n"
         for idf, value in zip(ID, dat):
-            if type is "elements_nodes":
+            if celltype is "elements_nodes":
                 s += str(int(idf)) + " 3 " + (str(value.real) + " ") * 3 + "\n"
             else:
                 s += str(int(idf)) + " " + str(value.real) + "\n"
@@ -194,7 +194,8 @@ def make_pos(ID, data, content_mesh, viewname, type="nodes"):
     return s
 
 
-def open_gmsh(path_mesh, path_geo, pos_list=[], verbose=2):
+def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
+    pos_list = pos_list or []
     subprocess.call(
         "gmsh "
         + path_geo
@@ -255,6 +256,7 @@ def load_node_table(filename):
 def load_table(filename):
     return np.loadtxt(filename, usecols=[3]) + 1j * np.loadtxt(filename, usecols=[4])
 
+
 # def load_node_table_vect(filename):
 #     nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)
 #     values = np.loadtxt(filename, usecols=[1], skiprows=1) + 1j * np.loadtxt(
@@ -262,14 +264,18 @@ def load_table(filename):
 #     )
 #     return nodenumber, values
 
+
 def load_table_vect(filename):
     vect = []
     for i in range(3):
         comp = 0
         for j in range(2):
-            comp += np.loadtxt(filename, usecols=[3 + i + j*3]) * np.exp(j * 1j*np.pi/2)
+            comp += np.loadtxt(filename, usecols=[3 + i + j * 3]) * np.exp(
+                j * 1j * np.pi / 2
+            )
         vect.append(comp)
     return vect
+
 
 def load_node_table_vect(filename):
     nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)
@@ -277,9 +283,12 @@ def load_node_table_vect(filename):
     for i in range(3):
         comp = 0
         for j in range(2):
-            comp += np.loadtxt(filename, usecols=[1 + i + j*3], skiprows=1) * np.exp(j * 1j*np.pi/2)
+            comp += np.loadtxt(filename, usecols=[1 + i + j * 3], skiprows=1) * np.exp(
+                j * 1j * np.pi / 2
+            )
         vect.append(comp)
     return nodenumber, vect
+
 
 def load_timetable(filename):
     return np.loadtxt(filename, usecols=[5]) + 1j * np.loadtxt(filename, usecols=[6])
@@ -309,4 +318,4 @@ def points2geo(points, lc_incl, output_path="./tmp.geo", startpoint=1000):
     fout.write(
         "Spline(%i) = {%i:%i};\n" % (startpoint, startpoint, startpoint + n_lines - 1)
     )
-    fout.close
+    fout.close()

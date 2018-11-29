@@ -92,7 +92,7 @@ def refine_mesh(
             verbose=fem.gmsh_verbose,
             dim=dim,
         )
-        nodes, els, des = get_mesh_info(fem)
+        nodes, els, des = fem.get_mesh_info(fem)
         fem.content_mesh = fem.make_mesh_pos(els, nodes)
         # plt.clf()
         # plt.imshow(np.fliplr(grad_pat_norm[:, :, 0]).T)
@@ -106,25 +106,8 @@ def refine_mesh(
     return fem
 
 
-def get_mesh_info(fem):
-    # get nodes and elements and their IDs in the design domain
-    nodes = fem.get_design_nodes()
-    els = fem.get_design_elements()
-    nodes_ID, nodes_coords = nodes
-    els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
-    xnodes, ynodes, znodes = nodes_coords.T
-    xels, yels, zels = els_coords.T
-    if fem.type_des is "elements":
-        des_ID, des_coords = els_ID, els_coords
-        des = els_ID, els_coords
-    elif fem.type_des is "nodes":
-        des_ID, des_coords = nodes_ID, nodes_coords
-        des = nodes_ID, nodes_coords
-    return nodes, els, des
-
-
 def transform_eff(eff):
-    effa = np.array(eff).T
+    # effa = np.array(eff).T
     R = [e["R"] for e in eff]
     T = [e["T"] for e in eff]
     Q = [e["Q"] for e in eff]
@@ -161,7 +144,7 @@ def meromorphic_expansion(
     fem.cplx_effs = True
     reson = eigval / (2 * pi)
     lamb_res = 1 / reson.real
-    Q_res = 0.5 * np.abs(reson.real / reson.imag)
+    # Q_res = 0.5 * np.abs(reson.real / reson.imag)
     # reson = reson[(lamb_res > 1) & (lamb_res < 2)]
     n_res = len(reson)
     Ni = deg_poly + 1 + n_res

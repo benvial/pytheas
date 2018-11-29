@@ -19,7 +19,6 @@ import os
 import subprocess
 import numpy as np
 import scipy as sc
-import tempfile
 from termcolor import colored
 from ..tools import femio
 
@@ -136,7 +135,7 @@ class BaseFEM:
         return os.path.join(self.tmp_dir, "mesh.msh")
 
     @property
-    def celltype(self):
+    def cellisinstance(self):
         if self.quad_mesh_flag:
             s = "quad"
         elif not self.quad_mesh_flag:
@@ -224,9 +223,9 @@ class BaseFEM:
             for cpl in self.cplx_list:
                 if key.startswith(cpl):
                     if (
-                        type(val) is float
-                        or type(val) is np.float64
-                        or type(val) is int
+                        isinstance(val) is float
+                        or isinstance(val) is np.float64
+                        or isinstance(val) is int
                     ):
                         self.__dict__[key] = complex(val)
         for key in attr_list:
@@ -250,9 +249,6 @@ class BaseFEM:
         param_dict["nodes_flag"] = int(self.type_des == "nodes")
         return param_dict
 
-    def generate_ID(self):
-        return datetime.now().strftime("%Y_%m_%d_%H_%M_%s_%f")
-
     def append_ID(self, filename, extension):
         return filename + "_" + str(self.ID) + "." + extension
 
@@ -273,7 +269,7 @@ class BaseFEM:
         # create a pos file to be read by getdp
         self.print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
-            des_ID, _eps_des, self.content_mesh, posname, type=self.type_des
+            des_ID, _eps_des, self.content_mesh, posname, celltype=self.type_des
         )
         return femio.maketmp(eps_des_pos, posname + ".pos", dirname=self.tmp_dir)
 
@@ -281,7 +277,7 @@ class BaseFEM:
         # create a pos file to be read by getdp
         self.print_progress("Creating pos file " + posname + ".pos")
         pos = femio.make_pos(
-            des_ID, val, self.content_mesh, posname, type=self.type_des
+            des_ID, val, self.content_mesh, posname, celltype=self.type_des
         )
         return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
@@ -416,8 +412,6 @@ class BaseFEM:
         els = self.get_design_elements()
         nodes_ID, nodes_coords = nodes
         els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
-        xnodes, ynodes, znodes = nodes_coords.T
-        xels, yels, zels = els_coords.T
         if self.type_des is "elements":
             des_ID, des_coords = els_ID, els_coords
             des = els_ID, els_coords
@@ -445,7 +439,8 @@ class BaseFEM:
         # create a pos file to be read by getdp
         self.path_pos = self.make_eps_pos(self.des[0], self._eps_des)
 
-    def open_gmsh_gui(self, pos_list=["*.pos"]):
+    def open_gmsh_gui(self, pos_list=None):
+        pos_list = pos_list or None
         self.print_progress("Opening gmsh GUI")
         p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
