@@ -119,8 +119,6 @@ grating and calculation of diffraction efficiencies.</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pytheas.tools.plottools</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pytheas.material</span> <span class="kn">import</span> <span class="n">genmat</span>
-
-<span class="kn">from</span> <span class="nn">pytheas</span> <span class="kn">import</span> <span class="n">periodic2D</span>
 <span class="kn">from</span> <span class="nn">pytheas.periodic2D</span> <span class="kn">import</span> <span class="n">FemModel</span><span class="p">,</span> <span class="n">utils</span>
 </pre></div>
 </div>
@@ -159,7 +157,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_layer2</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer 2</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer design</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">0.</span>   <span class="c1">#: flt: incident angle</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">0.</span>  <span class="c1">#: flt: incident angle</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TE&quot;</span>  <span class="c1">#: str: polarization (TE or TM)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
 <span class="c1">#: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),</span>
@@ -182,7 +180,7 @@ cell using gmsh</p>
 <p>We use the <code class="xref py py-mod docutils literal notranslate"><span class="pre">genmat</span></code> module to generate a material pattern</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">genmat</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">mat</span> <span class="o">=</span> <span class="n">genmat</span><span class="o">.</span><span class="n">MaterialDensity</span><span class="p">()</span>  <span class="c1"># instanciate</span>
-<span class="n">mat</span><span class="o">.</span><span class="n">n_x</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_y</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_z</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="o">**</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># sizes</span>
+<span class="n">mat</span><span class="o">.</span><span class="n">n_x</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_y</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># sizes</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">xsym</span> <span class="o">=</span> <span class="bp">True</span>  <span class="c1"># symmetric with respect to x?</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">p_seed</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">mat_rand</span>  <span class="c1"># fix the pattern random seed</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">nb_threshold</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># number of materials</span>
@@ -224,7 +222,7 @@ cell using gmsh</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.4440749322167822, &#39;T&#39;: 0.4804765728980809, &#39;Q&#39;: 0.05938397641376305, &#39;B&#39;: 0.9839354815286261}
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  5.210 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  5.377 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-periodic2d-plot-diffraction-efficiencies-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/fa7fc7b13469565449b774cd95f63ca6/plot_diffraction_efficiencies.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_diffraction_efficiencies.py</span></code></a></div>
