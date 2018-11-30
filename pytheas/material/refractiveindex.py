@@ -18,12 +18,10 @@ Forked from this repository_: github.com/cinek810/refractiveindex.info.
 
 
 from scipy.interpolate import interp1d
-import sys
 from parse import *
 import yaml
 from yaml.reader import Reader
 import numpy as np
-import cmath
 import os
 
 path = os.path.dirname(os.path.abspath(__file__))
@@ -46,13 +44,13 @@ def yaml_extract(yamlFile):
         c = yamlStream.read()
         allData = yaml.load(strip_invalid(c))
     materialData = allData["DATA"][0]
-    return yamlStream, allData, materialData
+    return allData, materialData
 
 
 # This function is designed to return refractive index for specified lambda
 # for file in "tabluated n " format
 def getDataN(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated n"
 
     matLambda = []
@@ -64,9 +62,8 @@ def getDataN(yamlFile, lamb):
             n = parsed["n"]
             matLambda.append(parsed["l"])
             matN.append(n)
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matN = np.array(matN)
@@ -81,7 +78,7 @@ def getDataN(yamlFile, lamb):
 
 
 def getDataK(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated k"
     print("Only k values!")
 
@@ -94,9 +91,8 @@ def getDataK(yamlFile, lamb):
             k = parsed["k"]
             matLambda.append(parsed["l"])
             matK.append(k)
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matK = np.array(matK)
@@ -111,7 +107,7 @@ def getDataK(yamlFile, lamb):
 
 
 def getRangeN(yamlFile):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated n"
     # in this type of material read data line by line
     matLambda = []
@@ -119,14 +115,14 @@ def getRangeN(yamlFile):
         parsed = parse("{l:g} {n:g}", line)
         try:
             matLambda.append(parsed["l"])
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
+
     return (min(matLambda), max(matLambda))
 
 
 def getRangeK(yamlFile):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated k"
     # in this type of material read data line by line
     matLambda = []
@@ -134,16 +130,16 @@ def getRangeK(yamlFile):
         parsed = parse("{l:g} {k:g}", line)
         try:
             matLambda.append(parsed["l"])
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
+
     return (min(matLambda), max(matLambda))
 
 
 def getDataNK(yamlFile, lamb):
     """This function is designed to return refractive index for specified lambda
     for file in `tabulated nk` format"""
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated nk"
     matLambda = []
     matN = []
@@ -157,9 +153,8 @@ def getDataNK(yamlFile, lamb):
             matLambda.append(parsed["l"])
             matN.append(n)
             matK.append(k)
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
 
     matLambda = np.array(matLambda)
     matN = np.array(matN)
@@ -174,7 +169,7 @@ def getDataNK(yamlFile, lamb):
 
 
 def getRangeNK(yamlFile):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "tabulated nk"
     # in this type of material read data line by line
@@ -183,15 +178,15 @@ def getRangeNK(yamlFile):
         parsed = parse("{l:g} {n:g} {k:g}", line)
         try:
             matLambda.append(parsed["l"])
-        except TypeError as e:
+        except TypeError:
             pass
-            # sys.stderr.write("TypeError occured:"+str(e)+"\n")
+
     return (min(matLambda), max(matLambda))
 
 
 # this function is desined to get data from files in formula1 format
 def getDataF1(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 1"
 
@@ -209,13 +204,13 @@ def getDataF1(yamlFile, lamb):
     epsi = epsi + coeff[0] + 1
     n = []
     for ep in epsi:
-        n.append(cmath.sqrt(ep))
+        n.append(np.sqrt(ep))
     return n
 
 
 # this function is desined to get data from files in formula2 format
 def getDataF2(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 2"
 
@@ -233,13 +228,13 @@ def getDataF2(yamlFile, lamb):
     epsi = epsi + coeff[0] + 1
     n = []
     for ep in epsi:
-        n.append(cmath.sqrt(ep))
+        n.append(np.sqrt(ep))
     return n
 
 
 # this function is desined to get data from files in formula3 format
 def getDataF3(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 3"
 
@@ -255,12 +250,12 @@ def getDataF3(yamlFile, lamb):
 
     n = []
     for ep in epsi:
-        n.append(cmath.sqrt(ep))
+        n.append(np.sqrt(ep))
     return n
 
 
 def getDataF4(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 4"
 
@@ -286,13 +281,13 @@ def getDataF4(yamlFile, lamb):
 
     n = []
     for ep in epsi:
-        n.append(cmath.sqrt(ep))
+        n.append(np.sqrt(ep))
     return n
 
 
 # this function is desined to get data from files in formula5 format
 def getDataF5(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 5"
 
@@ -312,7 +307,7 @@ def getDataF5(yamlFile, lamb):
 
 # this function is desined to get data from files in formula6 format
 def getDataF6(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 6"
 
@@ -332,7 +327,7 @@ def getDataF6(yamlFile, lamb):
 
 # this function is desined to get data from files in formula7 format
 def getDataF7(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 7"
 
@@ -354,7 +349,7 @@ def getDataF7(yamlFile, lamb):
 
 # this function is desined to get data from files in formula8 format
 def getDataF8(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 8"
 
@@ -375,7 +370,7 @@ def getDataF8(yamlFile, lamb):
 
 # this function is desined to get data from files in formula9 format
 def getDataF9(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 9"
 
@@ -402,7 +397,7 @@ def getDataF9(yamlFile, lamb):
 
 
 def getData(yamlFile, lamb):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     if materialData["type"] == "tabulated nk":
         return getDataNK(yamlFile, lamb)
@@ -434,7 +429,7 @@ def getData(yamlFile, lamb):
 
 
 def getRange(yamlFile):
-    yamlStream, allData, materialData = yaml_extract(yamlFile)
+    allData, materialData = yaml_extract(yamlFile)
 
     if materialData["type"] == "tabulated nk":
         return getRangeNK(yamlFile)

@@ -1,4 +1,4 @@
-from .topopt import *
+from .topopt import TopologyOptimization
 
 
 def norm_vec(V):
