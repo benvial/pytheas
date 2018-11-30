@@ -173,7 +173,7 @@ class ScattFEM3D(BaseFEM):
         )
 
     def postpro_absorption(self):
-        subprocess.call(self.ppstr("postopQ"), shell=True)
+        subprocess.call(self.ppcmd("postopQ"))
         path = self.tmp_dir + "/Q.txt"
         Q = np.loadtxt(path, skiprows=0, usecols=[1]) + 1j * np.loadtxt(
             path, skiprows=0, usecols=[1]
@@ -182,7 +182,7 @@ class ScattFEM3D(BaseFEM):
 
     def postpro_epsilon(self):
         self.print_progress("Postprocessing permittivity")
-        subprocess.call([self.ppstr("postop_epsilon") + " -order 2"], shell=True)
+        subprocess.call([self.ppcmd("postop_epsilon") + " -order 2"])
 
     #
     def postpro_fields(self, filetype="txt"):
@@ -196,7 +196,7 @@ class ScattFEM3D(BaseFEM):
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
-            subprocess.call(self.ppstr("postop_int_objective"), shell=True)
+            subprocess.call(self.ppcmd("postop_int_objective"))
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):

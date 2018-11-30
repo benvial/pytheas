@@ -31,13 +31,14 @@ database_path = os.path.join(path, "database", "data")
 
 
 def strip_invalid(s):
-    res = ''
+    res = ""
     for x in s:
         if Reader.NON_PRINTABLE.match(x):
             # res += '\\x{:x}'.format(ord(x))
             continue
         res += x
     return res
+
 
 def yaml_extract(yamlFile):
     filename = os.path.join(database_path, yamlFile)

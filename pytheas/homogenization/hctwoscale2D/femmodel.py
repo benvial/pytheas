@@ -1,7 +1,6 @@
 import os
 import subprocess
 import numpy as np
-import scipy as sc
 from ...tools import femio
 from ...basefem import BaseFEM
 
@@ -110,7 +109,7 @@ class FemModel(BaseFEM):
 
     def postprocessing(self):
         self.print_progress("Postprocessing")
-        subprocess.call(self.ppstr("postop"), shell=True)
+        subprocess.call(self.ppcmd("postop"))
 
     def get_phi(self):
         phi = np.zeros((2, 2), dtype=complex)
@@ -124,7 +123,7 @@ class FemModel(BaseFEM):
         return femio.load_table(self.tmp_dir + "/Vol.txt")
 
     def get_vol_incl(self):
-        subprocess.call(self.ppstr("postop_V_incl"), shell=True)
+        subprocess.call(self.ppcmd("postop_V_incl"))
         return femio.load_table(self.tmp_dir + "/V_incl.txt")
 
     def get_int_inveps(self):
@@ -172,7 +171,7 @@ class FemModel(BaseFEM):
 
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppstr("postop_eigenvalues"), shell=True)
+        subprocess.call(self.ppcmd("postop_eigenvalues"))
         filename = self.tmp_dir + "/EigenValues.txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])
@@ -202,13 +201,13 @@ class FemModel(BaseFEM):
 
     def postpro_norm_eigenvectors(self):
         self.print_progress("Retrieving eigenvector norms")
-        subprocess.call(self.ppstr("postop_norm_eigenvectors"), shell=True)
+        subprocess.call(self.ppcmd("postop_norm_eigenvectors"))
         filename = self.tmp_dir + "/NormsEigenVectors.txt"
         return np.sqrt(femio.load_timetable(filename))
 
     def postpro_coefs_mu(self):
         self.print_progress("Retrieving expansion coefficients")
-        subprocess.call(self.ppstr("postop_coefs_mu"), shell=True)
+        subprocess.call(self.ppcmd("postop_coefs_mu"))
         filename = self.tmp_dir + "/Coefs_mu.txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])

@@ -166,7 +166,7 @@ class FemModel(BaseFEM):
         path_L = self.tmp_dir + "/field_box_L.out"
         path_R = self.tmp_dir + "/field_box_R.out"
         path_B = self.tmp_dir + "/field_box_B.out"
-        subprocess.call(self.ppstr("postop_fields_box"), shell=True)
+        subprocess.call(self.ppcmd("postop_fields_box"))
         u_T = femio.load_timetable(path_T)
         u_R = femio.load_timetable(path_R)
         u_B = femio.load_timetable(path_B)
@@ -179,7 +179,7 @@ class FemModel(BaseFEM):
         return u_T, u_B, u_L, u_R
 
     def postpro_fields_n2f(self):
-        subprocess.call(self.ppstr("postop_fields_n2f"), shell=True)
+        subprocess.call(self.ppcmd("postop_fields_n2f"))
         u_out, vx_out, vy_out = {}, {}, {}
         for i in ["T", "L", "R", "B"]:
             u = femio.load_timetable(self.tmp_dir + "/field_n2f_{0}.out".format(i))
@@ -244,7 +244,7 @@ class FemModel(BaseFEM):
         return np.flipud(field.reshape((self.Niy, self.Nix)).T)
 
     def get_field_point(self):
-        subprocess.call(self.ppstr("postop_field_on_point"), shell=True)
+        subprocess.call(self.ppcmd("postop_field_on_point"))
         u_tot = femio.load_table(self.tmp_dir + "/" + "u_tot_point.txt")
         u_i = femio.load_table(self.tmp_dir + "/" + "u_i_point.txt")
         u = femio.load_table(self.tmp_dir + "/" + "u_point.txt")
@@ -253,12 +253,12 @@ class FemModel(BaseFEM):
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
-            subprocess.call(self.ppstr("postop_int_objective"), shell=True)
+            subprocess.call(self.ppcmd("postop_int_objective"))
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppstr("postop_eigenvalues"), shell=True)
+        subprocess.call(self.ppcmd("postop_eigenvalues"))
         filename = self.tmp_dir + "/EigenValues.txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])
@@ -266,13 +266,13 @@ class FemModel(BaseFEM):
 
     def postpro_norm_eigenvectors(self):
         self.print_progress("Retrieving eigenvector norms")
-        subprocess.call(self.ppstr("postop_norm_eigenvectors"), shell=True)
+        subprocess.call(self.ppcmd("postop_norm_eigenvectors"))
         filename = self.tmp_dir + "/NormsEigenVectors.txt"
         return femio.load_timetable(filename)
 
     def postpro_coupling_angle(self):
         self.print_progress("Angular sweep for coupling coeffs")
-        subprocess.call(self.ppstr("postop_coupling_coeffs_angle"), shell=True)
+        subprocess.call(self.ppcmd("postop_coupling_coeffs_angle"))
         filename = self.tmp_dir + "/coupling_coeffs.txt"
         tmp = femio.load_timetable(filename)
         return tmp.reshape((self.Ni_theta, self.neig))
@@ -280,7 +280,7 @@ class FemModel(BaseFEM):
     def postpro_fourrier_coefs_angle(self):
         self.print_progress("Fourrier coefficients for coupling")
         subprocess.call(
-            self.ppstr("postop_coupling_coeffs_fourrier_series"), shell=True
+            self.ppcmd("postop_coupling_coeffs_fourrier_series"), shell=True
         )
         filename = self.tmp_dir + "/coupling_coeffs_fs.txt"
         tmp = femio.load_timetable(filename)
@@ -308,14 +308,14 @@ class FemModel(BaseFEM):
 
     def postpro_modal_coupling(self):
         self.print_progress("QNMs coupling coeffs")
-        subprocess.call(self.ppstr("postop_mode_coupling"), shell=True)
+        subprocess.call(self.ppcmd("postop_mode_coupling"))
         filename = self.tmp_dir + "/mode_coupling.txt"
         tmp = femio.load_timetable(filename)
         return tmp  # .reshape((self.Ni_theta, self.neig))
 
     def postpro_modal_coupling_int(self):
         self.print_progress("QNMs coupling coeffs integrand")
-        subprocess.call(self.ppstr("postop_mode_coupling_int"), shell=True)
+        subprocess.call(self.ppcmd("postop_mode_coupling_int"))
         mode = femio.load_timetable(self.tmp_dir + "/mode_coupling_int.txt")
         u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
         u = mode.reshape((self.Niy, self.Nix, self.neig))

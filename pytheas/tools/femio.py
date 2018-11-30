@@ -125,7 +125,8 @@ def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, arg
     )
     if path_pos:
         solve_str += " -gmshread " + path_pos
-    subprocess.call(solve_str + " -cal -v2 " + argstr, shell=True)
+    command = solve_str + " -cal -v2 " + argstr
+    subprocess.call(command.split())
 
 
 def make_content_mesh_pos(nodes, els, dom, celltype):
@@ -210,8 +211,8 @@ def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     )
 
 
-def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
-    """Generate a command string for postprocessing by GetDP (see main.pro
+def postpro_commands(postop, path_pro, path_mesh, path_pos=None, verbose=0):
+    """Generate a command list for postprocessing by GetDP (see main.pro
     file in ./base folder for default available postprocessings, or to add
     your own)
 
@@ -224,7 +225,7 @@ def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
         Defaults to None.
 
     Returns:
-        str: The string to be oscommanded.
+        list : The list of strings to be oscommanded.
 
 
     """
@@ -242,7 +243,7 @@ def postprostring(postop, path_pro, path_mesh, path_pos=None, verbose=0):
     if path_pos:
         s += " -gmshread " + path_pos
     s += " -pos " + postop + " -v2"
-    return s
+    return s.split()
 
 
 def load_node_table(filename):

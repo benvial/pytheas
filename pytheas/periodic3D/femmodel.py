@@ -252,7 +252,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         )
 
     def postpro_absorption(self):
-        subprocess.call(self.ppstr("postopQ"), shell=True)
+        subprocess.call(self.ppcmd("postopQ"))
         path = self.tmp_dir + "/Q.txt"
         Q = np.loadtxt(path, skiprows=0, usecols=[1]) + 1j * np.loadtxt(
             path, skiprows=0, usecols=[1]
@@ -268,7 +268,7 @@ class PeriodicMediumFEM3D(BaseFEM):
             os.remove(path_t)
         if os.path.isfile(path_r):
             os.remove(path_r)
-        subprocess.call(self.ppstr("Ed") + " -order 2", shell=True)
+        subprocess.call(self.ppcmd("Ed") + " -order 2")
         Ex_t2, Ey_t2, Ez_t2 = femio.load_table_vect(path_t)
         Ex_t2 = Ex_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
         Ey_t2 = Ey_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
@@ -281,7 +281,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         return Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2
 
     def postpro_epsilon(self):
-        subprocess.call([self.ppstr("postop_epsilon") + " -order 2"], shell=True)
+        subprocess.call([self.ppcmd("postop_epsilon") + " -order 2"])
 
     #
     def postpro_fields(self, filetype="txt"):
@@ -295,7 +295,7 @@ class PeriodicMediumFEM3D(BaseFEM):
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
-            subprocess.call(self.ppstr("postop_int_objective"), shell=True)
+            subprocess.call(self.ppcmd("postop_int_objective"))
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):

@@ -94,7 +94,7 @@ class BandsFEM2D(BaseFEM):
 
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppstr("postop_eigenvalues_" + self.pola), shell=True)
+        subprocess.call(self.ppcmd("postop_eigenvalues_" + self.pola))
         filename = self.tmp_dir + "/EV_" + self.pola + ".txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])
@@ -136,10 +136,10 @@ class BandsFEM2D(BaseFEM):
     ):
 
         self.print_progress("Plotting field map")
-# x = np.linspace(
-#     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
-# )
-# y = np.linspace(self.domY_B, self.domY_T, self.Niy)
+        # x = np.linspace(
+        #     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+        # )
+        # y = np.linspace(self.domY_B, self.domY_T, self.Niy)
 
         # xx, yy = np.meshgrid(x, y)
         extent = (

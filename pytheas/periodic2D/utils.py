@@ -23,7 +23,7 @@ def refine_mesh(
     mat_tmp = mat
     mat_tmp.ratio_filter = [20, 20, 20]
     pattern = mat_tmp.pattern
-    nodes, els, des = get_mesh_info(fem)
+    nodes, els, des = fem.get_mesh_info()
     if not lc_des:
         lc_des = 1 * fem.lambda_mesh / (fem.parmesh_des * np.sqrt(fem.eps_des.real))
     # par = [[0.5, 0.4, 0.05], [0.5, 0.4, 0.2], [1, 1, 1]]
@@ -92,7 +92,7 @@ def refine_mesh(
             verbose=fem.gmsh_verbose,
             dim=dim,
         )
-        nodes, els, des = fem.get_mesh_info(fem)
+        nodes, els, des = fem.get_mesh_info()
         fem.content_mesh = fem.make_mesh_pos(els, nodes)
         # plt.clf()
         # plt.imshow(np.fliplr(grad_pat_norm[:, :, 0]).T)

@@ -1,7 +1,7 @@
 VERSION=$(shell python3 -c "import pytheas; print(pytheas.__version__)")
 
 default:
-	@echo "\"make publish\"?"
+	@echo "\"make save\"?"
 
 tag:
 	# Make sure we're on the master branch
@@ -39,4 +39,8 @@ lint:
 	flake8 setup.py pytheas/ tests/*.py
 
 style:
+	@echo "Styling..."
 	black setup.py pytheas/ tests/*.py
+	
+	
+save: clean style gh

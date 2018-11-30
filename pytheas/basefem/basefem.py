@@ -135,7 +135,7 @@ class BaseFEM:
         return os.path.join(self.tmp_dir, "mesh.msh")
 
     @property
-    def cellisinstance(self):
+    def celltype(self):
         if self.quad_mesh_flag:
             s = "quad"
         elif not self.quad_mesh_flag:
@@ -222,11 +222,7 @@ class BaseFEM:
         for key, val in self.__dict__.items():
             for cpl in self.cplx_list:
                 if key.startswith(cpl):
-                    if (
-                        isinstance(val) is float
-                        or isinstance(val) is np.float64
-                        or isinstance(val) is int
-                    ):
+                    if isinstance(val, (float, np.float64, int)):
                         self.__dict__[key] = complex(val)
         for key in attr_list:
             val = getattr(self, key)
@@ -343,14 +339,14 @@ class BaseFEM:
             argstr=argstr,
         )
 
-    def ppstr(self, postop):
-        return femio.postprostring(
+    def ppcmd(self, postop):
+        return femio.postpro_commands(
             postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
         )
 
     def postpro_choice(self, name, filetype):
         if filetype in {"pos", "txt"}:
-            subprocess.call(self.ppstr(name + "_" + filetype), shell=True)
+            subprocess.call(self.ppcmd(name + "_" + filetype))
         else:
             raise TypeError("Wrong filetype specified: choose between txt and pos")
 

@@ -65,7 +65,7 @@ class FemModel(BaseFEM):
 
     def postprocessing(self):
         self.print_progress("Postprocessing")
-        subprocess.call(self.ppstr("postop"), shell=True)
+        subprocess.call(self.ppcmd("postop"))
 
     def get_phi(self):
         phi = np.zeros((2, 2), dtype=complex)

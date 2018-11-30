@@ -3,7 +3,5 @@ import subprocess
 
 
 def test_getdp():
-    print("\n")
-    proc = subprocess.Popen(["getdp --info"], stdout=subprocess.PIPE, shell=True)
-    _, err = proc.communicate()
-    assert err is None
+    out = subprocess.call(["getdp", "--info"])
+    assert out == 0

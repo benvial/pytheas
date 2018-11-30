@@ -37,6 +37,7 @@ def opt_message(code):
         s = "Halted because of a forced termination: the user called nlopt_force_stop(opt) on the optimization’s nlopt_opt object opt from the user’s objective function or constraints."
     return s0, s
 
+
 def normalize(x0):
     if x0.min() == x0.max():
         return x0
@@ -443,8 +444,6 @@ class TopologyOptimization:
             # re-initialize for next global iteration
             p0 = np.copy(popt)
         return popt, opt_f, opt
-
-
 
     def threshold_design(self, f_obj, p):
         print("\n")

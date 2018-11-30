@@ -119,7 +119,7 @@ def cmap_discretize(cmap, N):
         imshow(x, cmap=djet)
     """
 
-    if isinstance(cmap) == str:
+    if isinstance(cmap, str):
         cmap = plt.get_cmap(cmap)
     colors_i = np.concatenate((np.linspace(0, 1.0, N), (0.0, 0.0, 0.0, 0.0)))
     colors_rgba = cmap(colors_i)

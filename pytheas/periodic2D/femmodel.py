@@ -259,7 +259,7 @@ class FemModel(BaseFEM):
             Absorption coefficient
         """
         self.print_progress("Postprocessing absorption")
-        subprocess.call(self.ppstr("postop_absorption"), shell=True)
+        subprocess.call(self.ppcmd("postop_absorption"))
         Q = femio.load_table(self.tmp_dir + "/Q.txt").real
         return Q
 
@@ -279,7 +279,7 @@ class FemModel(BaseFEM):
             os.remove(path_sub)
         if os.path.isfile(path_sup):
             os.remove(path_sup)
-        subprocess.call(self.ppstr("postop_fields_cuts"), shell=True)
+        subprocess.call(self.ppcmd("postop_fields_cuts"))
         u_diff_t = femio.load_table(path_sub)
         u_diff_r = femio.load_table(path_sup)
         return u_diff_t, u_diff_r
@@ -318,7 +318,7 @@ class FemModel(BaseFEM):
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
-            subprocess.call(self.ppstr("postop_int_objective"), shell=True)
+            subprocess.call(self.ppcmd("postop_int_objective"))
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):
@@ -329,7 +329,7 @@ class FemModel(BaseFEM):
 
     def postpro_eigenvalues(self):
         self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppstr("postop_eigenvalues"), shell=True)
+        subprocess.call(self.ppcmd("postop_eigenvalues"))
         filename = self.tmp_dir + "/EigenValues.txt"
         re = np.loadtxt(filename, usecols=[1])
         im = np.loadtxt(filename, usecols=[5])
@@ -358,7 +358,7 @@ class FemModel(BaseFEM):
 
     def postpro_norm_eigenvectors(self):
         self.print_progress("Retrieving eigenvector norms")
-        subprocess.call(self.ppstr("postop_norm_eigenvectors"), shell=True)
+        subprocess.call(self.ppcmd("postop_norm_eigenvectors"))
         filename = self.tmp_dir + "/NormsEigenVectors.txt"
         return femio.load_timetable(filename)
 
