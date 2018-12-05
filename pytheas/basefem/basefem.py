@@ -436,7 +436,7 @@ class BaseFEM:
         self.path_pos = self.make_eps_pos(self.des[0], self._eps_des)
 
     def open_gmsh_gui(self, pos_list=None):
-        pos_list = pos_list or None
+        pos_list = pos_list or ["*.pos"]
         self.print_progress("Opening gmsh GUI")
         p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
