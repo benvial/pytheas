@@ -42,6 +42,7 @@ class BaseFEM:
         self.ID = ID
         self.geom_filename_ = "geometry.geo"  #: str: Gmsh geometry filename
         self.pro_filename_ = "main.pro"  #: str: GetDP pro filename
+        self.param_filename_ = "parameters.dat"  #: str: GetDP pro filename
         #: str: Gmsh geo filename for background mesh
         self.bg_mesh_filename_ = "bg_mesh.geo"
         self.bg_mesh = True
@@ -152,13 +153,19 @@ class BaseFEM:
             print(toprint)
 
     def initialize(self):
+        """
+        Initialize the problem:
+        - make dictionary of parameters
+        - write this dictionary entries to a .dat file
+        - copy the .dat, .geo and .pro files to the temporary folder
+        """
         self.print_progress("Initialization")
         # tmp_name = tmp_dir.split("/")[2]
         self.mk_tmp_dir()
 
         # create tmp parameters files files
         self.param_dict = self.make_param_dict()
-        femio.maketmp(self.content_par, "parameters.dat", dirname=self.tmp_dir)
+        femio.maketmp(self.content_par, self.param_filename_, dirname=self.tmp_dir)
         # create tmp geo file
         femio.maketmp(self.content_geo, self.geom_filename_, dirname=self.tmp_dir)
         # create tmp geo file for background mesh
@@ -173,14 +180,15 @@ class BaseFEM:
         #     femio.maketmp(self.content_incl, "inclusion.geo", dirname=self.tmp_dir)
 
     def update_params(self):
+        """
+        Update the dictionary of parameters and the corresponding file
+        """
         self.print_progress("Updating parameters")
         self.param_dict = self.make_param_dict()
-        femio.maketmp(self.content_par, "parameters.dat", dirname=self.tmp_dir)
+        femio.maketmp(self.content_par, self.param_filename_, dirname=self.tmp_dir)
 
     def cleanup(self):
-        """Clean gmsh/getdp generated files
-
-        """
+        """Remove gmsh/getdp/python generated files from the temporary folder"""
         trash = ["*.msh", "*.pre", "*.res", "*.dat", "*.txt", "*.pyc", "*.pos"]
         for item in trash:
             try:
@@ -190,6 +198,7 @@ class BaseFEM:
         return
 
     def mk_tmp_dir(self):
+        """Create a temporary directory"""
         try:
             os.mkdir(self.tmp_dir)
             if self.python_verbose:
@@ -203,6 +212,7 @@ class BaseFEM:
         return
 
     def rm_tmp_dir(self):
+        """Remove the temporary directory"""
         try:
             shutil.rmtree(self.tmp_dir)
             if self.python_verbose:
@@ -216,6 +226,8 @@ class BaseFEM:
         return
 
     def make_param_dict(self):
+        """Build dictionary of parameters. This will be later written to a parameter.dat
+        file that is meant to be read by both gmsh and getdp"""
         param_dict = dict()
         attr_list = [i for i in dir(self) if i[:1] != "_"]
         attr_list = [i for i in attr_list if not callable(getattr(self, i))]
@@ -244,9 +256,6 @@ class BaseFEM:
         param_dict["extrude_mesh_flag"] = int(self.extrude_mesh_flag)
         param_dict["nodes_flag"] = int(self.type_des == "nodes")
         return param_dict
-
-    def append_ID(self, filename, extension):
-        return filename + "_" + str(self.ID) + "." + extension
 
     def make_inclusion(self, points, **kwargs):
         femio.points2geo(
@@ -299,6 +308,7 @@ class BaseFEM:
         return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
     def compute_solution(self, **kwargs):
+        """Compute the solution of the FEM problem using getdp"""
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
@@ -340,17 +350,46 @@ class BaseFEM:
         )
 
     def ppcmd(self, postop):
+        """Create a postprocessing command
+
+        Parameters
+        ----------
+        postop : str
+            Name of the post operation as defined in the .pro file.
+        """
         return femio.postpro_commands(
             postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
         )
 
     def postpro_choice(self, name, filetype):
+        """Run a postprocessing command with either 'pos' or 'txt' file output.
+
+        Parameters
+        ----------
+        name : str
+            Name of the post operation as defined in the .pro file.
+        filetype : str
+            File type to use ('pos' or 'txt')
+        """
+
         if filetype in {"pos", "txt"}:
             subprocess.call(self.ppcmd(name + "_" + filetype))
         else:
             raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def get_qty(self, filename):
+        """Run a postprocessing command with either 'pos' or 'txt' file output.
+
+        Parameters
+        ----------
+        filename : str
+            Name of the txt file to load.
+
+        Returns
+        -------
+        qty : array
+            The quantity to be loaded.
+        """
         file_path = os.path.join(self.tmp_dir, filename)
         if self.type_des is "nodes":
             return femio.load_node_table(file_path)[1]

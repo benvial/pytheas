@@ -1,10 +1,13 @@
 Include "parameters.dat";
 Group {
-        // Domains
-	/* incl         = Region[1001]; */
+  // Domains
 	host         = Region[1002];
-	/* Omega          = Region[{host,incl}]; */
-	Omega          = Region[{host}];
+	If (inclusion_flag)
+		incl         = Region[1001];
+		Omega          = Region[{host,incl}];
+	Else
+		Omega          = Region[{host}];
+	EndIf
 
 	// Boundaries
 	SurfBlochXm   = Region[505];
@@ -18,14 +21,21 @@ Group {
 }
 
 Function{
-	epsilonr[Omega]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
 
-	/* epsilonr[incl]            = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1]; */
-	/* epsilonr[host]           = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1]; */
+	epsilonr[host]           = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+	If (inclusion_flag)
+	epsilonr[incl]            = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
+
+	Else
+		epsilonr[Omega]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
+
+	EndIf
 	EX[] = Vector[1,0,0] ;
 	EY[] = Vector[0,1,0] ;
 	EZ[] = Vector[0,0,1] ;
         }
+
+
 
 Constraint {
 
@@ -94,7 +104,7 @@ FunctionSpace {
 }
 
 Formulation {
-	    {Name electrostat_scalar_x; Type FemEquation;
+	    {Name annex_x; Type FemEquation;
     		Quantity {{ Name ux; Type Local; NameOfSpace Hgrad;}}
 		Equation {
 		Galerkin { [epsilonr[]*Dof{d ux} , {d ux}];
@@ -103,7 +113,7 @@ Formulation {
                   		In Omega; Jacobian JVol; Integration Int_1; }
                 }
             }
-            {Name electrostat_scalar_y; Type FemEquation;
+            {Name annex_y; Type FemEquation;
     		Quantity {{ Name uy; Type Local; NameOfSpace Hgrad;}}
 		Equation {
 		Galerkin { [epsilonr[]*Dof{d uy} , {d uy}];
@@ -112,7 +122,7 @@ Formulation {
                   		In Omega; Jacobian JVol; Integration Int_1; }
                 }
             }
-            {Name electrostat_scalar_z; Type FemEquation;
+            {Name annex_z; Type FemEquation;
     		Quantity {{ Name uz; Type Local; NameOfSpace Hgrad;}}
 		Equation {
 		Galerkin { [epsilonr[]*Dof{d uz} , {d uz}];
@@ -127,9 +137,9 @@ Formulation {
 
 
 Resolution {
-  { Name electrostat_scalar_x;
+  { Name annex_x;
     System {
-      { Name Sx; NameOfFormulation electrostat_scalar_x; Type ComplexValue;}
+      { Name Sx; NameOfFormulation annex_x; Type ComplexValue;}
     }
     Operation {
       Generate[Sx] ;
@@ -138,9 +148,9 @@ Resolution {
       SaveSolution[Sx] ;
     }
   }
-    { Name electrostat_scalar_y;
+    { Name annex_y;
     System {
-      { Name Sy; NameOfFormulation electrostat_scalar_y; Type ComplexValue;}
+      { Name Sy; NameOfFormulation annex_y; Type ComplexValue;}
     }
     Operation {
       Generate[Sy] ;
@@ -149,9 +159,9 @@ Resolution {
       SaveSolution[Sy] ;
     }
   }
-      { Name electrostat_scalar_z;
+      { Name annex_z;
     System {
-      { Name Sz; NameOfFormulation electrostat_scalar_z; Type ComplexValue;}
+      { Name Sz; NameOfFormulation annex_z; Type ComplexValue;}
     }
     Operation {
       Generate[Sz] ;
@@ -163,7 +173,7 @@ Resolution {
 }
 
 PostProcessing {
-    { Name postpro_x; NameOfFormulation electrostat_scalar_x; NameOfSystem Sx;
+    { Name postpro_x; NameOfFormulation annex_x; NameOfSystem Sx;
             Quantity {
                { Name solutionx; Value { Local { [Re[ {ux}] ]  ; In Omega; Jacobian JVol; } } }
               { Name Phixx; Value { Integral { [CompX[epsilonr[]*{d ux}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -173,7 +183,7 @@ PostProcessing {
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
 		     }
     }
-    { Name postpro_y; NameOfFormulation electrostat_scalar_y; NameOfSystem Sy;
+    { Name postpro_y; NameOfFormulation annex_y; NameOfSystem Sy;
             Quantity {
                { Name solutiony; Value { Local { [Re[ {uy}] ] ; In Omega; Jacobian JVol; } } }
               { Name Phiyx; Value { Integral { [CompX[epsilonr[]*{d uy}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -181,7 +191,7 @@ PostProcessing {
               { Name Phiyz; Value { Integral { [CompZ[epsilonr[]*{d uy}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
 		     }
     }
-    { Name postpro_z; NameOfFormulation electrostat_scalar_z; NameOfSystem Sz;
+    { Name postpro_z; NameOfFormulation annex_z; NameOfSystem Sz;
             Quantity {
                { Name solutionz; Value { Local { [Re[ {uz}] ] ; In Omega; Jacobian JVol; } } }
               { Name Phizx; Value { Integral { [CompX[epsilonr[]*{d uz}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
