@@ -161,7 +161,13 @@ Light comes from the top (travels along -y if normal incidence,
 <dl class="method">
 <dt id="pytheas.periodic2D.FemModel.cleanup">
 <code class="descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.cleanup" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clean gmsh/getdp generated files</p>
+<dd><p>Remove gmsh/getdp/python generated files from the temporary folder</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.compute_solution">
+<code class="descname">compute_solution</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.compute_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the solution of the FEM problem using getdp</p>
 </dd></dl>
 
 <dl class="method">
@@ -189,6 +195,46 @@ Light comes from the top (travels along -y if normal incidence,
 </dd></dl>
 
 <dl class="method">
+<dt id="pytheas.periodic2D.FemModel.get_qty">
+<code class="descname">get_qty</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.get_qty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the txt file to load.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>qty</strong> – The quantity to be loaded.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the problem:
+- make dictionary of parameters
+- write this dictionary entries to a .dat file
+- copy the .dat, .geo and .pro files to the temporary folder</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.make_param_dict">
+<code class="descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.make_param_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build dictionary of parameters. This will be later written to a parameter.dat
+file that is meant to be read by both gmsh and getdp</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.mk_tmp_dir">
+<code class="descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a temporary directory</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pytheas.periodic2D.FemModel.postpro_absorption">
 <code class="descname">postpro_absorption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.postpro_absorption" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the absorption coefficient</p>
@@ -199,6 +245,24 @@ Light comes from the top (travels along -y if normal incidence,
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>Q</strong> – Absorption coefficient</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.7)">float</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.postpro_choice">
+<code class="descname">postpro_choice</code><span class="sig-paren">(</span><em>name</em>, <em>filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.postpro_choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</li>
+<li><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – File type to use (‘pos’ or ‘txt’)</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -235,6 +299,32 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.ppcmd">
+<code class="descname">ppcmd</code><span class="sig-paren">(</span><em>postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.ppcmd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a postprocessing command</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.rm_tmp_dir">
+<code class="descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the temporary directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.periodic2D.FemModel.update_params">
+<code class="descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.periodic2D.FemModel.update_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dictionary of parameters and the corresponding file</p>
 </dd></dl>
 
 </dd></dl>
