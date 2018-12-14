@@ -1,7 +1,4 @@
-# import pytheas.tools.gmsh_io as gmsh_io
 import meshio
-
-# from meshio import gmsh_io
 import os
 import subprocess
 import numpy as np

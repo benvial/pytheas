@@ -458,7 +458,7 @@ class BaseFEM:
     def register_pattern(self, pattern, threshold_val):
         self.pattern_ = pattern
         self.threshold_val = threshold_val
-        self.content_mesh = self.make_mesh_pos(self.els, self.nodes)
+        # self.content_mesh = self.make_mesh_pos(self.els, self.nodes)
         # define a density function from a pattern
         self.fdens = self.make_fdens(pattern)
         # interpolate
