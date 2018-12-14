@@ -119,7 +119,7 @@ grating and calculation of diffraction efficiencies.</p>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pytheas.tools.plottools</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">pytheas.material</span> <span class="kn">import</span> <span class="n">genmat</span>
-<span class="kn">from</span> <span class="nn">pytheas.periodic2D</span> <span class="kn">import</span> <span class="n">FemModel</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pytheas.periodic2D</span> <span class="kn">import</span> <span class="n">FemModel</span>
 </pre></div>
 </div>
 <p>Then we need to instanciate the class <code class="xref py py-class docutils literal notranslate"><span class="pre">FemModel</span></code>:</p>
@@ -142,13 +142,13 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># opto-geometric parameters  -------------------------------------------</span>
 <span class="n">mum</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: period</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; superstrate</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; substrate</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; superstrate</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; substrate</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness layer 1</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_layer2</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness layer 2</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_des</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness layer design</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">h_pmltop</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness pml top</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">h_pmlbot</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness pml bot</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">h_pmltop</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness pml top</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">h_pmlbot</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: thickness pml bot</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">a_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, real part</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">b_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, imaginary part</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_sup</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity superstrate</span>
@@ -157,7 +157,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_layer2</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer 2</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer design</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">0.</span>  <span class="c1">#: flt: incident angle</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1">#: flt: incident angle</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TE&quot;</span>  <span class="c1">#: str: polarization (TE or TM)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
 <span class="c1">#: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),</span>
@@ -222,7 +222,7 @@ cell using gmsh</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.4440749322167822, &#39;T&#39;: 0.4804765728980809, &#39;Q&#39;: 0.05938397641376305, &#39;B&#39;: 0.9839354815286261}
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  5.306 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  5.464 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-periodic2d-plot-diffraction-efficiencies-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/fa7fc7b13469565449b774cd95f63ca6/plot_diffraction_efficiencies.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_diffraction_efficiencies.py</span></code></a></div>
