@@ -37,6 +37,7 @@ class FemModel(BaseFEM):
         save_solution=False,
         type_des="nodes",
         inclusion_flag=False,
+        coupling_flag=False,
     ):
 
         super().__init__()
@@ -66,6 +67,7 @@ class FemModel(BaseFEM):
         self.eps_des = eps_host
 
         self.inclusion_flag = inclusion_flag
+        self.coupling_flag = coupling_flag
 
     celltype = "tetra"
 
@@ -82,7 +84,8 @@ class FemModel(BaseFEM):
 
     def make_param_dict(self):
         param_dict = super().make_param_dict()
-        param_dict["save_solution"] = int(self.save_solution)
+        # param_dict["save_solution"] = int(self.save_solution)
+        param_dict["coupling_flag"] = int(self.coupling_flag)
         return param_dict
 
     def compute_solution(self, **kwargs):
@@ -94,6 +97,7 @@ class FemModel(BaseFEM):
                  -pc_type lu -pc_factor_mat_solver_package mumps"
         for coord in ["x", "y", "z"]:
             resolution = "annex_" + coord
+            self.print_progress("     annex problem " + coord)
             femio.solve_problem(
                 resolution,
                 self.path_pro,

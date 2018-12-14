@@ -93,7 +93,9 @@ def refine_mesh(
             dim=dim,
         )
         nodes, els, des = fem.get_mesh_info()
-        fem.content_mesh = fem.make_mesh_pos(els, nodes)
+        # fem.content_mesh = fem.make_mesh_pos(els, nodes)
+        fem.content_mesh = femio.get_content(fem.path_mesh)
+
         # plt.clf()
         # plt.imshow(np.fliplr(grad_pat_norm[:, :, 0]).T)
         # plt.colorbar()

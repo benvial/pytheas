@@ -22,14 +22,20 @@ Group {
 
 Function{
 
-	epsilonr[host]           = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
 	If (inclusion_flag)
 	epsilonr[incl]            = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
-
+		If (coupling_flag)
+	 	eps_xx[host] = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ];
+		eps_yy[host] = Complex[ScalarField[XYZ[], 0, 1]{2}  ,ScalarField[XYZ[], 0, 1 ]{3} ];
+		eps_zz[host] = Complex[ScalarField[XYZ[], 0, 1]{4}  ,ScalarField[XYZ[], 0, 1 ]{5} ]; 
+		epsilonr[host]    = TensorDiag[eps_xx[],eps_yy[],eps_zz[]];
+		Else
+			epsilonr[host]           = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+		EndIf
 	Else
 		epsilonr[Omega]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
-
 	EndIf
+	
 	EX[] = Vector[1,0,0] ;
 	EY[] = Vector[0,1,0] ;
 	EZ[] = Vector[0,0,1] ;

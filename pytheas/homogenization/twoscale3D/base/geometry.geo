@@ -39,34 +39,27 @@ Plane Surface (24) = {1000024};
 Surface Loop (102) = {14, 16, 18, 24, 20, 22};
 
 
+/* #################################### */
+
+
 Periodic Line {1} = {5};
 Periodic Line {3} = {7};
 Periodic Line {9} = {10};
 Periodic Line {12} = {11};
-
-
-/* #################################### */
 Periodic Line {4} = {2} ;
-Periodic Line {4} = {6} ;
 Periodic Line {4} = {8} ;
-
 Periodic Line {1} = {5} ;
-Periodic Line {1} = {7} ;
-Periodic Line {1} = {3} ;
+Periodic Line {3} = {1} ;
+Periodic Line {8} = {6} ;
+Periodic Line {7} = {5} ;
+Periodic Line {12} = {9} ;
+Periodic Line {11} = {10} ;
 
-Periodic Line {9} = {10} ;
-Periodic Line {9} = {11} ;
-Periodic Line {9} = {12} ;
 
-Periodic Surface 24 {1,2,3,4} = 16 {5,6,7,8};
-Periodic Surface 14 {10,5,9,1} = 22 {11,-7,12,-3};
+
 Periodic Surface 18 {9,8,12,4} = 20 {10,-6,11,-2};
-
-/* #################################### */
-
-
-/* Periodic Surface {14} = {22};
-Periodic Surface {18} = {20}; */
+Periodic Surface 24 {1,2,3,4} = 16 {5,6,7,8};
+Periodic Surface  22 {11,-7,12,-3} = 14 {10,5,9,1};
 
 
 /*---------------------------------------------------*/
@@ -137,6 +130,14 @@ Physical Surface(505)={18};
 Physical Surface(506)={20};
 
 Physical Point(10000) = {1};
+
+
+
+Coherence;
+Coherence;
+Coherence;
+Coherence;
+
 
 /*---------------------------------------------------*/
 
