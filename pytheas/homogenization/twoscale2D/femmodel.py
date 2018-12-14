@@ -1,7 +1,6 @@
 import os
 import subprocess
 import numpy as np
-import scipy as sc
 from ...tools import femio
 from ...basefem import BaseFEM
 
@@ -65,7 +64,7 @@ class FemModel(BaseFEM):
 
     def postprocessing(self):
         self.print_progress("Postprocessing")
-        subprocess.call(self.ppcmd("postop"))
+        self.postprocess("postop")
 
     def get_phi(self):
         phi = np.zeros((2, 2), dtype=complex)

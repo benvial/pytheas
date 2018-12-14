@@ -233,6 +233,7 @@ def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     pos_list = pos_list or []
     subprocess.call(
         gmsh
+        + " "
         + path_geo
         + " "
         + path_mesh
@@ -342,6 +343,10 @@ def load_element_table_vect(filename):
 
 def load_timetable(filename):
     return np.loadtxt(filename, usecols=[5]) + 1j * np.loadtxt(filename, usecols=[6])
+
+
+def load_ev_timetable(filename):
+    return np.loadtxt(filename, usecols=[1]) + 1j * np.loadtxt(filename, usecols=[5])
 
 
 def points2geo(points, lc_incl, output_path="./tmp.geo", startpoint=1000):

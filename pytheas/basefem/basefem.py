@@ -373,7 +373,7 @@ class BaseFEM:
         """
 
         if filetype in {"pos", "txt"}:
-            subprocess.call(self.ppcmd(name + "_" + filetype))
+            self.postprocess(name + "_" + filetype)
         else:
             raise TypeError("Wrong filetype specified: choose between txt and pos")
 
@@ -479,6 +479,49 @@ class BaseFEM:
         self.print_progress("Opening gmsh GUI")
         p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
+
+    def postpro_eigenvalues(
+        self, postop="postop_eigenvalues", eig_file="EigenValues.txt"
+    ):
+        self.print_progress("Retrieving eigenvalues")
+        self.postprocess(postop)
+        filename = os.path.join(self.tmp_dir, eig_file)
+        return femio.load_ev_timetable(filename)
+
+    def postpro_eigenvectors(
+        self, filetype="txt", postop="postop_eigenvectors", eig_file="EigenVectors.txt"
+    ):
+        self.print_progress("Retrieving eigenvectors")
+        self.postpro_choice(postop, filetype)
+        if filetype is "txt":
+            filename = os.path.join(self.tmp_dir, eig_file)
+            mode = femio.load_timetable(filename)
+            u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
+            u = mode.reshape((self.Niy, self.Nix, self.neig))
+            for imode in range(self.neig):
+                u1[:, :, imode] = np.flipud(u[:, :, imode]).T
+            return u1
+        else:
+            return
+
+    def get_spectral_elements(self):
+        eigval = self.postpro_eigenvalues()
+        eigvect = self.postpro_eigenvectors()
+        isort = np.argsort(eigval)
+        eigval = eigval[isort]
+        eigvect = eigvect[:, :, (isort)]
+        return eigval, eigvect
+
+    def postpro_norm_eigenvectors(
+        self, postop="postop_norm_eigenvectors", eig_file="NormsEigenVectors.txt"
+    ):
+        self.print_progress("Retrieving eigenvector norms")
+        self.postprocess(postop)
+        filename = os.path.join(self.tmp_dir, eig_file)
+        return np.sqrt(femio.load_timetable(filename))
+
+    def postprocess(self, postop):
+        subprocess.call(self.ppcmd(postop))
 
 
 def assign_epsilon(pattern, matprop, threshold_val, density):

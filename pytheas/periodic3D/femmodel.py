@@ -252,7 +252,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         )
 
     def postpro_absorption(self):
-        subprocess.call(self.ppcmd("postopQ"))
+        self.postprocess("postopQ")
         path = self.tmp_dir + "/Q.txt"
         Q = np.loadtxt(path, skiprows=0, usecols=[1]) + 1j * np.loadtxt(
             path, skiprows=0, usecols=[1]
@@ -295,7 +295,7 @@ class PeriodicMediumFEM3D(BaseFEM):
     def get_objective(self):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
-            subprocess.call(self.ppcmd("postop_int_objective"))
+            self.postprocess("postop_int_objective")
         return femio.load_table(self.tmp_dir + "/objective.txt").real
 
     def get_adjoint(self):

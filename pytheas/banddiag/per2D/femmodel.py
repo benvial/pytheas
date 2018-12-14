@@ -20,37 +20,40 @@ class BandsFEM2D(BaseFEM):
 
     dir_path = os.path.dirname(os.path.abspath(__file__))
 
-    #: flt: incident wavelength in free space
-    lambda0 = 1.0
-    lambda_mesh = 1.0
-    kx = 0  #: flt: wavevector, x component
-    ky = 0  #: flt: wavevector, y component
-    eps_des = 1
-    analysis = "modal"
+    def __init__(self, ID="sim"):
+        super().__init__()
 
-    #: str: polarisation (either "TE" or "TM")
-    pola = "TE"
+        #: flt: incident wavelength in free space
+        self.lambda0 = 1.0
+        self.lambda_mesh = 1.0
+        self.kx = 0  #: flt: wavevector, x component
+        self.ky = 0  #: flt: wavevector, y component
+        self.eps_des = 1
+        self.analysis = "modal"
 
-    #: flt: shift for eigenvalue search
-    lambda0search = 1.0
-    #: int: number of eigenvalues
-    neig = 6
+        #: str: polarisation (either "TE" or "TM")
+        self.pola = "TE"
 
-    #: int: number of x points for postprocessing field maps
-    Nix = 51
+        #: flt: shift for eigenvalue search
+        self.lambda0search = 1.0
+        #: int: number of eigenvalues
+        self.neig = 6
 
-    #: flt: global mesh parameter
-    #: `MeshElementSize = lambda0/(parmesh*n)`, `n`: refractive index
-    parmesh = 10.0
-    quad_mesh_flag = False
-    type_des = "elements"
-    y_flag = False
-    save_solution = False
+        #: int: number of x points for postprocessing field maps
+        self.Nix = 51
 
-    # opto-geometric parameters  -------------------------------------------
-    dx = 1  #: flt: period x
-    dy = 1  #: flt: period y
-    dom_des = 1000  #: design domain number (check .geo/.pro files)
+        #: flt: global mesh parameter
+        #: `MeshElementSize = lambda0/(parmesh*n)`, `n`: refractive index
+        self.parmesh = 10.0
+        self.quad_mesh_flag = False
+        self.type_des = "elements"
+        self.y_flag = False
+        self.save_solution = False
+
+        # opto-geometric parameters  -------------------------------------------
+        self.dx = 1  #: flt: period x
+        self.dy = 1  #: flt: period y
+        self.dom_des = 1000  #: design domain number (check .geo/.pro files)
 
     # postprocessing -------------------------------------------------
     # @property
@@ -93,34 +96,16 @@ class BandsFEM2D(BaseFEM):
         return field.reshape((self.Niy, self.Nix)).T
 
     def postpro_eigenvalues(self):
-        self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppcmd("postop_eigenvalues_" + self.pola))
-        filename = self.tmp_dir + "/EV_" + self.pola + ".txt"
-        re = np.loadtxt(filename, usecols=[1])
-        im = np.loadtxt(filename, usecols=[5])
-        return re + 1j * im
-
-    # def postpro_eigenvectors(self, filetype="txt"):
-    #     self.print_progress("Retrieving eigenvectors")
-    #     self.postpro_choice("postop_eigenvectors_" + self.pola, filetype)
-    #     if filetype is "txt":
-    #         filename = self.tmp_dir + "/modes_" + self.pola + ".txt"
-    #         ev = femio.load_timetable(filename)
-    #         return ev.reshape((self.Nix, self.Niy, self.neig))
+        eig_file = "EV_" + self.pola + ".txt"
+        postop = "postop_eigenvalues_" + self.pola
+        return super().postpro_eigenvalues(postop=postop, eig_file=eig_file)
 
     def postpro_eigenvectors(self, filetype="txt"):
-        self.print_progress("Retrieving eigenvectors")
-        self.postpro_choice("postop_eigenvectors_" + self.pola, filetype)
-        if filetype is "txt":
-            filename = self.tmp_dir + "/modes_" + self.pola + ".txt"
-            mode = femio.load_timetable(filename)
-            u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
-            u = mode.reshape((self.Niy, self.Nix, self.neig))
-            for imode in range(self.neig):
-                u1[:, :, imode] = np.flipud(u[:, :, imode]).T
-            return u1
-        else:
-            return
+        postop = "postop_eigenvectors_" + self.pola
+        eig_file = "modes_" + self.pola + ".txt"
+        return super().postpro_eigenvectors(
+            filetype=filetype, postop=postop, eig_file=eig_file
+        )
 
     def plot_field_and_pattern(
         self,

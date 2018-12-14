@@ -1,7 +1,6 @@
 import os
 import subprocess
 import numpy as np
-import scipy as sc
 from ...tools import femio
 from ..twoscale2D.femmodel import FemModel as FemModel_
 
@@ -67,7 +66,7 @@ class FemModel(FemModel_):
         return femio.load_table(self.tmp_dir + "/Vol.txt")
 
     def get_vol_incl(self):
-        subprocess.call(self.ppcmd("postop_V_incl"))
+        self.postprocess("postop_V_incl")
         return femio.load_table(self.tmp_dir + "/V_incl.txt")
 
     def postpro_effective_permittivity(self):
@@ -78,44 +77,8 @@ class FemModel(FemModel_):
         eps_eff = np.linalg.inv(epsinv_eff)
         return eps_eff
 
-    def postpro_eigenvalues(self):
-        self.print_progress("Retrieving eigenvalues")
-        subprocess.call(self.ppcmd("postop_eigenvalues"))
-        filename = self.tmp_dir + "/EigenValues.txt"
-        re = np.loadtxt(filename, usecols=[1])
-        im = np.loadtxt(filename, usecols=[5])
-        return re + 1j * im
-
-    def get_spectral_elements(self):
-        eigval = self.postpro_eigenvalues()
-        eigvect = self.postpro_eigenvectors()
-        isort = np.argsort(eigval)
-        eigval = eigval[isort]
-        eigvect = eigvect[:, :, (isort)]
-        nms = self.postpro_norm_eigenvectors()
-        return eigval, eigvect / nms[isort]
-
-    def postpro_eigenvectors(self, filetype="txt"):
-        self.print_progress("Retrieving eigenvectors")
-        self.postpro_choice("postop_eigenvectors", filetype)
-        if filetype is "txt":
-            mode = femio.load_timetable(self.tmp_dir + "/EigenVectors.txt")
-            u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
-            u = mode.reshape((self.Niy, self.Nix, self.neig))
-            for imode in range(self.neig):
-                u1[:, :, imode] = np.flipud(u[:, :, imode]).T
-            return u1
-        else:
-            return
-
-    def postpro_norm_eigenvectors(self):
-        self.print_progress("Retrieving eigenvector norms")
-        subprocess.call(self.ppcmd("postop_norm_eigenvectors"))
-        filename = self.tmp_dir + "/NormsEigenVectors.txt"
-        return np.sqrt(femio.load_timetable(filename))
-
     def postpro_coefs_mu(self):
         self.print_progress("Retrieving expansion coefficients")
-        subprocess.call(self.ppcmd("postop_coefs_mu"))
-        filename = self.tmp_dir + "/Coefs_mu.txt"
+        self.postprocess("postop_coefs_mu")
+        filename = os.path.join(self.tmp_dir, "Coefs_mu.txt")
         return femio.load_timetable(filename)

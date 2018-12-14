@@ -107,7 +107,7 @@ class FemModel(BaseFEM):
                 argstr=argstr,
             )
             postop = "postop_" + coord
-            subprocess.call(self.ppcmd(postop))
+            self.postprocess(postop)
 
     def compute_epsilon_eff(self):
         self.print_progress("Postprocessing")
