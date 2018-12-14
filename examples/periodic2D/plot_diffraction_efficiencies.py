@@ -17,7 +17,7 @@ grating and calculation of diffraction efficiencies.
 import numpy as np
 from pytheas.tools.plottools import *
 from pytheas.material import genmat
-from pytheas.periodic2D import FemModel, utils
+from pytheas.periodic2D import FemModel
 
 ##############################################################################
 # Then we need to instanciate the class :py:class:`FemModel`:
@@ -42,13 +42,13 @@ fem = FemModel()
 # opto-geometric parameters  -------------------------------------------
 mum = 1e-6  #: flt: the scale of the problem (here micrometers)
 fem.d = 0.4 * mum  #: flt: period
-fem.h_sup = 1. * mum  #: flt: "thickness" superstrate
-fem.h_sub = 1. * mum  #: flt: "thickness" substrate
+fem.h_sup = 1.0 * mum  #: flt: "thickness" superstrate
+fem.h_sub = 1.0 * mum  #: flt: "thickness" substrate
 fem.h_layer1 = 0.1 * mum  #: flt: thickness layer 1
 fem.h_layer2 = 0.1 * mum  #: flt: thickness layer 2
 fem.h_des = 0.4 * mum  #: flt: thickness layer design
-fem.h_pmltop = 1. * mum  #: flt: thickness pml top
-fem.h_pmlbot = 1. * mum  #: flt: thickness pml bot
+fem.h_pmltop = 1.0 * mum  #: flt: thickness pml top
+fem.h_pmlbot = 1.0 * mum  #: flt: thickness pml bot
 fem.a_pml = 1  #: flt: PMLs parameter, real part
 fem.b_pml = 1  #: flt: PMLs parameter, imaginary part
 fem.eps_sup = 1  #: flt: permittivity superstrate
@@ -57,7 +57,7 @@ fem.eps_layer1 = 1  #: flt: permittivity layer 1
 fem.eps_layer2 = 1  #: flt: permittivity layer 2
 fem.eps_des = 1  #: flt: permittivity layer design
 fem.lambda0 = 0.6 * mum  #: flt: incident wavelength
-fem.theta_deg = 0.  #: flt: incident angle
+fem.theta_deg = 0.0  #: flt: incident angle
 fem.pola = "TE"  #: str: polarization (TE or TM)
 fem.lambda_mesh = 0.6 * mum  #: flt: incident wavelength
 #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),

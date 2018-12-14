@@ -3,7 +3,8 @@ from pytheas.tools.plottools import *
 from pytheas.material import genmat
 
 from pytheas import periodic2D
-from pytheas.periodic2D import FemModel, utils
+from pytheas.periodic2D import FemModel
+from pytheas.tools import utils
 import numpy.testing as npt
 
 

@@ -19,7 +19,7 @@ class FemModel(BaseFEM):
     def __init__(self):
         super().__init__()
 
-        #: flt: caracteristic length of the problem (typically the period)
+        #: flt: characteristic length of the problem (typically the period)
         self.l_carac = 1.0
 
         #: flt: global mesh parameter

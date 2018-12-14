@@ -18,7 +18,7 @@ class FemModel(BaseFEM):
 
     def __init__(
         self,
-        #: flt: caracteristic length of the problem (typically the period)
+        #: flt: characteristic length of the problem (typically the period)
         l_carac=1.0,
         #: flt: global mesh parameter
         #: `MeshElementSize = l_carac/(parmesh*n)`, `n`: refractive index
@@ -42,7 +42,7 @@ class FemModel(BaseFEM):
 
         super().__init__()
 
-        #: flt: caracteristic length of the problem (typically the period)
+        #: flt: characteristic length of the problem (typically the period)
         self.l_carac = l_carac
 
         #: flt: global mesh parameter
