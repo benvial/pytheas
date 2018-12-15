@@ -42,7 +42,7 @@ def yaml_extract(yamlFile):
     filename = os.path.join(database_path, yamlFile)
     with open(filename) as yamlStream:
         c = yamlStream.read()
-        allData = yaml.load(strip_invalid(c))
+        allData = yaml.safe_load(strip_invalid(c))
     materialData = allData["DATA"][0]
     return allData, materialData
 
@@ -50,7 +50,7 @@ def yaml_extract(yamlFile):
 # This function is designed to return refractive index for specified lambda
 # for file in "tabluated n " format
 def getDataN(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated n"
 
     matLambda = []
@@ -78,10 +78,9 @@ def getDataN(yamlFile, lamb):
 
 
 def getDataK(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated k"
-    print("Only k values!")
-
+    # print("Only k values!")
     matLambda = []
     matK = []
     # in this type of material read data line by line
@@ -107,7 +106,7 @@ def getDataK(yamlFile, lamb):
 
 
 def getRangeN(yamlFile):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated n"
     # in this type of material read data line by line
     matLambda = []
@@ -122,7 +121,7 @@ def getRangeN(yamlFile):
 
 
 def getRangeK(yamlFile):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated k"
     # in this type of material read data line by line
     matLambda = []
@@ -139,7 +138,7 @@ def getRangeK(yamlFile):
 def getDataNK(yamlFile, lamb):
     """This function is designed to return refractive index for specified lambda
     for file in `tabulated nk` format"""
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
     assert materialData["type"] == "tabulated nk"
     matLambda = []
     matN = []
@@ -169,7 +168,7 @@ def getDataNK(yamlFile, lamb):
 
 
 def getRangeNK(yamlFile):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "tabulated nk"
     # in this type of material read data line by line
@@ -186,7 +185,7 @@ def getRangeNK(yamlFile):
 
 # this function is desined to get data from files in formula1 format
 def getDataF1(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 1"
 
@@ -210,7 +209,7 @@ def getDataF1(yamlFile, lamb):
 
 # this function is desined to get data from files in formula2 format
 def getDataF2(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 2"
 
@@ -234,7 +233,7 @@ def getDataF2(yamlFile, lamb):
 
 # this function is desined to get data from files in formula3 format
 def getDataF3(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 3"
 
@@ -255,7 +254,7 @@ def getDataF3(yamlFile, lamb):
 
 
 def getDataF4(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 4"
 
@@ -287,7 +286,7 @@ def getDataF4(yamlFile, lamb):
 
 # this function is desined to get data from files in formula5 format
 def getDataF5(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 5"
 
@@ -307,7 +306,7 @@ def getDataF5(yamlFile, lamb):
 
 # this function is desined to get data from files in formula6 format
 def getDataF6(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 6"
 
@@ -327,7 +326,7 @@ def getDataF6(yamlFile, lamb):
 
 # this function is desined to get data from files in formula7 format
 def getDataF7(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 7"
 
@@ -349,7 +348,7 @@ def getDataF7(yamlFile, lamb):
 
 # this function is desined to get data from files in formula8 format
 def getDataF8(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 8"
 
@@ -370,7 +369,7 @@ def getDataF8(yamlFile, lamb):
 
 # this function is desined to get data from files in formula9 format
 def getDataF9(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     assert materialData["type"] == "formula 9"
 
@@ -397,7 +396,7 @@ def getDataF9(yamlFile, lamb):
 
 
 def getData(yamlFile, lamb):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     if materialData["type"] == "tabulated nk":
         return getDataNK(yamlFile, lamb)
@@ -424,12 +423,11 @@ def getData(yamlFile, lamb):
     elif materialData["type"] == "formula 9":
         return getDataF9(yamlFile, lamb)
     else:
-        # 	raise Error("UnsupportedDataType:This data type is currnetly not supported");
         return np.zeros_like(lamb)
 
 
 def getRange(yamlFile):
-    allData, materialData = yaml_extract(yamlFile)
+    _, materialData = yaml_extract(yamlFile)
 
     if materialData["type"] == "tabulated nk":
         return getRangeNK(yamlFile)
@@ -439,15 +437,6 @@ def getRange(yamlFile):
         return getRangeK(yamlFile)
     else:
         return np.array(list(map(float, materialData["range"].split())))
-    # elif materialData["type"] == "formula 1":
-    #     return np.array(list(map(float, materialData["range"].split())))
-    # elif materialData["type"] == "formula 2":
-    #     return np.array(list(map(float, materialData["range"].split())))
-    # elif materialData["type"] == "formula 3" or materialData["type"] == "formula 4":
-    #     return np.array(list(map(float, materialData["range"].split())))
-    # else:
-    #     #	raise Error("UnsupportedDataType:This data type "+materialData["type"] +" is currnetly not supported");
-    #     return (0, 0)
 
 
 def get_complex_index(lambdas, yamlFile):
