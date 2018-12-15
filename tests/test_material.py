@@ -21,7 +21,6 @@ def test_all():
         bounds = getRange(yamlFile)
         lambdas = np.linspace(bounds[0], bounds[1], 4)
         ncomplex = get_complex_index(lambdas, yamlFile)
-        epsilon = ncomplex ** 2
 
 
 def test_bounds():
