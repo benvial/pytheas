@@ -266,7 +266,7 @@ of the modal coupling coefficients</p>
 
 <dl class="method">
 <dt id="pytheas.scatt2D.FemModel.compute_solution">
-<code class="descname">compute_solution</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.scatt2D.FemModel.compute_solution" title="Permalink to this definition">¶</a></dt>
+<code class="descname">compute_solution</code><span class="sig-paren">(</span><em>res_list=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.scatt2D.FemModel.compute_solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the solution of the FEM problem using getdp</p>
 </dd></dl>
 
@@ -335,7 +335,7 @@ of the modal coupling coefficients</p>
 <dl class="method">
 <dt id="pytheas.scatt2D.FemModel.get_qty">
 <code class="descname">get_qty</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.scatt2D.FemModel.get_qty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
+<dd><p>Retrieve a scalar quantity.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -519,6 +519,39 @@ for postprocessing diffraction efficiencies</p>
 <li><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – File type to use (‘pos’ or ‘txt’)</li>
 </ul>
 </td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.scatt2D.FemModel.postpro_fields">
+<code class="descname">postpro_fields</code><span class="sig-paren">(</span><em>filetype='txt'</em>, <em>postop='postop_fields'</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.scatt2D.FemModel.postpro_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the field maps and output to a file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
+get_field_map in python) or “pos” to be read by gmsh/getdp.</li>
+<li><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;postop_fields&quot;</em>) – Name of the postoperation</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.scatt2D.FemModel.postprocess">
+<code class="descname">postprocess</code><span class="sig-paren">(</span><em>postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.scatt2D.FemModel.postprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run getdp postoperation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the postoperation to run.</td>
 </tr>
 </tbody>
 </table>
