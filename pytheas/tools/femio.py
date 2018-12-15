@@ -52,114 +52,35 @@ def maketmp(content, filename, dirname="", mode="w"):
 
 
 def mesh_model(
-    path_mesh, path_geo, mesh_format="msh2", dim=[1, 2], verbose=0, other_option=""
+    path_mesh, path_geo, mesh_format="msh2", dim=None, verbose=0, other_option=""
 ):
     """Mesh the model using Gmsh_
-
 
     .. _Gmsh:
         http://gmsh.info/
     """
-    str_dim = ""
-    for d in dim:
-        str_dim += " -" + str(d)
-    # print(str_dim)
-    subprocess.call(
-        gmsh
-        + " -v "
-        + str(verbose)
-        + " "
-        + "-format "
-        + str(mesh_format)
-        + " "
-        + path_geo
-        + " "
-        + str_dim
-        + " "
-        + other_option
-        + " -o "
-        + path_mesh,
-        shell=True,
-    )
-
-
-def get_nodes(path_mesh, physical_ID, celltype):
-    mesh = meshio.read(path_mesh)
-    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
-    domain = phys_ID == physical_ID
-    cell = mesh.cells[celltype]
-    els_nodes_ID = cell[domain]
-    nodes_ID_domain = np.unique(els_nodes_ID.flatten())
-    nodes_coords_domain = mesh.points[nodes_ID_domain]
-    return nodes_ID_domain + 1, nodes_coords_domain
-
-
-def get_elements(path_mesh, physical_ID, celltype):
-    mesh = meshio.read(path_mesh)
-    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
-    domain = phys_ID == physical_ID
-    n = 1
-    for k in mesh.cell_data.keys():
-        if k is celltype:
-            n += 0
-        else:
-            n += len(mesh.cell_data[k]["gmsh:physical"])
-    el_ID = np.arange(0, len(domain))[domain] + n
-    cell = mesh.cells[celltype]
-    els_nodes_ID = cell[domain]
-    el_center = np.mean(mesh.points[els_nodes_ID], axis=1)
-    return el_ID, el_center, els_nodes_ID + 1, None
-
-
-#
-
-#
-# def get_nodes(path_mesh, physical_ID, celltype):
-#     points, cells, point_data, cell_data, field_data = gmsh_io.read(path_mesh)
-#     phys_ID = cell_data[celltype]["physical"]
-#     domain = phys_ID == physical_ID
-#     cell = cells[celltype]
-#     els_nodes_ID = cell[domain]
-#     nodes_ID_domain = np.unique(els_nodes_ID.flatten())
-#     nodes_coords_domain = points[nodes_ID_domain]
-#     return nodes_ID_domain + 1, nodes_coords_domain
-#
-#
-# def get_elements(path_mesh, physical_ID, celltype):
-#     points, cells, point_data, cell_data, field_data = gmsh_io.read(path_mesh)
-#     phys_ID = cell_data[celltype]["physical"]
-#     geom_ID = cell_data[celltype]["geometrical"]
-#     domain = phys_ID == physical_ID
-#     n = 1
-#     for k in cell_data.keys():
-#         if k is celltype:
-#             n += 0
-#         else:
-#             n += len(cell_data[k]["physical"])
-#     el_ID = np.arange(0, len(domain))[domain] + n
-#     cell = cells[celltype]
-#     els_nodes_ID = cell[domain]
-#     geom_ID_dom = geom_ID[domain]
-#     el_center = np.mean(points[els_nodes_ID], axis=1)
-#     return el_ID, el_center, els_nodes_ID + 1, geom_ID_dom
+    dim = dim or [1, 2]
+    list_dim = ["-{}".format(d) for d in dim]
+    command = [gmsh, "-v", str(verbose), "-format", mesh_format, path_geo]
+    command += list_dim + other_option.split() + ["-o", path_mesh]
+    subprocess.call(command)
 
 
 def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, argstr=""):
-    solve_str = (
-        getdp
-        + " -v "
-        + str(verbose)
-        + " "
-        + path_pro
-        + " -pre "
-        + resolution
-        + " "
-        + " -msh  "
-        + path_mesh
-    )
+    command = [
+        getdp,
+        "-v",
+        str(verbose),
+        path_pro,
+        "-pre",
+        resolution,
+        "-msh",
+        path_mesh,
+    ]
     if path_pos:
-        solve_str += " -gmshread " + path_pos
-    subprocess.call(solve_str + " -cal -v2 " + argstr, shell=True)
+        command += ["-gmshread"] + path_pos.split()
+    command += ["-cal", "-v2"] + argstr.split()
+    subprocess.call(command)
 
 
 def make_content_mesh_pos(nodes, els, dom, celltype):
@@ -200,6 +121,34 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
     return s
 
 
+def get_nodes(path_mesh, physical_ID, celltype):
+    mesh = meshio.read(path_mesh)
+    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
+    domain = phys_ID == physical_ID
+    cell = mesh.cells[celltype]
+    els_nodes_ID = cell[domain]
+    nodes_ID_domain = np.unique(els_nodes_ID.flatten())
+    nodes_coords_domain = mesh.points[nodes_ID_domain]
+    return nodes_ID_domain + 1, nodes_coords_domain
+
+
+def get_elements(path_mesh, physical_ID, celltype):
+    mesh = meshio.read(path_mesh)
+    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
+    domain = phys_ID == physical_ID
+    n = 1
+    for k in mesh.cell_data.keys():
+        if k is celltype:
+            n += 0
+        else:
+            n += len(mesh.cell_data[k]["gmsh:physical"])
+    el_ID = np.arange(0, len(domain))[domain] + n
+    cell = mesh.cells[celltype]
+    els_nodes_ID = cell[domain]
+    el_center = np.mean(mesh.points[els_nodes_ID], axis=1)
+    return el_ID, el_center, els_nodes_ID + 1, None
+
+
 def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
     s = content_mesh
     if not s:
@@ -231,19 +180,8 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
 
 def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     pos_list = pos_list or []
-    subprocess.call(
-        gmsh
-        + " "
-        + path_geo
-        + " "
-        + path_mesh
-        + " "
-        + " ".join(pos_list)
-        + " -v "
-        + str(verbose)
-        + " &",
-        shell=True,
-    )
+    command = [gmsh, path_geo, path_mesh] + pos_list + ["-v", str(verbose), "&"]
+    subprocess.call(command)
 
 
 def postpro_commands(postop, path_pro, path_mesh, path_pos=None, verbose=0):

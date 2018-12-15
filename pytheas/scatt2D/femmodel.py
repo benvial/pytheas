@@ -235,10 +235,6 @@ class FemModel(BaseFEM):
             Itheta.append(I)
         return np.abs(Itheta) ** 2 / (8 * pi)
 
-    def postpro_fields(self, filetype="txt"):
-        self.print_progress("Postprocessing fields")
-        self.postpro_choice("postop_fields", filetype)
-
     def get_field_map(self, name):
         field = femio.load_table(self.tmp_dir + "/" + name)
         return np.flipud(field.reshape((self.Niy, self.Nix)).T)
@@ -250,18 +246,6 @@ class FemModel(BaseFEM):
         u = femio.load_table(self.tmp_dir + "/" + "u_point.txt")
         return u, u_tot, u_i
 
-    def get_objective(self):
-        self.print_progress("Retrieving objective")
-        if not self.adjoint:
-            self.postprocess("postop_int_objective")
-        return femio.load_table(self.tmp_dir + "/objective.txt").real
-
-    def postpro_norm_eigenvectors(self):
-        self.print_progress("Retrieving eigenvector norms")
-        self.postprocess("postop_norm_eigenvectors")
-        filename = self.tmp_dir + "/NormsEigenVectors.txt"
-        return femio.load_timetable(filename)
-
     def postpro_coupling_angle(self):
         self.print_progress("Angular sweep for coupling coeffs")
         self.postprocess("postop_coupling_coeffs_angle")
@@ -271,9 +255,7 @@ class FemModel(BaseFEM):
 
     def postpro_fourrier_coefs_angle(self):
         self.print_progress("Fourrier coefficients for coupling")
-        subprocess.call(
-            self.ppcmd("postop_coupling_coeffs_fourrier_series"), shell=True
-        )
+        self.postprocess("postop_coupling_coeffs_fourrier_series")
         filename = self.tmp_dir + "/coupling_coeffs_fs.txt"
         tmp = femio.load_timetable(filename)
         return tmp.reshape((2 * self.M_fs + 1, self.neig))
@@ -294,9 +276,6 @@ class FemModel(BaseFEM):
         for imode in range(self.neig):
             u1[:, :, imode] = np.flipud(u[:, :, imode]).T
         return u1
-
-    def get_adjoint(self):
-        return self.get_qty("adjoint.txt")
 
     def get_deq_deps(self):
         if self.pola is "TE":

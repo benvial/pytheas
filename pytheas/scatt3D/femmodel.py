@@ -6,7 +6,6 @@
 import os
 import subprocess
 import numpy as np
-import scipy as sc
 from ..tools import femio
 from ..basefem import BaseFEM
 
@@ -140,69 +139,9 @@ class ScattFEM3D(BaseFEM):
         return param_dict
 
     def compute_solution(self, **kwargs):
-        self.update_params()
-        self.print_progress("Computing solution: this may take a while")
-        if self.analysis == "diffraction":
-            argstr = "-petsc_prealloc 500 -ksp_type preonly \
-                     -pc_type lu -pc_factor_mat_solver_package mumps"
-
-            resolution = "helmholtz_vector"
-        elif self.analysis == "modal":
-            argstr = "-slepc -eps_type krylovschur \
-                       -st_ksp_type preonly \
-                       -st_pc_type lu \
-                       -st_pc_factor_mat_solver_package mumps \
-                       -eps_max_it 300 \
-                       -eps_target 0.00001 \
-                       -eps_target_real \
-                       -eps_mpd 600 -eps_nev 400"
-
-            resolution = "helmholtz_vector_modal"
-        else:
-            raise TypeError(
-                "Wrong analysis specified: choose between diffraction and modal"
-            )
-        argstr += " -cpu"
-        femio.solve_problem(
-            resolution,
-            self.path_pro,
-            self.path_mesh,
-            verbose=self.getdp_verbose,
-            path_pos=self.path_pos,
-            argstr=argstr,
-        )
-
-    def postpro_absorption(self):
-        self.postprocess("postopQ")
-        path = self.tmp_dir + "/Q.txt"
-        Q = np.loadtxt(path, skiprows=0, usecols=[1]) + 1j * np.loadtxt(
-            path, skiprows=0, usecols=[1]
-        )
-        return Q.real
+        res_list = ["helmholtz_vector", "helmholtz_vector_modal"]
+        return super().compute_solution(res_list=res_list)
 
     def postpro_epsilon(self):
         self.print_progress("Postprocessing permittivity")
-        subprocess.call([self.ppcmd("postop_epsilon") + " -order 2"])
-
-    #
-    def postpro_fields(self, filetype="txt"):
-        self.postpro_choice("postop_fields", filetype)
-
-    #
-    # def get_field_map(self, name):
-    #     field = femio.load_table(self.tmp_dir + "/" + name)
-    #     return field.reshape((self.Niy, self.Nix)).T
-    #
-    def get_objective(self):
-        self.print_progress("Retrieving objective")
-        if not self.adjoint:
-            self.postprocess("postop_int_objective")
-        return femio.load_table(self.tmp_dir + "/objective.txt").real
-
-    def get_adjoint(self):
-        self.print_progress("Retrieving adjoint")
-        return self.get_qty_vect("adjoint.txt")
-
-    def get_deq_deps(self):
-        self.print_progress("Retrieving dEq_deps")
-        return self.get_qty_vect("dEq_deps.txt")
+        self.postprocess("postop_epsilon" + " -order 2")

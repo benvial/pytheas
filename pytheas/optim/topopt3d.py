@@ -1,4 +1,5 @@
 from .topopt import TopologyOptimization
+import numpy as np
 
 
 class TopologyOptimization3D(TopologyOptimization):
@@ -20,8 +21,7 @@ class TopologyOptimization3D(TopologyOptimization):
         return x1, y1, z1
 
     def get_deq_deps(self):
-        deq_deps = self.fem.get_deq_deps()
-        return deq_deps
+        return self.fem.get_deq_deps()
 
     def get_sensitivity(self, p, filt=True, proj=True):
         adjoint = self.get_adjoint()

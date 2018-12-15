@@ -85,7 +85,7 @@ class BaseFEM:
 
     @property
     def inclusion_filename(self):
-        return os.path.join(self.tmp_dir, self.inclusion_filename_)
+        return self.tmppath(self.inclusion_filename_)
 
     @property
     def pro_filename(self):
@@ -121,19 +121,19 @@ class BaseFEM:
 
     @property
     def path_geo(self):
-        return os.path.join(self.tmp_dir, self.geom_filename_)
+        return self.tmppath(self.geom_filename_)
 
     @property
     def path_bg_mesh(self):
-        return os.path.join(self.tmp_dir, self.bg_mesh_filename_)
+        return self.tmppath(self.bg_mesh_filename_)
 
     @property
     def path_pro(self):
-        return os.path.join(self.tmp_dir, self.pro_filename_)
+        return self.tmppath(self.pro_filename_)
 
     @property
     def path_mesh(self):
-        return os.path.join(self.tmp_dir, "mesh.msh")
+        return self.tmppath("mesh.msh")
 
     @property
     def celltype(self):
@@ -142,6 +142,9 @@ class BaseFEM:
         elif not self.quad_mesh_flag:
             s = "triangle"
         return s
+
+    def tmppath(self, f):
+        return os.path.join(self.tmp_dir, f)
 
     def print_progress(self, s):
         if self.python_verbose:
@@ -192,7 +195,7 @@ class BaseFEM:
         trash = ["*.msh", "*.pre", "*.res", "*.dat", "*.txt", "*.pyc", "*.pos"]
         for item in trash:
             try:
-                os.remove(os.path.join(self.tmp_dir, item))
+                os.remove(self.tmppath(item))
             except OSError:
                 pass
         return
@@ -307,8 +310,9 @@ class BaseFEM:
         self.print_progress("Retrieving mesh content")
         return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
-    def compute_solution(self, **kwargs):
+    def compute_solution(self, res_list=None, **kwargs):
         """Compute the solution of the FEM problem using getdp"""
+        res_list = res_list or ["helmoltz_scalar", "helmoltz_scalar_modal"]
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
@@ -317,7 +321,7 @@ class BaseFEM:
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
 
-            resolution = "helmoltz_scalar"
+            resolution = res_list[0]
         elif self.analysis == "modal":
             argstr = "-slepc -eps_type krylovschur \
                        -st_ksp_type preonly \
@@ -328,12 +332,7 @@ class BaseFEM:
                        -eps_target_real \
                        -eps_mpd 600 -eps_nev 400"
 
-            resolution = "helmoltz_scalar_modal"
-        elif self.analysis == "electrostatic":
-            argstr = "-petsc_prealloc 1500 -ksp_type preonly \
-                     -pc_type lu -pc_factor_mat_solver_package mumps"
-
-            resolution = "electrostat"
+            resolution = res_list[1]
         else:
             raise TypeError(
                 "Wrong analysis specified: choose between diffraction, modal and electrostatic"
@@ -378,7 +377,7 @@ class BaseFEM:
             raise TypeError("Wrong filetype specified: choose between txt and pos")
 
     def get_qty(self, filename):
-        """Run a postprocessing command with either 'pos' or 'txt' file output.
+        """Retrieve a scalar quantity.
 
         Parameters
         ----------
@@ -390,14 +389,14 @@ class BaseFEM:
         qty : array
             The quantity to be loaded.
         """
-        file_path = os.path.join(self.tmp_dir, filename)
+        file_path = self.tmppath(filename)
         if self.type_des is "nodes":
             return femio.load_node_table(file_path)[1]
         else:
             return femio.load_table(file_path)
 
     def get_qty_vect(self, filename):
-        file_path = os.path.join(self.tmp_dir, filename)
+        file_path = self.tmppath(filename)
         if self.type_des is "nodes":
             return femio.load_node_table_vect(file_path)[1]
         else:
@@ -477,7 +476,7 @@ class BaseFEM:
     def open_gmsh_gui(self, pos_list=None):
         pos_list = pos_list or ["*.pos"]
         self.print_progress("Opening gmsh GUI")
-        p = [os.path.join(self.tmp_dir, pos) for pos in pos_list]
+        p = [self.tmppath(pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
 
     def postpro_eigenvalues(
@@ -485,7 +484,7 @@ class BaseFEM:
     ):
         self.print_progress("Retrieving eigenvalues")
         self.postprocess(postop)
-        filename = os.path.join(self.tmp_dir, eig_file)
+        filename = self.tmppath(eig_file)
         return femio.load_ev_timetable(filename)
 
     def postpro_eigenvectors(
@@ -494,7 +493,7 @@ class BaseFEM:
         self.print_progress("Retrieving eigenvectors")
         self.postpro_choice(postop, filetype)
         if filetype is "txt":
-            filename = os.path.join(self.tmp_dir, eig_file)
+            filename = self.tmppath(eig_file)
             mode = femio.load_timetable(filename)
             u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
             u = mode.reshape((self.Niy, self.Nix, self.neig))
@@ -517,11 +516,53 @@ class BaseFEM:
     ):
         self.print_progress("Retrieving eigenvector norms")
         self.postprocess(postop)
-        filename = os.path.join(self.tmp_dir, eig_file)
+        filename = self.tmppath(eig_file)
         return np.sqrt(femio.load_timetable(filename))
 
     def postprocess(self, postop):
+        """Run getdp postoperation.
+
+        Parameters
+        ----------
+        postop : str
+            Name of the postoperation to run.
+        """
         subprocess.call(self.ppcmd(postop))
+
+    def postpro_fields(self, filetype="txt", postop="postop_fields"):
+        """ Compute the field maps and output to a file.
+
+            Parameters
+            ----------
+            filetype : str, default "txt"
+                Type of output files. Either "txt" (to be read by the method
+                get_field_map in python) or "pos" to be read by gmsh/getdp.
+            postop : str, default "postop_fields"
+                Name of the postoperation
+
+        """
+        self.print_progress("Postprocessing fields")
+        self.postpro_choice(postop, filetype)
+
+    def get_objective(self, postop="postop_int_objective", filename="objective.txt"):
+        self.print_progress("Retrieving objective")
+        if not self.adjoint:
+            self.postprocess(postop)
+        return femio.load_table(self.tmppath(filename)).real
+
+    def get_adjoint(self, name="adjoint.txt"):
+        self.print_progress("Retrieving adjoint")
+        if self.dim is 2:
+            return self.get_qty(name)
+        else:
+            return self.get_qty_vect(name)
+
+    def get_deq_deps(self, name="dEq_deps.txt"):
+        self.print_progress("Retrieving dEq_deps")
+        if self.dim is 2:
+            return self.get_qty(name)
+        else:
+            return self.get_qty_vect(name)
 
 
 def assign_epsilon(pattern, matprop, threshold_val, density):

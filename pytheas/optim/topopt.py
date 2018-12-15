@@ -1,6 +1,8 @@
 import numpy as np
 import nlopt
 from pytheas.tools.plottools import *
+import matplotlib.tri as tri
+from matplotlib.ticker import MaxNLocator
 from scipy import interpolate
 
 

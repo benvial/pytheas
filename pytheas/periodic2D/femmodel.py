@@ -284,19 +284,6 @@ class FemModel(BaseFEM):
         u_diff_r = femio.load_table(path_sup)
         return u_diff_t, u_diff_r
 
-    def postpro_fields(self, filetype="txt"):
-        """ Compute the field maps and output to a file.
-
-            Parameters
-            ----------
-            filetype : str, default "txt"
-                Type of output files. Either "txt" (to be read by the method
-                get_field_map in python) or "pos" to be read by gmsh/getdp.
-
-        """
-        self.print_progress("Postprocessing fields")
-        self.postpro_choice("postop_fields", filetype)
-
     def get_field_map(self, name):
         """ Retrieve a field map.
 
@@ -314,18 +301,6 @@ class FemModel(BaseFEM):
         field = femio.load_table(self.tmp_dir + "/" + name + ".txt")
         field = np.flipud(field.reshape((self.Niy, self.Nix))).T
         return field
-
-    def get_objective(self):
-        self.print_progress("Retrieving objective")
-        if not self.adjoint:
-            self.postprocess("postop_int_objective")
-        return femio.load_table(self.tmp_dir + "/objective.txt").real
-
-    def get_adjoint(self):
-        return self.get_qty("adjoint.txt")
-
-    def get_deq_deps(self):
-        return self.get_qty("dEq_deps.txt")
 
     def diffraction_efficiencies(self):
         """Postprocess diffraction efficiencies"""

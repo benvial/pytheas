@@ -87,10 +87,6 @@ class BandsFEM2D(BaseFEM):
             argstr=argstr,
         )
 
-    def postpro_fields(self, filetype="txt"):
-        self.print_progress("Postprocessing fields")
-        self.postpro_choice("postop_fields", filetype)
-
     def get_field_map(self, name):
         field = femio.load_table(self.tmp_dir + "/" + name)
         return field.reshape((self.Niy, self.Nix)).T

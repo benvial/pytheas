@@ -19,10 +19,10 @@ else:
         # print("Interactive mode: setting matplotlib Qt5Agg backend")
         matplotlib.use("Qt5Agg")
 import matplotlib.pyplot as plt
-import matplotlib.tri as tri
+
 import seaborn as sns
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from matplotlib.ticker import MaxNLocator
+
 
 plt.ion()
 
