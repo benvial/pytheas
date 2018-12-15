@@ -8,21 +8,20 @@ grating and calculation of diffraction efficiencies.
 """
 
 ##############################################################################
-# First we import the :py:mod:`femmodel` module and some utility functions:
+# First we import the required modules and class
 
 
 # Code source: Benjamin Vial
 # License: MIT
 
 import numpy as np
-from pytheas.tools.plottools import *
-from pytheas.material import genmat
-from pytheas.periodic2D import FemModel
+from pytheas import genmat
+from pytheas import Periodic2D
 
 ##############################################################################
 # Then we need to instanciate the class :py:class:`FemModel`:
 
-fem = FemModel()
+fem = Periodic2D()
 
 ##############################################################################
 # The model consist of a single unit cell with quasi-periodic boundary conditions
@@ -87,8 +86,6 @@ mat.n_x, mat.n_y, mat.n_z = 2 ** 7, 2 ** 7, 1  # sizes
 mat.xsym = True  # symmetric with respect to x?
 mat.p_seed = mat.mat_rand  # fix the pattern random seed
 mat.nb_threshold = 3  # number of materials
-matprop = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
-
 mat._threshold_val = np.random.permutation(mat.threshold_val)
 mat.pattern = mat.discrete_pattern
 fig, ax = plt.subplots()
@@ -99,10 +96,10 @@ mat.plot_pattern(fig, ax, cmap=cmap)
 # We now assign the permittivity
 
 fem.register_pattern(mat.pattern, mat._threshold_val)
-fem.matprop_pattern = matprop
+fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
 
 ##############################################################################
-# Now we're ready to compute the solution!
+# Now we're ready to compute the solution:
 
 fem.compute_solution()
 

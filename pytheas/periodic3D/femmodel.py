@@ -4,16 +4,13 @@
 
 
 import os
-import subprocess
 import numpy as np
 import scipy as sc
 from ..tools import femio
 from ..basefem import BaseFEM
 
-pi = np.pi
 
-
-class PeriodicMediumFEM3D(BaseFEM):
+class Periodic3D(BaseFEM):
     """A class for a finite element model of a 3D bi-periodic
        medium using Gmsh_ and GetDP_.
 
@@ -22,8 +19,6 @@ class PeriodicMediumFEM3D(BaseFEM):
         .. _GetDP:
             http://getdp.info/
     """
-
-    dir_path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(
         self,
@@ -128,15 +123,15 @@ class PeriodicMediumFEM3D(BaseFEM):
 
     @property
     def theta_0(self):
-        return pi / 180.0 * (self.theta_deg)
+        return np.pi / 180.0 * (self.theta_deg)
 
     @property
     def phi_0(self):
-        return pi / 180.0 * (self.phi_deg)
+        return np.pi / 180.0 * (self.phi_deg)
 
     @property
     def psi_0(self):
-        return pi / 180.0 * (self.psi_deg)
+        return np.pi / 180.0 * (self.psi_deg)
 
     @property
     def corners_des(self):
@@ -240,7 +235,7 @@ class PeriodicMediumFEM3D(BaseFEM):
             os.remove(path_t)
         if os.path.isfile(path_r):
             os.remove(path_r)
-        subprocess.call(self.ppcmd("Ed") + " -order 2")
+        self.postprocess("Ed" + " -order 2")
         Ex_t2, Ey_t2, Ez_t2 = femio.load_table_vect(path_t)
         Ex_t2 = Ex_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
         Ey_t2 = Ey_t2.reshape(npt_integ, npt_integ, nb_slice, order="F")
@@ -253,7 +248,7 @@ class PeriodicMediumFEM3D(BaseFEM):
         return Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2
 
     def postpro_epsilon(self):
-        subprocess.call([self.ppcmd("postop_epsilon") + " -order 2"])
+        self.postprocess("postop_epsilon" + " -order 2")
 
     def diffraction_efficiencies(self):
         Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2 = self.postpro_fields_cuts()
@@ -274,11 +269,11 @@ class PeriodicMediumFEM3D(BaseFEM):
             -N_d_order + decalage, N_d_order + decalage, 2 * N_d_order + 1
         )
         Nb_ordre = No_ordre.shape[0]
-        alpha0 = 2 * pi / lambda0 * np.sin(theta_0) * np.cos(phi_0)
-        beta0 = 2 * pi / lambda0 * np.sin(theta_0) * np.sin(phi_0)
-        gamma0 = 2 * pi / lambda0 * np.cos(theta_0)
-        alphat = alpha0 + 2 * pi / period_x * No_ordre
-        betat = beta0 + 2 * pi / period_y * No_ordre
+        alpha0 = 2 * np.pi / lambda0 * np.sin(theta_0) * np.cos(phi_0)
+        beta0 = 2 * np.pi / lambda0 * np.sin(theta_0) * np.sin(phi_0)
+        gamma0 = 2 * np.pi / lambda0 * np.cos(theta_0)
+        alphat = alpha0 + 2 * np.pi / period_x * No_ordre
+        betat = beta0 + 2 * np.pi / period_y * No_ordre
         gammatt = np.zeros((Nb_ordre, Nb_ordre), dtype=complex)
         gammatr = np.zeros((Nb_ordre, Nb_ordre), dtype=complex)
         AXsir = np.zeros((Nb_ordre, Nb_ordre, nb_slice), dtype=complex)
@@ -290,8 +285,12 @@ class PeriodicMediumFEM3D(BaseFEM):
             layer_diopter.append({})
         layer_diopter[0]["epsilon"] = self.eps_L1
         layer_diopter[1]["epsilon"] = self.eps_L6
-        layer_diopter[0]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[0]["epsilon"])
-        layer_diopter[1]["kp"] = 2 * pi / lambda0 * sc.sqrt(layer_diopter[1]["epsilon"])
+        layer_diopter[0]["kp"] = (
+            2 * np.pi / lambda0 * sc.sqrt(layer_diopter[0]["epsilon"])
+        )
+        layer_diopter[1]["kp"] = (
+            2 * np.pi / lambda0 * sc.sqrt(layer_diopter[1]["epsilon"])
+        )
         layer_diopter[0]["gamma"] = sc.sqrt(
             layer_diopter[0]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
         )
@@ -454,8 +453,8 @@ class PeriodicMediumFEM3D(BaseFEM):
         AR2 = np.zeros((1, 1), dtype=complex)[0, :]
         AT2 = np.zeros((1, 1), dtype=complex)[0, :]
 
-        omega = 2.0 * pi * self.cel / self.lambda0
-        k0 = 2.0 * pi / self.lambda0
+        omega = 2.0 * np.pi * self.cel / self.lambda0
+        k0 = 2.0 * np.pi / self.lambda0
         alpha0 = k0 * np.sin(self.theta_0) * np.cos(self.phi_0)
         beta0 = k0 * np.sin(self.theta_0) * np.sin(self.phi_0)
         gamma0 = k0 * np.cos(self.theta_0)

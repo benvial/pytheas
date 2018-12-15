@@ -1,8 +1,7 @@
 import datetime
-from pytheas.tools import femio
 import numpy as np
-from pytheas.tools.plottools import *
-from pytheas.material import genmat
+from ..tools import femio
+from ..material import genmat
 
 
 def normalize(x):
@@ -60,7 +59,6 @@ def refine_mesh(
         grad_pat_norm = 1 - normalize(grad_pat_norm)
         # grad_pat_norm = genmat.make_discrete_pattern(grad_pat_norm, np.linspace(0,1,2))
         grad_pat_norm = between_range(grad_pat_norm, lc_min, lc_max)
-        # for i in range(np.shape(grad_pat)[-1]): plt.clf, plt.imshow(grad_pat_norm[:,:,i]), plt.pause(0.01)
 
         lc_bnd = lc_min  # (lc_max + lc_min) / 2
         if periodic_y:
@@ -95,12 +93,6 @@ def refine_mesh(
         nodes, els, des = fem.get_mesh_info()
         # fem.content_mesh = fem.make_mesh_pos(els, nodes)
         fem.content_mesh = femio.get_content(fem.path_mesh)
-
-        # plt.clf()
-        # plt.imshow(np.fliplr(grad_pat_norm[:, :, 0]).T)
-        # plt.colorbar()
-        # plt.pause(0.1)
-        # fem.open_gmsh_gui(pos_list=["size_mesh.pos"])
         it += 1
         if fem.gmsh_verbose:
             print("mesh refinement iteration :", it)

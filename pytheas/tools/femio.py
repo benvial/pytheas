@@ -181,7 +181,9 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
 def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     pos_list = pos_list or []
     command = [gmsh, path_geo, path_mesh] + pos_list + ["-v", str(verbose), "&"]
-    subprocess.call(command)
+    print(command)
+    # subprocess.call(command)
+    os.system(" ".join(command))
 
 
 def postpro_commands(postop, path_pro, path_mesh, path_pos=None, verbose=0):

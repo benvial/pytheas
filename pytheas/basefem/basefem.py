@@ -18,28 +18,23 @@ import shutil
 import os
 import subprocess
 import numpy as np
-import scipy as sc
-from termcolor import colored
+from scipy.interpolate import NearestNDInterpolator
 from ..tools import femio
+
+
+def get_file_path(f):
+    return os.path.dirname(os.path.abspath(f))
 
 
 class BaseFEM:
     """Base class for Finite Element models
-
-    Parameters
-    ----------
-    ID : str, default 'sim'
-        Name of the simulation
     """
 
     epsilon0 = 8.854187817e-12  #: flt: vacuum permittivity
     mu0 = 4.0 * np.pi * 1e-7  #: flt: vacuum permeability
     cel = 1.0 / (np.sqrt(epsilon0 * mu0))  #: flt: speed of light in vacuum
 
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-
-    def __init__(self, ID="sim"):
-        self.ID = ID
+    def __init__(self):
         self.geom_filename_ = "geometry.geo"  #: str: Gmsh geometry filename
         self.pro_filename_ = "main.pro"  #: str: GetDP pro filename
         self.param_filename_ = "parameters.dat"  #: str: GetDP pro filename
@@ -78,6 +73,7 @@ class BaseFEM:
         self.cplx_list = ["eps_"]
         self.dom_des = 0
         self.param_dict = dict()
+        self.dir_path = get_file_path(__file__)
 
     @property
     def geom_filename(self):
@@ -114,6 +110,10 @@ class BaseFEM:
     # @property
     # def param_dict(self):
     #     return self.make_param_dict()
+
+    # @property
+    # def dir_path(self):
+    #     return os.path.dirname(os.path.abspath(__file__))
 
     @property
     def content_par(self):
@@ -152,8 +152,7 @@ class BaseFEM:
                 sep = "-" * 51 + "\n"
             else:
                 sep = ""
-            toprint = sep + colored(s, "green")
-            print(toprint)
+            print(sep + s)
 
     def initialize(self):
         """
@@ -423,7 +422,7 @@ class BaseFEM:
         z = np.linspace(z0 + dz / 2, z1 - dz / 2, n_z)
         xx, yy, zz = np.meshgrid(x, y, z, indexing="ij")
         points = np.vstack((xx.ravel(), yy.ravel(), zz.ravel())).T
-        fdens = sc.interpolate.NearestNDInterpolator(points, pattern.flatten())
+        fdens = NearestNDInterpolator(points, pattern.flatten())
         return fdens
 
     def assign_material(self, mat, matprop, density, lambda0):
@@ -445,12 +444,10 @@ class BaseFEM:
         nodes = self.get_design_nodes()
         els = self.get_design_elements()
         nodes_ID, nodes_coords = nodes
-        els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
+        els_ID, els_coords, _, _ = els
         if self.type_des is "elements":
-            des_ID, des_coords = els_ID, els_coords
             des = els_ID, els_coords
         elif self.type_des is "nodes":
-            des_ID, des_coords = nodes_ID, nodes_coords
             des = nodes_ID, nodes_coords
         return nodes, els, des
 

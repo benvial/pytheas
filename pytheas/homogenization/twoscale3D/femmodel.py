@@ -1,20 +1,14 @@
-import os
-import subprocess
+
 import numpy as np
-import scipy as sc
 from ...tools import femio
-from ...basefem import BaseFEM
-
-pi = np.pi
+from ...basefem import *
 
 
-class FemModel(BaseFEM):
+class TwoScale3D(BaseFEM):
     """A class for the two scale convergence homogenization of
     a 3D medium using a finite element model. See the base class :class:`BaseFEM`
     documentation for more info.
     """
-
-    dir_path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(
         self,
@@ -41,6 +35,7 @@ class FemModel(BaseFEM):
     ):
 
         super().__init__()
+        self.dir_path = get_file_path(__file__)
 
         #: flt: characteristic length of the problem (typically the period)
         self.l_carac = l_carac

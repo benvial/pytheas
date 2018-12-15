@@ -13,4 +13,4 @@ scalar wave equation for TE and TM polarization in 2D:
 """
 
 
-from .femmodel import FemModel
+from .femmodel import Scatt2D

@@ -15,4 +15,4 @@ not directly.
 """
 
 
-from .basefem import BaseFEM
+from .basefem import *

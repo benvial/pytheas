@@ -4,17 +4,13 @@
 
 
 import os
-import subprocess
 import numpy as np
 import scipy as sc
 from ..tools import femio
-from ..basefem import BaseFEM
+from ..basefem import *
 
 
-pi = np.pi
-
-
-class FemModel(BaseFEM):
+class Periodic2D(BaseFEM):
     """A class for a finite element model of a 2D mono-periodic medium.
 
     The model consist of a single unit cell with quasi-periodic boundary conditions
@@ -102,8 +98,6 @@ class FemModel(BaseFEM):
 
     """
 
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-
     def __init__(
         self,
         analysis="diffraction",
@@ -133,6 +127,7 @@ class FemModel(BaseFEM):
     ):
 
         super().__init__()
+        self.dir_path = get_file_path(__file__)
         self.analysis = analysis
         self.pola = pola
         self.A = A
@@ -233,11 +228,11 @@ class FemModel(BaseFEM):
 
     @property
     def theta(self):
-        return pi / 180.0 * (self.theta_deg)
+        return np.pi / 180.0 * (self.theta_deg)
 
     @property
     def omega0(self):
-        return 2.0 * pi * self.cel / self.lambda0
+        return 2.0 * np.pi * self.cel / self.lambda0
 
     @property
     def N_d_order(self):
@@ -318,8 +313,8 @@ class FemModel(BaseFEM):
         x_slice = sc.linspace(-self.d / 2, self.d / 2, self.npt_integ)
         y_slice_t = sc.linspace(self.ycut_sub_min, self.ycut_sub_max, self.nb_slice)
         y_slice_r = sc.linspace(self.ycut_sup_min, self.ycut_sup_max, self.nb_slice)
-        k_sub = 2 * pi * sc.sqrt(self.eps_sub) / self.lambda0
-        k_sup = 2 * pi * sc.sqrt(self.eps_sup) / self.lambda0
+        k_sub = 2 * np.pi * sc.sqrt(self.eps_sub) / self.lambda0
+        k_sup = 2 * np.pi * sc.sqrt(self.eps_sup) / self.lambda0
         alpha_sup = -k_sup * sc.sin(self.theta)
         beta_sup = sc.sqrt(k_sup ** 2 - alpha_sup ** 2)
         beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)
@@ -336,8 +331,8 @@ class FemModel(BaseFEM):
         field_diff_r = np.transpose(
             field_diff_r.reshape(self.npt_integ, self.nb_slice, order="F")
         )
-        alphat_t = alpha_sup + 2 * pi / (self.d) * No_ordre
-        alphat_r = alpha_sup + 2 * pi / (self.d) * No_ordre
+        alphat_t = alpha_sup + 2 * np.pi / (self.d) * No_ordre
+        alphat_r = alpha_sup + 2 * np.pi / (self.d) * No_ordre
         betat_sup = np.conj(sc.sqrt(k_sup ** 2 - alphat_r ** 2))
         betat_sub = np.conj(sc.sqrt(k_sub ** 2 - alphat_t ** 2))
         for m1 in range(0, self.nb_slice):
@@ -405,7 +400,7 @@ class FemModel(BaseFEM):
         return eff
 
     def pseudo_periodize(self, qt):
-        k0 = 2 * pi / self.lambda0
+        k0 = 2 * np.pi / self.lambda0
         coef = np.exp(-1j * k0 * np.sin(self.theta) * self.d)
         qtper = qt
         for i in range(self.nper - 1):

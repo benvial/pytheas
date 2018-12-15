@@ -7,24 +7,17 @@ Finite Element model of 2D media
 
 """
 
-import os
-import subprocess
 import numpy as np
-import scipy as sc
 from ..tools import femio
-from ..basefem import BaseFEM
+from ..basefem import *
 
 
-pi = np.pi
-
-
-class FemModel(BaseFEM):
+class Scatt2D(BaseFEM):
     """A class for a finite element model of a 2D medium"""
-
-    dir_path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(self):
         super().__init__()
+        self.dir_path = get_file_path(__file__)
 
         #: str: analysys type (either "diffraction" or "modal")
         self.analysis = "diffraction"
@@ -148,11 +141,11 @@ class FemModel(BaseFEM):
 
     @property
     def theta(self):
-        return pi / 180.0 * (self.theta_deg)
+        return np.pi / 180.0 * (self.theta_deg)
 
     @property
     def omega0(self):
-        return 2.0 * pi * self.cel / self.lambda0
+        return 2.0 * np.pi * self.cel / self.lambda0
 
     def make_param_dict(self):
         param_dict = super().make_param_dict()
@@ -207,7 +200,7 @@ class FemModel(BaseFEM):
         xi = np.linspace(self.Xn2f_L, self.Xn2f_R, self.Nin2f_x)
         yi = np.linspace(self.Yn2f_B, self.Yn2f_T, self.Nin2f_y)
         nu0 = np.sqrt(self.mu0 / self.epsilon0)
-        k0 = 2 * pi / self.lambda0
+        k0 = 2 * np.pi / self.lambda0
 
         x = {"T": xi, "L": self.Xn2f_L, "R": self.Xn2f_R, "B": xi}
         y = {"T": self.Yn2f_T, "L": yi, "R": yi, "B": self.Yn2f_B}
@@ -233,7 +226,7 @@ class FemModel(BaseFEM):
                 ) * expo
                 I += np.trapz(J, l)
             Itheta.append(I)
-        return np.abs(Itheta) ** 2 / (8 * pi)
+        return np.abs(Itheta) ** 2 / (8 * np.pi)
 
     def get_field_map(self, name):
         field = femio.load_table(self.tmp_dir + "/" + name)

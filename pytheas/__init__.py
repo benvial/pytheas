@@ -10,3 +10,13 @@ from .__about__ import (
 )
 
 __doc__ = __description__
+
+# from .basefem import BaseFEM
+from .material import *
+from .periodic2D import *
+from .scatt2D import *
+from .periodic3D import *
+from .banddiag import *
+from .optim import *
+from .homogenization import *
+from .tools import *

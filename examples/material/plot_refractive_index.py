@@ -10,8 +10,8 @@ data.
 # Code source: Benjamin Vial
 # License: MIT
 
-from pytheas.material.refractiveindex import *
-from pytheas.tools.plottools import *
+import pytheas.refractiveindex as ri
+import matplotlib.pyplot as plt
 
 ##############################################################################
 # We can get the refractive index from tabulated data or a formula using the
@@ -26,23 +26,23 @@ yamlFile = "main/Au/Johnson.yml"
 # We then get the wavelength bounds from the data (in microns) and create a
 # wavelength range to interpolate:
 
-bounds = getRange(yamlFile)
+bounds = ri.getRange(yamlFile)
 lambdas = np.linspace(bounds[0], bounds[1], 300)
 
 ##############################################################################
 # Then get the refractive index data:
 
-ncomplex = get_complex_index(lambdas, yamlFile)
-epsilon = (ncomplex**2)
+ncomplex = ri.get_complex_index(lambdas, yamlFile)
+epsilon = ncomplex ** 2
 
 ##############################################################################
 # And finally plot it:
 
-plt.close('all')
+plt.close("all")
 fig, ax = plt.subplots(1, figsize=(6, 4))
-plt.plot(lambdas, epsilon.real, 'r-', label=r'Re($\varepsilon$)')
-plt.plot(lambdas, epsilon.imag, 'b--', label=r'Im($\varepsilon$)')
-plt.xlabel(r'$\lambda$ ($\mu m$)')
+plt.plot(lambdas, epsilon.real, "r-", label=r"Re($\varepsilon$)")
+plt.plot(lambdas, epsilon.imag, "b--", label=r"Im($\varepsilon$)")
+plt.xlabel(r"$\lambda$ ($\mu m$)")
 plt.title("complex permittivity from " + yamlFile[5:][:-4])
 plt.legend(loc=0)
 plt.show()

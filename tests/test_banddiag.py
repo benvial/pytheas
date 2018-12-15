@@ -1,17 +1,12 @@
 import numpy as np
-from pytheas.tools.plottools import *
 from pytheas.material import genmat
-
-from pytheas import periodic2D
-from pytheas.banddiag.per2D.femmodel import BandsFEM2D
+from pytheas import BandDiag2D
 from pytheas.tools import utils
 import numpy.testing as npt
 
-pi = np.pi
-
 
 def model(verbose=False):
-    fem = BandsFEM2D()
+    fem = BandDiag2D()
     # opto-geometric parameters  -------------------------------------------
     mum = 1e-6  #: flt: the scale of the problem (here micrometers)
     fem.dx = 1
@@ -47,12 +42,12 @@ def test_eigpb(verbose=False):
     # fem.initialize()
     fem.compute_solution()
     _ = fem.postpro_eigenvalues()
-    evTE = np.sort(_) * fem.dx / (2 * pi)
+    evTE = np.sort(_) * fem.dx / (2 * np.pi)
     fem.pola = "TM"
     fem.update_params()
     fem.compute_solution()
     _ = fem.postpro_eigenvalues()
-    evTM = np.sort(_) * fem.dx / (2 * pi)
+    evTM = np.sort(_) * fem.dx / (2 * np.pi)
 
     evTE_ref = np.array(
         [

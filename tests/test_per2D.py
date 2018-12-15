@@ -1,15 +1,12 @@
 import numpy as np
-from pytheas.tools.plottools import *
 from pytheas.material import genmat
-
-from pytheas import periodic2D
-from pytheas.periodic2D import FemModel
+from pytheas import Periodic2D
 from pytheas.tools import utils
 import numpy.testing as npt
 
 
 def model(verbose=False):
-    fem = FemModel()
+    fem = Periodic2D()
     # opto-geometric parameters  -------------------------------------------
     mum = 1e-6  #: flt: the scale of the problem (here micrometers)
     fem.d = 0.3 * mum  #: flt: period

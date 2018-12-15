@@ -1,22 +1,19 @@
-import os
-import subprocess
+
 import numpy as np
 from ...tools import femio
-from ..twoscale2D.femmodel import FemModel as FemModel_
+from ..twoscale2D.femmodel import TwoScale2D
+from ...basefem import get_file_path
 
-pi = np.pi
 
-
-class FemModel(FemModel_):
+class HighContrast2D(TwoScale2D):
     """A class for the two scale convergence homogenization of
     a 2D medium with high contrast using a finite element model. See the base class :class:`BaseFEM`
     documentation for more info.
     """
 
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-
     def __init__(self):
         super().__init__()
+        self.dir_path = get_file_path(__file__)
         self.inclusion_flag = True
         self.inclusion_filename_ = "inclusion.geo"
 
@@ -80,5 +77,5 @@ class FemModel(FemModel_):
     def postpro_coefs_mu(self):
         self.print_progress("Retrieving expansion coefficients")
         self.postprocess("postop_coefs_mu")
-        filename = os.path.join(self.tmp_dir, "Coefs_mu.txt")
+        filename = self.tmppath("Coefs_mu.txt")
         return femio.load_timetable(filename)

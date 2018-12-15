@@ -1,8 +1,6 @@
 import numpy as np
 from scipy import ndimage
 
-pi = np.pi
-
 
 class MaterialDensity:
     """A class for generating material densities"""
@@ -129,8 +127,8 @@ class MaterialDensity:
         Nhx, Nhy = c.shape
         for ix in range(Nhx):
             for iy in range(Nhy):
-                kx = 2 * pi * (-Nhx / 2 + 1 / 2 + ix)
-                ky = 2 * pi * (-Nhy / 2 + 1 / 2 + iy)
+                kx = 2 * np.pi * (-Nhx / 2 + 1 / 2 + ix)
+                ky = 2 * np.pi * (-Nhy / 2 + 1 / 2 + iy)
                 xsi = scale[0] * kx * Xn + scale[1] * ky * Yn
                 p = c[ix, iy] * np.exp(1j * xsi)
                 PAT += p
@@ -291,99 +289,3 @@ def random_fibers(
         # print(cond_stop)
     b[b != 0] = 1
     return b, F
-
-
-if __name__ == "__main__":
-    from pytheas.tools.plottools import *
-
-    # plt.close("all")
-    plt.clf()
-    np.random.seed(12)
-
-    mat = MaterialDensity()
-    mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1
-
-    mat.p_seed = np.random.random((mat.n_x, mat.n_y, mat.n_z))
-    mat.nb_threshold = 4
-    # mat.xsym = True
-    # mat.ysym = True
-    mat.sym8 = True
-    mat.ratio_filter = [11, 11, 1]
-    #
-    # Xg, Yg, Zg = mat.mat_grid
-    # sx, sy = mat.n_x / 2.2, mat.n_y / 2.2
-    #
-    # N = 8
-    # Xa = (Xg - mat.n_x / 2)**N / sx**N
-    # Ya = (Yg - mat.n_y / 2)**N / sy**N
-    # U = 1
-    # mat.p_seed = U
-    #
-    # plt.figure()
-    # rloc = [0, 0, 0]
-    # rwidth = [0.1, 0.2, 0.3]
-    # m = 2
-    # b = ell_shapes(mat.mat_grid, rloc=rloc, rwidth=rwidth, m=m)
-    # # b = ndimage.interpolation.rotate(b, 30, axes=(1, 2), order=0, reshape=False)
-    # # b = b[:, :, int(mat.n_z/2)]
-    # # b = b[int(mat.n_x/2), :, :]
-    # b = b[:, :, 0]
-    # # b = normalize(b)
-    # # b = make_discrete_pattern(b, mat.nb_threshold)
-    # #
-    # plt.imshow(b)
-    # plt.colorbar()
-    #
-    # f = 0.3
-    # b = random_fibers(f, mat.mat_grid, touching=True)[:, :, 0]
-    #
-    # # b = normalize(b)
-    # # b = make_discrete_pattern(b, mat.nb_threshold)
-    # plt.clf()
-    # plt.imshow(b)
-    # plt.colorbar()
-    # csd
-    #
-    # # genmat.make_discrete_pattern(discrete_pattern)
-    #
-    # #
-    # # plt.imshow( U[:,:,0])
-    # # plt.colorbar()
-    # # cd
-    #
-    # F = np.exp(-Xa) * np.exp(-Ya)
-    # # F = np.zeros_like(mat.p_seed)
-    # ncx = int(mat.n_x / 17)
-    # # F[ncx:-ncx, ncx:-ncx,:] = 1
-    # U = mat.normalized_pattern * F
-    # # U = mat.mat_rand*F
-    # # Udisc = filter_pattern(Udisc)
-    # # Udisc = genmat.make_discrete_pattern(U, mat.nb_threshold)
-    # sigma = mat.sigma * 0.01
-    # Udisc = filter_pattern(U, sigma)
-    # Udisc = normalize(Udisc)
-    # Udisc = make_discrete_pattern(Udisc, mat.nb_threshold)
-    #
-    # fig, ax = plt.subplots(2)
-    # ax[0].imshow(U[:, :, 0])
-    #
-    # ax[1].imshow(Udisc[:, :, 0])
-    #
-    # fig, ax = plt.subplots(1)
-    # mat.plot_pattern(fig, ax, cmap=cmap)
-    #
-    # xsa
-
-    np.random.seed(3)
-
-    # mat.threshold_val = (mat.threshold_val)
-    # mat.threshold_val = np.random.permutation(mat.threshold_val)
-    iplot = range(33)
-    for i in iplot:
-        # mat.threshold_val = np.random.permutation(mat.threshold_val)
-        plt.clf()
-        fig = plt.gcf()
-        ax = plt.gca()
-        mat.plot_pattern(fig, ax, cmap=cmap)
-        plt.draw()
-        plt.pause(0.1)

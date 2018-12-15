@@ -1,3 +1,7 @@
+
+import numpy as np
+
+
 def maxwell_garnett(incl_vol_frac, eps_incl, eps_host):
     num = 2 * incl_vol_frac * (eps_incl - eps_host) + eps_incl + 2 * eps_host
     den = -incl_vol_frac * (eps_incl - eps_host) + eps_incl + 2 * eps_host

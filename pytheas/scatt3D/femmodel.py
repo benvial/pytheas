@@ -3,15 +3,10 @@
 # License: MIT
 
 
-import os
-import subprocess
 import numpy as np
 from ..tools import femio
-from ..basefem import BaseFEM
-
+from ..basefem import *
 from .geom import make_geom
-
-pi = np.pi
 
 
 class ScattFEM3D(BaseFEM):
@@ -23,8 +18,6 @@ class ScattFEM3D(BaseFEM):
         .. _GetDP:
             http://getdp.info/
     """
-
-    dir_path = os.path.dirname(os.path.abspath(__file__))
 
     def __init__(
         self,
@@ -53,6 +46,7 @@ class ScattFEM3D(BaseFEM):
         el_order=1,
     ):
         super().__init__()
+        self.dir_path = get_file_path(__file__)
 
         self.analysis = analysis
         self.A = A
@@ -113,15 +107,15 @@ class ScattFEM3D(BaseFEM):
 
     @property
     def theta_0(self):
-        return pi / 180.0 * (self.theta_deg)
+        return np.pi / 180.0 * (self.theta_deg)
 
     @property
     def phi_0(self):
-        return pi / 180.0 * (self.phi_deg)
+        return np.pi / 180.0 * (self.phi_deg)
 
     @property
     def psi_0(self):
-        return pi / 180.0 * (self.psi_deg)
+        return np.pi / 180.0 * (self.psi_deg)
 
     @property
     def corners_des(self):

@@ -2,26 +2,25 @@
 # Author: Benjamin Vial
 # License: MIT
 
+"""
+Finite Element model computing the band diagramm of a 2D
+bi-periodic medium
 
-import os
-import subprocess
+"""
+
 import numpy as np
 from ...tools import femio
-from ...basefem import BaseFEM
+from ...basefem import *
 
 
-pi = np.pi
-
-
-class BandsFEM2D(BaseFEM):
+class BandDiag2D(BaseFEM):
     """A class to compute the band diagramm of a 2D
     bi-periodic medium.
     """
 
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-
     def __init__(self, ID="sim"):
         super().__init__()
+        self.dir_path = get_file_path(__file__)
 
         #: flt: incident wavelength in free space
         self.lambda0 = 1.0
@@ -170,8 +169,8 @@ class BandsFEM2D(BaseFEM):
 
     def points_kspace(self, N):
 
-        kx0 = pi / self.dx
-        ky0 = pi / self.dy
+        kx0 = np.pi / self.dx
+        ky0 = np.pi / self.dy
         Gamma = [0.0, 0.0]
         X = [kx0, 0.0]
         M = [kx0, ky0]

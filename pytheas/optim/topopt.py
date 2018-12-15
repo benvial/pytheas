@@ -1,9 +1,11 @@
 import numpy as np
 import nlopt
-from pytheas.tools.plottools import *
-import matplotlib.tri as tri
-from matplotlib.ticker import MaxNLocator
 from scipy import interpolate
+from matplotlib.tri import Triangulation
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+
+# from pytheas.tools.plottools import *
 
 
 def opt_message(code):
@@ -67,7 +69,7 @@ def neighbourhood_(Xe, Xn, rfilt):
     return norm_vec(dX) <= rfilt
 
 
-class TopologyOptimization:
+class TopOpt:
     """A class for topology optimization"""
 
     def __init__(self, fem):
@@ -277,7 +279,7 @@ class TopologyOptimization:
     ):
         if typeplot is "tri":
             xdes, ydes, zdes = self.fem.des[1].T
-            triang = matplotlib.tri.Triangulation(xdes, ydes)
+            triang = Triangulation(xdes, ydes)
             cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":
             varplot = self.mesh2grid(varplot, **kwargs)

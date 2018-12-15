@@ -1,8 +1,8 @@
-from .topopt import TopologyOptimization
+from .topopt import TopOpt
 import numpy as np
 
 
-class TopologyOptimization3D(TopologyOptimization):
+class TopOpt3D(TopOpt):
     """A class for topology optimization in 3D
 
     """
