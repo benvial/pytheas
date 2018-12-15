@@ -1,11 +1,7 @@
 import numpy as np
 import nlopt
-import numpy as np
-import scipy as sc
 from pytheas.tools.plottools import *
-
-# from scipy.interpolate import splev, splrep
-from scipy.interpolate import PchipInterpolator  # mono_cubic_interp
+from scipy import interpolate
 
 
 def opt_message(code):
@@ -45,30 +41,32 @@ def normalize(x0):
         return (x0 - x0.min()) / (x0.max() - x0.min())
 
 
-def norm_vec(x, y):
-    return np.sqrt((x) ** 2 + (y) ** 2)
+def norm_vec(V):
+    return np.sqrt(np.sum(V ** 2, axis=0))
 
 
 def simp_(p, val, m=1):
     nthres = len(val)
-    # k = min(self.nthres - 1, 3)
     if nthres == 2:
         out = (val[1] - val[0]) * p ** m + val[0]
     else:
         p_interp = np.linspace(0, 1, nthres)
-        # tsimp_re = splrep(self.p_interp, self.eps_interp.real, k=k)
-        # tsimp_im = splrep(self.p_interp, self.eps_interp.imag, k=k)
-        # out = splev(p, tsimp_re) + 1j*splev(p, tsimp_im)
-        tsimp_re = PchipInterpolator(p_interp, val.real)
-        tsimp_im = PchipInterpolator(p_interp, val.imag)
+        tsimp_re = interpolate.PchipInterpolator(p_interp, val.real)
+        tsimp_im = interpolate.PchipInterpolator(p_interp, val.imag)
         out = tsimp_re(p ** m) + 1j * tsimp_im(p ** m)
     return out
 
 
-class TopologyOptimization:
-    """A class for topology optimization
+def neighbourhood_(Xe, Xn, rfilt):
+    dX_ = []
+    for xe, xn in zip(Xe, Xn):
+        dX_.append(xe - xn)
+    dX = np.array(dX_)
+    return norm_vec(dX) <= rfilt
 
-    """
+
+class TopologyOptimization:
+    """A class for topology optimization"""
 
     def __init__(self, fem):
         self.obj_history = []
@@ -102,13 +100,9 @@ class TopologyOptimization:
     dg_dp = 0
     eps_interp = np.array([1, 5])
     threshold_final = True
-
-    log_opt = False
     dp = 1e-11
     n_x, n_y, n_z = 100, 100, 1
     force_xsym = False
-    # obj_history = []
-    # param_history = []
 
     @property
     def nthres(self):
@@ -124,19 +118,13 @@ class TopologyOptimization:
 
     @property
     def grid(self):
-        xdes, ydes, zdes = self.fem.des[1].T
+        xdes, ydes, _ = self.fem.des[1].T
         x1 = np.linspace(min(xdes), max(xdes), self.n_x)
         y1 = np.linspace(min(ydes), max(ydes), self.n_y)
         return x1, y1
 
     def _simp(self, p):
         return simp_(p, self.eps_interp, m=self.m)
-
-    #
-    # def grad_simp(self, p):
-    #     f = self.simp(p)
-    #     df = self.simp(p + self.dp)
-    #     return (df - f) / self.dp
 
     def simp(self, p, grad=True):
         g = None
@@ -154,11 +142,6 @@ class TopologyOptimization:
         p = (p + self.nthres - 1) / (2 * self.nthres - 2)
         return p
 
-    # def grad_proj(self, p):
-    #     f = self.proj(p)
-    #     df = self.proj(p + self.dp)
-    #     return (df - f) / self.dp
-
     def proj(self, p, grad=True):
         g = None
         f = self._proj(p)
@@ -168,11 +151,12 @@ class TopologyOptimization:
         return f, g
 
     # Filter
-    def neighbourhood(self, xe, ye, xn, yn):
-        return norm_vec(xn - xe, yn - ye) <= self.rfilt
+    def neighbourhood(self, Xe, Xn):
+        return neighbourhood_(Xe, Xn, self.rfilt)
 
-    def weight_filt(self, x, y, xe, ye):
-        D = norm_vec(x - xe, y - ye)
+    def weight_filt(self, Xe, Xn):
+        dX = np.array([Xe[0] - Xn[0, :], Xe[1] - Xn[1, :], Xe[2] - Xn[2, :]])
+        D = norm_vec(dX)
         if self.filt_weight is "gaussian":
             w = np.exp(-0.5 * (2 * D / self.rfilt) ** 2)
         elif self.filt_weight is "linear":
@@ -188,24 +172,19 @@ class TopologyOptimization:
         return w
 
     def _filter_param(self, p):
-        xdes, ydes, zdes = self.fem.des[1].T
+        self.fem.print_progress("Filtering")
+        Xdes = np.array(self.fem.des[1].T)
         if self.rfilt == 0:
             pfilt = p
         else:
-            pfilt = []
-            for xe, ye in zip(xdes, ydes):
-                Ne = self.neighbourhood(xe, ye, xdes, ydes)
-                xi, yi, pi = xdes[Ne], ydes[Ne], p[Ne]
-                wi = self.weight_filt(xi, yi, xe, ye)
-                ptmp = np.sum(wi * pi) / np.sum(wi)
-                pfilt.append(ptmp)
-        return np.array(pfilt)
-
-    # def grad_filter_param(self, p):
-    #     xdes, ydes, zdes = self.fem.des[1].T
-    #     f = self.filter_param(p)
-    #     df = self.filter_param(p + self.dp)
-    #     return (df - f) / self.dp
+            pfilt = np.zeros_like(p)
+            for i, Xe in enumerate(Xdes.T):
+                Ne = self.neighbourhood(Xe, Xdes)
+                Xneig = Xdes[:, Ne]
+                pneig = p[Ne]
+                w = self.weight_filt(Xe, Xneig)
+                pfilt[i] = np.sum(w * pneig) / np.sum(w)
+        return pfilt
 
     def filter_param(self, p, grad=True):
         g = None
@@ -233,7 +212,7 @@ class TopologyOptimization:
             x_grid, y_grid = grid
         else:
             x_grid, y_grid = self.grid
-        f = sc.interpolate.interp2d(x_grid, y_grid, val_grid, kind=interp_method)
+        f = interpolate.interp2d(x_grid, y_grid, val_grid, kind=interp_method)
         x0 = [f(x, y) for x, y in zip(xdes, ydes)]
         return np.array(x0).ravel()
 
@@ -243,35 +222,21 @@ class TopologyOptimization:
         x_grid, y_grid = self.grid
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
-        v = sc.interpolate.griddata(points, valdes, (xg, yg), method=interp_method)
+        v = interpolate.griddata(points, valdes, (xg, yg), method=interp_method)
         return v
-
-    #
 
     def make_epsilon(self, p, filt=True, proj=True, grad=False):
         self.fem.print_progress("Building permittivity")
-        p_filt, dpfilt_dp = (
-            self.filter_param(p, grad=grad) if filt else (p, np.ones_like(p))
-        )
-        p_proj, dpproj_dpfilt = (
-            self.proj(p_filt, grad=grad) if proj else (p_filt, np.ones_like(p))
-        )
+        p_filt, _ = self.filter_param(p, grad=grad) if filt else (p, np.ones_like(p))
+        p_proj, _ = self.proj(p_filt, grad=grad) if proj else (p_filt, np.ones_like(p))
         epsilon, depsilon_dpproj = self.simp(p_proj, grad=grad)
         if grad:
             return epsilon, depsilon_dpproj
         else:
             return epsilon
 
-    # def depsilon_dp(self, p, filt=True, proj=True):
-    #     p_filt, dpfilt_dp = self.filter_param(p) if filt else (p, np.ones_like(p))
-    #     p_proj, dpproj_dpfilt = self.proj(p_filt) if filt else (p_filt, np.ones_like(p))
-    #     depsilon_dpproj = self.grad_simp(p_proj)
-    #     return depsilon_dpproj * dpproj_dpfilt * dpfilt_dp
-
     def get_objective(self):
         goal = self.fem.get_objective()
-        # if self.log_opt:
-        #     goal = np.log(goal)
         return goal
 
     def get_adjoint(self):
@@ -303,11 +268,6 @@ class TopologyOptimization:
         deq_deps = self.get_deq_deps(interp_method=interp_method)
         _, depsilon_dp = self.make_epsilon(p, filt=filt, proj=proj, grad=True)
         sens = self.dg_dp + 1 * np.real(adjoint * deq_deps * depsilon_dp)
-        # if self.log_opt:
-        #     p_min = 1e-3
-        #     p_thres = np.copy(p)
-        #     p_thres[p <= p_min] = p_min
-        #     sens /= p_thres
         return sens
 
     def plot_design(
@@ -316,16 +276,13 @@ class TopologyOptimization:
         if typeplot is "tri":
             xdes, ydes, zdes = self.fem.des[1].T
             triang = matplotlib.tri.Triangulation(xdes, ydes)
-            xmid = xdes[triang.triangles].mean(axis=1)
-            ymid = ydes[triang.triangles].mean(axis=1)
             cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":
             varplot = self.mesh2grid(varplot, **kwargs)
             cf = ax.imshow(np.flipud(varplot), cmap=cmap, extent=extent)
         else:
             raise TypeError("Wrong typeplot specified: choose between interp and tri")
-        cbar = plt.colorbar(cf, fraction=0.046, pad=0.04)
-        # ax.set_title(r'Permittivity $\varepsilon$ in the design domain')
+        plt.colorbar(cf, fraction=0.046, pad=0.04)
         ax.axis("image")
         ax.axis("off")
 
@@ -350,12 +307,10 @@ class TopologyOptimization:
         )
         ax.set_xlabel(r"iteration number $N$")
         ax.set_ylabel(r"objective $\varphi$")
-        # ax4.grid(True)
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         ax.axis("tight")
 
     def plot_while_solving(self, varplot, title="", **kwargs):
-        # print("beta = ", beta)
         plt.clf()
         ax1 = plt.subplot(211, aspect="equal")
         self.plot_design(ax1, varplot, **kwargs)
@@ -364,9 +319,7 @@ class TopologyOptimization:
         self.plot_convergence(ax2)
         if self.Nit_tot > 1:
             ax2.set_xlim((0, self.Nit_tot - 1))
-        # ax2.set_ylim((0,1))
         plt.tight_layout()
-        # plt.draw()
         plt.show()
         plt.pause(0.01)
 
@@ -378,18 +331,14 @@ class TopologyOptimization:
         print("#" * 60)
         # instanciation opt object, optimization algorithm
         opt = nlopt.opt(self.algorithm, nvar)
-        # opt.verbose=1
         opt.set_lower_bounds(self.pmin)
         opt.set_upper_bounds(self.pmax)
-        # opt.set_min_objective(f_obj)
         if self.typeopt is "max":
             opt.set_max_objective(f_obj)
         elif self.typeopt is "min":
             opt.set_min_objective(f_obj)
         else:
             raise TypeError("Wrong typeopt specified: choose between max and min")
-        # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,2,0), 1e-8)
-        # opt.add_inequality_constraint(lambda x,grad: myconstraint(x,grad,-1,1), 1e-8)
         opt.set_maxeval(self.maxeval)
         if self.stopval:
             opt.set_stopval(self.stopval)
@@ -406,14 +355,10 @@ class TopologyOptimization:
             print("#" * 60)
             self.beta = 2 ** self.Nit
             # optimize it!
-
             try:
                 popt = self.opt.optimize(p0)
             except nlopt.ForcedStop:
                 print("forced stop...")
-                # print(self.tot_obj_history)
-                # print(self.Nit_loc)
-                # print(self.tot_obj_history[-self.Nit_loc:])
                 loc_obj = np.array(self.tot_obj_history[-self.Nit_loc :])
                 loc_vars = np.array(self.param_history[-self.Nit_loc :])
                 lb_ind = loc_vars >= self.opt.get_lower_bounds()
@@ -425,18 +370,13 @@ class TopologyOptimization:
                     index = np.argmax(loc_obj)
                 else:
                     index = np.argmin(loc_obj)
-
-                # print(loc_obj[index])
-                # print(loc_vars[index])
                 popt = loc_vars[index]
 
             opt_f = self.opt.last_optimum_value()
 
             print(popt)
-            # print("optimum at ", popt)
             print("-" * 45)
             print("   optimum   = ", opt_f)
-            # print("result code = ", opt.last_optimize_result())
             result_code = self.opt.last_optimize_result()
             s0, s = opt_message(result_code)
             print(s0)
