@@ -21,8 +21,9 @@ data.
     # Code source: Benjamin Vial
     # License: MIT
 
-    from pytheas.material.refractiveindex import *
-    from pytheas.tools.plottools import *
+    import numpy as np
+    from pytheas import refractiveindex as ri
+    import matplotlib.pyplot as plt
 
 
 
@@ -57,7 +58,7 @@ wavelength range to interpolate:
 .. code-block:: python
 
 
-    bounds = getRange(yamlFile)
+    bounds = ri.getRange(yamlFile)
     lambdas = np.linspace(bounds[0], bounds[1], 300)
 
 
@@ -73,8 +74,8 @@ Then get the refractive index data:
 .. code-block:: python
 
 
-    ncomplex = get_complex_index(lambdas, yamlFile)
-    epsilon = (ncomplex**2)
+    ncomplex = ri.get_complex_index(lambdas, yamlFile)
+    epsilon = ncomplex ** 2
 
 
 
@@ -89,11 +90,11 @@ And finally plot it:
 .. code-block:: python
 
 
-    plt.close('all')
+    plt.close("all")
     fig, ax = plt.subplots(1, figsize=(6, 4))
-    plt.plot(lambdas, epsilon.real, 'r-', label=r'Re($\varepsilon$)')
-    plt.plot(lambdas, epsilon.imag, 'b--', label=r'Im($\varepsilon$)')
-    plt.xlabel(r'$\lambda$ ($\mu m$)')
+    plt.plot(lambdas, epsilon.real, "r-", label=r"Re($\varepsilon$)")
+    plt.plot(lambdas, epsilon.imag, "b--", label=r"Im($\varepsilon$)")
+    plt.xlabel(r"$\lambda$ ($\mu m$)")
     plt.title("complex permittivity from " + yamlFile[5:][:-4])
     plt.legend(loc=0)
     plt.show()
@@ -115,7 +116,7 @@ And finally plot it:
     https://doi.org/10.1103/PhysRevB.6.4370
 
 
-**Total running time of the script:** ( 0 minutes  2.038 seconds)
+**Total running time of the script:** ( 0 minutes  0.048 seconds)
 
 
 .. _sphx_glr_download_auto_examples_material_plot_refractive_index.py:

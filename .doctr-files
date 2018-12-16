@@ -12,8 +12,6 @@
 ./_sources/auto_examples/index.rst.txt
 ./_sources/auto_examples/material/plot_refractive_index.rst.txt
 ./_sources/auto_examples/periodic2D/plot_diffraction_efficiencies.rst.txt
-./_sources/gen_modules/pytheas.periodic2D.FemModel.rst.txt
-./_sources/gen_modules/pytheas.scatt2D.FemModel.rst.txt
 ./_sources/index.rst.txt
 ./_sources/reference.rst.txt
 ./_static/ajax-loader.gif
@@ -116,8 +114,6 @@
 ./auto_examples/index.html
 ./auto_examples/material/plot_refractive_index.html
 ./auto_examples/periodic2D/plot_diffraction_efficiencies.html
-./gen_modules/pytheas.periodic2D.FemModel.html
-./gen_modules/pytheas.scatt2D.FemModel.html
 ./genindex.html
 ./index.html
 ./objects.inv

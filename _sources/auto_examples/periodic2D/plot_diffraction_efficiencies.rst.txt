@@ -14,7 +14,7 @@ Finite element simulation of the diffraction of a plane wave a mono-periodic
 grating and calculation of diffraction efficiencies.
 
 
-First we import the :py:mod:`femmodel` module and some utility functions:
+First we import the required modules and class
 
 
 
@@ -26,9 +26,9 @@ First we import the :py:mod:`femmodel` module and some utility functions:
     # License: MIT
 
     import numpy as np
-    from pytheas.tools.plottools import *
-    from pytheas.material import genmat
-    from pytheas.periodic2D import FemModel
+    import matplotlib.pyplot as plt
+    from pytheas import genmat
+    from pytheas import Periodic2D
 
 
 
@@ -43,7 +43,7 @@ Then we need to instanciate the class :py:class:`FemModel`:
 .. code-block:: python
 
 
-    fem = FemModel()
+    fem = Periodic2D()
 
 
 
@@ -138,12 +138,10 @@ We use the :py:mod:`genmat` module to generate a material pattern
     mat.xsym = True  # symmetric with respect to x?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed
     mat.nb_threshold = 3  # number of materials
-    matprop = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
-
     mat._threshold_val = np.random.permutation(mat.threshold_val)
     mat.pattern = mat.discrete_pattern
     fig, ax = plt.subplots()
-    mat.plot_pattern(fig, ax, cmap=cmap)
+    mat.plot_pattern(fig, ax)
 
 
 
@@ -163,7 +161,7 @@ We now assign the permittivity
 
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
-    fem.matprop_pattern = matprop
+    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
 
 
 
@@ -171,7 +169,7 @@ We now assign the permittivity
 
 
 
-Now we're ready to compute the solution!
+Now we're ready to compute the solution:
 
 
 
@@ -233,7 +231,7 @@ It is fairly easy to switch to TM polarization:
     efficiencies TM {'R': 0.4440749322167822, 'T': 0.4804765728980809, 'Q': 0.05938397641376305, 'B': 0.9839354815286261}
 
 
-**Total running time of the script:** ( 0 minutes  5.390 seconds)
+**Total running time of the script:** ( 0 minutes  3.876 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
