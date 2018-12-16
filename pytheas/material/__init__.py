@@ -9,3 +9,5 @@ The :mod:`pytheas.material` module provides:
 - tools to define material patterns
 
 """
+
+__all__ = ["refractiveindex", "genmat"]

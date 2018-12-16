@@ -10,7 +10,8 @@ data.
 # Code source: Benjamin Vial
 # License: MIT
 
-import pytheas.refractiveindex as ri
+import numpy as np
+from pytheas import refractiveindex as ri
 import matplotlib.pyplot as plt
 
 ##############################################################################

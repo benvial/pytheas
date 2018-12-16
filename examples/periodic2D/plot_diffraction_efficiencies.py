@@ -15,6 +15,7 @@ grating and calculation of diffraction efficiencies.
 # License: MIT
 
 import numpy as np
+import matplotlib.pyplot as plt
 from pytheas import genmat
 from pytheas import Periodic2D
 
@@ -89,7 +90,7 @@ mat.nb_threshold = 3  # number of materials
 mat._threshold_val = np.random.permutation(mat.threshold_val)
 mat.pattern = mat.discrete_pattern
 fig, ax = plt.subplots()
-mat.plot_pattern(fig, ax, cmap=cmap)
+mat.plot_pattern(fig, ax)
 
 
 ##############################################################################
