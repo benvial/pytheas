@@ -69,12 +69,10 @@ class Scatt2D(BaseFEM):
         self.M_fs = 3
         self.Nibox_x = 500  #: int: number of x interpolation points on the design box
         self.Nibox_y = 500  #: int: number of y interpolation points on the design box
-        self.Nin2f_x = (
-            500
-        )  #: int: number of x interpolation points for near to far field calculations
-        self.Nin2f_y = (
-            500
-        )  #: int: number of y interpolation points for near to far field calculations
+        #: int: number of x interpolation points for near to far field calculations
+        self.Nin2f_x = 500
+        #: int: number of y interpolation points for near to far field calculations
+        self.Nin2f_y = 500
         self.rat_n2f = 0.95
 
         #: int: number of y slices points
