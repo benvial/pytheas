@@ -47,118 +47,40 @@ def yaml_extract(yamlFile):
     return allData, materialData
 
 
-# This function is designed to return refractive index for specified lambda
-# for file in "tabluated n " format
-def getDataN(yamlFile, lamb):
+def getDataTab(yamlFile, lamb, datatype):
     _, materialData = yaml_extract(yamlFile)
-    assert materialData["type"] == "tabulated n"
+    assert materialData["type"] == "tabulated {}".format(datatype)
 
-    matLambda = []
-    matN = []
-    # in this type of material read data line by line
-    for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {n:g}", line)
-        try:
-            n = parsed["n"]
-            matLambda.append(parsed["l"])
-            matN.append(n)
-        except TypeError:
-            pass
-
-    matLambda = np.array(matLambda)
-    matN = np.array(matN)
-    matK = np.zeros_like(matN)
-
-    if len(matLambda) == 1:
-        return matN + 1j * matK
-    else:
-        interN = interp1d(matLambda, matN)
-        interK = interp1d(matLambda, matK)
-        return interN(lamb) + 1j * interK(lamb)
-
-
-def getDataK(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-    assert materialData["type"] == "tabulated k"
-    # print("Only k values!")
-    matLambda = []
-    matK = []
-    # in this type of material read data line by line
-    for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {k:g}", line)
-        try:
-            k = parsed["k"]
-            matLambda.append(parsed["l"])
-            matK.append(k)
-        except TypeError:
-            pass
-
-    matLambda = np.array(matLambda)
-    matK = np.array(matK)
-    matN = np.zeros_like(matK)
-
-    if len(matLambda) == 1:
-        return matN + 1j * matK
-    else:
-        interN = interp1d(matLambda, matN)
-        interK = interp1d(matLambda, matK)
-        return interN(lamb) + 1j * interK(lamb)
-
-
-def getRangeN(yamlFile):
-    _, materialData = yaml_extract(yamlFile)
-    assert materialData["type"] == "tabulated n"
-    # in this type of material read data line by line
-    matLambda = []
-    for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {n:g}", line)
-        try:
-            matLambda.append(parsed["l"])
-        except TypeError:
-            pass
-
-    return (min(matLambda), max(matLambda))
-
-
-def getRangeK(yamlFile):
-    _, materialData = yaml_extract(yamlFile)
-    assert materialData["type"] == "tabulated k"
-    # in this type of material read data line by line
-    matLambda = []
-    for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {k:g}", line)
-        try:
-            matLambda.append(parsed["l"])
-        except TypeError:
-            pass
-
-    return (min(matLambda), max(matLambda))
-
-
-def getDataNK(yamlFile, lamb):
-    """This function is designed to return refractive index for specified lambda
-    for file in `tabulated nk` format"""
-    _, materialData = yaml_extract(yamlFile)
-    assert materialData["type"] == "tabulated nk"
     matLambda = []
     matN = []
     matK = []
     # in this type of material read data line by line
     for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {n:g} {k:g}", line)
+
         try:
-            n = parsed["n"]
-            k = parsed["k"]
+            if datatype == "n":
+                parsed = parse("{l:g} {n:g}", line)
+                n = parsed["n"]
+                matN.append(n)
+                matK.append(0)
+            elif datatype == "k":
+                parsed = parse("{l:g} {k:g}", line)
+                k = parsed["k"]
+                matN.append(0)
+                matK.append(k)
+            else:
+                parsed = parse("{l:g} {n:g} {k:g}", line)
+                n = parsed["n"]
+                k = parsed["k"]
+                matN.append(n)
+                matK.append(k)
             matLambda.append(parsed["l"])
-            matN.append(n)
-            matK.append(k)
         except TypeError:
             pass
 
     matLambda = np.array(matLambda)
     matN = np.array(matN)
     matK = np.array(matK)
-
     if len(matLambda) == 1:
         return matN + 1j * matK
     else:
@@ -167,15 +89,19 @@ def getDataNK(yamlFile, lamb):
         return interN(lamb) + 1j * interK(lamb)
 
 
-def getRangeNK(yamlFile):
+def getRangeTab(yamlFile, datatype):
     _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "tabulated nk"
+    assert materialData["type"] == "tabulated {}".format(datatype)
     # in this type of material read data line by line
     matLambda = []
     for line in materialData["data"].split("\n"):
-        parsed = parse("{l:g} {n:g} {k:g}", line)
         try:
+            if datatype == "n":
+                parsed = parse("{l:g} {n:g}", line)
+            elif datatype == "k":
+                parsed = parse("{l:g} {k:g}", line)
+            else:
+                parsed = parse("{l:g} {n:g} {k:g}", line)
             matLambda.append(parsed["l"])
         except TypeError:
             pass
@@ -183,209 +109,83 @@ def getRangeNK(yamlFile):
     return (min(matLambda), max(matLambda))
 
 
-# this function is desined to get data from files in formula1 format
-def getDataF1(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 1"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    epsi = 0
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+def formula(lamb, coeff, formula_number):
+    if formula_number == 1:
+        epsi = 0
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            epsi = epsi + ((coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1] ** 2))
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    epsi = epsi + coeff[0] + 1
-    n = []
-    for ep in epsi:
-        n.append(np.sqrt(ep))
-    return n
-
-
-# this function is desined to get data from files in formula2 format
-def getDataF2(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 2"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    epsi = 0
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+            epsi += (coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1] ** 2)
+        epsi += coeff[0] + 1
+        n = [np.sqrt(ep) for ep in epsi]
+    elif formula_number == 2:
+        epsi = 0
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            epsi = epsi + ((coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1]))
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    epsi = epsi + coeff[0] + 1
-    n = []
-    for ep in epsi:
-        n.append(np.sqrt(ep))
-    return n
-
-
-# this function is desined to get data from files in formula3 format
-def getDataF3(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 3"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    epsi = coeff[0]
-    if min(lamb) >= dataRange[0] and max(lamb) <= dataRange[1]:
+            epsi += (coeff[i] * lamb ** 2) / (lamb ** 2 - coeff[i + 1])
+        epsi += coeff[0] + 1
+        n = [np.sqrt(ep) for ep in epsi]
+    elif formula_number == 3:
+        epsi = coeff[0]
         for i in range(1, np.size(coeff), 2):
-            epsi = epsi + coeff[i] * lamb ** coeff[i + 1]
-    else:
-        raise Exception("OutOfBands")
-
-    n = []
-    for ep in epsi:
-        n.append(np.sqrt(ep))
-    return n
-
-
-def getDataF4(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 4"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.zeros(17)
-    coeff2 = list(map(float, materialData["coefficients"].split()))
-
-    for i, val in enumerate(coeff2):
-        coeff[i] = val
-    epsi = coeff[0]
-    if min(lamb) >= dataRange[0] and max(lamb) <= dataRange[1]:
-        epsi = epsi + coeff[1] * lamb ** coeff[2] / (lamb ** 2 - coeff[3] ** coeff[4])
-        epsi = epsi + coeff[5] * lamb ** coeff[6] / (lamb ** 2 - coeff[7] ** coeff[8])
-        epsi = epsi + coeff[9] * lamb ** coeff[10]
-        epsi = epsi + coeff[11] * lamb ** coeff[12]
-        epsi = epsi + coeff[13] * lamb ** coeff[14]
-        epsi = epsi + coeff[15] * lamb ** coeff[16]
-    else:
-        raise Exception(
-            "OutOfBands",
-            "No data for this material(" + yamlFile + " )for lambda=" + str(lamb),
-        )
-
-    n = []
-    for ep in epsi:
-        n.append(np.sqrt(ep))
-    return n
-
-
-# this function is desined to get data from files in formula5 format
-def getDataF5(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 5"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    n = coeff[0]
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+            epsi += coeff[i] * lamb ** coeff[i + 1]
+        n = [np.sqrt(ep) for ep in epsi]
+    elif formula_number == 4:
+        coeff_ = np.zeros(17)
+        for i, val in enumerate(coeff):
+            coeff_[i] = val
+        coeff = coeff_
+        epsi = coeff[0]
+        epsi += coeff[1] * lamb ** coeff[2] / (lamb ** 2 - coeff[3] ** coeff[4])
+        epsi += coeff[5] * lamb ** coeff[6] / (lamb ** 2 - coeff[7] ** coeff[8])
+        epsi += coeff[9] * lamb ** coeff[10]
+        epsi += coeff[11] * lamb ** coeff[12]
+        epsi += coeff[13] * lamb ** coeff[14]
+        epsi += coeff[15] * lamb ** coeff[16]
+        n = [np.sqrt(ep) for ep in epsi]
+    elif formula_number == 5:
+        n = coeff[0]
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            n = n + (coeff[i] * lamb ** coeff[i + 1])
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    return n
-
-
-# this function is desined to get data from files in formula6 format
-def getDataF6(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 6"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    n = coeff[0] + 1
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+            n += coeff[i] * lamb ** coeff[i + 1]
+    elif formula_number == 6:
+        n = coeff[0] + 1
         for i in reversed(list(range(1, np.size(coeff), 2))):
-            n = n + coeff[i] / (coeff[i + 1] - lamb ** (-2))
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    return n
-
-
-# this function is desined to get data from files in formula7 format
-def getDataF7(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 7"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    n = coeff[0]
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+            n += coeff[i] / (coeff[i + 1] - lamb ** (-2))
+    elif formula_number == 7:
+        n = coeff[0]
         n += coeff[1] / (lamb ** 2 - 0.028)
         n += coeff[2] / (lamb ** 2 - 0.028) ** 2
         for i in range(3, np.size(coeff)):
             n += coeff[i] * lamb ** (2 * (i - 2))
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    return n
-
-
-# this function is desined to get data from files in formula8 format
-def getDataF8(yamlFile, lamb):
-    _, materialData = yaml_extract(yamlFile)
-
-    assert materialData["type"] == "formula 8"
-
-    dataRange = np.array(list(map(float, materialData["range"].split())))
-    coeff = np.array(list(map(float, materialData["coefficients"].split())))
-
-    A = coeff[0]
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
+    elif formula_number == 8:
+        A = coeff[0]
         A += coeff[1] * lamb ** 2 / (lamb ** 2 - coeff[2])
         A += coeff[3] * lamb ** 2
-
-    else:
-        raise Exception("OutOfBands", "No data for this material for this l")
-
-    n = ((1 + 2 * A) / (1 - A)) ** 0.5
+        n = ((1 + 2 * A) / (1 - A)) ** 0.5
+    elif formula_number == 9:
+        epsi = coeff[0]
+        epsi += coeff[1] / (lamb ** 2 - coeff[2])
+        epsi += coeff[3] * (lamb - coeff[4]) / ((lamb - coeff[4]) ** 2 * +coeff[5])
+        n = epsi ** 0.5
     return n
 
 
-# this function is desined to get data from files in formula9 format
-def getDataF9(yamlFile, lamb):
+def getDataF(yamlFile, lamb, formula_number):
     _, materialData = yaml_extract(yamlFile)
 
-    assert materialData["type"] == "formula 9"
+    assert materialData["type"] == "formula {}".format(formula_number)
 
     dataRange = np.array(list(map(float, materialData["range"].split())))
     coeff = np.array(list(map(float, materialData["coefficients"].split())))
 
-    epsi = coeff[0]
-    if min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]:
-        epsi += coeff[1] / (lamb ** 2 - coeff[2])
-        epsi += coeff[3] * (lamb - coeff[4]) / ((lamb - coeff[4]) ** 2 * +coeff[5])
-
+    if not check_bounds(lamb, dataRange):
+        raise Exception(
+            "OutOfBands",
+            "No data for this material(" + yamlFile + " ) for lambda=" + str(lamb),
+        )
     else:
-        raise Exception("OutOfBands", "No data for this material for this l")
+        return formula(lamb, coeff, formula_number)
 
-    n = epsi ** 0.5
-    return n
+
+def check_bounds(lamb, dataRange):
+    return min(lamb) >= dataRange[0] or max(lamb) <= dataRange[1]
 
 
 # def Error(BaseException):
@@ -397,44 +197,22 @@ def getDataF9(yamlFile, lamb):
 
 def getData(yamlFile, lamb):
     _, materialData = yaml_extract(yamlFile)
-
-    if materialData["type"] == "tabulated nk":
-        return getDataNK(yamlFile, lamb)
-    elif materialData["type"] == "tabulated n":
-        return getDataN(yamlFile, lamb)
-    elif materialData["type"] == "tabulated k":
-        return getDataK(yamlFile, lamb)
-    elif materialData["type"] == "formula 1":
-        return getDataF1(yamlFile, lamb)
-    elif materialData["type"] == "formula 2":
-        return getDataF2(yamlFile, lamb)
-    elif materialData["type"] == "formula 3":
-        return getDataF3(yamlFile, lamb)
-    elif materialData["type"] == "formula 4":
-        return getDataF4(yamlFile, lamb)
-    elif materialData["type"] == "formula 5":
-        return getDataF5(yamlFile, lamb)
-    elif materialData["type"] == "formula 6":
-        return getDataF6(yamlFile, lamb)
-    elif materialData["type"] == "formula 7":
-        return getDataF7(yamlFile, lamb)
-    elif materialData["type"] == "formula 8":
-        return getDataF8(yamlFile, lamb)
-    elif materialData["type"] == "formula 9":
-        return getDataF9(yamlFile, lamb)
+    mtype = materialData["type"]
+    if mtype.split()[0] == "tabulated":
+        return getDataTab(yamlFile, lamb, mtype.split()[1])
+    elif mtype.split()[0] == "formula":
+        return getDataF(yamlFile, lamb, int(mtype.split()[1]))
     else:
         return np.zeros_like(lamb)
 
 
-def getRange(yamlFile):
+def get_wl_range(yamlFile):
     _, materialData = yaml_extract(yamlFile)
 
-    if materialData["type"] == "tabulated nk":
-        return getRangeNK(yamlFile)
-    elif materialData["type"] == "tabulated n":
-        return getRangeN(yamlFile)
-    elif materialData["type"] == "tabulated k":
-        return getRangeK(yamlFile)
+    mtype = materialData["type"]
+
+    if mtype.split()[0] == "tabulated":
+        return getRangeTab(yamlFile, mtype.split()[1])
     else:
         return np.array(list(map(float, materialData["range"].split())))
 

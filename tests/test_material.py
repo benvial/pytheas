@@ -18,14 +18,14 @@ mat_test = [
 
 def test_all():
     for yamlFile in mat_test:
-        bounds = getRange(yamlFile)
+        bounds = get_wl_range(yamlFile)
         lambdas = np.linspace(bounds[0], bounds[1], 4)
-        ncomplex = get_complex_index(lambdas, yamlFile)
+        get_complex_index(lambdas, yamlFile)
 
 
 def test_bounds():
     yamlFile = "main/Au/Johnson.yml"
-    bounds = getRange(yamlFile)
+    bounds = get_wl_range(yamlFile)
     assert bounds == (0.1879, 1.937)
 
 
