@@ -43,22 +43,9 @@ class TwoScale2D(BaseFEM):
         param_dict["aniso"] = int(self.aniso)
         return param_dict
 
-    def compute_solution(self, **kwargs):
-        if self.pattern:
-            self.update_epsilon_value()
-        self.update_params()
-        self.print_progress("Computing solution: homogenization problem")
-        argstr = "-petsc_prealloc 1500 -ksp_type preonly \
-                 -pc_type lu -pc_factor_mat_solver_package mumps"
-        resolution = "electrostat_scalar"
-        femio.solve_problem(
-            resolution,
-            self.path_pro,
-            self.path_mesh,
-            verbose=self.getdp_verbose,
-            path_pos=self.path_pos,
-            argstr=argstr,
-        )
+    def compute_solution(self, res_list=None):
+        res_list = res_list or ["electrostat_scalar", ""]
+        super().compute_solution(res_list=res_list)
 
     def postprocessing(self):
         self.print_progress("Postprocessing")

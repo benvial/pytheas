@@ -27,8 +27,8 @@ class Periodic2D(BaseFEM):
 
     Parameters
     ----------
-    analysis : str, default "diffraction"
-        Analysis type: either "diffraction" (plane wave) or
+    analysis : str, default "direct"
+        Analysis type: either "direct" (plane wave) or
         "modal" (spectral problem)
 
     pola : str, default "TE"
@@ -100,7 +100,7 @@ class Periodic2D(BaseFEM):
 
     def __init__(
         self,
-        analysis="diffraction",
+        analysis="direct",
         pola="TE",
         A=1,
         lambda0=1,

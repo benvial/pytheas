@@ -22,7 +22,7 @@ class Periodic3D(BaseFEM):
 
     def __init__(
         self,
-        analysis="diffraction",
+        analysis="direct",
         A=1,
         lambda0=1,
         theta_deg=0.0,

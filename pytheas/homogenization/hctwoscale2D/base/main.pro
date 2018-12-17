@@ -32,13 +32,13 @@ Function{
   ksearch = 2.*Pi/lambda0search;
 
   If (inclusion_flag)
-    /* epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
-    epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1]; */
+    
+    epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
     epsilonr[host] = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
-    epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
-    epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
-    epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
-    epsilonr[incl] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+    /* epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}]; */
+    /* epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}]; */
+    /* epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}]; */
+    /* epsilonr[incl] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]]; */
 
   Else
     /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */

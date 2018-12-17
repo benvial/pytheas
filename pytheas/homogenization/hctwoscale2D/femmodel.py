@@ -20,28 +20,14 @@ class HighContrast2D(TwoScale2D):
         self.neig = 10
         self.lambda0search = 100
 
+    def compute_solution(self, res_list=None):
+        res_list = res_list or ["electrostat_scalar_host", "spectral_problem_incl"]
+        super().compute_solution(res_list=res_list)
+
     def compute_modes(self, **kwargs):
-        if self.pattern:
-            self.update_epsilon_value()
-        self.update_params()
-        self.print_progress("Computing solution: spectral problem")
-        argstr = "-slepc -eps_type krylovschur \
-                   -st_ksp_type preonly \
-                   -st_pc_type lu \
-                   -st_pc_factor_mat_solver_package mumps \
-                   -eps_max_it 300 \
-                   -eps_target 0.00001 \
-                   -eps_target_real \
-                   -eps_mpd 600 -eps_nev 400"
-        resolution = "spectral_problem_incl"
-        femio.solve_problem(
-            resolution,
-            self.path_pro,
-            self.path_mesh,
-            verbose=self.getdp_verbose,
-            path_pos=self.path_pos,
-            argstr=argstr,
-        )
+        self.analysis = "modal"
+        self.compute_solution()
+        self.analysis = "direct"
 
     @property
     def domX_L(self):
@@ -79,3 +65,20 @@ class HighContrast2D(TwoScale2D):
         self.postprocess("postop_coefs_mu")
         filename = self.tmppath("Coefs_mu.txt")
         return femio.load_timetable(filename)
+
+    def postpro_effective_permeability(self):
+        """Returns: a function of wavennumber k"""
+        # spec = fem.get_spectral_elements()
+        kn = self.postpro_eigenvalues()
+        norms = self.postpro_norm_eigenvectors()
+        coefs = self.postpro_coefs_mu()
+        Vincl = self.get_vol_incl()
+        coefs_mu = (np.abs(coefs) ** 2) / np.abs((norms)) ** 2
+
+        def mu_eff(k):
+            mu_hom = 1
+            for i in range(self.neig):
+                mu_hom += k ** 2 * coefs_mu[i] / (kn[i] ** 2 - k ** 2)
+            return mu_hom
+
+        return mu_eff

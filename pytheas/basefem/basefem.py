@@ -74,6 +74,7 @@ class BaseFEM:
         self.dom_des = 0
         self.param_dict = dict()
         self.dir_path = get_file_path(__file__)
+        self.analysis = "direct"
 
     @property
     def geom_filename(self):
@@ -316,7 +317,7 @@ class BaseFEM:
             self.update_epsilon_value()
         self.update_params()
         self.print_progress("Computing solution: " + self.analysis + " problem")
-        if self.analysis == "diffraction":
+        if self.analysis == "direct":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_package mumps"
 
@@ -333,9 +334,7 @@ class BaseFEM:
 
             resolution = res_list[1]
         else:
-            raise TypeError(
-                "Wrong analysis specified: choose between diffraction, modal and electrostatic"
-            )
+            raise TypeError("Wrong analysis specified: choose between direct and modal")
 
         argstr += " -cpu"
         femio.solve_problem(

@@ -19,8 +19,8 @@ class Scatt2D(BaseFEM):
         super().__init__()
         self.dir_path = get_file_path(__file__)
 
-        #: str: analysys type (either "diffraction" or "modal")
-        self.analysis = "diffraction"
+        #: str: analysys type (either "direct" or "modal")
+        self.analysis = "direct"
         #: str: polarisation of the incident plane wave
         #: (either "TE" or "TM")
         self.pola = "TE"
