@@ -27,7 +27,7 @@ def model(verbose=False):
 
 def test_eigpb(verbose=False):
     fem = model(verbose=verbose)
-    mat = pattern()
+    mat = pattern(xsym=True)
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.kx, fem.ky = 0, 0
     fem.pola = "TE"

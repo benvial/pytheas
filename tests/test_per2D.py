@@ -6,6 +6,7 @@ from testutils import *
 
 def model(verbose=False):
     fem = Periodic2D()
+    fem.rm_tmp_dir()
     # opto-geometric parameters  -------------------------------------------
     mum = 1e-6  #: flt: the scale of the problem (here micrometers)
     fem.d = 0.3 * mum  #: flt: period
@@ -47,7 +48,7 @@ def model(verbose=False):
 
 def test_per2D(verbose=False):
     fem = model(verbose=verbose)
-    mat = pattern()
+    mat = pattern(xsym=True, ysym=False)
     fem = ref_mesh(fem, mat)
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()

@@ -7,8 +7,11 @@ from testutils import *
 def square(a, x0, y0):
     nt = 360 * 4
     theta = np.linspace(0, 2 * np.pi, nt)
+    eps = 1e-6
     rt = [
-        np.min([0.5 * a / np.abs(np.cos(t)), 0.5 * a / np.abs(np.sin(t))])
+        np.min(
+            [0.5 * a / (eps + np.abs(np.cos(t))), 0.5 * a / (eps + np.abs(np.sin(t)))]
+        )
         for t in theta
     ]
     rt = np.array(rt)
@@ -23,6 +26,7 @@ def model(verbose=False):
     fem.rm_tmp_dir()
     fem.eps_incl = 50 - 1j
     fem.eps_host = 2
+    fem.parmesh = 10
     fem.inclusion_flag = True
     fem.inclusion_filename_ = "inclusion.geo"
     fem.neig = 20
