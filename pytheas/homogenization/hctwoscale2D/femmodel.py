@@ -60,11 +60,11 @@ class HighContrast2D(TwoScale2D):
         return self.corners_des[3]
 
     def get_vol_host(self):
-        return femio.load_table(self.tmp_dir + "/Vol.txt")
+        return femio.load_table(self.tmppath("Vol.txt"))
 
     def get_vol_incl(self):
         self.postprocess("postop_V_incl")
-        return femio.load_table(self.tmp_dir + "/V_incl.txt")
+        return femio.load_table(self.tmppath("V_incl.txt"))
 
     def postpro_effective_permittivity(self):
         phi = self.get_phi()

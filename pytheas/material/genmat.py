@@ -157,10 +157,10 @@ class MaterialDensity:
 
 def multi_period(pat, npx, npy):
     patper = pat
-    for ix in range(npx - 1):
+    for _ in range(npx - 1):
         patper = np.vstack((patper, pat))
     patper1 = patper
-    for iy in range(npy - 1):
+    for _ in range(npy - 1):
         patper1 = np.hstack((patper1, patper))
 
     return patper1
@@ -230,7 +230,6 @@ def random_fibers(
     itmax=1000,
 ):
     b = 0
-    n = 0
     F = -1
     # while np.abs(F - f)>1e-2:
     i0 = 0

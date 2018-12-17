@@ -4,7 +4,8 @@
 
 
 import numpy as np
-from ..tools import femio
+
+# from ..tools import femio
 from ..basefem import *
 from .geom import make_geom
 

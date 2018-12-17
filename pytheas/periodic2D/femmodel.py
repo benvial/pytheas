@@ -255,7 +255,7 @@ class Periodic2D(BaseFEM):
         """
         self.print_progress("Postprocessing absorption")
         self.postprocess("postop_absorption")
-        Q = femio.load_table(self.tmp_dir + "/Q.txt").real
+        Q = femio.load_table(self.tmppath("Q.txt")).real
         return Q
 
     def postpro_fields_cuts(self):
@@ -268,8 +268,8 @@ class Periodic2D(BaseFEM):
         u_diff_r : array-like
             Reflected field cuts
         """
-        path_sub = self.tmp_dir + "/sub_field_cuts.out"
-        path_sup = self.tmp_dir + "/sup_field_cuts.out"
+        path_sub = self.tmppath("sub_field_cuts.out")
+        path_sup = self.tmppath("sup_field_cuts.out")
         if os.path.isfile(path_sub):
             os.remove(path_sub)
         if os.path.isfile(path_sup):
@@ -293,7 +293,7 @@ class Periodic2D(BaseFEM):
 
 
         """
-        field = femio.load_table(self.tmp_dir + "/" + name + ".txt")
+        field = femio.load_table(self.tmppath(name + ".txt"))
         field = np.flipud(field.reshape((self.Niy, self.Nix))).T
         return field
 
@@ -317,7 +317,7 @@ class Periodic2D(BaseFEM):
         k_sup = 2 * np.pi * sc.sqrt(self.eps_sup) / self.lambda0
         alpha_sup = -k_sup * sc.sin(self.theta)
         beta_sup = sc.sqrt(k_sup ** 2 - alpha_sup ** 2)
-        beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)
+        # beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)
         s_t = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
         s_r = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
         Aeff_t = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
@@ -409,7 +409,7 @@ class Periodic2D(BaseFEM):
 
     def periodize(self, qt):
         qtper = qt
-        for i in range(self.nper - 1):
+        for _ in range(self.nper - 1):
             qtper = np.row_stack((qtper, qt))
         return qtper
 
@@ -427,10 +427,11 @@ class Periodic2D(BaseFEM):
     ):
 
         self.print_progress("Plotting field map")
-        x = np.linspace(
-            self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
-        )
-        y = np.linspace(self.domY_B, self.domY_T, self.Niy)
+        # x = np.linspace(
+        #     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
+        # )
+        # y = np.linspace(self.domY_B, self.domY_T, self.Niy)
+
         # xx, yy = np.meshgrid(x, y)
         extent = (
             self.nper * self.domX_L,

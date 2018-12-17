@@ -1,7 +1,5 @@
 import nlopt
 import sys
-
-import nlopt
 import numpy as np
 import numpy.testing as npt
 

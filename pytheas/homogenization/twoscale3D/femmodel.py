@@ -112,11 +112,11 @@ class TwoScale3D(BaseFEM):
             i2 = 0
             for ax2 in ("x", "y", "z"):
                 phi[i1, i2] = femio.load_timetable(
-                    self.tmp_dir + "/Phi" + ax1 + ax2 + ".txt"
+                    self.tmppath("Phi" + ax1 + ax2 + ".txt")
                 )
                 i2 += 1
             i1 += 1
-        int_eps = femio.load_timetable(self.tmp_dir + "/Inteps.txt")
+        int_eps = femio.load_timetable(self.tmppath("Inteps.txt"))
         Vcell = self.dx * self.dy * self.dz
         eps_eff = 1 / Vcell * (int_eps * np.eye(3) - phi)
         if self.python_verbose:

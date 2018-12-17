@@ -278,7 +278,7 @@ class TopOpt:
         self, ax, varplot, typeplot="interp", cmap=None, extent=None, **kwargs
     ):
         if typeplot is "tri":
-            xdes, ydes, zdes = self.fem.des[1].T
+            xdes, ydes, _ = self.fem.des[1].T
             triang = Triangulation(xdes, ydes)
             cf = ax.tripcolor(triang, varplot, shading="flat", cmap=cmap)
         elif typeplot is "interp":

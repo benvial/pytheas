@@ -1,14 +1,13 @@
 import numpy as np
-from pytheas.material import genmat
 from pytheas import BandDiag2D
-from pytheas.tools import utils
 import numpy.testing as npt
+from testutils import *
+import matplotlib.pyplot as plt
 
 
 def model(verbose=False):
     fem = BandDiag2D()
     # opto-geometric parameters  -------------------------------------------
-    mum = 1e-6  #: flt: the scale of the problem (here micrometers)
     fem.dx = 1
     fem.dy = 1
     fem.lambda0search = 10
@@ -16,6 +15,7 @@ def model(verbose=False):
     fem.Nix = 101
     fem.parmesh = 10
     fem.type_des = "elements"
+    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
     if verbose:
         fem.getdp_verbose = 4
         fem.gmsh_verbose = 4
@@ -27,15 +27,7 @@ def model(verbose=False):
 
 def test_eigpb(verbose=False):
     fem = model(verbose=verbose)
-    genmat.np.random.seed(100)
-    mat = genmat.MaterialDensity()  # instanciate
-    mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1  # sizes
-    mat.xsym = True  # symmetric with respect to x?
-    mat.p_seed = mat.mat_rand  # fix the pattern random seed
-    mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
-    mat._threshold_val = np.random.permutation(mat.threshold_val)
-    mat.pattern = mat.discrete_pattern
+    mat = pattern()
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.kx, fem.ky = 0, 0
     fem.pola = "TE"
@@ -83,4 +75,7 @@ def test_eigpb(verbose=False):
 
     npt.assert_almost_equal(evTE, evTE_ref, decimal=2)
     npt.assert_almost_equal(evTM, evTM_ref, decimal=2)
+
+    fem.postpro_eigenvectors()
+    pnts = fem.points_kspace(13)
     # return evTE, evTM

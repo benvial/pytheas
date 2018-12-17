@@ -4,9 +4,8 @@
 # License: MIT
 
 """
-The :mod:`pytheas.optim` module implements tools for the topology 
+The :mod:`pytheas.optim` module implements tools for the topology
 optimization of finite elements models
-
 """
 
 from .topopt import TopOpt

@@ -4,9 +4,8 @@
 
 """
 The :mod:`pytheas.homogenization.hctwoscale2D` module implements tools for the
-two scale convergence homogenization of 2D metamaterials with high contrast, 
+two scale convergence homogenization of 2D metamaterials with high contrast
 for TM polarization
-
 """
 
 

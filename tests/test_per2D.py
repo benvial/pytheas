@@ -1,8 +1,7 @@
 import numpy as np
-from pytheas.material import genmat
 from pytheas import Periodic2D
-from pytheas.tools import utils
 import numpy.testing as npt
+from testutils import *
 
 
 def model(verbose=False):
@@ -35,6 +34,7 @@ def model(verbose=False):
     fem.parmesh = 5
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
+    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
     if verbose:
         fem.getdp_verbose = 4
         fem.gmsh_verbose = 4
@@ -47,21 +47,8 @@ def model(verbose=False):
 
 def test_per2D(verbose=False):
     fem = model(verbose=verbose)
-    genmat.np.random.seed(100)
-    mat = genmat.MaterialDensity()  # instanciate
-    mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1  # sizes
-    mat.xsym = True  # symmetric with respect to x?
-    mat.p_seed = mat.mat_rand  # fix the pattern random seed
-    mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
-    mat._threshold_val = np.random.permutation(mat.threshold_val)
-    mat.pattern = mat.discrete_pattern
-
-    lc_des = fem.lambda0 / (fem.eps_des.real ** 0.5 * fem.parmesh_des)
-    # par = [[0.5, 0.4, 0.15], [0.4, 0.3, 0.1], [0.1, 0.5, 1]]
-    par = [[0.5, 0.4, 0.3], [0.4, 0.3, 0.1], [0.8, 0.9, 1]]
-    fem = utils.refine_mesh(fem, mat, lc_des=lc_des, par=par, periodic_x=False, nmax=10)
-
+    mat = pattern()
+    fem = ref_mesh(fem, mat)
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()
     effs_TE = fem.diffraction_efficiencies()
@@ -88,21 +75,3 @@ def test_per2D(verbose=False):
         npt.assert_almost_equal(a, b, decimal=3)
     for a, b in zip(effs_TM.values(), effs_TM_ref.values()):
         npt.assert_almost_equal(a, b, decimal=3)
-
-
-def test_ref_mesh():
-    fem = model()
-    genmat.np.random.seed(100)
-    mat = genmat.MaterialDensity()  # instanciate
-    mat.n_x, mat.n_y, mat.n_z = 2 ** 7, 2 ** 7, 1  # sizes
-    mat.xsym = True  # symmetric with respect to x?
-    mat.p_seed = mat.mat_rand  # fix the pattern random seed
-    mat.nb_threshold = 3  # number of materials
-    fem.matprop_pattern = [1.4, 4 - 0.02 * 1j, 2]  # refractive index values
-    mat._threshold_val = np.random.permutation(mat.threshold_val)
-    mat.pattern = mat.discrete_pattern
-    fem = utils.refine_mesh(fem, mat)
-    fem.register_pattern(mat.pattern, mat._threshold_val)
-    fem.compute_solution()
-    rc = 0
-    assert rc == 0

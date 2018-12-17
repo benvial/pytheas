@@ -220,7 +220,7 @@ class Periodic3D(BaseFEM):
 
     def postpro_absorption(self):
         self.postprocess("postopQ")
-        path = self.tmp_dir + "/Q.txt"
+        path = self.tmppath("Q.txt")
         Q = np.loadtxt(path, skiprows=0, usecols=[1]) + 1j * np.loadtxt(
             path, skiprows=0, usecols=[1]
         )
@@ -229,8 +229,8 @@ class Periodic3D(BaseFEM):
     def postpro_fields_cuts(self):
         npt_integ = self.ninterv_integ + 1
         nb_slice = self.nb_slice
-        path_t = self.tmp_dir + "/Etot_XYcut.out"
-        path_r = self.tmp_dir + "/Edif_XYcut.out"
+        path_t = self.tmppath("Etot_XYcut.out")
+        path_r = self.tmppath("Edif_XYcut.out")
         if os.path.isfile(path_t):
             os.remove(path_t)
         if os.path.isfile(path_r):
@@ -445,9 +445,8 @@ class Periodic3D(BaseFEM):
     def ancillary_problem(self):
         nb_layer_diopter = 2
         layer_diopter = []
-        for k1 in range(0, nb_layer_diopter):
+        for _ in range(0, nb_layer_diopter):
             layer_diopter.append({})
-
         AR1 = np.zeros((1, 1), dtype=complex)[0, :]
         AT1 = np.zeros((1, 1), dtype=complex)[0, :]
         AR2 = np.zeros((1, 1), dtype=complex)[0, :]
@@ -458,9 +457,9 @@ class Periodic3D(BaseFEM):
         alpha0 = k0 * np.sin(self.theta_0) * np.cos(self.phi_0)
         beta0 = k0 * np.sin(self.theta_0) * np.sin(self.phi_0)
         gamma0 = k0 * np.cos(self.theta_0)
-        gamma02 = sc.sqrt(k0 ** 2 - alpha0 ** 2 - beta0 ** 2)
+        # gamma02 = sc.sqrt(k0 ** 2 - alpha0 ** 2 - beta0 ** 2)
         Ae = 1.0
-        Ah = Ae * sc.sqrt(self.epsilon0 / self.mu0)
+        # Ah = Ae * sc.sqrt(self.epsilon0 / self.mu0)
 
         Ex0 = Ae * (
             np.cos(self.psi_0) * np.cos(self.theta_0) * np.cos(self.phi_0)
@@ -472,9 +471,10 @@ class Periodic3D(BaseFEM):
         )
         Ez0 = Ae * (-np.cos(self.psi_0) * np.sin(self.theta_0))
 
-        Hx0 = -1 / (omega * self.mu0) * (beta0 * Ez0 - gamma0 * Ey0)
-        Hy0 = -1 / (omega * self.mu0) * (gamma0 * Ex0 - alpha0 * Ez0)
-        Hz0 = -1 / (omega * self.mu0) * (alpha0 * Ey0 - beta0 * Ex0)
+        # Hx0 = -1 / (omega * self.mu0) * (beta0 * Ez0 - gamma0 * Ey0)
+        # Hy0 = -1 / (omega * self.mu0) * (gamma0 * Ex0 - alpha0 * Ez0)
+        # Hz0 = -1 / (omega * self.mu0) * (alpha0 * Ey0 - beta0 * Ex0)
+
         #######################################################
         ####   SLAB CONFIG  (4 layer_diopters in this example)    ####
         #######################################################

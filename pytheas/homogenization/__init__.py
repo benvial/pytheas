@@ -4,9 +4,8 @@
 # License: MIT
 
 """
-The :mod:`pytheas.homogenization` module implements tools for the homogenization 
-of metamaterials
-
+The :mod:`pytheas.homogenization` module implements tools for the
+homogenization of metamaterials
 """
 
 from .twoscale2D import TwoScale2D

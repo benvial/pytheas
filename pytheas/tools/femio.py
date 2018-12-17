@@ -85,7 +85,7 @@ def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, arg
 
 def make_content_mesh_pos(nodes, els, dom, celltype):
     nodes_ID, nodes_coords = nodes
-    els_ID, els_coords, els_nodes_ID, geom_ID_dom = els
+    els_ID, _, els_nodes_ID, geom_ID_dom = els
     s = "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n"
     nnodes = len(nodes_ID)
     s += "$Nodes\n"
@@ -181,9 +181,10 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
 def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     pos_list = pos_list or []
     command = [gmsh, path_geo, path_mesh] + pos_list + ["-v", str(verbose), "&"]
-    print(command)
-    # subprocess.call(command)
-    os.system(" ".join(command))
+
+    # subprocess.call(command, shell=True)
+    subprocess.call(" ".join(command), shell=True)
+    # os.system(" ".join(command))
 
 
 def postpro_commands(postop, path_pro, path_mesh, path_pos=None, verbose=0):

@@ -30,6 +30,7 @@ class TwoScale2D(BaseFEM):
 
         self.y_flag = False
         self.save_solution = False
+        self.aniso = False
 
     @property
     def corners_des(self):
@@ -39,6 +40,7 @@ class TwoScale2D(BaseFEM):
         param_dict = super().make_param_dict()
         param_dict["y_flag"] = int(self.y_flag)
         param_dict["save_solution"] = int(self.save_solution)
+        param_dict["aniso"] = int(self.aniso)
         return param_dict
 
     def compute_solution(self, **kwargs):
@@ -64,18 +66,18 @@ class TwoScale2D(BaseFEM):
 
     def get_phi(self):
         phi = np.zeros((2, 2), dtype=complex)
-        phi[0, 0] = femio.load_table(self.tmp_dir + "/Phixx.txt")
-        phi[0, 1] = femio.load_table(self.tmp_dir + "/Phixy.txt")
-        phi[1, 0] = femio.load_table(self.tmp_dir + "/Phiyx.txt")
-        phi[1, 1] = femio.load_table(self.tmp_dir + "/Phiyy.txt")
+        phi[0, 0] = femio.load_table(self.tmppath("Phixx.txt"))
+        phi[0, 1] = femio.load_table(self.tmppath("Phixy.txt"))
+        phi[1, 0] = femio.load_table(self.tmppath("Phiyx.txt"))
+        phi[1, 1] = femio.load_table(self.tmppath("Phiyy.txt"))
         return phi
 
     def get_vol(self):
-        return femio.load_table(self.tmp_dir + "/Vol.txt")
+        return femio.load_table(self.tmppath("Vol.txt"))
 
     def get_int_inveps(self):
-        Ixx = femio.load_table(self.tmp_dir + "/I_inveps_xx.txt")
-        Iyy = femio.load_table(self.tmp_dir + "/I_inveps_yy.txt")
+        Ixx = femio.load_table(self.tmppath("I_inveps_xx.txt"))
+        Iyy = femio.load_table(self.tmppath("I_inveps_yy.txt"))
         return Ixx, Iyy
 
     def postpro_effective_permittivity(self):
@@ -102,16 +104,3 @@ class TwoScale2D(BaseFEM):
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
         return self.postpro_effective_permittivity()
-
-    def postpro_fields(self, filetype="txt"):
-        """ Compute the field maps and output to a file.
-
-            Parameters
-            ----------
-            filetype : str, default "txt"
-                Type of output files. Either "txt" (to be read by the method
-                get_field_map in python) or "pos" to be read by gmsh/getdp.
-
-        """
-        self.print_progress("Postprocessing fields")
-        self.postpro_choice("postop_fields", filetype)

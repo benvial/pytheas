@@ -155,10 +155,10 @@ class Scatt2D(BaseFEM):
         return param_dict
 
     def postpro_fields_box(self):
-        path_T = self.tmp_dir + "/field_box_T.out"
-        path_L = self.tmp_dir + "/field_box_L.out"
-        path_R = self.tmp_dir + "/field_box_R.out"
-        path_B = self.tmp_dir + "/field_box_B.out"
+        path_T = self.tmppath("field_box_T.out")
+        path_L = self.tmppath("field_box_L.out")
+        path_R = self.tmppath("field_box_R.out")
+        path_B = self.tmppath("field_box_B.out")
         self.postprocess("postop_fields_box")
         u_T = femio.load_timetable(path_T)
         u_R = femio.load_timetable(path_R)
@@ -175,12 +175,12 @@ class Scatt2D(BaseFEM):
         self.postprocess("postop_fields_n2f")
         u_out, vx_out, vy_out = {}, {}, {}
         for i in ["T", "L", "R", "B"]:
-            u = femio.load_timetable(self.tmp_dir + "/field_n2f_{0}.out".format(i))
+            u = femio.load_timetable(self.tmppath("field_n2f_{0}.out".format(i)))
             vx = femio.load_timetable(
-                self.tmp_dir + "/field_dual_x_n2f_{0}.out".format(i)
+                self.tmppath("field_dual_x_n2f_{0}.out".format(i))
             )
             vy = femio.load_timetable(
-                self.tmp_dir + "/field_dual_y_n2f_{0}.out".format(i)
+                self.tmppath("field_dual_y_n2f_{0}.out".format(i))
             )
             if self.analysis == "modal":
                 if (i == "T") or (i == "B"):
@@ -229,41 +229,41 @@ class Scatt2D(BaseFEM):
         return np.abs(Itheta) ** 2 / (8 * np.pi)
 
     def get_field_map(self, name):
-        field = femio.load_table(self.tmp_dir + "/" + name)
+        field = femio.load_table(self.tmppath(name))
         return np.flipud(field.reshape((self.Niy, self.Nix)).T)
 
     def get_field_point(self):
         self.postprocess("postop_field_on_point")
-        u_tot = femio.load_table(self.tmp_dir + "/" + "u_tot_point.txt")
-        u_i = femio.load_table(self.tmp_dir + "/" + "u_i_point.txt")
-        u = femio.load_table(self.tmp_dir + "/" + "u_point.txt")
+        u_tot = femio.load_table(self.tmppath("u_tot_point.txt"))
+        u_i = femio.load_table(self.tmppath("u_i_point.txt"))
+        u = femio.load_table(self.tmppath("u_point.txt"))
         return u, u_tot, u_i
 
     def postpro_coupling_angle(self):
         self.print_progress("Angular sweep for coupling coeffs")
         self.postprocess("postop_coupling_coeffs_angle")
-        filename = self.tmp_dir + "/coupling_coeffs.txt"
+        filename = self.tmppath("coupling_coeffs.txt")
         tmp = femio.load_timetable(filename)
         return tmp.reshape((self.Ni_theta, self.neig))
 
     def postpro_fourrier_coefs_angle(self):
         self.print_progress("Fourrier coefficients for coupling")
         self.postprocess("postop_coupling_coeffs_fourrier_series")
-        filename = self.tmp_dir + "/coupling_coeffs_fs.txt"
+        filename = self.tmppath("coupling_coeffs_fs.txt")
         tmp = femio.load_timetable(filename)
         return tmp.reshape((2 * self.M_fs + 1, self.neig))
 
     def postpro_modal_coupling(self):
         self.print_progress("QNMs coupling coeffs")
         self.postprocess("postop_mode_coupling")
-        filename = self.tmp_dir + "/mode_coupling.txt"
+        filename = self.tmppath("mode_coupling.txt")
         tmp = femio.load_timetable(filename)
         return tmp  # .reshape((self.Ni_theta, self.neig))
 
     def postpro_modal_coupling_int(self):
         self.print_progress("QNMs coupling coeffs integrand")
         self.postprocess("postop_mode_coupling_int")
-        mode = femio.load_timetable(self.tmp_dir + "/mode_coupling_int.txt")
+        mode = femio.load_timetable(self.tmppath("mode_coupling_int.txt"))
         u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
         u = mode.reshape((self.Niy, self.Nix, self.neig))
         for imode in range(self.neig):

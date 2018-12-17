@@ -31,12 +31,15 @@ Function{
     epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
   Else
-    /* epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1]; */
-    epsilonr_xx[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
-    epsilonr_yy[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
-    epsilonr_zz[Omega]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
+  If (aniso)
+      epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+      epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+      epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
 
-    epsilonr[Omega] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+      epsilonr[Omega] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+    Else
+      epsilonr[Omega]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+    EndIf
   EndIf
 
 		If (y_flag)
@@ -218,7 +221,7 @@ PostOperation {
           EndIf
         	}
     }
-    /* { Name postop_fields_txt; NameOfPostProcessing postpro ;
+    { Name postop_fields_txt; NameOfPostProcessing postpro ;
         Operation {
               Print [ v , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
               { Niy-1, Nix-1} ,Format SimpleTable, File "v.txt" ];
@@ -229,6 +232,6 @@ PostOperation {
 
 
         	}
-    } */
+    }
 
 }

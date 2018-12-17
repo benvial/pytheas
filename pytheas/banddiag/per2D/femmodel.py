@@ -87,7 +87,7 @@ class BandDiag2D(BaseFEM):
         )
 
     def get_field_map(self, name):
-        field = femio.load_table(self.tmp_dir + "/" + name)
+        field = femio.load_table(self.tmppath(name))
         return field.reshape((self.Niy, self.Nix)).T
 
     def postpro_eigenvalues(self):
@@ -101,71 +101,6 @@ class BandDiag2D(BaseFEM):
         return super().postpro_eigenvectors(
             filetype=filetype, postop=postop, eig_file=eig_file
         )
-
-    def plot_field_and_pattern(
-        self,
-        fig,
-        ax,
-        field,
-        pattern,
-        cmap_div,
-        cmap_mat,
-        cbar=True,
-        vmin=None,
-        vmax=None,
-    ):
-
-        self.print_progress("Plotting field map")
-        # x = np.linspace(
-        #     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
-        # )
-        # y = np.linspace(self.domY_B, self.domY_T, self.Niy)
-
-        # xx, yy = np.meshgrid(x, y)
-        extent = (
-            self.nper * self.domX_L,
-            self.nper * self.domX_R,
-            self.domY_B,
-            self.domY_T,
-        )
-
-        im1 = ax.imshow(
-            field.T,
-            interpolation="bilinear",
-            cmap=cmap_div,
-            vmin=vmin,
-            vmax=vmax,
-            extent=extent,
-        )
-        if cbar:
-            fig.colorbar(im1, fraction=0.046, pad=0.04)
-        ax.imshow(
-            pattern.T,
-            interpolation="None",
-            cmap=cmap_mat,
-            alpha=0.33,
-            extent=(
-                self.nper * self.domX_L,
-                self.nper * self.domX_R,
-                self.h_layer1,
-                self.h_layer1 + self.h_des,
-            ),
-        )
-        ax.imshow(
-            field,
-            alpha=0.0,
-            interpolation="bilinear",
-            cmap=cmap_div,
-            vmin=vmin,
-            vmax=vmax,
-            extent=(
-                self.nper * self.domX_L,
-                self.nper * self.domX_R,
-                self.domY_B,
-                self.domY_T,
-            ),
-        )
-        ax.set_ylim((self.domY_B, self.domY_T))
 
     def points_kspace(self, N):
 
@@ -200,41 +135,3 @@ class BandDiag2D(BaseFEM):
         Kplot = np.append(np.append(K1, K2), K3)
         K = np.array((bandsx, bandsy)).T
         return K, Kplot
-
-    #
-    #
-    # def points_kspace(self, N):
-    #     Gamma = [0., 0.]
-    #     X = [1., 0.]
-    #     M = [1., 1.]
-    #     ngx = N
-    #     Gamma_X = np.array(
-    #         [np.linspace(Gamma[0], X[0], ngx), np.linspace(Gamma[1], X[1], ngx)]
-    #     )
-    #
-    #     nxm = N
-    #     X_M = np.array([np.linspace(X[0], M[0], nxm), np.linspace(X[1], M[1], nxm)])
-    #
-    #     X_M = np.delete(X_M, 0, axis=1)
-    #
-    #     nmg = N
-    #     M_Gamma = np.array(
-    #         [np.linspace(M[0], Gamma[0], nmg), np.linspace(M[1], Gamma[1], nmg)]
-    #     )
-    #     M_Gamma = np.delete(M_Gamma, 0, axis=1)
-    #     bandsx = np.append(np.append(Gamma_X[0, :], X_M[0, :]), M_Gamma[0, :])
-    #     bandsy = np.append(np.append(Gamma_X[1, :], X_M[1, :]), M_Gamma[1, :])
-    #
-    #     K1 = np.linspace(0, self.dx, ngx)
-    #
-    #     K2 = np.linspace(self.dx, self.dx + self.dy, nxm)
-    #     K2 = np.delete(K2, 0)
-    #     K3 = np.linspace(
-    #         self.dx + self.dy,
-    #         self.dx + self.dy + np.sqrt(self.dx ** 2 + self.dy ** 2),
-    #         nmg,
-    #     )
-    #     K3 = np.delete(K3, 0)
-    #     Kplot = np.append(np.append(K1, K2), K3)
-    #     K = np.array((bandsx, bandsy)).T
-    #     return K, Kplot
