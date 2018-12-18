@@ -130,7 +130,7 @@ We first specify the file <code class="code docutils literal notranslate"><span 
 </div>
 <p>We then get the wavelength bounds from the data (in microns) and create a
 wavelength range to interpolate:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ri</span><span class="o">.</span><span class="n">getRange</span><span class="p">(</span><span class="n">yamlFile</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bounds</span> <span class="o">=</span> <span class="n">ri</span><span class="o">.</span><span class="n">get_wl_range</span><span class="p">(</span><span class="n">yamlFile</span><span class="p">)</span>
 <span class="n">lambdas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">300</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -161,7 +161,7 @@ wavelength range to interpolate:</p>
 </td></tr>
 </tbody>
 </table>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  0.048 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  0.050 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-material-plot-refractive-index-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/3ad4e6bc81cca75bc8c8c4bb878b1279/plot_refractive_index.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_refractive_index.py</span></code></a></div>
