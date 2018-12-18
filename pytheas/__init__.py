@@ -15,6 +15,7 @@ __doc__ = __description__
 from .material import *
 from .periodic2D import *
 from .scatt2D import *
+from .scatt3D import *
 from .periodic3D import *
 from .banddiag import *
 from .optim import *

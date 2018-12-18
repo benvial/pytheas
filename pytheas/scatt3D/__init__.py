@@ -13,4 +13,4 @@ vectorial wave equation in 3D:
 """
 
 
-from .femmodel import FemModel
+from .femmodel import Scatt3D

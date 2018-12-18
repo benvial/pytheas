@@ -7,7 +7,7 @@ import os
 import numpy as np
 import scipy as sc
 from ..tools import femio
-from ..basefem import BaseFEM
+from ..basefem import BaseFEM, get_file_path
 
 
 class Periodic3D(BaseFEM):
@@ -49,6 +49,7 @@ class Periodic3D(BaseFEM):
         el_order=1,
     ):
         super().__init__()
+        self.dir_path = get_file_path(__file__)
 
         self.analysis = analysis
         self.A = A

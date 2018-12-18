@@ -1,6 +1,7 @@
 import numpy as np
 from pytheas import TwoScale2D
-import numpy.testing as npt
+
+# import numpy.testing as npt
 from testutils import *
 
 
@@ -28,13 +29,13 @@ def test_hom(verbose=False):
     # fem = ref_mesh(fem, mat, periodic_x=True, periodic_y=True)
     fem.register_pattern(mat.pattern, mat._threshold_val)
     fem.compute_solution()
-    eps_eff = fem.compute_epsilon_eff()
-    eps_eff_ref = np.array(
-        [
-            [4.09598751 - 0.06423691j, 0.0353099 - 0.001815j],
-            [0.0353099 - 0.001815j, 3.82597454 - 0.05819867j],
-        ]
-    )
+    fem.compute_epsilon_eff()
+    # eps_eff_ref = np.array(
+    #     [
+    #         [4.09598751 - 0.06423691j, 0.0353099 - 0.001815j],
+    #         [0.0353099 - 0.001815j, 3.82597454 - 0.05819867j],
+    #     ]
+    # )
 
     # npt.assert_almost_equal(eps_eff, eps_eff_ref, decimal=2)
     return fem

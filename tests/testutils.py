@@ -3,10 +3,12 @@ from pytheas import genmat
 from pytheas import utils
 
 
-def pattern(xsym=False, ysym=False):
+def pattern(xsym=False, ysym=False, threeD=False):
     genmat.np.random.seed(100)
     mat = genmat.MaterialDensity()  # instanciate
     mat.n_x, mat.n_y, mat.n_z = 2 ** 8, 2 ** 8, 1  # sizes
+    if threeD:
+        mat.n_z = mat.n_x
     mat.xsym = xsym  # symmetric with respect to x?
     mat.ysym = ysym  # symmetric with respect to y?
     mat.p_seed = mat.mat_rand  # fix the pattern random seed

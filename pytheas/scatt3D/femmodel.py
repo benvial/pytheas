@@ -10,7 +10,7 @@ from ..basefem import *
 from .geom import make_geom
 
 
-class ScattFEM3D(BaseFEM):
+class Scatt3D(BaseFEM):
     """A class for a finite element model of a 3D scattering object
         using Gmsh_ and GetDP_.
 
