@@ -27,7 +27,7 @@ yamlFile = "main/Au/Johnson.yml"
 # We then get the wavelength bounds from the data (in microns) and create a
 # wavelength range to interpolate:
 
-bounds = ri.getRange(yamlFile)
+bounds = ri.get_wl_range(yamlFile)
 lambdas = np.linspace(bounds[0], bounds[1], 300)
 
 ##############################################################################
