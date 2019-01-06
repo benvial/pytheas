@@ -4,9 +4,11 @@
 # License: MIT
 
 """
-The :mod:`pytheas.tools` contains various utilities
+Input/output and utilities.
 
 """
 
-from .femio import *
-from .utils import *
+__all__ = ["femio", "utils"]
+
+# from .femio import *
+# from .utils import *

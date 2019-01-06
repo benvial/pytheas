@@ -11,7 +11,7 @@ from .__about__ import (
 
 __doc__ = __description__
 
-# from .basefem import BaseFEM
+from .basefem import BaseFEM
 from .material import *
 from .periodic2D import *
 from .scatt2D import *

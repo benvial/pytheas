@@ -1,10 +1,27 @@
-import datetime
+
+"""Shared utility functions used in pytheas."""
+
+
 import numpy as np
 from ..tools import femio
 from ..material import genmat
 
 
 def normalize(x):
+    """Normalize an array between 0 and 1
+
+        Parameters
+        ----------
+        x : array-like
+            the quantity to be normalized
+
+        Returns
+        -------
+        x_norm : array-like
+            normalized array
+
+
+    """
     return (x - x.min()) / (x.max() - x.min())
 
 
