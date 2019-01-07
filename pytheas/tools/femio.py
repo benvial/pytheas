@@ -1,5 +1,3 @@
-
-
 """
 Tools for gmsh/getdp control and input/output.
 

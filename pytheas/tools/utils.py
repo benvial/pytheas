@@ -1,4 +1,3 @@
-
 """Shared utility functions used in pytheas."""
 
 
