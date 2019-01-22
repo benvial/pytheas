@@ -106,18 +106,20 @@ class TwoScale3D(BaseFEM):
     def compute_epsilon_eff(self):
         self.print_progress("Postprocessing")
         phi = np.zeros((3, 3), dtype=complex)
-        i1 = 0
-        for ax1 in ("x", "y", "z"):
-            i2 = 0
-            for ax2 in ("x", "y", "z"):
+        int_eps = []
+        for i1, ax1 in enumerate(["x", "y", "z"]):
+            int_eps.append(
+                femio.load_timetable(self.tmppath("Int_eps_{}{}.txt".format(ax1, ax1)))
+            )
+            for i2, ax2 in enumerate(["x", "y", "z"]):
                 phi[i1, i2] = femio.load_timetable(
                     self.tmppath("Phi" + ax1 + ax2 + ".txt")
                 )
-                i2 += 1
-            i1 += 1
-        int_eps = femio.load_timetable(self.tmppath("Inteps.txt"))
+
         Vcell = self.dx * self.dy * self.dz
-        eps_eff = 1 / Vcell * (int_eps * np.eye(3) - phi)
+        eps_eff = 1 / Vcell * (np.diag(int_eps) - phi)
+        print("int_eps = {}".format(int_eps))
+        print("phi = {}".format(phi))
         if self.python_verbose:
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)

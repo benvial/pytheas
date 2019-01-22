@@ -27,7 +27,7 @@ Function{
 		If (coupling_flag)
 	 	eps_xx[host] = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ];
 		eps_yy[host] = Complex[ScalarField[XYZ[], 0, 1]{2}  ,ScalarField[XYZ[], 0, 1 ]{3} ];
-		eps_zz[host] = Complex[ScalarField[XYZ[], 0, 1]{4}  ,ScalarField[XYZ[], 0, 1 ]{5} ]; 
+		eps_zz[host] = Complex[ScalarField[XYZ[], 0, 1]{4}  ,ScalarField[XYZ[], 0, 1 ]{5} ];
 		epsilonr[host]    = TensorDiag[eps_xx[],eps_yy[],eps_zz[]];
 		Else
 			epsilonr[host]           = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
@@ -35,7 +35,7 @@ Function{
 	Else
 		epsilonr[Omega]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
 	EndIf
-	
+
 	EX[] = Vector[1,0,0] ;
 	EY[] = Vector[0,1,0] ;
 	EZ[] = Vector[0,0,1] ;
@@ -181,28 +181,32 @@ Resolution {
 PostProcessing {
     { Name postpro_x; NameOfFormulation annex_x; NameOfSystem Sx;
             Quantity {
-               { Name solutionx; Value { Local { [Re[ {ux}] ]  ; In Omega; Jacobian JVol; } } }
+               /* { Name solutionx; Value { Local { [Re[ {ux}] ]  ; In Omega; Jacobian JVol; } } } */
               { Name Phixx; Value { Integral { [CompX[epsilonr[]*{d ux}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phixy; Value { Integral { [CompY[epsilonr[]*{d ux}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phixz; Value { Integral { [CompZ[epsilonr[]*{d ux}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name Int_eps; Value { Integral { [CompXX[epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name Int_eps_xx; Value { Integral { [CompXX[epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              /* { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } } */
 		     }
     }
     { Name postpro_y; NameOfFormulation annex_y; NameOfSystem Sy;
             Quantity {
-               { Name solutiony; Value { Local { [Re[ {uy}] ] ; In Omega; Jacobian JVol; } } }
+               /* { Name solutiony; Value { Local { [Re[ {uy}] ] ; In Omega; Jacobian JVol; } } } */
               { Name Phiyx; Value { Integral { [CompX[epsilonr[]*{d uy}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phiyy; Value { Integral { [CompY[epsilonr[]*{d uy}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phiyz; Value { Integral { [CompZ[epsilonr[]*{d uy}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+							{ Name Int_eps_yy; Value { Integral { [CompYY[epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+
 		     }
     }
     { Name postpro_z; NameOfFormulation annex_z; NameOfSystem Sz;
             Quantity {
-               { Name solutionz; Value { Local { [Re[ {uz}] ] ; In Omega; Jacobian JVol; } } }
+               /* { Name solutionz; Value { Local { [Re[ {uz}] ] ; In Omega; Jacobian JVol; } } } */
               { Name Phizx; Value { Integral { [CompX[epsilonr[]*{d uz}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phizy; Value { Integral { [CompY[epsilonr[]*{d uz}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Phizz; Value { Integral { [CompZ[epsilonr[]*{d uz}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+							{ Name Int_eps_zz; Value { Integral { [CompZZ[epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+
 		     }
     }
 
@@ -215,7 +219,7 @@ Operation {
 	Print [ Phixx[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixx.txt"];
 	Print [ Phixy[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixy.txt"];
 	Print [ Phixz[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phixz.txt"];
-	Print [ Int_eps[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Inteps.txt"];
+	Print [ Int_eps_xx[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Int_eps_xx.txt"];
 	/*Print [ V[Omega], OnElementsOf PrintPoint, Format TimeTable, File "V.txt"];*/
 	}
 }
@@ -226,6 +230,8 @@ Operation {
 	Print [ Phiyx[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phiyx.txt"];
 	Print [ Phiyy[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phiyy.txt"];
 	Print [ Phiyz[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phiyz.txt"];
+	Print [ Int_eps_yy[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Int_eps_yy.txt"];
+
 }
 }
 { Name postop_z; NameOfPostProcessing postpro_z ;
@@ -234,6 +240,8 @@ Operation {
 	Print [ Phizz[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phizz.txt"];
 	Print [ Phizy[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phizy.txt"];
 	Print [ Phizx[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Phizx.txt"];
+	Print [ Int_eps_zz[Omega], OnElementsOf PrintPoint, Format TimeTable, File "Int_eps_zz.txt"];
+
 }
 }
 

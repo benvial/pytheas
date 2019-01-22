@@ -28,8 +28,17 @@ Group {
 
 Function{
   If (inclusion_flag)
-    epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
+    /* epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1]; */
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
+    If (aniso)
+        epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+        epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+        epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
+
+        epsilonr[host] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+      Else
+        epsilonr[host]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      EndIf
   Else
   If (aniso)
       epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
@@ -41,6 +50,9 @@ Function{
       epsilonr[Omega]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
     EndIf
   EndIf
+
+    xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],1];
+
 
 		If (y_flag)
 			E[] = Vector[0,1,0] ;
@@ -126,9 +138,9 @@ Formulation {
 	    {Name electrostat_scalar; Type FemEquation;
     		Quantity {{ Name u; Type Local; NameOfSpace Hgrad;}}
 		Equation {
-		Galerkin { [1/epsilonr[]*Dof{d u} , {d u}];
+		Galerkin { [xsi[]*Dof{d u} , {d u}];
                  		In Omega; Jacobian JVol; Integration Int_1; }
-                 Galerkin { [ 1/epsilonr[] * E[] , {d u} ];
+                 Galerkin { [ xsi[] * E[] , {d u} ];
                   		In Omega; Jacobian JVol; Integration Int_1; }
                 }
             }
@@ -160,10 +172,10 @@ PostProcessing {
               { Name solution; Value { Local { [ {u}] ; In Omega; Jacobian JVol; } } }
 							{ Name vx; Value { Local {[CompX[{d u}]] ; In Omega; Jacobian JVol; } } }
 							{ Name vy; Value { Local {[CompY[{d u}]] ; In Omega; Jacobian JVol; } } }
-              { Name Ix; Value { Integral { [CompX[1/epsilonr[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name Iy; Value { Integral { [CompY[1/epsilonr[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-							{ Name I_inveps_xx; Value { Integral { [CompXX[1/epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-          		{ Name I_inveps_yy; Value { Integral { [CompYY[1/epsilonr[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name Ix; Value { Integral { [CompX[xsi[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name Iy; Value { Integral { [CompY[xsi[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+							{ Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+          		{ Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
 
          }

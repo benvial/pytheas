@@ -71,7 +71,8 @@ class TwoScale2D(BaseFEM):
         int_inveps_xx, int_inveps_yy = self.get_int_inveps()
         V = self.get_vol()
         epsinv_eff = (np.diag([int_inveps_xx, int_inveps_yy]) + phi) / V
-        eps_eff = np.linalg.inv(epsinv_eff)
+        # eps_eff = np.linalg.inv(epsinv_eff)
+        eps_eff = epsinv_eff.T / np.linalg.det(epsinv_eff)
         return eps_eff
 
     def compute_epsilon_eff(self, postpro_fields=False):
@@ -89,4 +90,4 @@ class TwoScale2D(BaseFEM):
         if self.python_verbose:
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
-        return self.postpro_effective_permittivity()
+        return eps_eff
