@@ -12,6 +12,10 @@
 ./_sources/auto_examples/index.rst.txt
 ./_sources/auto_examples/material/plot_refractive_index.rst.txt
 ./_sources/auto_examples/periodic2D/plot_diffraction_efficiencies.rst.txt
+./_sources/gen_modules/pytheas.BaseFEM.rst.txt
+./_sources/gen_modules/pytheas.Periodic2D.rst.txt
+./_sources/gen_modules/pytheas.tools.femio.rst.txt
+./_sources/gen_modules/pytheas.tools.utils.rst.txt
 ./_sources/index.rst.txt
 ./_sources/reference.rst.txt
 ./_static/ajax-loader.gif
@@ -100,6 +104,7 @@
 ./_static/js/custom.js
 ./_static/js/jquery-1.11.0.min.js
 ./_static/js/jquery-fix.js
+./_static/language_data.js
 ./_static/logo_pytheas_white.png
 ./_static/minus.png
 ./_static/no_image.png
@@ -114,6 +119,10 @@
 ./auto_examples/index.html
 ./auto_examples/material/plot_refractive_index.html
 ./auto_examples/periodic2D/plot_diffraction_efficiencies.html
+./gen_modules/pytheas.BaseFEM.html
+./gen_modules/pytheas.Periodic2D.html
+./gen_modules/pytheas.tools.femio.html
+./gen_modules/pytheas.tools.utils.html
 ./genindex.html
 ./index.html
 ./objects.inv

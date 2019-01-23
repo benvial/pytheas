@@ -38,15 +38,36 @@ Classes
   :toctree: gen_modules/
   :template: class.rst
 
-  periodic2D.FemModel
+  Periodic2D
 
 
--------------------------------------
 
-:mod:`pytheas.scatt2D`: 2D scattering
-=====================================
 
-.. automodule:: pytheas.scatt2D
+:mod:`pytheas.tools`: tools and utilities
+=========================================
+
+.. automodule:: pytheas.tools
+  :no-members:
+  :no-inherited-members:
+
+Submodules
+----------
+.. currentmodule:: pytheas.tools
+
+.. autosummary::
+  :toctree: gen_modules/
+  :template: module.rst
+  
+  femio
+  utils
+  
+
+
+
+:mod:`pytheas.basefem`: boilerplate class for FEM models
+========================================================
+
+.. automodule:: pytheas.basefem
   :no-members:
   :no-inherited-members:
 
@@ -58,7 +79,32 @@ Classes
   :toctree: gen_modules/
   :template: class.rst
 
-  scatt2D.FemModel
+  BaseFEM
+
+
+
+
+
+
+
+.. -------------------------------------
+.. 
+.. :mod:`pytheas.scatt2D`: 2D scattering
+.. =====================================
+.. 
+.. .. automodule:: pytheas.scatt2D
+..   :no-members:
+..   :no-inherited-members:
+.. 
+.. Classes
+.. -------
+.. .. currentmodule:: pytheas
+.. 
+.. .. autosummary::
+..   :toctree: gen_modules/
+..   :template: class.rst
+.. 
+..   scatt2D.FemModel
 
 
 

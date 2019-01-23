@@ -1,0 +1,12 @@
+:mod:`pytheas`.BaseFEM
+=============================
+
+.. currentmodule:: pytheas
+
+.. autoclass:: BaseFEM
+
+.. include:: backreferences/pytheas.BaseFEM.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

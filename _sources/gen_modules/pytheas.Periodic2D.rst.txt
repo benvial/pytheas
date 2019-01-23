@@ -1,0 +1,12 @@
+:mod:`pytheas`.Periodic2D
+================================
+
+.. currentmodule:: pytheas
+
+.. autoclass:: Periodic2D
+
+.. include:: backreferences/pytheas.Periodic2D.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

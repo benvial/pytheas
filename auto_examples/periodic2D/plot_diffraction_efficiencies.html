@@ -18,8 +18,9 @@
     <script type="text/javascript" src="../../_static/jquery.js"></script>
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/custom.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -152,7 +153,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <span class="n">fem</span><span class="o">.</span><span class="n">a_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, real part</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">b_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, imaginary part</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_sup</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity superstrate</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">eps_sub</span> <span class="o">=</span> <span class="mi">11</span>  <span class="c1">#: flt: permittivity substrate</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">eps_sub</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1">#: flt: permittivity substrate</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_layer1</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer 1</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_layer2</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer 2</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity layer design</span>
@@ -206,7 +207,7 @@ cell using gmsh</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TE {&#39;R&#39;: 0.5416794889618843, &#39;T&#39;: 0.3545625265103274, &#39;Q&#39;: 0.1158907418802392, &#39;B&#39;: 1.012132757352451}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TE {&#39;R&#39;: 0.4690040776942383, &#39;T&#39;: 0.4218990091544012, &#39;Q&#39;: 0.1100136303946849, &#39;B&#39;: 1.0009167172433244}
 </pre></div>
 </div>
 <p>It is fairly easy to switch to TM polarization:</p>
@@ -217,10 +218,10 @@ cell using gmsh</p>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.4440749322167822, &#39;T&#39;: 0.4804765728980809, &#39;Q&#39;: 0.05938397641376305, &#39;B&#39;: 0.9839354815286261}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.30121288992028544, &#39;T&#39;: 0.6537613111772448, &#39;Q&#39;: 0.04339047619570134, &#39;B&#39;: 0.9983646772932315}
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  4.145 seconds)</p>
+<p><strong>Total running time of the script:</strong> ( 0 minutes  2.661 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-periodic2d-plot-diffraction-efficiencies-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/fa7fc7b13469565449b774cd95f63ca6/plot_diffraction_efficiencies.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_diffraction_efficiencies.py</span></code></a></div>
@@ -259,8 +260,8 @@ cell using gmsh</p>
         </div>
         <div class="footer-copyright">
           <p>
-              &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+              &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
           
           </p>
 
@@ -279,8 +280,8 @@ cell using gmsh</p>
         
       </p>
       <p>
-          &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+          &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
       </p>
     </div> -->
   </footer>

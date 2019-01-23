@@ -1,0 +1,12 @@
+:mod:`pytheas.tools`.femio
+=================================
+
+.. currentmodule:: pytheas.tools.femio
+
+.. automodule:: pytheas.tools.femio
+
+.. include:: backreferences/pytheas.tools.femio.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

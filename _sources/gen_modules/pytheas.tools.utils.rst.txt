@@ -1,0 +1,12 @@
+:mod:`pytheas.tools`.utils
+=================================
+
+.. currentmodule:: pytheas.tools.utils
+
+.. automodule:: pytheas.tools.utils
+
+.. include:: backreferences/pytheas.tools.utils.examples
+
+.. raw:: html
+
+    <div class="clearer"></div>

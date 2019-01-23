@@ -18,8 +18,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
     <script type="text/javascript" src="_static/js/custom.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
@@ -27,6 +28,7 @@
     <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pytheas.Periodic2D" href="gen_modules/pytheas.Periodic2D.html" />
     <link rel="prev" title="&lt;no title&gt;" href="index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -109,7 +111,11 @@
 <li><a class="reference internal" href="#classes">Classes</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pytheas.scatt2D"><code class="docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code>: 2D scattering</a><ul>
+<li><a class="reference internal" href="#module-pytheas.tools"><code class="docutils literal notranslate"><span class="pre">pytheas.tools</span></code>: tools and utilities</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pytheas.basefem"><code class="docutils literal notranslate"><span class="pre">pytheas.basefem</span></code>: boilerplate class for FEM models</a><ul>
 <li><a class="reference internal" href="#id1">Classes</a></li>
 </ul>
 </li>
@@ -143,22 +149,39 @@ of the diffraction efficiencies, absorption and energy balance.</li>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">periodic2D.FemModel</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D" title="pytheas.Periodic2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Periodic2D</span></code></a>([analysis,&nbsp;pola,&nbsp;A,&nbsp;lambda0,&nbsp;…])</td>
+<td>A class for a finite element model of a 2D mono-periodic medium.</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<hr class="docutils" />
-<div class="section" id="module-pytheas.scatt2D">
-<span id="pytheas-scatt2d-2d-scattering"></span><h2><a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a>: 2D scattering<a class="headerlink" href="#module-pytheas.scatt2D" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a> module implements the resolution of the
-scalar wave equation for TE and TM polarization in 2D:</p>
-<ul class="simple">
-<li>subject to an incident plane wave or line source (diffraction problem)</li>
-<li>eigenvalues and eigenmodes (modal analysis)</li>
-</ul>
+<div class="section" id="module-pytheas.tools">
+<span id="pytheas-tools-tools-and-utilities"></span><h2><a class="reference internal" href="#module-pytheas.tools" title="pytheas.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.tools</span></code></a>: tools and utilities<a class="headerlink" href="#module-pytheas.tools" title="Permalink to this headline">¶</a></h2>
+<p>Input/output and utilities.</p>
+<div class="section" id="submodules">
+<h3>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h3>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="gen_modules/pytheas.tools.femio.html#module-pytheas.tools.femio" title="pytheas.tools.femio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">femio</span></code></a></td>
+<td>Tools for gmsh/getdp control and input/output.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="gen_modules/pytheas.tools.utils.html#module-pytheas.tools.utils" title="pytheas.tools.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utils</span></code></a></td>
+<td>Shared utility functions used in pytheas.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="module-pytheas.basefem">
+<span id="pytheas-basefem-boilerplate-class-for-fem-models"></span><h2><a class="reference internal" href="#module-pytheas.basefem" title="pytheas.basefem"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.basefem</span></code></a>: boilerplate class for FEM models<a class="headerlink" href="#module-pytheas.basefem" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pytheas.basefem" title="pytheas.basefem"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.basefem</span></code></a> module implements a base class common for FEM
+models using <a class="reference external" href="http://gmsh.info/">Gmsh</a> and <a class="reference external" href="http://getdp.info/">GetDP</a>. This should be used as a parent class and
+not directly.</p>
 <div class="section" id="id1">
 <h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <table border="1" class="longtable docutils">
@@ -167,8 +190,8 @@ scalar wave equation for TE and TM polarization in 2D:</p>
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><code class="xref py py-obj docutils literal notranslate"><span class="pre">scatt2D.FemModel</span></code></td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM" title="pytheas.BaseFEM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseFEM</span></code></a>()</td>
+<td>Base class for Finite Element models</td>
 </tr>
 </tbody>
 </table>
@@ -214,8 +237,8 @@ scalar wave equation for TE and TM polarization in 2D:</p>
         </div>
         <div class="footer-copyright">
           <p>
-              &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+              &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
           
           </p>
 
@@ -234,8 +257,8 @@ scalar wave equation for TE and TM polarization in 2D:</p>
         
       </p>
       <p>
-          &copy; Copyright Copyright (c) 2017-2018, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.<br/>
+          &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.3.<br/>
       </p>
     </div> -->
   </footer>

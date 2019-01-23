@@ -83,7 +83,7 @@ We define here the opto-geometric parameters:
     fem.a_pml = 1  #: flt: PMLs parameter, real part
     fem.b_pml = 1  #: flt: PMLs parameter, imaginary part
     fem.eps_sup = 1  #: flt: permittivity superstrate
-    fem.eps_sub = 11  #: flt: permittivity substrate
+    fem.eps_sub = 3  #: flt: permittivity substrate
     fem.eps_layer1 = 1  #: flt: permittivity layer 1
     fem.eps_layer2 = 1  #: flt: permittivity layer 2
     fem.eps_des = 1  #: flt: permittivity layer design
@@ -204,7 +204,7 @@ Finally we compute the diffraction efficiencies, absorption and energy balance
 
  .. code-block:: none
 
-    efficiencies TE {'R': 0.5416794889618843, 'T': 0.3545625265103274, 'Q': 0.1158907418802392, 'B': 1.012132757352451}
+    efficiencies TE {'R': 0.4690040776942383, 'T': 0.4218990091544012, 'Q': 0.1100136303946849, 'B': 1.0009167172433244}
 
 
 It is fairly easy to switch to TM polarization:
@@ -228,10 +228,10 @@ It is fairly easy to switch to TM polarization:
 
  .. code-block:: none
 
-    efficiencies TM {'R': 0.4440749322167822, 'T': 0.4804765728980809, 'Q': 0.05938397641376305, 'B': 0.9839354815286261}
+    efficiencies TM {'R': 0.30121288992028544, 'T': 0.6537613111772448, 'Q': 0.04339047619570134, 'B': 0.9983646772932315}
 
 
-**Total running time of the script:** ( 0 minutes  4.145 seconds)
+**Total running time of the script:** ( 0 minutes  2.661 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
