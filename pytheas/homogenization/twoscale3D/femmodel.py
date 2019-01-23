@@ -118,8 +118,8 @@ class TwoScale3D(BaseFEM):
 
         Vcell = self.dx * self.dy * self.dz
         eps_eff = 1 / Vcell * (np.diag(int_eps) - phi)
-        print("int_eps = {}".format(int_eps))
-        print("phi = {}".format(phi))
+        # print("int_eps = {}".format(int_eps))
+        # print("phi = {}".format(phi))
         if self.python_verbose:
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
