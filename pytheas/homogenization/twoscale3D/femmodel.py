@@ -88,7 +88,7 @@ class TwoScale3D(BaseFEM):
         self.update_params()
         self.print_progress("Computing solution: homogenization problem")
         argstr = "-petsc_prealloc 1500 -ksp_type preonly \
-                 -pc_type lu -pc_factor_mat_solver_package mumps"
+                 -pc_type lu -pc_factor_mat_solver_type mumps"
         for coord in ["x", "y", "z"]:
             resolution = "annex_" + coord
             self.print_progress("     annex problem " + coord)

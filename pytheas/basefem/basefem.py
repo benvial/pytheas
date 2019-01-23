@@ -319,7 +319,7 @@ class BaseFEM:
         self.print_progress("Computing solution: " + self.analysis + " problem")
         if self.analysis == "direct":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
-                     -pc_type lu -pc_factor_mat_solver_package mumps"
+                     -pc_type lu -pc_factor_mat_solver_type mumps"
 
             resolution = res_list[0]
         elif self.analysis == "modal":

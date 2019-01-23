@@ -47,7 +47,7 @@ install:
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
 script: #run tests
-  - pytest -s --cov=./
+  - pytest -s --ignore $TRAVIS_BUILD_DIR/opt --cov=./
 
 after_success: #make the doc and push to gh-pages the run code coverage analysis
   - set -e
