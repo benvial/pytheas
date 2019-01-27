@@ -3,7 +3,7 @@ dist: trusty
 language: python
 
 python:
-  - "3.6"
+  - "3.7"
 
 branches:
   only:
@@ -34,18 +34,13 @@ install:
   - conda info -a
   - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
   - source activate testenv
-  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic
-  # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
+  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
   - pip install -r requirements.txt
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
-  - ./install_nlopt.sh
-  - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
-  - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib:LD_LIBRARY_PATH
-  - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
-
+  
 script: #run tests
   - pytest -s ./pytheas/tests --cov=./pytheas
 
