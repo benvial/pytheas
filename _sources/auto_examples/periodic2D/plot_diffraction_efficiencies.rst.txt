@@ -231,7 +231,7 @@ It is fairly easy to switch to TM polarization:
     efficiencies TM {'R': 0.30121288992028544, 'T': 0.6537613111772448, 'Q': 0.04339047619570134, 'B': 0.9983646772932315}
 
 
-**Total running time of the script:** ( 0 minutes  2.661 seconds)
+**Total running time of the script:** ( 0 minutes  2.544 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
