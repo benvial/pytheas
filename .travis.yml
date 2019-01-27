@@ -46,8 +46,6 @@ install:
   - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
 
 script: #run tests
-  - echo $PWD
-  # - pytest -s ./pytheas/tests --cov=./pytheas
   - pytest -s ./tests --cov
 
 after_success: #make the doc and push to gh-pages the run code coverage analysis
