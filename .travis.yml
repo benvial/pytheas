@@ -35,14 +35,20 @@ install:
   - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
   - source activate testenv
   - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
+  # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   - pip install -r requirements.txt
   - pip install -e .
   - mkdir $TRAVIS_BUILD_DIR/opt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR/opt/bin
   - ./install_onelab_prebuilt.sh
-  
+  - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
+  - export LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/opt/lib:LD_LIBRARY_PATH
+  - export PYTHONPATH=$TRAVIS_BUILD_DIR/opt/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:PYTHONPATH
+
 script: #run tests
-  - pytest -s ./pytheas/tests --cov=./pytheas
+  - echo $PWD
+  # - pytest -s ./pytheas/tests --cov=./pytheas
+  - pytest -s ./tests --cov
 
 after_success: #make the doc and push to gh-pages the run code coverage analysis
   - set -e
