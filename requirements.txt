@@ -5,3 +5,4 @@ meshio
 pygmsh
 PyYAML
 parse
+nlopt
