@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export ONELAB_PATH=$TRAVIS_BUILD_DIR/opt
+export ONELAB_PATH=$HOME/bin
 # export VERSION="stable"
 export VERSION="dev"
 
@@ -14,9 +14,9 @@ else
   exit
 fi
 
-mkdir $ONELAB_PATH
-cd $ONELAB_PATH
-mkdir bin
+# mkdir $ONELAB_PATH
+# cd $ONELAB_PATH
+# mkdir bin
 
 echo "INSTALLING GMSH"
 echo '----------------'
@@ -24,7 +24,7 @@ echo '----------------'
 wget -c http://gmsh.info/bin/Linux/gmsh-$GMSH_VERSION-Linux64.tgz -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
-mv gmsh-$GMSH_VERSION-Linux64/bin/gmsh $ONELAB_PATH/bin
+mv gmsh-$GMSH_VERSION-Linux64/bin/gmsh $ONELAB_PATH
 rm -rf gmsh
 
 echo "INSTALLING GETDP"
@@ -33,5 +33,5 @@ echo '----------------'
 wget -c http://getdp.info/bin/Linux/getdp-$GETDP_VERSION-Linux64c.tgz -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
-mv getdp-$GETDP_VERSION-Linux64/bin/getdp $ONELAB_PATH/bin
+mv getdp-$GETDP_VERSION-Linux64/bin/getdp $ONELAB_PATH
 rm -rf getdp
