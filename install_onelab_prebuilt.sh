@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export ONELAB_PATH=$HOME/bin
+export ONELAB_PATH=$HOME/onelab
 # export VERSION="stable"
 export VERSION="dev"
 

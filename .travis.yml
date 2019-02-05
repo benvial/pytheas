@@ -20,8 +20,8 @@ env:
 
 install:
   # - sudo apt-get update
-  - mkdir $HOME/bin
-  - export PATH=$PATH:$HOME/bin
+  - mkdir $HOME/onelab
+  - export PATH=$PATH:$HOME/onelab
   - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
   - export LD_LIBRARY_PATH=$HOME/miniconda/envs/testenv/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:$LD_LIBRARY_PATH
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
