@@ -1,6 +1,6 @@
 
 
-.. _aotomat_api_reference:
+.. _pytheas_api_reference:
 
 
 ..
@@ -57,10 +57,10 @@ Submodules
 .. autosummary::
   :toctree: gen_modules/
   :template: module.rst
-  
+
   femio
   utils
-  
+
 
 
 
@@ -88,22 +88,22 @@ Classes
 
 
 .. -------------------------------------
-.. 
+..
 .. :mod:`pytheas.scatt2D`: 2D scattering
 .. =====================================
-.. 
+..
 .. .. automodule:: pytheas.scatt2D
 ..   :no-members:
 ..   :no-inherited-members:
-.. 
+..
 .. Classes
 .. -------
 .. .. currentmodule:: pytheas
-.. 
+..
 .. .. autosummary::
 ..   :toctree: gen_modules/
 ..   :template: class.rst
-.. 
+..
 ..   scatt2D.FemModel
 
 
