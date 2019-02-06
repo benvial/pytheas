@@ -13,6 +13,7 @@ tag:
 pipy: setup.py
 	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
 	rm -f dist/*
+	rm -rf pytheas/tools/bin
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel --universal
 	twine upload dist/*
@@ -42,5 +43,7 @@ style:
 	@echo "Styling..."
 	black setup.py pytheas/ tests/*.py
 	
+onelab:
+	bash install_onelab_prebuilt.sh
 	
 save: clean style gh

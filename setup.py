@@ -19,7 +19,7 @@ with open("requirements.txt") as f:
 
 
 setup(
-    name="pytheas",
+    name="pytheas-pip",
     version=about["__version__"],
     author=about["__author__"],
     author_email=about["__author_email__"],

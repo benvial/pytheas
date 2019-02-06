@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export ONELAB_PATH=$HOME/onelab
+export ONELAB_PATH=$PWD/pytheas/tools/bin
 # export VERSION="stable"
 export VERSION="dev"
 
@@ -14,9 +14,9 @@ else
   exit
 fi
 
-# mkdir $ONELAB_PATH
-# cd $ONELAB_PATH
-# mkdir bin
+rm -rf $ONELAB_PATH
+mkdir $ONELAB_PATH
+cd $ONELAB_PATH
 
 echo "INSTALLING GMSH"
 echo '----------------'
@@ -24,8 +24,9 @@ echo '----------------'
 wget -c http://gmsh.info/bin/Linux/gmsh-$GMSH_VERSION-Linux64.tgz -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
-mv gmsh-$GMSH_VERSION-Linux64/bin/gmsh $ONELAB_PATH
-rm -rf gmsh
+mv gmsh-$GMSH_VERSION-Linux64 gmsh_tmp
+mv gmsh_tmp/bin/gmsh $ONELAB_PATH
+rm -rf gmsh_tmp
 
 echo "INSTALLING GETDP"
 echo '----------------'
@@ -33,5 +34,6 @@ echo '----------------'
 wget -c http://getdp.info/bin/Linux/getdp-$GETDP_VERSION-Linux64c.tgz -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
-mv getdp-$GETDP_VERSION-Linux64/bin/getdp $ONELAB_PATH
-rm -rf getdp
+mv getdp-$GETDP_VERSION-Linux64 getdp_tmp
+mv getdp_tmp/bin/getdp $ONELAB_PATH
+rm -rf getdp_tmp

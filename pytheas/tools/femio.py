@@ -10,8 +10,15 @@ import subprocess
 import numpy as np
 import shutil
 
+script_path = os.path.dirname(os.path.abspath(__file__))
+bin_path = os.path.join(script_path, "bin")
+
 gmsh = shutil.which("gmsh")
 getdp = shutil.which("getdp")
+if gmsh is None:
+    gmsh = os.path.join(bin_path, "gmsh")
+if getdp is None:
+    getdp = os.path.join(bin_path, "getdp")
 
 
 def make_var_str(varname, varvalue):

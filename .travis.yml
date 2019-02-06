@@ -20,10 +20,10 @@ env:
 
 install:
   # - sudo apt-get update
-  - mkdir $HOME/onelab
-  - export PATH=$PATH:$HOME/onelab
-  - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
-  - export LD_LIBRARY_PATH=$HOME/miniconda/envs/testenv/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:$LD_LIBRARY_PATH
+  # - mkdir $HOME/onelab
+  # - export PATH=$PATH:$HOME/onelab
+  # - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
+  # - export LD_LIBRARY_PATH=$HOME/miniconda/envs/testenv/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:$LD_LIBRARY_PATH
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
     else
@@ -42,7 +42,7 @@ install:
   # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   - pip install -r requirements.txt
   - pip install -e .
-  - ./install_onelab_prebuilt.sh
+  - make onelab
 
 
 script: #run tests
