@@ -18,6 +18,7 @@ env:
 
 
 install:
+  - sudo apt-get install libglu1
   # - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   # - bash miniconda.sh -b -p $HOME/miniconda
   # - export PATH="$HOME/miniconda/bin:$PATH"
@@ -33,7 +34,7 @@ install:
   # - pip install -r requirements.txt
   # - pip install -e .
   - make onelab
-  - export PATH="$PWD/pytheas/tools/bin:$PATH"
+  - export PATH="$TRAVIS_BUILD_DIR/pytheas/tools/bin:$PATH"
   - getdp --info
   - gmsh --info
 
