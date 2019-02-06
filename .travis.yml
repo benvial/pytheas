@@ -1,9 +1,6 @@
 dist: trusty
 
-language: python
-
-python:
-  - "3.6"
+language: minimal
 
 branches:
   only:
@@ -19,16 +16,7 @@ env:
 
 
 install:
-  # - sudo apt-get update
-  # - mkdir $HOME/onelab
-  # - export PATH=$PATH:$HOME/onelab
-  # - export TRAVIS_PYTHON_MAJOR_VERSION=${TRAVIS_PYTHON_VERSION:0:3}
-  # - export LD_LIBRARY_PATH=$HOME/miniconda/envs/testenv/lib/python$TRAVIS_PYTHON_MAJOR_VERSION/site-packages:$LD_LIBRARY_PATH
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
+  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
