@@ -54,6 +54,7 @@ tar -xvf gmsh.tgz
 rm gmsh.tgz
 mv $GMSH_NAME gmsh_tmp
 mv gmsh_tmp/bin/gmsh $ONELAB_PATH
+mv gmsh_tmp/lib/libgmsh.4.1.5.dylib $ONELAB_PATH
 rm -rf gmsh_tmp
 
 
