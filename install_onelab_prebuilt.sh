@@ -18,22 +18,53 @@ rm -rf $ONELAB_PATH
 mkdir $ONELAB_PATH
 cd $ONELAB_PATH
 
+
+
+
+
+case $1 in
+     linux)
+          export GMSH_NAME=gmsh-$GMSH_VERSION-Linux64
+          export GMSH_TGZ=Linux/$GMSH_NAME.tgz
+          export GETDP_NAME=getdp-$GETDP_VERSION-Linux64
+          export GETDP_TGZ=Linux/$GETDP_NAME\c.tgz
+
+          ;;
+     osx)
+          export GMSH_NAME=gmsh-$GMSH_VERSION-MacOSX-sdk
+          export GMSH_TGZ=MacOSX/$GMSH_NAME.tgz
+          export GETDP_NAME=getdp-$GETDP_VERSION-MacOSX
+          export GETDP_TGZ=MacOSX/$GETDP_NAME\c.tgz
+          ;;
+     windows)
+          echo "Not supported yet."
+          ;;
+esac
+
+
+
+# gmsh
+
+
+
 echo "INSTALLING GMSH"
 echo '----------------'
-# gmsh
-wget -c http://gmsh.info/bin/Linux/gmsh-$GMSH_VERSION-Linux64.tgz -O gmsh.tgz
+wget -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
-mv gmsh-$GMSH_VERSION-Linux64 gmsh_tmp
+mv $GMSH_NAME gmsh_tmp
 mv gmsh_tmp/bin/gmsh $ONELAB_PATH
 rm -rf gmsh_tmp
 
+
+# getdp
+
 echo "INSTALLING GETDP"
 echo '----------------'
-# getdp
-wget -c http://getdp.info/bin/Linux/getdp-$GETDP_VERSION-Linux64c.tgz -O getdp.tgz
+
+wget -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
-mv getdp-$GETDP_VERSION-Linux64 getdp_tmp
+mv $GETDP_NAME getdp_tmp
 mv getdp_tmp/bin/getdp $ONELAB_PATH
 rm -rf getdp_tmp

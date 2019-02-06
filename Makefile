@@ -42,8 +42,11 @@ lint:
 style:
 	@echo "Styling..."
 	black setup.py pytheas/ tests/*.py
-	
-onelab:
-	bash install_onelab_prebuilt.sh
-	
+
+onelab-linux:
+	bash install_onelab_prebuilt.sh linux
+
+onelab-osx:
+	bash install_onelab_prebuilt.sh osx
+
 save: clean style gh

@@ -1,6 +1,6 @@
 
 os:
-  - linux
+  - osx
 
 language: minimal
 
@@ -18,7 +18,7 @@ env:
 
 
 install:
-  - sudo apt-get install libglu1
+  # - sudo apt-get install libglu1
   # - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
   # - bash miniconda.sh -b -p $HOME/miniconda
   # - export PATH="$HOME/miniconda/bin:$PATH"
@@ -33,7 +33,7 @@ install:
   # # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   # - pip install -r requirements.txt
   # - pip install -e .
-  - make onelab
+  - make onelab-osx
   - export PATH="$TRAVIS_BUILD_DIR/pytheas/tools/bin:$PATH"
   - getdp --info
   - gmsh --info
