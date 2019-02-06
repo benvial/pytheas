@@ -1,4 +1,6 @@
-dist: trusty
+
+os:
+  - linux
 
 language: minimal
 
@@ -16,38 +18,40 @@ env:
 
 
 install:
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda config --add channels conda-forge
-  - conda update -q --all
-  - conda info -a
-  - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
-  - source activate testenv
-  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
-  # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
-  - pip install -r requirements.txt
-  - pip install -e .
+  # - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  # - bash miniconda.sh -b -p $HOME/miniconda
+  # - export PATH="$HOME/miniconda/bin:$PATH"
+  # - hash -r
+  # - conda config --set always_yes yes --set changeps1 no
+  # - conda config --add channels conda-forge
+  # - conda update -q --all
+  # - conda info -a
+  # - conda create -q -n testenv python=$TRAVIS_PYTHON_VERSION
+  # - source activate testenv
+  # - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
+  # # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
+  # - pip install -r requirements.txt
+  # - pip install -e .
   - make onelab
+  - getdp --info
+  - gmsh --info
 
 
-script: #run tests
-  - pytest -s ./tests --cov
-
-after_success: #make the doc and push to gh-pages the run code coverage analysis
-  - set -e
-  - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow codecov codacy-coverage
-  - cd docs
-  - make html
-  - make latex
-  - tectonic --version
-  - tectonic ./_build/latex/pytheas.tex
-  - mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
-  - cd ..
-  - doctr deploy . --built-docs docs/_build/html
-  - codecov
-  - export CODACY_PROJECT_TOKEN=50a1d9ea26e241f7bfc27117f783e4c0
-  - coverage xml
-  - python-codacy-coverage -r coverage.xml
+# script: #run tests
+#   - pytest -s ./tests --cov
+#
+# after_success: #make the doc and push to gh-pages the run code coverage analysis
+#   - set -e
+#   - pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow codecov codacy-coverage
+#   - cd docs
+#   - make html
+#   - make latex
+#   - tectonic --version
+#   - tectonic ./_build/latex/pytheas.tex
+#   - mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
+#   - cd ..
+#   - doctr deploy . --built-docs docs/_build/html
+#   - codecov
+#   - export CODACY_PROJECT_TOKEN=50a1d9ea26e241f7bfc27117f783e4c0
+#   - coverage xml
+#   - python-codacy-coverage -r coverage.xml
