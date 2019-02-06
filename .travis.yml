@@ -32,6 +32,7 @@ install:
   # # - while read requirement; do conda install --yes -n testenv $requirement; done < requirements.txt
   # - pip install -r requirements.txt
   # - pip install -e .
+  - export PATH="$HOME/pytheas/tools/bin:$PATH"
   - make onelab
   - getdp --info
   - gmsh --info
