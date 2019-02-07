@@ -38,13 +38,13 @@ install: #install miniconda, create test environment, install package dependenci
   # - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
   # - ./miniconda.exe /D=$HOME/miniconda
   # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
-  - choco install miniconda3 
+  - choco install miniconda3  --params="'/AddToPath:1'"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda config --add channels conda-forge
   - conda update -q --all
   - conda info -a
-  - onda create -q -n testenv python=3
+  - conda create -q -n testenv python=3
   - source activate testenv
   - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
   - pip install -r requirements.txt
