@@ -55,9 +55,6 @@ onelab-osx:
 pyinstall:
 	bash .ci/pyinstall.sh
 
-citest:
-	source activate testenv ; \
-	pytest -s --cov=./ ; \
 
 post:
 	bash .ci/post.sh
