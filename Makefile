@@ -44,9 +44,9 @@ style:
 	black setup.py pytheas/ tests/*.py
 
 onelab-linux:
-	bash install_onelab_prebuilt.sh linux
+	bash .ci/install_onelab_prebuilt.sh linux
 
 onelab-osx:
-	bash install_onelab_prebuilt.sh osx
+	bash .ci/install_onelab_prebuilt.sh osx
 
 save: clean style gh

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 export ONELAB_PATH=$PWD/pytheas/tools/bin
 # export VERSION="stable"
@@ -17,8 +17,6 @@ fi
 rm -rf $ONELAB_PATH
 mkdir $ONELAB_PATH
 cd $ONELAB_PATH
-
-
 
 
 
