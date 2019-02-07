@@ -90,8 +90,12 @@
 ./_static/css/custom_gallery.css
 ./_static/css/custom_pygments.css
 ./_static/css/custom_styles.css
+./_static/css/less/custom_gallery.less
+./_static/css/less/custom_pygments.less
+./_static/css/less/custom_styles.less
+./_static/css/less/theme.less
+./_static/css/less/variables.less
 ./_static/css/theme.css
-./_static/css/variables.less
 ./_static/doctools.js
 ./_static/documentation_options.js
 ./_static/down-pressed.png
