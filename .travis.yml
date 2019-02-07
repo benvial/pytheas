@@ -57,7 +57,6 @@ install: #install miniconda, create test environment, install package dependenci
   - pip install -e .
   - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc
 
-
   # - make pyinstall
   # - make onelab-$TRAVIS_OS_NAME
   # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
