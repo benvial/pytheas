@@ -6,8 +6,15 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 fi
 
 
-wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.sh;
-bash miniconda.sh -b -p $HOME/miniconda
+if [[ $TRAVIS_OS_NAME == 'windows' ]]; then
+  export EXT=exe
+else
+  export EXT=sh
+fi
+
+
+wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
+./miniconda.$EXT -b -p $HOME/miniconda
 hash -r
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge
