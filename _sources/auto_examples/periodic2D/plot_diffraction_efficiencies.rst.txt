@@ -204,7 +204,7 @@ Finally we compute the diffraction efficiencies, absorption and energy balance
 
  .. code-block:: none
 
-    efficiencies TE {'R': 0.4690040776942249, 'T': 0.421899009154393, 'Q': 0.1100136303946832, 'B': 1.0009167172433011}
+    efficiencies TE {'R': 0.46900407769423136, 'T': 0.4218990091543974, 'Q': 0.110013630394683, 'B': 1.0009167172433118}
 
 
 It is fairly easy to switch to TM polarization:
@@ -228,10 +228,10 @@ It is fairly easy to switch to TM polarization:
 
  .. code-block:: none
 
-    efficiencies TM {'R': 0.3012128899202854, 'T': 0.6537613111772416, 'Q': 0.04339047619570145, 'B': 0.9983646772932284}
+    efficiencies TM {'R': 0.3012128899202832, 'T': 0.653761311177237, 'Q': 0.04339047619570129, 'B': 0.9983646772932214}
 
 
-**Total running time of the script:** ( 0 minutes  2.677 seconds)
+**Total running time of the script:** ( 0 minutes  2.480 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
