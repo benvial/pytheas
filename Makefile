@@ -1,10 +1,11 @@
+# 
+# ifeq ($(TRAVIS_OS_NAME),windows)
+# 	SHELL := cmd
+# else
+# 	SHELL := /bin/bash
+# endif
 
-ifeq ($(TRAVIS_OS_NAME),windows)
-	SHELL := cmd
-else
-	SHELL := /bin/bash
-endif
-
+SHELL := /bin/bash
 
 VERSION=$(shell python3 -c "import pytheas; print(pytheas.__version__)")
 
