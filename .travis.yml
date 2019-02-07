@@ -30,6 +30,7 @@ env:
 
 
 install: #install miniconda, create test env, install package dependencies
+  - make pyinstall
   - make onelab-$TRAVIS_OS_NAME
 
   
