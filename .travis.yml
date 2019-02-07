@@ -31,6 +31,7 @@ env:
 
 install: #install miniconda, create test environment, install package dependencies
   - echo $PATH
+  - ls
   - ls $HOME
   # - echo $DYLD_LIBRARY_PATH
   # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
@@ -39,12 +40,13 @@ install: #install miniconda, create test environment, install package dependenci
   # - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
   # - ./miniconda.exe /D=$HOME/miniconda
   # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
-  - choco install miniconda3 --params="'/D:$HOME/miniconda  /AddToPath:1 '"
+  - choco install miniconda3 --params="/D:$HOME/miniconda"
   - set
+  - ls
+  - ls $HOME
+  - ls $HOME/AppData
+  - ls $HOME/Application Data
   - echo $PATH
-  - refreshenv
-  - echo $PATH
-  # - ls $HOME/miniconda
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda config --add channels conda-forge
