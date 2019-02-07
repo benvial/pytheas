@@ -14,7 +14,7 @@ fi
 
 
 wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
-./miniconda.$EXT -b -p $HOME/miniconda
+./miniconda.$EXT /D=$HOME/miniconda
 hash -r
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge
