@@ -12,7 +12,7 @@ matrix:
     env:
       MINICONDA=Miniconda3-latest-Windows-x86_64.exe
 
-language: generic
+language: minimal
 
 branches:
   only:
