@@ -1,0 +1,72 @@
+
+
+
+matrix:
+  include:
+  # - os: linux
+  #   env:
+  #     MINICONDA=Miniconda3-latest-Linux-x86_64.sh
+  # - os: osx
+  #   env:
+  #     MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
+  #     DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
+  - os: windows
+    env:
+      MINICONDA=Miniconda3-latest-Windows-x86_64.exe
+
+language: sh
+filter_secrets: false
+branches:
+  only:
+    - master
+
+notifications:
+  email: false
+
+env:
+  global:
+    # Doctr deploy key for benvial/pytheas
+    - secure: "TYrr93kJk/7VfPglkfdh/dV4HGachKPfPq8Q3ulkV/2kBczNR396uruBElPG1clbvKs7JVKQZjmGcjqEsXBN5wkELuaeZ4szWszbiiLt3GWVwXGSgVoN3yK/DauI7y4bqDPsrqbCm5zvRhYGlSW+HiV/skjZrrlPj5LrmViNSkZdz9TyhSiK3gq1hvuxU0/odYZQ8w2CGJwFhH+QYS1OrI17FAMv7mxFF3ImEFkWLZJiNprKltZG3btiFWOOLrFOxjCfo3U78ifLJspw0fqPzpulYnwzVZj8cGMrLzv3pUEG0A//3kTy+0k5PZ8/yUqtZAzYCVHjgzduAH2F0Ip6BLo8qNYVvHh728gP9x5rSbyWvoO5u6gKAiKl36b0quqkBtMjHOWwEhsm0Sb72Hi4O6OyBgN2KqWWKbanYXPtfwUpksyTshJXOpOM7K8G9Ffld6yeHwgC+lMN4jfl92OWwpDSgH0Mc7EUaOrnP/2vexdIUm5DRlrYprzdaqyPMI9syy2HuGftGlJgMJuYF0UqVBPgW0tJU/qD5OAwMnmKJlFv6/llHRakRoQ9847bVcwXM/ZDpeZOYBS+yvYJ3bvZdNxkM1QkMyQidQwo4F7K2JGeHEjTYO2Q7FqycUyxAgNzTf7/Sgu2VTJwmxV0jAVFEftm2trZjfEKHh2L2nE4d8I="
+    - PATH=$HOME/miniconda/bin:$TRAVIS_BUILD_DIR/pytheas/tools/bin:$PATH
+
+install: #install miniconda, create test environment, install package dependencies
+  - echo $PATH
+  - ls
+  - ls $HOME
+  # - echo $DYLD_LIBRARY_PATH
+  # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
+
+
+  - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
+  - ./miniconda.exe /D=$HOME/miniconda
+  # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
+  # - choco install miniconda3 --params="/D:$HOME/miniconda"
+  - set
+  - ls
+  - ls $HOME
+  - ls $HOME/AppData
+  - ls $HOME/Application Data
+  - echo $PATH
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
+  - conda update -q --all
+  - conda info -a
+  - conda create -q -n testenv python=3
+  - source activate testenv
+  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
+  - pip install -r requirements.txt
+  - pip install -e .
+  - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc
+
+  # - make pyinstall
+  # - make onelab-$TRAVIS_OS_NAME
+  # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
+
+
+# script: #run tests
+#   - source activate testenv
+#   - pytest -s --cov=./
+#
+# after_success: #make the doc and push to gh-pages the run code coverage analysis
+#   - make post

@@ -1,4 +1,4 @@
-# 
+#
 # ifeq ($(TRAVIS_OS_NAME),windows)
 # 	SHELL := cmd
 # else
@@ -61,6 +61,17 @@ onelab-osx:
 
 pyinstall:
 	bash .ci/pyinstall.sh
+
+less:
+	cd docs/_custom/static/css/less;\
+	lessc theme.less  ../theme.css;\
+	lessc custom_styles.less  ../custom_styles.css;\
+	lessc custom_gallery.less  ../custom_gallery.css;\
+	lessc custom_pygments.less  ../custom_pygments.css;\
+
+
+webdoc: less
+	cd docs && make clean && make html
 
 
 post:

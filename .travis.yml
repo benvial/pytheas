@@ -3,16 +3,16 @@
 
 matrix:
   include:
-  # - os: linux
-  #   env:
-  #     MINICONDA=Miniconda3-latest-Linux-x86_64.sh
-  # - os: osx
-  #   env:
-  #     MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
-  #     DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
-  - os: windows
+  - os: linux
     env:
-      MINICONDA=Miniconda3-latest-Windows-x86_64.exe
+      MINICONDA=Miniconda3-latest-Linux-x86_64.sh
+  - os: osx
+    env:
+      MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
+      DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
+  # - os: windows
+  #   env:
+  #     MINICONDA=Miniconda3-latest-Windows-x86_64.exe
 
 language: sh
 filter_secrets: false
@@ -30,43 +30,13 @@ env:
     - PATH=$HOME/miniconda/bin:$TRAVIS_BUILD_DIR/pytheas/tools/bin:$PATH
 
 install: #install miniconda, create test environment, install package dependencies
-  - echo $PATH
-  - ls
-  - ls $HOME
-  # - echo $DYLD_LIBRARY_PATH
-  # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
+  - make pyinstall
+  - make onelab-$TRAVIS_OS_NAME
 
 
-  - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
-  - ./miniconda.exe /D=$HOME/miniconda
-  # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
-  # - choco install miniconda3 --params="/D:$HOME/miniconda"
-  - set
-  - ls
-  - ls $HOME
-  - ls $HOME/AppData
-  - ls $HOME/Application Data
-  - echo $PATH
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda config --add channels conda-forge
-  - conda update -q --all
-  - conda info -a
-  - conda create -q -n testenv python=3
+script: #run tests
   - source activate testenv
-  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
-  - pip install -r requirements.txt
-  - pip install -e .
-  - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc
+  - pytest -s --cov=./
 
-  # - make pyinstall
-  # - make onelab-$TRAVIS_OS_NAME
-  # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
-
-
-# script: #run tests
-#   - source activate testenv
-#   - pytest -s --cov=./
-#
-# after_success: #make the doc and push to gh-pages the run code coverage analysis
-#   - make post
+after_success: #make the doc and push to gh-pages the run code coverage analysis
+  - make post
