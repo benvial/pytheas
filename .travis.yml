@@ -38,8 +38,10 @@ install: #install miniconda, create test environment, install package dependenci
   # - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
   # - ./miniconda.exe /D=$HOME/miniconda
   # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
-  - choco install miniconda3  --params="'/AddToPath:1'"
+  - choco install miniconda3  --params="'/D=$HOME/miniconda'"
   - hash -r
+  - which conda
+  - where conda
   - conda config --set always_yes yes --set changeps1 no
   - conda config --add channels conda-forge
   - conda update -q --all
