@@ -1,13 +1,16 @@
 
 matrix:
   include:
-  - os: linux
-    env: 
-      MINICONDA=Miniconda3-latest-Linux-x86_64.sh
-  - os: osx
-    env: 
-      MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
-      DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
+  # - os: linux
+  #   env:
+  #     MINICONDA=Miniconda3-latest-Linux-x86_64.sh
+  # - os: osx
+  #   env:
+  #     MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
+  #     DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
+  - os: windows
+    env:
+      MINICONDA=Miniconda3-latest-Windows-x86_64.exe
 
 language: minimal
 
@@ -28,13 +31,13 @@ install: #install miniconda, create test environment, install package dependenci
   - echo $PATH
   - echo $DYLD_LIBRARY_PATH
   - make pyinstall
-  - make onelab-$TRAVIS_OS_NAME
-  - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
+  # - make onelab-$TRAVIS_OS_NAME
+  # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
 
-  
-script: #run tests
-  - source activate testenv
-  - pytest -s --cov=./
 
-after_success: #make the doc and push to gh-pages the run code coverage analysis
-  - make post
+# script: #run tests
+#   - source activate testenv
+#   - pytest -s --cov=./
+#
+# after_success: #make the doc and push to gh-pages the run code coverage analysis
+#   - make post
