@@ -49,6 +49,9 @@ onelab-linux:
 onelab-osx:
 	bash .ci/install_onelab_prebuilt.sh osx
 	
+pyinstall:
+	bash /.ci/pyinstall.sh
+	
 post:
 	bash /.ci/post.sh
 
