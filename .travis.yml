@@ -32,8 +32,25 @@ env:
 install: #install miniconda, create test environment, install package dependencies
   - echo $PATH
   # - echo $DYLD_LIBRARY_PATH
-  - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
-  - make pyinstall
+  # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
+  # - make pyinstall
+
+  - wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe;
+  - bash miniconda.exe -b -p $HOME/miniconda
+  - hash -r
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
+  - conda update -q --all
+  - conda info -a
+  - onda create -q -n testenv python=3
+  - source activate testenv
+  - conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
+  - pip install -r requirements.txt
+  - pip install -e .
+  - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc
+
+
+
   # - make onelab-$TRAVIS_OS_NAME
   # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
 
