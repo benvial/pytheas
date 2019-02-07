@@ -2,6 +2,7 @@
 
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
+  source activate testenv
   set -e
   pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow codecov codacy-coverage
   cd docs

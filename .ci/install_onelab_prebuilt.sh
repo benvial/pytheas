@@ -47,7 +47,7 @@ esac
 
 echo "INSTALLING GMSH"
 echo '----------------'
-wget -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
+wget -q -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
 mv $GMSH_NAME gmsh_tmp
@@ -63,7 +63,7 @@ rm -rf gmsh_tmp
 echo "INSTALLING GETDP"
 echo '----------------'
 
-wget -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
+wget -q -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
 mv $GETDP_NAME getdp_tmp

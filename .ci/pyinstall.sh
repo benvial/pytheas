@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.sh;
+wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.sh;
 bash miniconda.sh -b -p $HOME/miniconda
 hash -r
 conda config --set always_yes yes --set changeps1 no

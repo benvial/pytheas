@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 VERSION=$(shell python3 -c "import pytheas; print(pytheas.__version__)")
 
 default:
@@ -31,6 +33,7 @@ publish: tag pipy
 
 test:
 	pytest -s --cov=./
+	
 
 clean:
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
@@ -51,7 +54,13 @@ onelab-osx:
 	
 pyinstall:
 	bash .ci/pyinstall.sh
-	
+
+
+citest:
+	source activate testenv ; \
+	pytest -s --cov=./ ; \
+
+
 post:
 	bash .ci/post.sh
 
