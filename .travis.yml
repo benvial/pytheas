@@ -41,7 +41,7 @@ install:
   - export DYLD_LIBRARY_PATH="$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH"
   - getdp --info
   - gmsh --info
-  - mkdir  $HOME/.matplotlib
+  - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc 
   - echo "backend: TkAgg" >> $HOME/.matplotlib/matplotlibrc 
 
 
