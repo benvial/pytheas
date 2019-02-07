@@ -37,10 +37,10 @@ install: #install miniconda, create test environment, install package dependenci
   # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
 
 
-  # - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
-  # - ./miniconda.exe /D=$HOME/miniconda
+  - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
+  - ./miniconda.exe /D=$HOME/miniconda
   # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
-  - choco install miniconda3 --params="/D:$HOME/miniconda"
+  # - choco install miniconda3 --params="/D:$HOME/miniconda"
   - set
   - ls
   - ls $HOME
