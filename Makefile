@@ -48,5 +48,8 @@ onelab-linux:
 
 onelab-osx:
 	bash .ci/install_onelab_prebuilt.sh osx
+	
+post:
+	bash /.ci/post.sh
 
 save: clean style gh
