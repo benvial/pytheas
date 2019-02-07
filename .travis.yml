@@ -32,7 +32,7 @@ install: #install miniconda, create test environment, install package dependenci
 
   
 script: #run tests
-  -	make citest
+  - make citest
 
 after_success: #make the doc and push to gh-pages the run code coverage analysis
   - make post
