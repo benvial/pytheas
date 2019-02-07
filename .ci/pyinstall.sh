@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
-  sudo apt-get install libglu1-mesa libxi-dev libxmu-dev libglu1-mesa-dev
+  sudo apt-get update
+  sudo apt-get install libglu1-mesa
 fi
 
 
