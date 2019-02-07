@@ -6,8 +6,6 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
 fi
 
 
-
-
 wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.sh;
 bash miniconda.sh -b -p $HOME/miniconda
 hash -r

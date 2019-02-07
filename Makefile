@@ -1,4 +1,10 @@
-SHELL := /bin/bash
+
+ifeq ($(TRAVIS_OS_NAME),windows)
+	SHELL := cmd
+else
+	SHELL := /bin/bash
+endif
+
 
 VERSION=$(shell python3 -c "import pytheas; print(pytheas.__version__)")
 
@@ -33,7 +39,7 @@ publish: tag pipy
 
 test:
 	pytest -s --cov=./
-	
+
 
 clean:
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
@@ -51,7 +57,7 @@ onelab-linux:
 
 onelab-osx:
 	bash .ci/install_onelab_prebuilt.sh osx
-	
+
 pyinstall:
 	bash .ci/pyinstall.sh
 
