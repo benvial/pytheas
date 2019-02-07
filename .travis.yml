@@ -27,6 +27,8 @@ env:
 
 install: #install miniconda, create test environment, install package dependencies
   - echo $PATH
+  - echo $DYLD_LIBRARY_PATH
+  - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
   - make pyinstall
   - make onelab-$TRAVIS_OS_NAME
 

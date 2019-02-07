@@ -14,3 +14,6 @@ conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
 pip install -r requirements.txt
 pip install -e .
 mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc 
+
+
+sudo apt-get install libglu1
