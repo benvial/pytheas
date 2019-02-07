@@ -2,7 +2,6 @@
 matrix:
   include:
   - os: linux
-    dist: trusty
     env: 
       MINICONDA=Miniconda3-latest-Linux-x86_64.sh
   - os: osx
