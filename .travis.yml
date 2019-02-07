@@ -32,8 +32,7 @@ notifications:
 install: #install miniconda, create test environment, install package dependencies
   - echo $PATH
   # - echo $DYLD_LIBRARY_PATH
-  - if: os = windows
-    choco install make
+  - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
   - make pyinstall
   # - make onelab-$TRAVIS_OS_NAME
   # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
