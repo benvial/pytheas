@@ -34,12 +34,15 @@ install: #install miniconda, create test environment, install package dependenci
   - ls $HOME
   # - echo $DYLD_LIBRARY_PATH
   # - if [[ ( "$TRAVIS_OS_NAME" == "windows" ) ]]; then choco install make; fi
-  # - make pyinstall
+
 
   # - wget https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.exe
   # - ./miniconda.exe /D=$HOME/miniconda
   # - ./miniconda.exe /InstallationType=JustMe /RegisterPython=0 /D=$HOME/miniconda
   - choco install miniconda3 --params="'/D:$HOME/miniconda  /AddToPath:1 '"
+  - set
+  - echo $PATH
+  - refreshenv
   - echo $PATH
   # - ls $HOME/miniconda
   - hash -r
@@ -55,7 +58,7 @@ install: #install miniconda, create test environment, install package dependenci
   - mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc
 
 
-
+  # - make pyinstall
   # - make onelab-$TRAVIS_OS_NAME
   # - ls $TRAVIS_BUILD_DIR/pytheas/tools/bin
 
