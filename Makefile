@@ -50,9 +50,9 @@ onelab-osx:
 	bash .ci/install_onelab_prebuilt.sh osx
 	
 pyinstall:
-	bash /.ci/pyinstall.sh
+	bash .ci/pyinstall.sh
 	
 post:
-	bash /.ci/post.sh
+	bash .ci/post.sh
 
 save: clean style gh
