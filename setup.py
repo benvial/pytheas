@@ -28,7 +28,7 @@ setup(
     long_description=read("README.rst"),
     long_description_content_type="text/x-rst",
     url=about["__website__"],
-    project_urls={"Documentation": "https://benvial.github.io/pytheas"},
+    project_urls={"Documentation": about["__website__"]},
     license=about["__license__"],
     platforms="any",
     install_requires=required,
