@@ -4,6 +4,7 @@
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
+  conda install --yes -n testenv tectonic
   pip install doctr sphinx sphinx_bootstrap_theme sphinx_gallery Pillow codecov codacy-coverage
   cd docs
   make html
