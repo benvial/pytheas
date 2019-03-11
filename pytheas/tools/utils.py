@@ -87,7 +87,9 @@ def refine_mesh(
         femio.mesh_model(
             fem.path_mesh, fem.path_bg_mesh, verbose=fem.gmsh_verbose, dim=dim
         )
-        bgm = "-bgm " + path_size_mesh
+
+        bgm = " -bgm {}".format(path_size_mesh)
+        bgm += " -merge {}".format(fem.path_bg_mesh)
         femio.mesh_model(
             fem.path_mesh,
             fem.path_geo,

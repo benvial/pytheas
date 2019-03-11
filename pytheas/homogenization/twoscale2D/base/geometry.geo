@@ -1,6 +1,8 @@
 
 Include "parameters.dat";
 
+l_carac = 0.5*(dx+dy);
+
 lc_host      = l_carac/(parmesh*Sqrt[Fabs[eps_host_re]]);
 lc_incl	     = l_carac/(parmesh_incl*Sqrt[Fabs[eps_incl_re]]);
 

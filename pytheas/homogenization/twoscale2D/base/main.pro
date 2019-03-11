@@ -233,8 +233,12 @@ PostOperation {
           EndIf
         	}
     }
-    /* { Name postop_fields_txt; NameOfPostProcessing postpro ;
+  { Name postop_fields_txt; NameOfPostProcessing postpro ;
         Operation {
+              Print [ epsilonr_xx , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+              { Niy-1, Nix-1} ,Format SimpleTable, File "epsilonr_xx.txt" ];
+              Print [ epsilonr_yy , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+              { Niy-1, Nix-1} ,Format SimpleTable, File "epsilonr_yy.txt" ];
               Print [ solution , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
               { Niy-1, Nix-1} ,Format SimpleTable, File "v.txt" ];
               Print [ vx , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
@@ -244,6 +248,6 @@ PostOperation {
 
 
         	}
-    } */
+    }
 
 }

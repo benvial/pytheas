@@ -1,8 +1,11 @@
 #!/bin/bash
 
-export ONELAB_PATH=$PWD/pytheas/tools/bin
+# export ONELAB_PATH=$PWD/pytheas/tools/bin
 # export VERSION="stable"
-export VERSION="dev"
+# export VERSION="dev"
+
+ONELAB_PATH=$2
+VERSION="$3"
 
 if [ $VERSION == "stable" ]; then
   export GMSH_VERSION="4.0.1"
@@ -13,11 +16,14 @@ elif [ $VERSION == "dev" ]; then
 else
   exit
 fi
-
-rm -rf $ONELAB_PATH
+#
+# rm -rf $ONELAB_PATH
 mkdir $ONELAB_PATH
 cd $ONELAB_PATH
-
+#
+#
+echo "Installing onelab $VERSION for $1 in $ONELAB_PATH"
+echo "-------------------------------------------------"
 
 
 case $1 in
@@ -43,11 +49,9 @@ esac
 
 # gmsh
 
-
-
-echo "INSTALLING GMSH"
+echo "installing gmsh"
 echo '----------------'
-wget -q -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
+wget -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
 tar -xvf gmsh.tgz
 rm gmsh.tgz
 mv $GMSH_NAME gmsh_tmp
@@ -60,10 +64,10 @@ rm -rf gmsh_tmp
 
 # getdp
 
-echo "INSTALLING GETDP"
+echo "installing getdp"
 echo '----------------'
 
-wget -q -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
+wget -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
 tar -xvf getdp.tgz
 rm getdp.tgz
 mv $GETDP_NAME getdp_tmp

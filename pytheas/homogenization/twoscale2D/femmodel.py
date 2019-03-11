@@ -35,6 +35,23 @@ class TwoScale2D(BaseFEM):
     def corners_des(self):
         return -self.dx / 2, +self.dx / 2, -self.dy / 2, +self.dy / 2
 
+    @property
+    def domX_L(self):
+        return -self.dx / 2
+
+    @property
+    def domX_R(self):
+        return self.dx / 2
+
+    @property
+    def domY_B(self):
+        return -self.dy / 2
+
+    @property
+    def domY_T(self):
+        # + self.h_pmltop
+        return self.dy / 2
+
     def make_param_dict(self):
         param_dict = super().make_param_dict()
         param_dict["y_flag"] = int(self.y_flag)
@@ -74,6 +91,10 @@ class TwoScale2D(BaseFEM):
         # eps_eff = np.linalg.inv(epsinv_eff)
         eps_eff = epsinv_eff.T / np.linalg.det(epsinv_eff)
         return eps_eff
+
+    def get_field_map(self, name):
+        field = femio.load_table(self.tmp_dir + "/" + name)
+        return np.flipud(field.reshape((self.Niy, self.Nix))).T
 
     def compute_epsilon_eff(self, postpro_fields=False):
         self.y_flag = False
