@@ -155,6 +155,7 @@ class Periodic2D(BaseFEM):
         self.mu_des = mu_des
         self.dom_des = 4000
         self.nb_incl = 1
+        self.aniso = False
         # if not isinstance(self.eps_layer1, complex):
         #     raise TypeError("bar must be a complex number")
 
@@ -244,6 +245,11 @@ class Periodic2D(BaseFEM):
         WRA[2] = a * (np.sqrt(self.eps_sup.real) - b)
         WRA[3] = a * (np.sqrt(self.eps_sub.real) - b)
         return int(max(abs(WRA)))
+
+    def make_param_dict(self):
+        param_dict = super().make_param_dict()
+        param_dict["aniso"] = int(self.aniso)
+        return param_dict
 
     def postpro_absorption(self):
         """ Compute the absorption coefficient

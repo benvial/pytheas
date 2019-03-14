@@ -86,6 +86,9 @@ class TwoScale2D(BaseFEM):
     def postpro_effective_permittivity(self):
         phi = self.get_phi()
         int_inveps_xx, int_inveps_yy = self.get_int_inveps()
+        if self.python_verbose:
+            print("int_inveps_xx = ", int_inveps_xx)
+            print("phi = ", phi)
         V = self.get_vol()
         epsinv_eff = (np.diag([int_inveps_xx, int_inveps_yy]) + phi) / V
         # eps_eff = np.linalg.inv(epsinv_eff)

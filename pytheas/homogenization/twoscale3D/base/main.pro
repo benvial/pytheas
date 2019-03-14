@@ -47,36 +47,24 @@ Constraint {
 
 		{Name Bloch;
 		    Case {
-                    { Region SurfBlochXp; Type LinkCplx ; RegionRef SurfBlochXm;
-                      Coefficient Complex[1.0,0.0]; Function Vector[$X-dx,$Y,$Z] ;
-                    }
-                    { Region SurfBlochYp; Type LinkCplx ; RegionRef SurfBlochYm;
-                      Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y-dy,$Z] ;
-                    }
-                    { Region SurfBlochZp; Type LinkCplx ; RegionRef SurfBlochZm;
-                      Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y,$Z-dz] ;
-                    }
+              { Region SurfBlochXp; Type LinkCplx ; RegionRef SurfBlochXm;
+                Coefficient Complex[1.0,0.0]; Function Vector[$X-dx,$Y,$Z] ;
+              }
+              { Region SurfBlochYp; Type LinkCplx ; RegionRef SurfBlochYm;
+                Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y-dy,$Z] ;
+              }
+              { Region SurfBlochZp; Type LinkCplx ; RegionRef SurfBlochZm;
+                Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y,$Z-dz] ;
+              }
 			 }
 		}
 }
 
 
 Jacobian {
-  { Name JVol ;
-    Case {
-      { Region All ; Jacobian Vol ; }
-    }
-  }
-  { Name JSur ;
-    Case {
-      { Region All ; Jacobian Sur ; }
-    }
-  }
-  { Name JLin ;
-    Case {
-      { Region All ; Jacobian Lin ; }
-    }
-  }
+			{ Name JVol ; Case { { Region All ; Jacobian Vol ; } } }
+			{ Name JSur ; Case { { Region All ; Jacobian Sur ; } }   }
+			{ Name JLin ; Case { { Region All ; Jacobian Lin ; } } }
 }
 
 Integration {
@@ -99,12 +87,12 @@ FunctionSpace {
   { Name Hgrad; Type Form0;
     BasisFunction {
       { Name sn;  NameOfCoef un;  Function BF_Node;    Support Region[Omega]; Entity NodesOf[Omega]; }
-//       { Name sn2; NameOfCoef un2; Function BF_Node_2E; Support Region[Omega]; Entity EdgesOf[Omega]; }
+//    { Name sn2; NameOfCoef un2; Function BF_Node_2E; Support Region[Omega]; Entity EdgesOf[Omega]; }
      }
     Constraint {
       { NameOfCoef un;  EntityType NodesOf ; NameOfConstraint Bloch; }
-//       { NameOfCoef un2; EntityType EdgesOf ; NameOfConstraint Dirichlet; }
-//       { NameOfCoef un2; EntityType EdgesOf ; NameOfConstraint Bloch; }
+//    { NameOfCoef un2; EntityType EdgesOf ; NameOfConstraint Dirichlet; }
+//    { NameOfCoef un2; EntityType EdgesOf ; NameOfConstraint Bloch; }
    }
   }
 }
@@ -112,31 +100,31 @@ FunctionSpace {
 Formulation {
 	    {Name annex_x; Type FemEquation;
     		Quantity {{ Name ux; Type Local; NameOfSpace Hgrad;}}
-		Equation {
-		Galerkin { [epsilonr[]*Dof{d ux} , {d ux}];
-                 		In Omega; Jacobian JVol; Integration Int_1; }
-                 Galerkin { [ -epsilonr[] * EX[] , {d ux} ];
-                  		In Omega; Jacobian JVol; Integration Int_1; }
-                }
+					Equation {
+						Galerkin { [epsilonr[]*Dof{d ux} , {d ux}];
+						In Omega; Jacobian JVol; Integration Int_1; }
+						Galerkin { [ -epsilonr[] * EX[] , {d ux} ];
+						In Omega; Jacobian JVol; Integration Int_1; }
             }
-            {Name annex_y; Type FemEquation;
-    		Quantity {{ Name uy; Type Local; NameOfSpace Hgrad;}}
-		Equation {
-		Galerkin { [epsilonr[]*Dof{d uy} , {d uy}];
-                 		In Omega; Jacobian JVol; Integration Int_1; }
-                 Galerkin { [ -epsilonr[] * EY[] , {d uy} ];
-                  		In Omega; Jacobian JVol; Integration Int_1; }
-                }
-            }
-            {Name annex_z; Type FemEquation;
-    		Quantity {{ Name uz; Type Local; NameOfSpace Hgrad;}}
-		Equation {
-		Galerkin { [epsilonr[]*Dof{d uz} , {d uz}];
-                 		In Omega; Jacobian JVol; Integration Int_1; }
-                 Galerkin { [ -epsilonr[] * EZ[] , {d uz} ];
-                  		In Omega; Jacobian JVol; Integration Int_1; }
-                }
-            }
+      }
+      {Name annex_y; Type FemEquation;
+			Quantity {{ Name uy; Type Local; NameOfSpace Hgrad;}}
+					Equation {
+							Galerkin { [epsilonr[]*Dof{d uy} , {d uy}];
+							In Omega; Jacobian JVol; Integration Int_1; }
+							Galerkin { [ -epsilonr[] * EY[] , {d uy} ];
+							In Omega; Jacobian JVol; Integration Int_1; }
+					}
+			}
+				{Name annex_z; Type FemEquation;
+					Quantity {{ Name uz; Type Local; NameOfSpace Hgrad;}}
+						Equation {
+							Galerkin { [epsilonr[]*Dof{d uz} , {d uz}];
+							In Omega; Jacobian JVol; Integration Int_1; }
+							Galerkin { [ -epsilonr[] * EZ[] , {d uz} ];
+							In Omega; Jacobian JVol; Integration Int_1; }
+						}
+					}
 
         }
 

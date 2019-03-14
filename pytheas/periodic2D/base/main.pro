@@ -84,13 +84,30 @@ Function{
     epsilonr[pmltop]         = eps_sup_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
     epsilonr[pmlbot]         = eps_sub_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
 
+    If (aniso)
+        epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
+        epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
+        epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
+    EndIf
+
     If (inclusion_flag)
-      epsilonr[design]         = Complex[eps_des_re,eps_des_im] * TensorDiag[1,1,1];
+
       epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
       epsilonr_annex[incl]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
+      If (aniso)
+          epsilonr[design] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+        Else
+          epsilonr[design]         = Complex[eps_des_re,eps_des_im] * TensorDiag[1,1,1];
+        EndIf
     Else
+
+    If (aniso)
+        epsilonr[design] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
+      Else
       epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
-      /* epsilonr[design]         = -2* TensorDiag[1,1,1]; */
+
+      EndIf
+
     EndIf
 
     epsilonr_annex[sup]      = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
@@ -165,17 +182,19 @@ Function{
       ycut_sup~{i} = ycut_sup_min + i*(ycut_sup_max-ycut_sup_min)/(nb_slice-1);
     EndFor
 
-    coef_Q[] = 0.5 * epsilon0*omega0*Fabs[Im[CompZZ[epsilonr[]]]   ]  / (Pinc*d);
+
 
 
     If (TE_flag)
+          coef_Q[] = 0.5 * epsilon0*omega0*Fabs[Im[CompZZ[epsilonr[]]]   ]  / (Pinc*d);
           dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(j[]*omega0*mu0*CompXX[mur[]]); // TE case H = dual[{d u}]
           dual_tot[] = dual[$1] + dual_1[] * CompXX[mur_annex[]] /CompXX[mur[]] ;
           absorption[]  =  coef_Q[] * SquNorm[$1 + u_1[]] ;
     Else
           dual[] = Vector[ CompY[ $1 ], - CompX[ $1 ], 0 ]/(-j[]*omega0*epsilon0*CompXX[epsilonr[]]); // TM case E = dual[{d u}]
           dual_tot[] = -dual[$1] + dual_1[] * CompXX[epsilonr_annex[]] /CompXX[epsilonr[]] ;
-          absorption[]  =  coef_Q[] * ( SquNorm[  CompX[dual_tot[$1]] ] + SquNorm[CompY[dual_tot[$1]] ] );
+          coef_Q[] = 0.5 * epsilon0*omega0  / (Pinc*d);
+          absorption[]  = - coef_Q[] * ( Im[CompXX[ epsilonr[]]]  * SquNorm[CompX[dual_tot[$1]] ] + Im[CompYY[ epsilonr[]]] *SquNorm[CompY[dual_tot[$1]] ] );
 
     EndIf
 
