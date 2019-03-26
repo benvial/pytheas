@@ -56,10 +56,10 @@ style:
 	black setup.py pytheas/ tests/*.py
 
 onelab-linux:
-	bash .ci/install_onelab_prebuilt.sh linux $PWD/pytheas/tools/bin $ONELAB_VERSION
+	bash .ci/install_onelab_prebuilt.sh linux $(PWD)/pytheas/tools/bin $(ONELAB_VERSION)
 
 onelab-osx:
-	bash .ci/install_onelab_prebuilt.sh osx $PWD/pytheas/tools/bin $ONELAB_VERSION
+	bash .ci/install_onelab_prebuilt.sh osx $(PWD)/pytheas/tools/bin $(ONELAB_VERSION)
 
 pyinstall:
 	bash .ci/pyinstall.sh
