@@ -9,6 +9,8 @@ SHELL := /bin/bash
 
 VERSION=$(shell python3 -c "import pytheas; print(pytheas.__version__)")
 
+ONELAB_VERSION = "dev"
+
 default:
 	@echo "\"make save\"?"
 
@@ -54,10 +56,10 @@ style:
 	black setup.py pytheas/ tests/*.py
 
 onelab-linux:
-	bash .ci/install_onelab_prebuilt.sh linux
+	bash .ci/install_onelab_prebuilt.sh linux $PWD/pytheas/tools/bin $ONELAB_VERSION
 
 onelab-osx:
-	bash .ci/install_onelab_prebuilt.sh osx
+	bash .ci/install_onelab_prebuilt.sh osx $PWD/pytheas/tools/bin $ONELAB_VERSION
 
 pyinstall:
 	bash .ci/pyinstall.sh
