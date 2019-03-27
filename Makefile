@@ -41,7 +41,7 @@ gh:
 publish: tag pipy
 
 test:
-	pytest -s --cov=./
+	pytest ./tests -s --cov=./
 
 
 clean:

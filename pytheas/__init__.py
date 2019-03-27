@@ -18,6 +18,7 @@ from .scatt2D import *
 from .scatt3D import *
 from .periodic3D import *
 from .banddiag import *
-from .optim import *
+
+# from .optim import *
 from .homogenization import *
 from .tools import *
