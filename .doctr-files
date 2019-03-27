@@ -11,7 +11,9 @@
 ./_images/sphx_glr_plot_refractive_index_thumb.png
 ./_sources/auto_examples/index.rst.txt
 ./_sources/auto_examples/material/plot_refractive_index.rst.txt
+./_sources/auto_examples/material/sg_execution_times.rst.txt
 ./_sources/auto_examples/periodic2D/plot_diffraction_efficiencies.rst.txt
+./_sources/auto_examples/periodic2D/sg_execution_times.rst.txt
 ./_sources/gen_modules/pytheas.BaseFEM.rst.txt
 ./_sources/gen_modules/pytheas.Periodic2D.rst.txt
 ./_sources/gen_modules/pytheas.tools.femio.rst.txt
@@ -122,7 +124,9 @@
 ./_static/websupport.js
 ./auto_examples/index.html
 ./auto_examples/material/plot_refractive_index.html
+./auto_examples/material/sg_execution_times.html
 ./auto_examples/periodic2D/plot_diffraction_efficiencies.html
+./auto_examples/periodic2D/sg_execution_times.html
 ./gen_modules/pytheas.BaseFEM.html
 ./gen_modules/pytheas.Periodic2D.html
 ./gen_modules/pytheas.tools.femio.html

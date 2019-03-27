@@ -112,19 +112,19 @@
 <div class="sphx-glr-example-title section" id="simulating-diffraction-by-a-2d-metamaterial">
 <span id="sphx-glr-auto-examples-periodic2d-plot-diffraction-efficiencies-py"></span><h1>Simulating diffraction by a 2D metamaterial<a class="headerlink" href="#simulating-diffraction-by-a-2d-metamaterial" title="Permalink to this headline">¶</a></h1>
 <p>Finite element simulation of the diffraction of a plane wave a mono-periodic
-grating and calculation of diffraction efficiencies.</p>
-<p>First we import the required modules and class</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code source: Benjamin Vial</span>
+grating and calculation of diffraction efficiencies.
+First we import the required modules and class</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Code source: Benjamin Vial</span>
 <span class="c1"># License: MIT</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">pytheas</span> <span class="kn">import</span> <span class="n">genmat</span>
-<span class="kn">from</span> <span class="nn">pytheas</span> <span class="kn">import</span> <span class="n">Periodic2D</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">pytheas</span> <span class="k">import</span> <span class="n">genmat</span>
+<span class="kn">from</span> <span class="nn">pytheas</span> <span class="k">import</span> <span class="n">Periodic2D</span>
 </pre></div>
 </div>
 <p>Then we need to instanciate the class <code class="xref py py-class docutils literal notranslate"><span class="pre">FemModel</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span> <span class="o">=</span> <span class="n">Periodic2D</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span> <span class="o">=</span> <span class="n">Periodic2D</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>The model consist of a single unit cell with quasi-periodic boundary conditions
@@ -140,7 +140,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <li>PML bottom</li>
 </ul>
 <p>We define here the opto-geometric parameters:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># opto-geometric parameters  -------------------------------------------</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># opto-geometric parameters  -------------------------------------------</span>
 <span class="n">mum</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: period</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; superstrate</span>
@@ -171,7 +171,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 </div>
 <p>We then initialize the model (copying files, etc…) and mesh the unit
 cell using gmsh</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">getdp_verbose</span> <span class="o">=</span> <span class="mi">0</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">getdp_verbose</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">gmsh_verbose</span> <span class="o">=</span> <span class="mi">0</span>
 
 <span class="n">fem</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
@@ -179,10 +179,10 @@ cell using gmsh</p>
 </pre></div>
 </div>
 <p>We use the <code class="xref py py-mod docutils literal notranslate"><span class="pre">genmat</span></code> module to generate a material pattern</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">genmat</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">genmat</span><span class="o">.</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
 <span class="n">mat</span> <span class="o">=</span> <span class="n">genmat</span><span class="o">.</span><span class="n">MaterialDensity</span><span class="p">()</span>  <span class="c1"># instanciate</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">n_x</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_y</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">n_z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span> <span class="o">**</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span>  <span class="c1"># sizes</span>
-<span class="n">mat</span><span class="o">.</span><span class="n">xsym</span> <span class="o">=</span> <span class="bp">True</span>  <span class="c1"># symmetric with respect to x?</span>
+<span class="n">mat</span><span class="o">.</span><span class="n">xsym</span> <span class="o">=</span> <span class="kc">True</span>  <span class="c1"># symmetric with respect to x?</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">p_seed</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">mat_rand</span>  <span class="c1"># fix the pattern random seed</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">nb_threshold</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># number of materials</span>
 <span class="n">mat</span><span class="o">.</span><span class="n">_threshold_val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">threshold_val</span><span class="p">)</span>
@@ -193,35 +193,35 @@ cell using gmsh</p>
 </div>
 <img alt="../../_images/sphx_glr_plot_diffraction_efficiencies_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_diffraction_efficiencies_001.png" />
 <p>We now assign the permittivity</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">register_pattern</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">_threshold_val</span><span class="p">)</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">matprop_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mi">4</span> <span class="o">-</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="mi">1j</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># refractive index values</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">register_pattern</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">mat</span><span class="o">.</span><span class="n">_threshold_val</span><span class="p">)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">matprop_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mi">4</span> <span class="o">-</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># refractive index values</span>
 </pre></div>
 </div>
 <p>Now we’re ready to compute the solution:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">compute_solution</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">compute_solution</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Finally we compute the diffraction efficiencies, absorption and energy balance</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">effs_TE</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">diffraction_efficiencies</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;efficiencies TE&quot;</span><span class="p">,</span> <span class="n">effs_TE</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">effs_TE</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">diffraction_efficiencies</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;efficiencies TE&quot;</span><span class="p">,</span> <span class="n">effs_TE</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TE {&#39;R&#39;: 0.46900407769423136, &#39;T&#39;: 0.4218990091543974, &#39;Q&#39;: 0.110013630394683, &#39;B&#39;: 1.0009167172433118}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TE {&#39;R&#39;: 0.4690040776942464, &#39;T&#39;: 0.4218990091544, &#39;Q&#39;: 0.1100136303946861, &#39;B&#39;: 1.0009167172433324}
 </pre></div>
 </div>
 <p>It is fairly easy to switch to TM polarization:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TM&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TM&quot;</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">compute_solution</span><span class="p">()</span>
 <span class="n">effs_TM</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">diffraction_efficiencies</span><span class="p">()</span>
-<span class="k">print</span><span class="p">(</span><span class="s2">&quot;efficiencies TM&quot;</span><span class="p">,</span> <span class="n">effs_TM</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;efficiencies TM&quot;</span><span class="p">,</span> <span class="n">effs_TM</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.3012128899202832, &#39;T&#39;: 0.653761311177237, &#39;Q&#39;: 0.04339047619570129, &#39;B&#39;: 0.9983646772932214}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.30121288992028283, &#39;T&#39;: 0.6537613111772456, &#39;Q&#39;: 0.04339047619570147, &#39;B&#39;: 0.9983646772932299}
 </pre></div>
 </div>
-<p><strong>Total running time of the script:</strong> ( 0 minutes  2.500 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.792 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-periodic2d-plot-diffraction-efficiencies-py">
 <div class="sphx-glr-download docutils container">
 <a class="reference download internal" download="" href="../../_downloads/fa7fc7b13469565449b774cd95f63ca6/plot_diffraction_efficiencies.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_diffraction_efficiencies.py</span></code></a></div>
@@ -261,7 +261,7 @@ cell using gmsh</p>
         <div class="footer-copyright">
           <p>
               &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
           
           </p>
 
@@ -281,7 +281,7 @@ cell using gmsh</p>
       </p>
       <p>
           &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.4.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
       </p>
     </div> -->
   </footer>

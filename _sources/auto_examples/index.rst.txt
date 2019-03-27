@@ -1,5 +1,9 @@
 :orphan:
 
+
+
+.. _sphx_glr_auto_examples:
+
 .. _examples-index:
 
 Examples
@@ -9,6 +13,10 @@ Examples
 .. raw:: html
 
     <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_auto_examples_material:
 
 .. _material_examples:
 
@@ -22,7 +30,7 @@ generating material patterns.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Retrieve and plot the refractive index of a material in the refractiveindex.info data. ">
+    <div class="sphx-glr-thumbcontainer" tooltip="Retrieve and plot the refractive index of a material in the refractiveindex.info data.">
 
 .. only:: html
 
@@ -42,6 +50,10 @@ generating material patterns.
 .. raw:: html
 
     <div style='clear:both'></div>
+
+
+
+.. _sphx_glr_auto_examples_periodic2D:
 
 .. _periodic2D_examples:
 

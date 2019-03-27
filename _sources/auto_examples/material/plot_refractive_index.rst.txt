@@ -13,9 +13,7 @@ Importing refractive index from a database
 Retrieve and plot the refractive index of a material in the refractiveindex.info
 data.
 
-
-
-.. code-block:: python
+.. code-block:: default
 
 
     # Code source: Benjamin Vial
@@ -37,8 +35,7 @@ We will import the measured data from the reference `Johnson and Christy`_ [JC19
 We first specify the file :code:`yamlFile` we want to import:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     yamlFile = "main/Au/Johnson.yml"
@@ -54,8 +51,7 @@ We then get the wavelength bounds from the data (in microns) and create a
 wavelength range to interpolate:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     bounds = ri.get_wl_range(yamlFile)
@@ -70,8 +66,7 @@ wavelength range to interpolate:
 Then get the refractive index data:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     ncomplex = ri.get_complex_index(lambdas, yamlFile)
@@ -86,8 +81,7 @@ Then get the refractive index data:
 And finally plot it:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     plt.close("all")
@@ -116,7 +110,9 @@ And finally plot it:
     https://doi.org/10.1103/PhysRevB.6.4370
 
 
-**Total running time of the script:** ( 0 minutes  0.073 seconds)
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.323 seconds)
 
 
 .. _sphx_glr_download_auto_examples_material_plot_refractive_index.py:

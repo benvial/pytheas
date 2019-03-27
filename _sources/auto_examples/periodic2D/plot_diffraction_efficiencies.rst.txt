@@ -12,13 +12,10 @@ Simulating diffraction by a 2D metamaterial
 
 Finite element simulation of the diffraction of a plane wave a mono-periodic
 grating and calculation of diffraction efficiencies.
-
-
 First we import the required modules and class
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
 
@@ -39,8 +36,7 @@ First we import the required modules and class
 Then we need to instanciate the class :py:class:`FemModel`:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     fem = Periodic2D()
@@ -66,8 +62,7 @@ in the :math:`y` direction to truncate the semi infinite media. From top to bott
 We define here the opto-geometric parameters:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     # opto-geometric parameters  -------------------------------------------
@@ -109,8 +104,7 @@ We then initialize the model (copying files, etc...) and mesh the unit
 cell using gmsh
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     fem.getdp_verbose = 0
@@ -128,8 +122,7 @@ cell using gmsh
 We use the :py:mod:`genmat` module to generate a material pattern
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     genmat.np.random.seed(100)
@@ -156,8 +149,7 @@ We use the :py:mod:`genmat` module to generate a material pattern
 We now assign the permittivity
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     fem.register_pattern(mat.pattern, mat._threshold_val)
@@ -172,8 +164,7 @@ We now assign the permittivity
 Now we're ready to compute the solution:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     fem.compute_solution()
@@ -187,8 +178,7 @@ Now we're ready to compute the solution:
 Finally we compute the diffraction efficiencies, absorption and energy balance
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     effs_TE = fem.diffraction_efficiencies()
@@ -204,14 +194,13 @@ Finally we compute the diffraction efficiencies, absorption and energy balance
 
  .. code-block:: none
 
-    efficiencies TE {'R': 0.46900407769423136, 'T': 0.4218990091543974, 'Q': 0.110013630394683, 'B': 1.0009167172433118}
+    efficiencies TE {'R': 0.4690040776942464, 'T': 0.4218990091544, 'Q': 0.1100136303946861, 'B': 1.0009167172433324}
 
 
 It is fairly easy to switch to TM polarization:
 
 
-
-.. code-block:: python
+.. code-block:: default
 
 
     fem.pola = "TM"
@@ -228,10 +217,13 @@ It is fairly easy to switch to TM polarization:
 
  .. code-block:: none
 
-    efficiencies TM {'R': 0.3012128899202832, 'T': 0.653761311177237, 'Q': 0.04339047619570129, 'B': 0.9983646772932214}
+    efficiencies TM {'R': 0.30121288992028283, 'T': 0.6537613111772456, 'Q': 0.04339047619570147, 'B': 0.9983646772932299}
 
 
-**Total running time of the script:** ( 0 minutes  2.500 seconds)
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  2.792 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
