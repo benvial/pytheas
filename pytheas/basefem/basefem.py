@@ -326,7 +326,7 @@ class BaseFEM:
             argstr = "-slepc -eps_type krylovschur \
                        -st_ksp_type preonly \
                        -st_pc_type lu \
-                       -st_pc_factor_mat_solver_package mumps \
+                       -st_pc_factor_mat_solver_type mumps \
                        -eps_max_it 300 \
                        -eps_target 0.00001 \
                        -eps_target_real \

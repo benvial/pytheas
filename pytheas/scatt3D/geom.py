@@ -31,7 +31,7 @@ def make_geom(ext=False):
         "hy_des",
         char_length="lc_des",
     )
-    _, des = geom_oc.extrude(des, [0, 0, "hz_des"])
+    _, des, _ = geom_oc.extrude(des, [0, 0, "hz_des"])
 
     box = geom_oc.add_rectangle(
         ["-hx_box/2", "-hy_box/2", "-hz_box/2"],
@@ -39,7 +39,7 @@ def make_geom(ext=False):
         "hy_box",
         char_length="lc_host",
     )
-    _, box = geom_oc.extrude(box, [0, 0, "hz_box"])
+    _, box, _ = geom_oc.extrude(box, [0, 0, "hz_box"])
     # union = geom_oc.boolean_difference([box_], [des])
 
     pml1 = geom_oc.add_rectangle(
@@ -48,21 +48,21 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[0] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_c[0], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "-h_pml-hy_box/2", "-hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_xy[0] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_xy[0], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "-h_pml-hy_box/2", "hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[1] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_c[1], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["hx_box/2", "-h_pml-hy_box/2", "-h_pml-hz_box/2"],
@@ -70,21 +70,21 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[2] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_c[2], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["hx_box/2", "-h_pml-hy_box/2", "-hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_xy[1] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_xy[1], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["hx_box/2", "-h_pml-hy_box/2", "hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[3] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_c[3], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "hy_box/2", "-h_pml-hz_box/2"],
@@ -92,21 +92,21 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[4] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_c[4], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "hy_box/2", "-hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_xy[2] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_xy[2], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "hy_box/2", "hz_box/2"],
         "h_pml",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[5] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_c[5], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["hx_box/2", "hy_box/2", "-h_pml-hz_box/2"],
@@ -114,15 +114,15 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_c[6] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_c[6], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["hx_box/2", "hy_box/2", "-hz_box/2"], "h_pml", "h_pml", char_length="lc_pml"
     )
-    _, pml_xy[3] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_xy[3], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["hx_box/2", "hy_box/2", "hz_box/2"], "h_pml", "h_pml", char_length="lc_pml"
     )
-    _, pml_c[7] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_c[7], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["-hx_box/2", "-h_pml-hy_box/2", "-h_pml-hz_box/2"],
@@ -130,21 +130,21 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_yz[0] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_yz[0], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-hx_box/2", "-h_pml-hy_box/2", "-hz_box/2"],
         "hx_box",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_y[0] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_y[0], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["-hx_box/2", "-h_pml-hy_box/2", "hz_box/2"],
         "hx_box",
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_yz[1] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_yz[1], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["-hx_box/2", "hy_box/2", "-h_pml-hz_box/2"],
@@ -152,15 +152,15 @@ def make_geom(ext=False):
         "h_pml",
         char_length="lc_pml",
     )
-    _, pml_yz[2] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_yz[2], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-hx_box/2", "hy_box/2", "-hz_box/2"], "hx_box", "h_pml", char_length="lc_pml"
     )
-    _, pml_y[1] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_y[1], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["-hx_box/2", "hy_box/2", "hz_box/2"], "hx_box", "h_pml", char_length="lc_pml"
     )
-    _, pml_yz[3] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_yz[3], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "-hy_box/2", "-h_pml-hz_box/2"],
@@ -168,21 +168,21 @@ def make_geom(ext=False):
         "hy_box",
         char_length="lc_pml",
     )
-    _, pml_xz[0] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_xz[0], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "-hy_box/2", "-hz_box/2"],
         "h_pml",
         "hy_box",
         char_length="lc_pml",
     )
-    _, pml_x[0] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_x[0], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["-h_pml-hx_box/2", "-hy_box/2", "hz_box/2"],
         "h_pml",
         "hy_box",
         char_length="lc_pml",
     )
-    _, pml_xz[1] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_xz[1], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
 
     pml1 = geom_oc.add_rectangle(
         ["hx_box/2", "-hy_box/2", "-h_pml-hz_box/2"],
@@ -190,15 +190,15 @@ def make_geom(ext=False):
         "hy_box",
         char_length="lc_pml",
     )
-    _, pml_xz[2] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_xz[2], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["hx_box/2", "-hy_box/2", "-hz_box/2"], "h_pml", "hy_box", char_length="lc_pml"
     )
-    _, pml_x[1] = geom_oc.extrude(pml2, [0, 0, "hz_box"])
+    _, pml_x[1], _ = geom_oc.extrude(pml2, [0, 0, "hz_box"])
     pml3 = geom_oc.add_rectangle(
         ["hx_box/2", "-hy_box/2", "hz_box/2"], "h_pml", "hy_box", char_length="lc_pml"
     )
-    _, pml_xz[3] = geom_oc.extrude(pml3, [0, 0, "h_pml"])
+    _, pml_xz[3], _ = geom_oc.extrude(pml3, [0, 0, "h_pml"])
     #
 
     pml1 = geom_oc.add_rectangle(
@@ -207,11 +207,11 @@ def make_geom(ext=False):
         "hy_box",
         char_length="lc_pml",
     )
-    _, pml_z[0] = geom_oc.extrude(pml1, [0, 0, "h_pml"])
+    _, pml_z[0], _ = geom_oc.extrude(pml1, [0, 0, "h_pml"])
     pml2 = geom_oc.add_rectangle(
         ["-hx_box/2", "-hy_box/2", "hz_box/2"], "hx_box", "hy_box", char_length="lc_pml"
     )
-    _, pml_z[1] = geom_oc.extrude(pml2, [0, 0, "h_pml"])
+    _, pml_z[1], _ = geom_oc.extrude(pml2, [0, 0, "h_pml"])
 
     sph = geom_oc.add_ball(["x_sph", "y_sph", "z_sph"], "R_sph", char_length="lc_sph")
     bkg = geom_oc.boolean_difference([box], [sph, des])
@@ -258,7 +258,7 @@ def make_geom(ext=False):
             "hy_des",
             char_length="lc_des",
         )
-        _, des = geom_oc.extrude(des, [0, 0, "hz_des"])
+        _, des, _ = geom_oc.extrude(des, [0, 0, "hz_des"])
 
     printpoint = geom_oc.add_point([0, 0, 0])
 
