@@ -37,7 +37,7 @@ install: #install miniconda, create test environment, install package dependenci
 
 script: #run tests
   - source activate testenv
-  - make test
+  - pytest ./tests -s --cov=./
 
 after_success: #make the doc and push to gh-pages the run code coverage analysis
   - make post

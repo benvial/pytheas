@@ -31,6 +31,7 @@ setup(
     project_urls={"Documentation": about["__website__"]},
     license=about["__license__"],
     platforms="any",
+    include_package_data=True,
     install_requires=required,
     extras_require={
         "all": ["pipdate >=0.3.0, <0.4.0"],
