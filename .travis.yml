@@ -4,6 +4,7 @@
 matrix:
   include:
   - os: linux
+    dist: xenial
     env:
       MINICONDA=Miniconda3-latest-Linux-x86_64.sh
   - os: osx

@@ -2,7 +2,7 @@
 
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   sudo apt-get update
-  sudo apt-get install libglu1-mesa
+  # sudo apt-get install libglu1-mesa
 fi
 
 
