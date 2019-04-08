@@ -31,6 +31,7 @@ Function{
     /* epsilonr[host]         = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1]; */
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
     If (aniso)
+
         epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
         epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
         epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
@@ -50,6 +51,12 @@ Function{
       epsilonr[Omega]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
     EndIf
   EndIf
+  If (aniso)
+    istore=6;
+  Else
+    istore=2;
+  EndIf
+
 
     xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],1];
 
@@ -59,6 +66,22 @@ Function{
 		Else
 			E[] = Vector[1,0,0] ;
 		EndIf
+
+    source[]=xsi[] * E[];
+
+
+
+
+  // Topology optimization
+/* DefineFunction[sadj]; */
+
+xsi_hom_target=1/6;
+coef_obj[] = 1;
+objective[] = coef_obj[] * (CompY[xsi[]*(Vector[0,1,0] + $1)] - xsi_hom_target)^2 ;
+adj_source_int[] =  2 * coef_obj[] * (Conj[ (CompY[xsi[]*(Vector[0,1,0] + $1)] - xsi_hom_target) * CompY[xsi[]] ]); //d_objective_du *ElementVol[]
+db_deps[] = Vector[0,0,0];
+dA_deps[] = 1;
+dEq_deps[] = db_deps[] - dA_deps[] * ($1);
 }
 
 // #############################################################################
@@ -67,12 +90,12 @@ Constraint {
 
 		{Name Bloch;
 		    Case {
-                    { Region SurfBlochRight; Type LinkCplx ; RegionRef SurfBlochLeft;
-                      Coefficient Complex[1.0,0.0]; Function Vector[$X-dx,$Y,$Z] ;
-                    }
-                    { Region SurfBlochTop; Type LinkCplx ; RegionRef SurfBlochBot;
-                      Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y-dy,$Z] ;
-                    }
+              { Region SurfBlochRight; Type LinkCplx ; RegionRef SurfBlochLeft;
+                Coefficient Complex[1.0,0.0]; Function Vector[$X-dx,$Y,$Z] ;
+              }
+              { Region SurfBlochTop; Type LinkCplx ; RegionRef SurfBlochBot;
+                Coefficient Complex[1.0,0.0]; Function Vector[$X,$Y-dy,$Z] ;
+              }
 			 }
 		}
 }
@@ -138,10 +161,12 @@ Formulation {
 	    {Name electrostat_scalar; Type FemEquation;
     		Quantity {{ Name u; Type Local; NameOfSpace Hgrad;}}
 		Equation {
-		Galerkin { [xsi[]*Dof{d u} , {d u}];
-                 		In Omega; Jacobian JVol; Integration Int_1; }
-                 Galerkin { [ xsi[] * E[] , {d u} ];
-                  		In Omega; Jacobian JVol; Integration Int_1; }
+		        Galerkin { [xsi[]*Dof{d u} , {d u}];
+         		In Omega; Jacobian JVol; Integration Int_1; }
+            Galerkin { [ ($Source ? source[] : 0) , {d u}];
+            In Omega; Jacobian JVol; Integration Int_1; }
+            Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]  : 0) , CompY[{d u}]];
+            In Omega; Jacobian JVol; Integration Int_1; }
                 }
             }
 
@@ -155,7 +180,22 @@ Resolution {
       { Name S; NameOfFormulation electrostat_scalar; Type ComplexValue;}
     }
     Operation {
+      Evaluate[$Source = 1, $SourceAdj = 0];
+      /* Evaluate[$sadj =0]; */
+
       Generate[S] ;  Solve[S] ;SaveSolution[S] ;
+      /* f[]=10; */
+
+      If (adjoint_flag)
+        PostOperation[postop_int_objective];
+        PostOperation[postop_dEq_deps];
+        PostOperation[postop_source_adj];
+        Evaluate[$Source = 0, $SourceAdj = 1];
+        /* Evaluate[$sadj = Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]]; */
+
+        GenerateRHSGroup[S, Omega]; SolveAgain[S] ; SaveSolution[S] ;
+        PostOperation[postop_adjoint];
+      EndIf
     }
   }
 
@@ -177,6 +217,12 @@ PostProcessing {
 							{ Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
           		{ Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name sadj_int_im  ; Value { Integral { [Im[ adj_source_int[{d u}]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name u_adj   ; Value { Local { [ {u} * ElementVol[]   ] ; In Omega; Jacobian JVol; } } }
+              { Name int_objective  ; Value { Integral { [objective[{d u}]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name dEq_deps_x   ; Value { Local { [CompX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name dEq_deps_y   ; Value { Local { [CompY[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
 
          }
     }
@@ -204,14 +250,49 @@ Operation {
 	EndIf
 		Print [ Ix[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixx.txt"];
 		Print [ Iy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixy.txt"];
-		Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
-		Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
-		Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Vol.txt"];
+
 	EndIf
+  Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
+  Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
+  Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Vol.txt"];
 	}
+}
+{ Name postop_source_adj; NameOfPostProcessing postpro ;
+    Operation {
+      Print[sadj_int_re, OnElementsOf Omega, StoreInField  istore];
+      Print[sadj_int_im, OnElementsOf Omega, StoreInField  istore+1];
+  }
+}
+{ Name postop_adjoint; NameOfPostProcessing postpro ;
+    Operation {
+    If (nodes_flag)
+      Print[u_adj, OnElementsOf Omega ,  Format NodeTable, File "adjoint.txt" ];
+    Else
+      Print[u_adj, OnElementsOf Omega , Depth 0, Format SimpleTable, File "adjoint.txt" ];
+    EndIf
+    /* Print [ u_adj , OnElementsOf Omega, File "u_adj.pos", Name "adjoint"]; */
+  }
 }
 
 
+    { Name postop_int_objective; NameOfPostProcessing postpro ;
+       Operation {
+         /*Print [ u  , OnElementsOf Omega, File "u.pos" ];*/
+       Print[ int_objective[Omega],  OnElementsOf PrintPoint, File "objective.txt" , Format SimpleTable ];
+       }
+    }
+
+    { Name postop_dEq_deps; NameOfPostProcessing postpro ;
+        Operation {
+          If (nodes_flag)
+            Print[dEq_deps_x, OnElementsOf Omega ,  Format NodeTable, File "dEq_deps_x.txt" ];
+            Print[dEq_deps_y, OnElementsOf Omega ,  Format NodeTable, File "dEq_deps_y.txt" ];
+          Else
+            Print[dEq_deps_x, OnElementsOf Omega ,   Depth 0, Format SimpleTable, File "dEq_deps_x.txt" ];
+            Print[dEq_deps_y, OnElementsOf Omega ,   Depth 0, Format SimpleTable, File "dEq_deps_y.txt" ];
+          EndIf
+      }
+    }
 }
 
 // #############################################################################

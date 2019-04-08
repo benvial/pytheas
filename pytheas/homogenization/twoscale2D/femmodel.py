@@ -84,13 +84,14 @@ class TwoScale2D(BaseFEM):
         return Ixx, Iyy
 
     def postpro_effective_permittivity(self):
-        phi = self.get_phi()
-        int_inveps_xx, int_inveps_yy = self.get_int_inveps()
-        if self.python_verbose:
-            print("int_inveps_xx = ", int_inveps_xx)
-            print("phi = ", phi)
         V = self.get_vol()
-        epsinv_eff = (np.diag([int_inveps_xx, int_inveps_yy]) + phi) / V
+        int_inveps_xx, int_inveps_yy = self.get_int_inveps()
+        int_inveps = np.diag([int_inveps_xx, int_inveps_yy]) / V
+        phi = self.get_phi() / V
+        if self.python_verbose:
+            print("int_inveps = ", int_inveps)
+            print("phi = ", phi)
+        epsinv_eff = int_inveps + phi
         # eps_eff = np.linalg.inv(epsinv_eff)
         eps_eff = epsinv_eff.T / np.linalg.det(epsinv_eff)
         return eps_eff
@@ -115,3 +116,6 @@ class TwoScale2D(BaseFEM):
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
         return eps_eff
+
+    def get_deq_deps(self):
+        return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
