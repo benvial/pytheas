@@ -226,7 +226,9 @@ class TopOpt:
         x_grid, y_grid = self.grid
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
-        v = interpolate.griddata(points, valdes, (xg, yg), method=interp_method)
+        v = interpolate.griddata(
+            points, valdes, (xg, yg), method=interp_method, fill_value=0
+        )
         return v
 
     def make_epsilon(self, p, filt=True, proj=True, grad=False):
@@ -246,7 +248,7 @@ class TopOpt:
     def get_adjoint(self):
         return self.fem.get_adjoint()
 
-    def get_deq_deps(self, interp_method="cubic"):
+    def get_deq_deps(self, interp_method="nearest"):
         deq_deps = self.fem.get_deq_deps()
 
         if self.fem.pola is "TM":

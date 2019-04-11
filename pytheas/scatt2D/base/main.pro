@@ -539,7 +539,7 @@ PostOperation {
         Else
           Print[u_adj, OnElementsOf Omega_design , Depth 0, Format SimpleTable, File "adjoint.txt" ];
         EndIf
-        Print [ u_adj , OnElementsOf Omega_design, File "u_adj.pos", Name "adjoint"];
+        /* Print [ u_adj , OnElementsOf Omega_design, File "u_adj.pos", Name "adjoint"]; */
       }
     }
     { Name postop_source_adj; NameOfPostProcessing postpro ;
