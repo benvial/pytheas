@@ -273,7 +273,7 @@ class TopOpt:
         adjoint = self.get_adjoint()
         deq_deps = self.get_deq_deps(interp_method=interp_method)
         _, depsilon_dp = self.make_epsilon(p, filt=filt, proj=proj, grad=True)
-        sens = self.dg_dp + 1 * np.real(adjoint * deq_deps * depsilon_dp)
+        sens = self.dg_dp + np.real(adjoint * deq_deps * depsilon_dp)
         return sens
 
     def plot_design(
