@@ -15,14 +15,19 @@ Group {
       Omega          = Region[{host}];
     EndIf
 
+
     // Boundaries
   	SurfBlochLeft   = Region[101];
   	SurfBlochRight  = Region[103];
   	SurfBlochTop   = Region[102];
   	SurfBlochBot  = Region[104];
 
+    Borders =  Region[{SurfBlochLeft, SurfBlochRight, SurfBlochTop, SurfBlochBot}];
+
   	// Points
   	PrintPoint      = Region[10000];
+
+    Omega1          = ElementsOf [{host}, Not Borders];
 }
 // #############################################################################
 
@@ -76,6 +81,8 @@ Function{
   // Topology optimization
 /* DefineFunction[sadj]; */
 
+ftest[]=Exp[-X[]^2/0.1^2-Y[]^2/0.1^2]*Y[];
+
 xsi_hom_target=1/18;
 coef_obj[] = 1/xsi_hom_target^2;
 int_xsi[] = CompYY[xsi[]]*(1 + CompY[$1]);
@@ -85,11 +92,14 @@ E1[]=E[];
 int_xsi_vect[] = xsi[]*( E1[] + $1);
 
 objective[] = int_xsi[$1] ;//coef_obj[] * (int_xsi[$1]  - xsi_hom_target)^2 ;
-/* adj_source_int[] = -2 * coef_obj[] * Conj[  (int_xsi_vect[$1]  - E1[]*xsi_hom_target) * xsi[] ]; //d_objective_du *ElementVol[] */
+/* adj_source_int[] = -2 * coef_obj[] * Conj[  (int_xsi_vect[$1]  - E1[]*xsi_hom_target*ElementVol[]) * xsi[] ]; //d_objective_du *ElementVol[] */
  /* 3+Sin[1.2*X[] -0.2]; */
+adj_source_int[]  = Sin[10.1*Y[]]*Exp[-X[]^2/0.1^2-Y[]^2/0.1^2];
+
+/* adj_source_int[]  = (CompY[$1]); */
 
 
-adj_source_int[] =  -2 * coef_obj[] * Conj[ (int_xsi[$1] - xsi_hom_target ) * CompYY[xsi[]]]; //d_objective_du *ElementVol[]
+/* adj_source_int[] = -2 * coef_obj[] * ftest[] /CompYY[xsi[]] ; //d_objective_du *ElementVol[] */
 
 
 adj_source_int1[] = Conj[int_xsi[$1]];
@@ -181,18 +191,16 @@ Formulation {
 	    {Name electrostat_scalar; Type FemEquation;
     		Quantity {{ Name u; Type Local; NameOfSpace Hgrad;}}
 		Equation {
-		        Galerkin { [xsi[]*Dof{d u} , {d u}];
+		        Galerkin { [ xsi[] * Dof{d u} , {d u}];
          		In Omega; Jacobian JVol; Integration Int_1; }
             Galerkin { [ ($Source ? source[] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-
-
             Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}]  : 0) , {u}];
-            In Omega; Jacobian JVol; Integration Int_1; }
+            In Omega1 ;Jacobian JVol; Integration Int_1; }
             /* Galerkin { [ ($SourceAdj ? 1*xsi[]*E[] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; } */
-            /* Galerkin { [ ($SourceAdj ? adj_source_int[{d u}] : 0) , {d u}]; */
-            /* In Omega; Jacobian JVol; Integration Int_1; } */
+            /* Galerkin { [ ($SourceAdj ? adj_source_int[] : 0) , {u}];
+            In Omega; Jacobian JVol; Integration Int_1; } */
 
             /* Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{istore+2}, ScalarField[XYZ[], 0, 1 ]{istore+3}]*Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]  : 0) , {u}];
             In Omega; Jacobian JVol; Integration Int_1; } */
@@ -221,14 +229,13 @@ Resolution {
       /* f[]=10; */
 
       If (adjoint_flag)
+        PostOperation[postop_solution];
         PostOperation[postop_int_objective];
         PostOperation[postop_dEq_deps];
         PostOperation[postop_source_adj];
         Evaluate[$Source = 0, $SourceAdj = 1];
-        /* Evaluate[$sadj = Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]]; */
-
-
         GenerateRHSGroup[S, Omega]; SolveAgain[S] ; SaveSolution[S] ;
+        /* Generate[S] ;  Solve[S] ;SaveSolution[S] ; */
         PostOperation[postop_adjoint];
       EndIf
     }
@@ -259,8 +266,8 @@ PostProcessing {
               /* { Name sadj_var   ; Value { Local { [$sadj  ] ; In Omega; Jacobian JVol; } } } */
               /* { Name sadj_scalfield   ; Value { Local { [Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]  ] ; In Omega; Jacobian JVol; } } } */
 
-              { Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name sadj_int_im  ; Value { Integral { [Im[ adj_source_int[{d u}]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name sadj_int_re  ; Value { Integral { [Re[adj_source_int[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name sadj_int_im  ; Value { Integral { [Im[adj_source_int[{d u}]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name sadj_int_re1  ; Value { Integral { [Re[ adj_source_int1[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name sadj_int_im1  ; Value { Integral { [Im[ adj_source_int1[{d u}]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name sadj_int_re2  ; Value { Integral { [Re[ adj_source_int2[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -324,8 +331,8 @@ Operation {
       Print[sadj_int_re2, OnElementsOf Omega, StoreInField  istore+2];
       Print[sadj_int_im2, OnElementsOf Omega, StoreInField  istore+3]; */
       Print[sadj_re1, OnElementsOf Omega, File "sadj_re1.pos", Name "sadj_re1"];
-      Print[sadj_re1_times_gradu, OnElementsOf Omega, File "sadj_re1_times_gradu.pos", Name "sadj_re1_times_gradu"];
-      Print[solution, OnElementsOf Omega, File "u.pos", Name "u"];
+      /* Print[sadj_re1_times_gradu, OnElementsOf Omega, File "sadj_re1_times_gradu.pos", Name "sadj_re1_times_gradu"]; */
+      /* Print[solution, OnElementsOf Omega, File "u.pos", Name "u"]; */
   }
 }
 { Name postop_adjoint; NameOfPostProcessing postpro ;
@@ -342,7 +349,20 @@ Operation {
     /* Print [ sadj_scalfield , OnElementsOf Omega, File "sadj_scalfield.pos", Name "sadj_scalfield"]; */
   }
 }
+{ Name postop_solution; NameOfPostProcessing postpro ;
+    Operation {
+    If (nodes_flag)
+      Print[solution, OnElementsOf Omega ,  Format NodeTable, File "u.txt" ];
+    Else
+      Print[solution, OnElementsOf Omega , Depth 0, Format SimpleTable, File "u.txt" ];
+    EndIf
+    Print [ solution , OnElementsOf Omega, File "u.pos", Name "solution"];
 
+    /* Print [ sadj_var , OnElementsOf Omega, File "sadj_var.pos", Name "sadj_var"]; */
+
+    /* Print [ sadj_scalfield , OnElementsOf Omega, File "sadj_scalfield.pos", Name "sadj_scalfield"]; */
+  }
+}
 
     { Name postop_int_objective; NameOfPostProcessing postpro ;
        Operation {

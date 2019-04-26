@@ -78,6 +78,9 @@ class TwoScale2D(BaseFEM):
     def get_vol(self):
         return femio.load_table(self.tmppath("Vol.txt"))
 
+    def get_solution(self):
+        return femio.load_table(self.tmppath("u.txt"))
+
     def get_int_inveps(self):
         Ixx = femio.load_table(self.tmppath("I_inveps_xx.txt"))
         Iyy = femio.load_table(self.tmppath("I_inveps_yy.txt"))
