@@ -163,8 +163,6 @@ class Periodic2D(BaseFEM):
         # int: number of diffraction orders
         # for postprocessing diffraction efficiencies
         # N_d_order = 0
-        self.orders = False
-        self.cplx_effs = False
         # int: number of x integration points
         # for postprocessing diffraction efficiencies
         self.npt_integ = 1000
@@ -184,7 +182,8 @@ class Periodic2D(BaseFEM):
 
         # topology optimization   ------------------------
         self.adjoint = False
-        self.rtar = 1
+        self.r_tar = 1 + 0j
+        self.t_tar = 0 + 0j
 
     @property
     def scan_dist(self):
@@ -303,7 +302,7 @@ class Periodic2D(BaseFEM):
         field = np.flipud(field.reshape((self.Niy, self.Nix))).T
         return field
 
-    def diffraction_efficiencies(self):
+    def diffraction_efficiencies(self, cplx_effs=False, orders=False):
         """Postprocess diffraction efficiencies"""
         self.print_progress("Processing diffraction efficiencies")
         if self.pola == "TE":
@@ -393,10 +392,10 @@ class Periodic2D(BaseFEM):
             print("    ------------------------")
             print("    Total        = ", "%0.6f" % (B))
 
-        if self.cplx_effs:
+        if cplx_effs:
             R, T = rcplx, tcplx
         else:
-            if self.orders:
+            if orders:
                 R, T = Rorders, Torders
         eff = dict()
         eff["R"] = R

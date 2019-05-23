@@ -32,7 +32,7 @@ Group {
 
 
     /* Omega_target    = Region[{layer1,layer2, design}]; */
-    Omega_target    = Region[{sup}];
+    Omega_target    = Region[{sub, sup}];
     Omega_design    = Region[{design}];
     // Boundaries
     SurfBlochLeft   = Region[101];
@@ -74,6 +74,10 @@ Function{
     sx               =   1.;
     sy[]             =   Complex[a_pml, -b_pml];
     sz               =   1.;
+    Id3[] = TensorDiag[1.,1.,1.];
+
+    r_tar[] = Complex[r_tar_re, r_tar_im];
+    t_tar[] = Complex[t_tar_re, t_tar_im];
 
     // Permittivities
     epsilonr[sup]            = Complex[eps_sup_re, eps_sup_im] * TensorDiag[1,1,1];
@@ -104,8 +108,8 @@ Function{
     If (aniso)
         epsilonr[design] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
       Else
-      epsilonr[design]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
-
+      epsilonr[design]    = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      /* epsilonr[design] = 3 * Id3[]; */
       EndIf
 
     EndIf
@@ -124,6 +128,7 @@ Function{
     mur[layer1]              = TensorDiag[1,1,1];
     mur[layer2]              = TensorDiag[1,1,1];
     mur[design]              =  Complex[mu_des_re,mu_des_im] *TensorDiag[1,1,1];
+    /* mur[design] = 7 * Id3[]; */
     mur[sub]                 = TensorDiag[1,1,1];
     mur[pmlbot]              = TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
     mur_annex[Omega]         = TensorDiag[1,1,1];
@@ -146,10 +151,14 @@ Function{
     u_1[] 	      = u_i[]+u_r[]+u_t[];
     u_1_d[]       = u_r[]+u_t[];
 
-    r_ref[] = rtar;//Complex[0.9, 0];
+
+
+    r_ref[] = r_tar[] * Exp[j[] * beta_sup *(h_layer1 +h_layer2 +h_des)] ;
+    t_ref[] = t_tar[]  ;
     /* r_ref[] = 0.5; */
 
-    u_ref[Omega] = PW[r_ref[], alpha_sup, - beta_sup];
+    u_ref[sup] = PW[r_ref[], alpha_sup, - beta_sup];
+    u_ref[sub] = PW[t_ref[], alpha_sup,  beta_sub];
 
 
     If (TE_flag)
@@ -207,15 +216,15 @@ Function{
       /* objective[] = absorption[$1];
       adj_source_int[] = - 2 * coef_obj[] *  Conj[($1 + u_1[]) ];  */
 
-      coef_obj[] =  1/(h_sup*d);
+      coef_obj[] =  1/((h_sup + h_sub)*d);
 
 
-      /* objective[] = coef_obj[] *SquNorm[$1 + u_1_d[] - u_ref[]] ;
-      adj_source_int[] = - 2 * coef_obj[] *  Conj[($1 + u_1_d[] - u_ref[]) ]; */
+      objective[] = coef_obj[] * SquNorm[$1 + u_1_d[] - u_ref[]] ;
+      adj_source_int[] = - 2 * coef_obj[] *  Conj[($1 + u_1_d[] - u_ref[]) ];
 
 
-      objective[] = coef_obj[] * SquNorm[SquNorm[$1 + u_1_d[]] - SquNorm[u_ref[]]] ;
-      adj_source_int[] = - 4 * coef_obj[] * (SquNorm[$1 + u_1_d[]] - SquNorm[u_ref[]]) * Conj[$1 + u_1_d[]] ;
+      /* objective[] = coef_obj[] * SquNorm[SquNorm[$1 + u_1_d[]] - SquNorm[u_ref[]]] ;
+      adj_source_int[] = - 2 * coef_obj[] * (SquNorm[$1 + u_1_d[]] - SquNorm[u_ref[]]) * Conj[$1 + u_1_d[]] ; */
 
 
       db_deps[] = -k0^2*u_1[];
@@ -300,6 +309,24 @@ Integration {
   }
 }
 
+Integration {
+  { Name GaussOnePoint ; Case {
+      { Type Gauss ;
+        Case {
+          { GeoElement Point       ; NumberOfPoints  1; }
+          { GeoElement Line        ; NumberOfPoints  1; }
+          { GeoElement Triangle    ; NumberOfPoints  1; }
+          { GeoElement Quadrangle  ; NumberOfPoints  1; }
+          { GeoElement Prism       ; NumberOfPoints  1; }
+          { GeoElement Tetrahedron ; NumberOfPoints  1; }
+          { GeoElement Hexahedron  ; NumberOfPoints  1; }
+          { GeoElement Pyramid     ; NumberOfPoints  1; }
+        }
+      }
+    }
+  }
+}
+
 // #############################################################################
 
 FunctionSpace {
@@ -357,6 +384,9 @@ Formulation{
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  }
+            Galerkin { [ 0*Dof{u}, {u} ] ;
+            In Omega_design; Jacobian JVol ; Integration GaussOnePoint ; }
+
             /* Galerkin { [ ($SourceAdj ? ElementVol[] * adj_source_int[{u}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  } */
         Else
@@ -481,9 +511,9 @@ PostProcessing {
             { Name vx_tot    ; Value { Local { [  CompX[dual_1[] + dual[{d u}]  ]         ] ; In Omega; Jacobian JVol; } } }
             { Name vy_tot   ; Value { Local { [  CompY[dual_1[]   + dual[{d u}]  ]  ] ; In Omega; Jacobian JVol; } } }
             { Name v_tot   ; Value { Local { [  dual_1[]   + dual[{d u}]   ] ; In Omega; Jacobian JVol; } } }
-            { Name u_adj   ; Value { Local { [ {u}   ] ; In Omega; Jacobian JVol; } } }
-            { Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
-            { Name sadj_int_im  ; Value { Integral { [Im[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
+            { Name u_adj   ; Value { Local { [ {u}* ElementVol[]    ] ; In Omega; Jacobian JVol; } } }
+            { Name sadj_int_re  ; Value { Integral { [Re[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration GaussOnePoint ; Jacobian JVol ; } } }
+            { Name sadj_int_im  ; Value { Integral { [Im[ adj_source_int[{u}] ]] ; In Omega_target    ; Integration GaussOnePoint ; Jacobian JVol ; } } }
             If (TE_flag)
                 { Name Q  ; Value { Integral { [ absorption[{u}] ] ; In Omega_source    ; Integration Int_1 ; Jacobian JVol ; } } }
                 { Name abso_density   ; Value { Local { [ absorption[{u}] ]; In Omega_source; Jacobian JVol; } } }
