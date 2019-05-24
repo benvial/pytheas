@@ -43,20 +43,20 @@ Line(7) = {7, 8};
 
 
 If (quad_mesh_flag)
-  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Layers{d/lc_des};};
+  /* out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Layers{d/lc_des};};
   out[] = Extrude{d,0,0}{Line{4};Layers{d/lc_des};Recombine;};
-  out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};Layers{d/lc_des};};
-  /*out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};};
-  out[] = Extrude{d,0,0}{Line{4};Recombine;};
-  out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};};*/
+  out[] = Extrude{d,0,0}{Line{5};Line{6};Line{7};Layers{d/lc_des};}; */
+
+  out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};Recombine;};
+
   Else
     /* If (extrude_mesh_flag) */
-      /* out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};}; */
+       /* out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};Layers{d/lc_des};}; */ 
     /* Else */
       out[] = Extrude{d,0,0}{Line{1};Line{2};Line{3};Line{4};Line{5};Line{6};Line{7};};
     /* EndIf */
 
-
+EndIf
     /* Periodic Line {1} = {8};
     Periodic Line {2} = {12};
     Periodic Line {3} = {16};
@@ -65,7 +65,7 @@ If (quad_mesh_flag)
     Periodic Line {6} = {28};
     Periodic Line {7} = {32}; */
 
-EndIf
+
 
 tag_des = 23;
 Line Loop(tag_des) = {4, 22, -20, -18};

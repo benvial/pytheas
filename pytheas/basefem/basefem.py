@@ -75,6 +75,7 @@ class BaseFEM:
         self.param_dict = dict()
         self.dir_path = get_file_path(__file__)
         self.analysis = "direct"
+        self.ignore_periodicity = False
 
     @property
     def geom_filename(self):
@@ -295,12 +296,16 @@ class BaseFEM:
         else:
             dim = [1, 2]
         self.print_progress("Meshing model")
+        if self.ignore_periodicity:
+            igper = "-ignore_periodicity"
+        else:
+            igper = ""
         femio.mesh_model(
             self.path_mesh,
             self.path_geo,
             dim=dim,
             verbose=self.gmsh_verbose,
-            other_option=other_option,
+            other_option=other_option + igper,
         )
         self.content_mesh = femio.get_content(self.path_mesh)
         self.nodes, self.els, self.des = self.get_mesh_info()
