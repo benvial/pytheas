@@ -120,5 +120,5 @@ class TwoScale2D(BaseFEM):
             print("effective permittivity tensor: \n", eps_eff)
         return eps_eff
 
-    def get_deq_deps(self):
-        return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
+    # def get_deq_deps(self):
+    # return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
