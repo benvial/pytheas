@@ -458,7 +458,7 @@ Resolution {
 
           Evaluate[$Source = 0, $SourceAdj = 1];
           /* Generate[S] ;Solve[S] ;SaveSolution[S] ; */
-          GenerateRHSGroup[S, Omega_target]; SolveAgain[S] ; SaveSolution[S] ;
+          GenerateRHSGroup[S, Omega]; SolveAgain[S] ; SaveSolution[S] ;
 
           PostOperation[postop_adjoint];
         EndIf

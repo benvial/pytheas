@@ -120,5 +120,25 @@ class TwoScale2D(BaseFEM):
             print("effective permittivity tensor: \n", eps_eff)
         return eps_eff
 
-    # def get_deq_deps(self):
-    # return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
+    def get_deq_deps(self):
+        return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
+
+    #
+    #
+    # def get_laplacian_psi(self, interp_method="nearest"):
+    #     deq_deps = self.get_qty("dx_psi.txt"), self.get_qty("dy_psi.txt")
+    #     x_grid, y_grid = self.grid
+    #
+    #     deq_deps_x, deq_deps_y = deq_deps
+    #     deq_deps_x = self.mesh2grid(deq_deps_x, interp_method=interp_method)
+    #     deq_deps_x_x = np.gradient(deq_deps_x.T)[0] / np.gradient(x_grid)[0]
+    #
+    #     deq_deps_y = self.mesh2grid(deq_deps_y, interp_method=interp_method)
+    #     deq_deps_y_y = np.gradient(deq_deps_y.T)[1] / np.gradient(y_grid)[0]
+    #
+    #     deq_deps = deq_deps_x_x.T + deq_deps_y_y.T
+    #
+    #     deq_deps_re = self.grid2mesh(deq_deps.real)
+    #     deq_deps_im = self.grid2mesh(deq_deps.imag)
+    #     deq_deps = deq_deps_re + 1j * deq_deps_im
+    #     return deq_deps
