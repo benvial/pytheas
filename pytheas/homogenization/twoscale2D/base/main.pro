@@ -88,7 +88,9 @@ int_xsi[] = CompY[xsi[]* ( E[] + $1)];
 
 objective[] = (int_xsi[$1]  - xsi_0_xx)^2 ;
 
-adj_source_int[]  = - 2 * coef_obj[] * (CompYY[xsi[]]) * Conj[CompYY[xsi[]] + CompY[xsi[] * $1] - xsi_0_xx ];
+adj_source_int[]  = - 2 *  coef_obj[] * Conj[CompYY[xsi[]] + CompY[xsi[] * $1] - xsi_0_xx ];
+
+adj_source_int1[]  = (CompYY[xsi[]]);
 
 
 
@@ -199,12 +201,13 @@ Formulation {
          		In Omega; Jacobian JVol; Integration Int_1; }
             Galerkin { [ ($Source ? source[] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}]  : 0) ,{d u}];
-            In Omega ;Jacobian JVol; Integration Int_1; }
+            /* Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}]  : 0) , CompY[{d u}]];
+            In Omega ;Jacobian JVol; Integration Int_1; } */
             /* Galerkin { [ ($SourceAdj ? adj_source_int[{d u}] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; } */
 
-
+            Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}] * Complex[ScalarField [XYZ[], 0, 1 ]{istore+2}, ScalarField [XYZ[], 0, 1 ]{istore+3}]  : 0) , CompY[{d u}]];
+            In Omega ;Jacobian JVol; Integration Int_1; }
 
 
                 }
@@ -221,10 +224,7 @@ Resolution {
     }
     Operation {
       Evaluate[$Source = 1, $SourceAdj = 0];
-      /* Evaluate[$sadj =0]; */
-
       Generate[S] ;  Solve[S] ;SaveSolution[S] ;
-      /* f[]=10; */
 
       If (adjoint_flag)
         /* PostOperation[postop_solution]; */
@@ -257,7 +257,7 @@ PostProcessing {
 							{ Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
           		{ Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name u_adj   ; Value { Local { [ {u} * ElementVol[]] ; In Omega; Jacobian JVol; } } }
+              { Name u_adj   ; Value { Local { [ {u}  ] ; In Omega; Jacobian JVol; } } }
               /* { Name u_adj   ; Value { Local { [ {u}] ; In Omega; Jacobian JVol; } } } */
               { Name int_objective  ; Value { Integral { [objective[{d u}]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name dEq_deps_x   ; Value { Local { [CompX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
@@ -265,16 +265,22 @@ PostProcessing {
               { Name dEq_deps  ; Value { Local { [dEq_deps[CompY[{d u}]]] ; In Omega; Jacobian JVol; } } }
               /* { Name sadj_var   ; Value { Local { [$sadj  ] ; In Omega; Jacobian JVol; } } } */
               /* { Name sadj_scalfield   ; Value { Local { [Complex[ScalarField[XYZ[], 0, 1 ]{istore}, ScalarField[XYZ[], 0, 1 ]{istore+1}]  ] ; In Omega; Jacobian JVol; } } } */
+              { Name u_re   ; Value { Local { [ Re[{u}]] ; In Omega; Jacobian JVol; } } }
+              { Name u_im  ; Value { Local { [ Im[{u}]] ; In Omega; Jacobian JVol; } } }
 
               { Name sadj_int_re  ; Value { Integral { [Re[adj_source_int[{d u}]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name sadj_int_im  ; Value { Integral { [Im[adj_source_int[{d u}]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name u_re   ; Value { Local { [ Re[{u}]] ; In Omega; Jacobian JVol; } } }
-              { Name u_im  ; Value { Local { [ Im[{u}]] ; In Omega; Jacobian JVol; } } }
-              /* { Name sadj_int_re   ; Value { Local { [Re[adj_source_int[{d u}]]] ; In Omega; Jacobian JVol; } } } */
-              /* { Name sadj_int_im   ; Value { Local { [Im[adj_source_int[{d u}]]] ; In Omega; Jacobian JVol; } } } */
-              /* { Name sadj_re1   ; Value { Local { [Re[{u}] ]; In Omega; Jacobian JVol; } } } */
-              /* { Name sadj_im1   ; Value { Local { [Im[{u}]] ; In Omega; Jacobian JVol; } } } */
-              { Name sadj_re1_times_gradu   ; Value { Local { [Re[adj_source_int[{d u}]] * {d u}] ; In Omega; Jacobian JVol; } } }
+              { Name sadj_int_re1  ; Value { Integral { [Re[adj_source_int1[]]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name sadj_int_im1  ; Value { Integral { [Im[adj_source_int1[]]]; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+
+/*
+
+              { Name sadj_int_re   ; Value { Local { [Re[adj_source_int[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name sadj_int_im   ; Value { Local { [Im[adj_source_int[{d u}]]] ; In Omega; Jacobian JVol; } } }
+              { Name sadj_int_re1   ; Value { Local { [Re[adj_source_int1[]]] ; In Omega; Jacobian JVol; } } }
+              { Name sadj_int_im1   ; Value { Local { [Im[adj_source_int1[]]] ; In Omega; Jacobian JVol; } } } */
+
+              /* { Name sadj_re1_times_gradu   ; Value { Local { [Re[adj_source_int[{d u}]] * {d u}] ; In Omega; Jacobian JVol; } } } */
 
 
          }
@@ -318,8 +324,13 @@ Operation {
       Print[u_im, OnElementsOf Omega, StoreInField  istore+1]; */
       Print[sadj_int_re, OnElementsOf Omega, StoreInField  istore];
       Print[sadj_int_im, OnElementsOf Omega, StoreInField  istore+1];
-      /* Print[sadj_int_re, OnElementsOf Omega, File "sadj_int_re.pos", Name "sadj_int_re"]; */
-      /* Print[sadj_int_im, OnElementsOf Omega, File "sadj_int_im.pos", Name "sadj_int_im"]; */
+      Print[sadj_int_re1, OnElementsOf Omega, StoreInField  istore+2];
+      Print[sadj_int_im1, OnElementsOf Omega, StoreInField  istore+3];
+      Print[sadj_int_re, OnElementsOf Omega, File "sadj_int_re.pos", Name "sadj_int_re"];
+      Print[sadj_int_im, OnElementsOf Omega, File "sadj_int_im.pos", Name "sadj_int_im"];
+
+      Print[sadj_int_re1, OnElementsOf Omega, File "sadj_int_re1.pos", Name "sadj_int_re1"];
+      Print[sadj_int_im1, OnElementsOf Omega, File "sadj_int_im1.pos", Name "sadj_int_im1"];
 
 
   }
