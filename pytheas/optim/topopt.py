@@ -233,11 +233,15 @@ class TopOpt:
 
     def make_epsilon(self, p, filt=True, proj=True, grad=False):
         self.fem.print_progress("Building permittivity")
-        p_filt, _ = self.filter_param(p, grad=grad) if filt else (p, np.ones_like(p))
-        p_proj, _ = self.proj(p_filt, grad=grad) if proj else (p_filt, np.ones_like(p))
+        p_filt, dp_filt_dp = (
+            self.filter_param(p, grad=grad) if filt else (p, np.ones_like(p))
+        )
+        p_proj, dp_proj_dpfilt = (
+            self.proj(p_filt, grad=grad) if proj else (p_filt, np.ones_like(p))
+        )
         epsilon, depsilon_dpproj = self.simp(p_proj, grad=grad)
         if grad:
-            return epsilon, depsilon_dpproj
+            return epsilon, depsilon_dpproj * dp_proj_dpfilt * dp_filt_dp
         else:
             return epsilon
 
