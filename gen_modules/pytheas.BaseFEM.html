@@ -3,8 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>pytheas.BaseFEM &#8212; pytheas 1.1.1 documentation</title>
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -21,10 +20,6 @@
     <script type="text/javascript" src="../_static/language_data.js"></script>
     <script type="text/javascript" src="../_static/js/custom.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,6 +29,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
     
@@ -104,151 +103,129 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="section" id="pytheas-basefem">
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas</span></code>.BaseFEM<a class="headerlink" href="#pytheas-basefem" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pytheas.BaseFEM">
-<em class="property">class </em><code class="descclassname">pytheas.</code><code class="descname">BaseFEM</code><a class="headerlink" href="#pytheas.BaseFEM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">BaseFEM</code><a class="headerlink" href="#pytheas.BaseFEM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Finite Element models</p>
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.Nix">
-<code class="descname">Nix</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.Nix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">Nix</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.Nix" title="Permalink to this definition">¶</a></dt>
 <dd><p>number of x points for postprocessing field maps</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.bg_mesh_filename_">
-<code class="descname">bg_mesh_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.bg_mesh_filename_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">bg_mesh_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.bg_mesh_filename_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gmsh geo filename for background mesh</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.cel">
-<code class="descname">cel</code><em class="property"> = 299792458.0105029</em><a class="headerlink" href="#pytheas.BaseFEM.cel" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cel</code><em class="property"> = 299792458.0105029</em><a class="headerlink" href="#pytheas.BaseFEM.cel" title="Permalink to this definition">¶</a></dt>
 <dd><p>speed of light in vacuum</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.cleanup">
-<code class="descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.cleanup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.cleanup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove gmsh/getdp/python generated files from the temporary folder</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.compute_solution">
-<code class="descname">compute_solution</code><span class="sig-paren">(</span><em>res_list=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.compute_solution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><em class="sig-param">res_list=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.compute_solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the solution of the FEM problem using getdp</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.dim">
-<code class="descname">dim</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.dim" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">dim</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.dim" title="Permalink to this definition">¶</a></dt>
 <dd><p>dimension of the problem</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.epsilon0">
-<code class="descname">epsilon0</code><em class="property"> = 8.854187817e-12</em><a class="headerlink" href="#pytheas.BaseFEM.epsilon0" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">epsilon0</code><em class="property"> = 8.854187817e-12</em><a class="headerlink" href="#pytheas.BaseFEM.epsilon0" title="Permalink to this definition">¶</a></dt>
 <dd><p>vacuum permittivity</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.geom_filename_">
-<code class="descname">geom_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.geom_filename_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">geom_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.geom_filename_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gmsh geometry filename</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.get_qty">
-<code class="descname">get_qty</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.get_qty" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_qty</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.get_qty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a scalar quantity.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the txt file to load.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>qty</strong> – The quantity to be loaded.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">array</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the txt file to load.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>qty</strong> – The quantity to be loaded.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.getdp_verbose">
-<code class="descname">getdp_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.getdp_verbose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">getdp_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.getdp_verbose" title="Permalink to this definition">¶</a></dt>
 <dd><p>GetDP verbose (int between 0 and 4)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.gmsh_verbose">
-<code class="descname">gmsh_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.gmsh_verbose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">gmsh_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.gmsh_verbose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gmsh verbose (int between 0 and 4)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the problem:
 - make dictionary of parameters
 - write this dictionary entries to a .dat file
@@ -257,190 +234,155 @@
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.make_param_dict">
-<code class="descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.make_param_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.make_param_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build dictionary of parameters. This will be later written to a parameter.dat
 file that is meant to be read by both gmsh and getdp</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.mk_tmp_dir">
-<code class="descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a temporary directory</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.mu0">
-<code class="descname">mu0</code><em class="property"> = 1.2566370614359173e-06</em><a class="headerlink" href="#pytheas.BaseFEM.mu0" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mu0</code><em class="property"> = 1.2566370614359173e-06</em><a class="headerlink" href="#pytheas.BaseFEM.mu0" title="Permalink to this definition">¶</a></dt>
 <dd><p>vacuum permeability</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.param_filename_">
-<code class="descname">param_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.param_filename_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">param_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.param_filename_" title="Permalink to this definition">¶</a></dt>
 <dd><p>GetDP pro filename</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.parmesh">
-<code class="descname">parmesh</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parmesh</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh" title="Permalink to this definition">¶</a></dt>
 <dd><p>global mesh parameter
 <cite>MeshElementSize = lambda0/(parmesh*n)</cite> <cite>n</cite>: refractive index</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.parmesh_des">
-<code class="descname">parmesh_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh_des" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parmesh_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh_des" title="Permalink to this definition">¶</a></dt>
 <dd><p>design subdomain mesh parameter</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.parmesh_pml">
-<code class="descname">parmesh_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh_pml" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">parmesh_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.parmesh_pml" title="Permalink to this definition">¶</a></dt>
 <dd><p>PMLs mesh parameter</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">flt</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postpro_choice">
-<code class="descname">postpro_choice</code><span class="sig-paren">(</span><em>name</em>, <em>filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_choice" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_choice</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</li>
-<li><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – File type to use (‘pos’ or ‘txt’)</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</p></li>
+<li><p><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – File type to use (‘pos’ or ‘txt’)</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postpro_fields">
-<code class="descname">postpro_fields</code><span class="sig-paren">(</span><em>filetype='txt'</em>, <em>postop='postop_fields'</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_fields</code><span class="sig-paren">(</span><em class="sig-param">filetype='txt'</em>, <em class="sig-param">postop='postop_fields'</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the field maps and output to a file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
-get_field_map in python) or “pos” to be read by gmsh/getdp.</li>
-<li><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;postop_fields&quot;</em>) – Name of the postoperation</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
+get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
+<li><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a><em>, </em><em>default &quot;postop_fields&quot;</em>) – Name of the postoperation</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postprocess">
-<code class="descname">postprocess</code><span class="sig-paren">(</span><em>postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run getdp postoperation.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the postoperation to run.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the postoperation to run.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.ppcmd">
-<code class="descname">ppcmd</code><span class="sig-paren">(</span><em>postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.ppcmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ppcmd</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.ppcmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a postprocessing command</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.pro_filename_">
-<code class="descname">pro_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.pro_filename_" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">pro_filename_</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.pro_filename_" title="Permalink to this definition">¶</a></dt>
 <dd><p>GetDP pro filename</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.python_verbose">
-<code class="descname">python_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.python_verbose" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">python_verbose</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.BaseFEM.python_verbose" title="Permalink to this definition">¶</a></dt>
 <dd><p>python verbose (int between 0 and 1)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.rm_tmp_dir">
-<code class="descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the temporary directory</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.update_params">
-<code class="descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.update_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.update_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the dictionary of parameters and the corresponding file</p>
 </dd></dl>
 
@@ -478,7 +420,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</li>
         <div class="footer-copyright">
           <p>
               &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
           
           </p>
 
@@ -498,7 +440,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</li>
       </p>
       <p>
           &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
       </p>
     </div> -->
   </footer>

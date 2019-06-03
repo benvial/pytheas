@@ -3,8 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>Importing refractive index from a database &#8212; pytheas 1.1.1 documentation</title>
     <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -21,10 +20,6 @@
     <script type="text/javascript" src="../../_static/language_data.js"></script>
     <script type="text/javascript" src="../../_static/js/custom.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -34,6 +29,10 @@
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
     
@@ -104,11 +103,11 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-12 content">
+    <div class="body col-md-12 content" role="main">
       
   <div class="sphx-glr-download-link-note admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Click <a class="reference internal" href="#sphx-glr-download-auto-examples-material-plot-refractive-index-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-material-plot-refractive-index-py"><span class="std std-ref">here</span></a> to download the full example code</p>
 </div>
 <div class="sphx-glr-example-title section" id="importing-refractive-index-from-a-database">
 <span id="sphx-glr-auto-examples-material-plot-refractive-index-py"></span><h1>Importing refractive index from a database<a class="headerlink" href="#importing-refractive-index-from-a-database" title="Permalink to this headline">¶</a></h1>
@@ -124,7 +123,7 @@ data.</p>
 </div>
 <p>We can get the refractive index from tabulated data or a formula using the
 database in the <code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.material</span></code> module.
-We will import the measured data from the reference <a class="reference external" href="https://doi.org/10.1103/PhysRevB.6.4370">Johnson and Christy</a> <a class="reference internal" href="#jc1972" id="id1">[JC1972]</a>.
+We will import the measured data from the reference <a class="reference external" href="https://doi.org/10.1103/PhysRevB.6.4370">Johnson and Christy</a> <a class="reference internal" href="#jc1972" id="id1"><span>[JC1972]</span></a>.
 We first specify the file <code class="code docutils literal notranslate"><span class="pre">yamlFile</span></code> we want to import:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">yamlFile</span> <span class="o">=</span> <span class="s2">&quot;main/Au/Johnson.yml&quot;</span>
 </pre></div>
@@ -152,22 +151,22 @@ wavelength range to interpolate:</p>
 </pre></div>
 </div>
 <img alt="../../_images/sphx_glr_plot_refractive_index_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_refractive_index_001.png" />
-<table class="docutils citation" frame="void" id="jc1972" rules="none">
-<colgroup><col class="label" /><col /></colgroup>
-<tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[JC1972]</a></td><td><dl class="first last docutils">
-<dt>(P. B. Johnson and R. W. Christy. Optical constants of the noble</dt>
-<dd>metals, Phys. Rev. B 6, 4370-4379 (1972)).</dd>
+<dl class="citation">
+<dt class="label" id="jc1972"><span class="brackets"><a class="fn-backref" href="#id1">JC1972</a></span></dt>
+<dd><dl class="simple">
+<dt>(P. B. Johnson and R. W. Christy. Optical constants of the noble</dt><dd><p>metals, Phys. Rev. B 6, 4370-4379 (1972)).</p>
+</dd>
 </dl>
-</td></tr>
-</tbody>
-</table>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.316 seconds)</p>
+</dd>
+</dl>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.277 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-material-plot-refractive-index-py">
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../../_downloads/3ad4e6bc81cca75bc8c8c4bb878b1279/plot_refractive_index.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_refractive_index.py</span></code></a></div>
+<p><a class="reference download internal" download="" href="../../_downloads/3ad4e6bc81cca75bc8c8c4bb878b1279/plot_refractive_index.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_refractive_index.py</span></code></a></p>
+</div>
 <div class="sphx-glr-download docutils container">
-<a class="reference download internal" download="" href="../../_downloads/b0cbff650f75bcdf5d0e99f027c4921c/plot_refractive_index.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_refractive_index.ipynb</span></code></a></div>
+<p><a class="reference download internal" download="" href="../../_downloads/b0cbff650f75bcdf5d0e99f027c4921c/plot_refractive_index.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_refractive_index.ipynb</span></code></a></p>
+</div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.readthedocs.io">Gallery generated by Sphinx-Gallery</a></p>
 </div>
@@ -202,7 +201,7 @@ wavelength range to interpolate:</p>
         <div class="footer-copyright">
           <p>
               &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
           
           </p>
 
@@ -222,7 +221,7 @@ wavelength range to interpolate:</p>
       </p>
       <p>
           &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.5.<br/>
+        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.1.0.<br/>
       </p>
     </div> -->
   </footer>
