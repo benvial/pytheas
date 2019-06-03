@@ -8,7 +8,7 @@ def model(verbose=False):
     fem = Periodic2D()
     fem.rm_tmp_dir()
     # opto-geometric parameters  -------------------------------------------
-    mum = 1e-6  #: flt: the scale of the problem (here micrometers)
+    mum = 1  #: flt: the scale of the problem (here micrometers)
     fem.d = 0.3 * mum  #: flt: period
     fem.h_sup = 1.0 * mum  #: flt: "thickness" superstrate
     fem.h_sub = 1.0 * mum  #: flt: "thickness" substrate
@@ -31,8 +31,8 @@ def model(verbose=False):
     fem.quad_mesh_flag = False
     #: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),
     #: where n is the refractive index of the medium
-    fem.parmesh_des = 5
-    fem.parmesh = 5
+    fem.parmesh_des = 10
+    fem.parmesh = 10
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.type_des = "elements"
     fem.matprop_pattern = [1.4, 2 - 0.02 * 1j, 3 - 0.01j]  # refractive index values
@@ -60,16 +60,16 @@ def test_per2D(verbose=False):
     print("effs_TM = ", effs_TM)
 
     effs_TE_ref = {
-        "R": 0.3528373505073045,
-        "T": 0.3274087995895207,
-        "Q": 0.3262777713934278,
-        "B": 1.006523921490253,
+        "R": 0.35226180453162476,
+        "T": 0.3427617641524676,
+        "Q": 0.3055241279248766,
+        "B": 1.000547696608969,
     }
     effs_TM_ref = {
-        "R": 0.2966385564434248,
-        "T": 0.5843153749078397,
-        "Q": 0.1262830646121085,
-        "B": 1.007236995963373,
+        "R": 0.3009273632117272,
+        "T": 0.5754791687727658,
+        "Q": 0.1241873828028853,
+        "B": 1.0005939147873784,
     }
 
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
