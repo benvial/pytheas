@@ -73,6 +73,6 @@ def test_per2D(verbose=False):
     }
 
     for a, b in zip(effs_TE.values(), effs_TE_ref.values()):
-        npt.assert_almost_equal(a, b, decimal=3)
+        npt.assert_almost_equal(a, b, decimal=2)
     for a, b in zip(effs_TM.values(), effs_TM_ref.values()):
-        npt.assert_almost_equal(a, b, decimal=3)
+        npt.assert_almost_equal(a, b, decimal=2)
