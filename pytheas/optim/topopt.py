@@ -368,7 +368,7 @@ class TopOpt:
             try:
                 popt = self.opt.optimize(p0)
             except nlopt.ForcedStop:
-                print("forced stop...")
+                print("Forced stop...")
                 loc_obj = np.array(self.tot_obj_history[-self.Nit_loc :])
                 loc_vars = np.array(self.param_history[-self.Nit_loc :])
                 lb_ind = loc_vars >= self.opt.get_lower_bounds()
