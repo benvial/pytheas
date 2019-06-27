@@ -25,8 +25,8 @@ def model(verbose=False):
     fem.eps_L3 = 4 - 0.2 * 1j  #: flt: permittivity layer 3
     fem.eps_L4 = 1 - 0.0 * 1j  #: flt: permittivity layer 4
     fem.eps_L5 = 1 - 0.0 * 1j  #: flt: permittivity layer 5
-    fem.parmesh_des = 5
-    fem.parmesh = 4
+    fem.parmesh_des = 6
+    fem.parmesh = 5
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.N_d_order = 0
     fem.el_order = 2  #: int: order of basis function (1 or 2)
@@ -49,10 +49,10 @@ def test_per3D(verbose=False):
     effs = fem.diffraction_efficiencies()
     print("effs = ", effs)
     effs_ref = {
-        "T": np.array([[0.79876197]]),
-        "R": np.array([[0.19270794]]),
-        "Q": 0.00884780476823657,
-        "B": 1.0003177244577777,
+        "T": np.array([[0.71853899]]),
+        "R": np.array([[0.20766518]]),
+        "Q": 0.06919446332313202,
+        "B": 0.9953986385861953,
     }
 
     for a, b in zip(effs.values(), effs_ref.values()):

@@ -297,6 +297,7 @@ class BaseFEM:
             dim = [1, 2]
         self.print_progress("Meshing model")
         if self.ignore_periodicity:
+            print("Ignoring periodicity")
             igper = "-ignore_periodicity"
         else:
             igper = ""

@@ -22,11 +22,12 @@ Periodic Line {12} = {14}; */
 
 
 If (quad_mesh_flag)
+/* Periodic Line {11} = {12}; */
+/* Periodic Line {13} = {14}; */
   out[] = Extrude{dx,0,0}{Line{11};Layers{dx/lc_incl};Recombine;};
   tag_des =  out[1];
   Line Loop(tag_des) = {11, -12, -13, 14};
-  /* Periodic Line {11} = {12}; */
-  /* Periodic Line {13} = {14}; */
+
 Else
   tag_des = 20;
   Line(12) = {2, 3};
@@ -74,6 +75,7 @@ Physical Point(10000) = {5};        // Printpoint
 
 Coherence;Coherence;Coherence;Coherence;
 
+/* Geometry.Tolerance=1e-3; */
 
 /*
 Plane Surface(30) = {20};

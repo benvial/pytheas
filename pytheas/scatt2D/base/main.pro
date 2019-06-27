@@ -399,7 +399,6 @@ Resolution {
         }
         Operation {
         Evaluate[$Source = 1, $SourceAdj = 0];
-
         Generate[S] ;Solve[S] ;SaveSolution[S] ;
 
         If (adjoint_flag)

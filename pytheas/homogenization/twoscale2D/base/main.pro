@@ -201,14 +201,15 @@ Formulation {
          		In Omega; Jacobian JVol; Integration Int_1; }
             Galerkin { [ ($Source ? source[] : 0) , {d u}];
             In Omega; Jacobian JVol; Integration Int_1; }
-            Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}]  : 0) , {d u}];
-            In Omega ;Jacobian JVol; Integration Int_1; }
 
-            /* Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}] * Complex[ScalarField [XYZ[], 0, 1 ]{istore+2}, ScalarField [XYZ[], 0, 1 ]{istore+3}]  : 0) ,{d u}];
+            /* Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}]  : 0) , {d u}];
             In Omega ;Jacobian JVol; Integration Int_1; } */
 
-            /* Galerkin { [ ($SourceAdj ? adj_source_int[{d u}] : 0) , {d u}];
-            In Omega; Jacobian JVol; Integration Int_1; } */
+            /* Galerkin { [ ($SourceAdj ? Complex[ScalarField [XYZ[], 0, 1 ]{istore}, ScalarField [XYZ[], 0, 1 ]{istore+1}] * Complex[ScalarField [XYZ[], 0, 1 ]{istore+2}, ScalarField [XYZ[], 0, 1 ]{istore+3}]  : 0) ,{d u}]; */
+            /* In Omega ;Jacobian JVol; Integration Int_1; } */
+
+            Galerkin { [ ($SourceAdj ? adj_source_int[{d u}] : 0) , {d u}];
+            In Omega; Jacobian JVol; Integration Int_1; }
 
 
                 }
@@ -258,7 +259,7 @@ PostProcessing {
 							{ Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
           		{ Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
-              { Name u_adj   ; Value { Local { [ CompY[{d u}] * ElementVol[] ] ; In Omega; Jacobian JVol; } } }
+              { Name u_adj   ; Value { Local { [ {d u} * ElementVol[] ] ; In Omega; Jacobian JVol; } } }
               /* { Name u_adj   ; Value { Local { [ {u}] ; In Omega; Jacobian JVol; } } } */
               { Name int_objective  ; Value { Integral { [objective[{d u}]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name dEq_deps_x   ; Value { Local { [CompX[dEq_deps[{d u}]]] ; In Omega; Jacobian JVol; } } }
@@ -325,8 +326,8 @@ Operation {
       Print[u_im, OnElementsOf Omega, StoreInField  istore+1]; */
       Print[sadj_int_re, OnElementsOf Omega, StoreInField  istore];
       Print[sadj_int_im, OnElementsOf Omega, StoreInField  istore+1];
-      Print[sadj_int_re1, OnElementsOf Omega, StoreInField  istore+2];
-      Print[sadj_int_im1, OnElementsOf Omega, StoreInField  istore+3];
+      /* Print[sadj_int_re1, OnElementsOf Omega, StoreInField  istore+2]; */
+      /* Print[sadj_int_im1, OnElementsOf Omega, StoreInField  istore+3]; */
       /* Print[sadj_int_re, OnElementsOf Omega, File "sadj_int_re.pos", Name "sadj_int_re"]; */
       /* Print[sadj_int_im, OnElementsOf Omega, File "sadj_int_im.pos", Name "sadj_int_im"]; */
 

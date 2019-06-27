@@ -65,7 +65,7 @@ def maketmp(content, filename, dirname="", mode="w"):
 
 
 def mesh_model(
-    path_mesh, path_geo, mesh_format="msh2", dim=None, verbose=0, other_option=""
+    path_mesh, path_geo, mesh_format="msh4", dim=None, verbose=0, other_option=""
 ):
     """Mesh the model using Gmsh_
 
