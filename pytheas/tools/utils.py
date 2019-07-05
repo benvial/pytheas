@@ -29,7 +29,14 @@ def between_range(x, xmin, xmax):
 
 
 def refine_mesh(
-    fem, mat, lc_des=None, par=None, nmax=5, periodic_x=False, periodic_y=False
+    fem,
+    mat,
+    lc_des=None,
+    par=None,
+    nmax=5,
+    periodic_x=False,
+    periodic_y=False,
+    lc_bnd=None,
 ):
     mat_tmp = mat
     mat_tmp.ratio_filter = [20, 20, 20]
@@ -67,7 +74,8 @@ def refine_mesh(
         grad_pat_norm = 1 - normalize(grad_pat_norm)
         grad_pat_norm = between_range(grad_pat_norm, lc_min, lc_max)
 
-        lc_bnd = lc_min  # (lc_max + lc_min) / 2
+        if not lc_bnd:
+            lc_bnd = lc_min  # (lc_max + lc_min) / 2
         if periodic_y:
             grad_pat_norm[:, :nmax] = lc_bnd
             grad_pat_norm[:, -nmax:] = lc_bnd

@@ -75,6 +75,9 @@ less:
 webdoc: less
 	cd docs && make clean && make html
 
+## Show html doc in browser
+showdoc:
+	xdg-open ./docs/_build/html/index.html
 
 post:
 	bash .ci/post.sh

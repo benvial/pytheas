@@ -325,6 +325,6 @@ def points2geo(points, lc_incl, output_path="./tmp.geo", startpoint=1000):
     # gmsh bspline format
     # Write out splinefit line
     fout.write(
-        "Spline(%i) = {%i:%i};\n" % (startpoint, startpoint, startpoint + n_lines - 1)
+        "BSpline(%i) = {%i:%i};\n" % (startpoint, startpoint, startpoint + n_lines - 1)
     )
     fout.close()
