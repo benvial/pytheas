@@ -199,7 +199,7 @@ class TopOpt:
         return f, g
 
     def make_xsym(self, qt, interp_method="cubic"):
-        qt = self.mesh2grid(qt, interp_method=interp_method)
+        qt = self.mesh2grid(qt, interp_method="nearest")
         qt = (qt + np.fliplr(qt)) / 2
         return self.grid2mesh(qt, interp_method=interp_method)
 
@@ -399,12 +399,7 @@ class TopOpt:
         print("\n")
         print("Final design")
         print("#" * 60)
-        p_thres = np.zeros_like(p)
-        threshold_val = self.p_interp
-        threshold = np.linspace(0, 1, self.nthres + 1)
-        for i in range(self.nthres):
-            cond = np.logical_and(p >= threshold[i], p <= threshold[i + 1])
-            p_thres[cond] = threshold_val[i]
+        p_thres = self.get_threshold_design(p)
         opt_thres = f_obj(p_thres, np.array([]), filt=False)
         print("-" * 45)
         print("   optimum   = ", opt_thres)

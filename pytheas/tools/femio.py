@@ -65,7 +65,7 @@ def maketmp(content, filename, dirname="", mode="w"):
 
 
 def mesh_model(
-    path_mesh, path_geo, mesh_format="msh4", dim=None, verbose=0, other_option=""
+    path_mesh, path_geo, mesh_format="msh2", dim=None, verbose=0, other_option=""
 ):
     """Mesh the model using Gmsh_
 
@@ -168,7 +168,7 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
         if mesh_format == 2:
             meshversion = "2.2 0 8"
         else:
-            meshversion = "4 0 8"
+            meshversion = "4.1 0 8"
         s = "$MeshFormat\n{}\n$EndMeshFormat\n".format(meshversion)
     N = len(ID)
     if celltype is "nodes":
