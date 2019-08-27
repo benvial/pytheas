@@ -37,14 +37,17 @@ Function{
     /* epsilonr[host]         = Complex[eps_host_re,eps_host_im] * I3[]; */
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * I3[];
     If (aniso)
-
         epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}];
         epsilonr_yy[]  = Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}];
         epsilonr_zz[]  = Complex[ScalarField[XYZ[], 0, 1 ]{4}, ScalarField[XYZ[], 0, 1 ]{5}];
 
         epsilonr[host] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
       Else
-        epsilonr[host]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * I3[];
+        If (interp)
+          epsilonr[host]         = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * I3[];
+        Else
+          epsilonr[host]         = Complex[eps_host_re,eps_host_im] * I3[];
+        EndIf
       EndIf
   Else
   If (aniso)

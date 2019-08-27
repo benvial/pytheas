@@ -30,6 +30,7 @@ class TwoScale2D(BaseFEM):
         self.y_flag = False
         self.save_solution = False
         self.aniso = False
+        self.interp = True
 
     @property
     def corners_des(self):
@@ -57,6 +58,7 @@ class TwoScale2D(BaseFEM):
         param_dict["y_flag"] = int(self.y_flag)
         param_dict["save_solution"] = int(self.save_solution)
         param_dict["aniso"] = int(self.aniso)
+        param_dict["interp"] = int(self.interp)
         return param_dict
 
     def compute_solution(self, res_list=None):
@@ -95,7 +97,6 @@ class TwoScale2D(BaseFEM):
             print("int_inveps = ", int_inveps)
             print("phi = ", phi)
         epsinv_eff = int_inveps + phi
-        # eps_eff = np.linalg.inv(epsinv_eff)
         eps_eff = epsinv_eff.T / np.linalg.det(epsinv_eff)
         return eps_eff
 
