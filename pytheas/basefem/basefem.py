@@ -261,10 +261,8 @@ class BaseFEM:
         param_dict["nodes_flag"] = int(self.type_des == "nodes")
         return param_dict
 
-    def make_inclusion(self, points, **kwargs):
-        femio.points2geo(
-            points, "lc_incl", output_path=self.inclusion_filename, **kwargs
-        )
+    def make_inclusion(self, points, lcar="lc_incl", **kwargs):
+        femio.points2geo(points, lcar, output_path=self.inclusion_filename, **kwargs)
 
     def get_design_nodes(self):
         self.print_progress("Retrieving nodes")

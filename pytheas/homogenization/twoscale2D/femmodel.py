@@ -31,6 +31,8 @@ class TwoScale2D(BaseFEM):
         self.save_solution = False
         self.aniso = False
         self.interp = True
+        self.N_pts_circ = 100
+        self.R_circ = 1
 
     @property
     def corners_des(self):
@@ -84,14 +86,16 @@ class TwoScale2D(BaseFEM):
         return femio.load_table(self.tmppath("u.txt"))
 
     def get_int_inveps(self):
-        Ixx = femio.load_table(self.tmppath("I_inveps_xx.txt"))
-        Iyy = femio.load_table(self.tmppath("I_inveps_yy.txt"))
-        return Ixx, Iyy
+        I = np.zeros((2, 2), dtype=complex)
+        I[0, 0] = femio.load_table(self.tmppath("I_inveps_xx.txt"))
+        I[1, 1] = femio.load_table(self.tmppath("I_inveps_yy.txt"))
+        I[1, 0] = femio.load_table(self.tmppath("I_inveps_yx.txt"))
+        I[0, 1] = femio.load_table(self.tmppath("I_inveps_xy.txt"))
+        return I
 
     def postpro_effective_permittivity(self):
         V = self.get_vol()
-        int_inveps_xx, int_inveps_yy = self.get_int_inveps()
-        int_inveps = np.diag([int_inveps_xx, int_inveps_yy]) / V
+        int_inveps = self.get_int_inveps() / V
         phi = self.get_phi() / V
         if self.python_verbose:
             print("int_inveps = ", int_inveps)
@@ -124,7 +128,24 @@ class TwoScale2D(BaseFEM):
     def get_deq_deps(self):
         return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
 
-    #
+    def postpro_circ(self):
+        for s in ["sol", "vx", "vy"]:
+            t = self.tmppath("{}_circ.txt".format(s))
+            try:
+                os.remove(t)
+            except:
+                pass
+        self.postprocess("postop_fields_circle")
+
+    def get_sol_circ(self):
+        t = self.tmppath("sol_circ.txt")
+        return femio.load_table(t)
+
+    def get_gradsol_circ(self):
+        vx = femio.load_table(self.tmppath("vx_circ.txt"))
+        vy = femio.load_table(self.tmppath("vy_circ.txt"))
+        return vx, vy
+
     #
     # def get_laplacian_psi(self, interp_method="nearest"):
     #     deq_deps = self.get_qty("dx_psi.txt"), self.get_qty("dy_psi.txt")

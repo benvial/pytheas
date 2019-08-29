@@ -65,9 +65,21 @@ Function{
   Else
     istore=2;
   EndIf
+    epsXX[]=CompXX[epsilonr[]];
+    epsYY[]=CompYY[epsilonr[]];
+    epsXY[]=CompXY[epsilonr[]];
+    epsYX[]=CompYX[epsilonr[]];
+    deteps[] = epsXX[]*epsYY[] - epsXY[]*epsYX[];
+    /* xsi[Omega] = Tensor[epsXX[], epsXX[],epsXX[]];  */
+    /* xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],1]; */
+
+    /* xsi[Omega] = Transpose[epsilonr[]]/Det[epsilonr[]]; */
+
+    xsi[Omega] = Transpose[epsilonr[]]/deteps[];
+
+    /* xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],111]; */
 
 
-    xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],1];
 
 
 		If (y_flag)
@@ -261,6 +273,8 @@ PostProcessing {
               { Name Iy; Value { Integral { [CompY[xsi[]*{d u}]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
 							{ Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
           		{ Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name I_inveps_xy; Value { Integral { [CompXY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name I_inveps_yx; Value { Integral { [CompYX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name u_adj   ; Value { Local { [ {d u} * ElementVol[] ] ; In Omega; Jacobian JVol; } } }
               /* { Name u_adj   ; Value { Local { [ {u}] ; In Omega; Jacobian JVol; } } } */
@@ -318,6 +332,8 @@ Operation {
 	EndIf
   Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
   Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
+  Print [ I_inveps_yx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yx.txt"];
+  Print [ I_inveps_xy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xy.txt"];
   Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Vol.txt"];
 	}
 }
@@ -436,5 +452,21 @@ PostOperation {
 
         	}
     }
+
+    { Name postop_fields_circle; NameOfPostProcessing postpro ;
+          Operation {
+            For i In {0:N_pts_circ-1}
+              t=i * 2*Pi/(N_pts_circ-1);
+              xi = R_circ*Cos[t];
+              yi = R_circ*Sin[t];
+              Print [ solution , OnPoint {xi,yi,0} ,Format SimpleTable, File >> "sol_circ.txt" ];
+              Print [ vx , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vy_circ.txt" ];
+              Print [ vy , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vx_circ.txt" ];
+
+            EndFor
+
+
+            }
+      }
 
 }
