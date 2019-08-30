@@ -460,8 +460,8 @@ PostOperation {
               xi = R_circ*Cos[t];
               yi = R_circ*Sin[t];
               Print [ solution , OnPoint {xi,yi,0} ,Format SimpleTable, File >> "sol_circ.txt" ];
-              Print [ vx , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vy_circ.txt" ];
-              Print [ vy , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vx_circ.txt" ];
+              Print [ vx , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vx_circ.txt" ];
+              Print [ vy , OnPoint  {xi,yi,0}  ,Format SimpleTable, File >> "vy_circ.txt" ];
 
             EndFor
 
