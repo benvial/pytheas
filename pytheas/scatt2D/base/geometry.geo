@@ -45,8 +45,6 @@ PSourceInt3 = newp; Point(PSourceInt3) = {x_target - RadiusSourceIntX, y_target,
 PSourceInt4 = newp; Point(PSourceInt4) = {x_target, y_target - RadiusSourceIntY, z_target, lcSourceInt};
 
 
-
-
 Line(1) = {1, 4};
 Line(2) = {4, 3};
 Line(3) = {3, 2};

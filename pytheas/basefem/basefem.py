@@ -544,6 +544,9 @@ class BaseFEM:
         self.print_progress("Postprocessing fields")
         self.postpro_choice(postop, filetype)
 
+    def postpro_fields_pos(self, postop="postop_fields"):
+        return self.postpro_fields(filetype="pos", postop=postop)
+
     def get_objective(self, postop="postop_int_objective", filename="objective.txt"):
         self.print_progress("Retrieving objective")
         if not self.adjoint:
