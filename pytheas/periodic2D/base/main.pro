@@ -301,8 +301,8 @@ Integration {
         Case {
 	  { GeoElement Point       ; NumberOfPoints  1 ; }
 	  { GeoElement Line        ; NumberOfPoints  4 ; }
-	  { GeoElement Triangle    ; NumberOfPoints  6 ; }
-	  { GeoElement Quadrangle  ; NumberOfPoints  7 ; }
+	  { GeoElement Triangle    ; NumberOfPoints  4 ; }
+	  { GeoElement Quadrangle  ; NumberOfPoints  4 ; }
 	}
       }
     }
