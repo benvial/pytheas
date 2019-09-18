@@ -23,9 +23,43 @@ import yaml
 from yaml.reader import Reader
 import numpy as np
 import os
+import numpy as np
+import functools
 
 path = os.path.dirname(os.path.abspath(__file__))
 database_path = os.path.join(path, "database", "data")
+
+
+def get_directory_structure(rootdir):
+    """
+    Creates a nested dictionary that represents the folder structure of rootdir
+    """
+    dir = {}
+    materials_path = []
+    materials_list = []
+    rootdir = rootdir.rstrip(os.sep)
+    start = rootdir.rfind(os.sep) + 1
+    for path, dirs, files in os.walk(rootdir):
+        folders = path[start:].split(os.sep)
+        _ = []
+        for f in files:
+            if f.endswith(".yml") and f != "library.yml":
+                _.append(f[:-4])
+                frel = os.path.join(os.path.relpath(path, database_path), f)
+                # print(frel)
+                materials_path.append(frel[:-4])
+                materials_list.append(frel[:-4].split("/"))
+        files = _
+        subdir = dict.fromkeys(files)
+        parent = functools.reduce(dict.get, folders[:-1], dir)
+        parent[folders[-1]] = subdir
+    return dir["data"], materials_path, materials_list
+
+
+def fix_yml_file(yamlFile):
+    if not yamlFile.endswith(".yml"):
+        yamlFile += ".yml"
+    return yamlFile
 
 
 def strip_invalid(s):
@@ -39,6 +73,7 @@ def strip_invalid(s):
 
 
 def yaml_extract(yamlFile):
+    yamlFile = fix_yml_file(yamlFile)
     filename = os.path.join(database_path, yamlFile)
     with open(filename) as yamlStream:
         c = yamlStream.read()
@@ -221,3 +256,42 @@ def get_complex_index(lambdas, yamlFile):
     lambdas = np.array([lambdas]).ravel()
     ncomplex = getData(yamlFile, lambdas)
     return np.asarray(np.conj(ncomplex))
+
+
+class Materials(object):
+    """Materials class"""
+
+    def __init__(self):
+        self.data, self.materials_path, self.materials_list = get_directory_structure(
+            database_path
+        )
+
+    def list(self, sublist=None):
+
+        if sublist:
+            if not isinstance(sublist, list):
+                sublist = list([sublist])
+            a = self.data
+            for s in sublist:
+                a = a[s]
+            return list(a.keys())
+        else:
+            return list(self.data.keys())
+
+    def get(self, id):
+        a = self.data
+        for s in id:
+            a = a[s]
+        return a
+
+    def get_rel_path(self, id):
+        return os.path.join(*id)
+
+    def info(self, id):
+        return yaml_extract(self.get_rel_path(id))[0]["REFERENCES"]
+
+    def get_complex_index(self, lambdas, id):
+        return get_complex_index(lambdas, self.get_rel_path(id))
+
+    def get_wl_range(self, id):
+        return get_wl_range(self.get_rel_path(id))

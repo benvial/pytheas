@@ -33,3 +33,14 @@ def test_vals():
     yamlFile = "main/Au/Johnson.yml"
     ncomplex = get_complex_index(0.5, yamlFile)
     assert np.allclose(ncomplex, 0.97112 - 1.873672j)
+
+
+def test_Material_class():
+    m = Materials()
+    for mat_id in mat_test:
+        mat_id = mat_id.split("/")
+        print(mat_id)
+        lambda0 = m.get_wl_range(mat_id)
+        m.get_complex_index(lambda0, mat_id)
+        print(m.info(mat_id))
+        print("-" * 48)
