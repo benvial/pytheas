@@ -191,8 +191,10 @@ def rot_z(t):
 
 
 def ell_shapes(mat_grid, rloc=None, rwidth=None, m=2):
-    rloc = rloc or [0, 0, 0]
-    rwidth = rwidth or [0.1, 0.1, 0.1]
+    if np.all(rloc == None):
+        rloc = [0, 0, 0]
+    if np.all(rwidth == None):
+        rwidth = [0.1, 0.1, 0.1]
     coords1 = 0
     N = np.shape(mat_grid)[1:4]
     for i in range(3):
