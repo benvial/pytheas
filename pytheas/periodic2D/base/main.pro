@@ -80,11 +80,11 @@ Function{
     t_tar[] = Complex[t_tar_re, t_tar_im];
 
     // Permittivities
-    epsilonr[sup]            = Complex[eps_sup_re, eps_sup_im] * TensorDiag[1,1,1];
-    epsilonr[sub]            = Complex[eps_sub_re,eps_sub_im] * TensorDiag[1,1,1];
-    epsilonr[layer1]         = Complex[eps_layer1_re,eps_layer1_im] * TensorDiag[1,1,1];
+    epsilonr[sup]            = Complex[eps_sup_re, eps_sup_im] * Id3[];
+    epsilonr[sub]            = Complex[eps_sub_re,eps_sub_im] * Id3[];
+    epsilonr[layer1]         = Complex[eps_layer1_re,eps_layer1_im] * Id3[];
 
-    epsilonr[layer2]         = Complex[eps_layer2_re,eps_layer2_im] * TensorDiag[1,1,1];
+    epsilonr[layer2]         = Complex[eps_layer2_re,eps_layer2_im] * Id3[];
     epsilonr[pmltop]         = eps_sup_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
     epsilonr[pmlbot]         = eps_sub_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
 
@@ -96,44 +96,44 @@ Function{
 
     If (inclusion_flag)
 
-      epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
-      epsilonr_annex[incl]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
+      epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * Id3[];
+      epsilonr_annex[incl]   = Complex[eps_sup_re,eps_sup_im] * Id3[];
       If (aniso)
           epsilonr[design] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
         Else
-          epsilonr[design]         = Complex[eps_des_re,eps_des_im] * TensorDiag[1,1,1];
+          epsilonr[design]         = Complex[eps_des_re,eps_des_im] * Id3[];
         EndIf
     Else
 
     If (aniso)
         epsilonr[design] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
       Else
-      epsilonr[design]    = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * TensorDiag[1,1,1];
+      epsilonr[design]    = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}] * Id3[];
       /* epsilonr[design] = 3 * Id3[]; */
       EndIf
 
     EndIf
 
-    epsilonr_annex[sup]      = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
-    epsilonr_annex[sub]      = Complex[eps_sub_re,eps_sub_im] * TensorDiag[1,1,1];
-    epsilonr_annex[layer1]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
-    epsilonr_annex[design]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
-    epsilonr_annex[layer2]   = Complex[eps_sup_re,eps_sup_im] * TensorDiag[1,1,1];
+    epsilonr_annex[sup]      = Complex[eps_sup_re,eps_sup_im] * Id3[];
+    epsilonr_annex[sub]      = Complex[eps_sub_re,eps_sub_im] * Id3[];
+    epsilonr_annex[layer1]   = Complex[eps_sup_re,eps_sup_im] * Id3[];
+    epsilonr_annex[design]   = Complex[eps_sup_re,eps_sup_im] * Id3[];
+    epsilonr_annex[layer2]   = Complex[eps_sup_re,eps_sup_im] * Id3[];
     epsilonr_annex[pmltop]   = eps_sup_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
     epsilonr_annex[pmlbot]   = eps_sub_re*TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
 
     // Permeabilities
     mur[pmltop]              = TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
-    mur[sup]                 = TensorDiag[1,1,1];
-    mur[layer1]              = TensorDiag[1,1,1];
-    mur[layer2]              = TensorDiag[1,1,1];
-    mur[design]              =  Complex[mu_des_re,mu_des_im] *TensorDiag[1,1,1];
+    mur[sup]                 = Id3[];
+    mur[layer1]              = Id3[];
+    mur[layer2]              = Id3[];
+    mur[design]              =  Complex[mu_des_re,mu_des_im] *Id3[];
     /* mur[design] = 7 * Id3[]; */
-    mur[sub]                 = TensorDiag[1,1,1];
+    mur[sub]                 = Id3[];
     mur[pmlbot]              = TensorDiag[sz*sy[]/sx,sx*sz/sy[],sx*sy[]/sz];
-    mur_annex[Omega]         = TensorDiag[1,1,1];
+    mur_annex[Omega]         = Id3[];
     If (inclusion_flag)
-      mur[incl]                 =  Complex[mu_incl_re,mu_incl_im] * TensorDiag[1,1,1];
+      mur[incl]                 =  Complex[mu_incl_re,mu_incl_im] * Id3[];
     EndIf
 
 
@@ -384,8 +384,8 @@ Formulation{
             In Omega_source; Jacobian JVol; Integration Int_1;  }
             Galerkin { [ ($SourceAdj ? Complex[ScalarField[XYZ[], 0, 1 ]{2}, ScalarField[XYZ[], 0, 1 ]{3}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  }
-            Galerkin { [ 0*Dof{u}, {u} ] ;
-            In Omega_design; Jacobian JVol ; Integration GaussOnePoint ; }
+            /* Galerkin { [ 0*Dof{u}, {u} ] ;
+            In Omega_design; Jacobian JVol ; Integration GaussOnePoint ; } */
 
             /* Galerkin { [ ($SourceAdj ? ElementVol[] * adj_source_int[{u}] : 0) , {u}];
             In Omega_target; Jacobian JVol; Integration Int_1;  } */
