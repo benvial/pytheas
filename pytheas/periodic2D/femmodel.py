@@ -245,10 +245,10 @@ class Periodic2D(BaseFEM):
         WRA[3] = a * (np.sqrt(self.eps_sub.real) - b)
         return int(max(abs(WRA)))
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
-        param_dict["aniso"] = int(self.aniso)
-        return param_dict
+    # def make_param_dict(self):
+    #     param_dict = super().make_param_dict()
+    #     param_dict["aniso"] = int(self.aniso)
+    #     return param_dict
 
     def postpro_absorption(self):
         """ Compute the absorption coefficient

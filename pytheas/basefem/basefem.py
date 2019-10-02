@@ -49,7 +49,7 @@ class BaseFEM:
         self.inclusion_filename_ = "inclusion.geo"
         self.content_mesh = ""
         self.tmp_dir = "./tmp"
-        self.path_pos = None
+        self.path_pos = ""
         self.getdp_verbose = 0  #: str: GetDP verbose (int between 0 and 4)
         self.gmsh_verbose = 0  #: str: Gmsh verbose (int between 0 and 4)
         self.python_verbose = 0  #: str: python verbose (int between 0 and 1)
@@ -76,6 +76,20 @@ class BaseFEM:
         self.dir_path = get_file_path(__file__)
         self.analysis = "direct"
         self.ignore_periodicity = False
+        self._debug = False
+
+    @property
+    def debug(self):
+        return self._debug
+
+    @debug.setter
+    def debug(self, val):
+        self._debug = val
+        if self._debug:
+            self.getdp_verbose = 4
+            self.gmsh_verbose = 4
+            self.python_verbose = 1
+        return self._debug
 
     @property
     def geom_filename(self):
@@ -247,6 +261,7 @@ class BaseFEM:
                 param_dict[key + "_im"] = val.imag
             if isinstance(val, bool):
                 # special handling
+                param_dict[key] = int(val)
                 pass
             elif isinstance(val, (float, int)):
                 param_dict[key] = val
@@ -307,7 +322,7 @@ class BaseFEM:
             other_option=other_option + igper,
         )
         self.content_mesh = femio.get_content(self.path_mesh)
-        self.nodes, self.els, self.des = self.get_mesh_info()
+        self.get_mesh_info()
         return self.content_mesh
 
     def make_mesh_pos(self, els, nodes):
@@ -452,6 +467,7 @@ class BaseFEM:
             des = els_ID, els_coords
         elif self.type_des is "nodes":
             des = nodes_ID, nodes_coords
+        self.nodes, self.els, self.des = nodes, els, des
         return nodes, els, des
 
     def register_pattern(self, pattern, threshold_val):
