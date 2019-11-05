@@ -48,7 +48,7 @@ Function{
 	/* epsilon[Omega_design]  = Complex[eps_des_re , eps_des_im] * TensorDiag[1,1,1]; */
 
 	mu[Omega_no_pml]       = TensorDiag[1,1,1];
-	
+
 
 // PML parameters
 	sx[]            = Complex[a_pml,-b_pml];
@@ -70,17 +70,17 @@ Function{
 	mu[PMLxz] = pml_tens[sx[],1,sz[]];
 	epsilon[PMLyz] = eps_host_re*pml_tens[1,sy[],sz[]];
 	mu[PMLyz] = pml_tens[1,sy[],sz[]];
-	
+
 	epsilon_annex[Omega_nosource]=epsilon[];
 	epsilon_annex[Omega_source]=Complex[eps_host_re , eps_host_im] * TensorDiag[1,1,1];
-	
+
 	Propp[]         = Complex[ Cos[alpha0*X[]+beta0*Y[]+gamma0*(Z[]-0.0)] , Sin[alpha0*X[]+beta0*Y[]+gamma0*(Z[]-0.0)] ];
-	
+
 	Ex0[] = Propp[]*Ae *(Cos[psi_0] * Cos[theta_0] * Cos[phi_0]	- Sin[psi_0] * Sin[phi_0] );
 	Ey0[] = Propp[]*Ae * (	Cos[(psi_0)] * Cos[(theta_0)] * Sin[(phi_0)]	+ Sin[(psi_0)] * Cos[(phi_0)]);
 	Ez0[] = Propp[]*Ae * (-Cos[(psi_0)] * Sin[(theta_0)]);
 	E0[]            = Vector[Ex0[],Ey0[],Ez0[]];
-	
+
 	source[]         = k0^2*(epsilon[]-epsilon_annex[])*E0[];//(nm/1.e-9)^2*
 
 	// Topology optimization
@@ -210,8 +210,8 @@ Resolution {
 PostProcessing {
     { Name postpro_diff; NameOfFormulation helmholtz_vector;NameOfSystem Maxwell;
             Quantity {
-
-              { Name Etot; Value { Local { [ {u}+E0[] ]; In Omega; Jacobian JVol; } } }
+							{ Name Etot; Value { Local { [ {u}+E0[] ]; In Omega; Jacobian JVol; } } }
+              { Name Etot_norm; Value { Local {[ Norm[ {u}+E0[] ]]; In Omega; Jacobian JVol; } } }
 							{ Name Etotx; Value { Local { [ CompX[{u}+E0[]]  ]; In Omega; Jacobian JVol; } } }
 							{ Name Etoty; Value { Local { [ CompY[{u}+E0[]]  ]; In Omega; Jacobian JVol; } } }
 							{ Name Etotz; Value { Local { [ CompZ[{u}+E0[]]  ]; In Omega; Jacobian JVol; } } }
@@ -224,7 +224,7 @@ PostProcessing {
 							{ Name E0y; Value { Local { [ CompY[E0[]]  ]; In Omega; Jacobian JVol; } } }
 							{ Name E0z; Value { Local { [ CompZ[E0[]]  ]; In Omega; Jacobian JVol; } } }
 							{ Name objective_local; Value { Local { [objective[{u}]]; In Omega; Jacobian JVol; } } }
-							
+
               { Name source; Value { Local { [ source[]]; In Omega; Jacobian JVol; } } }
 
 							{ Name sadj_int_x_re  ; Value { Integral { [Re[ CompX[adj_source_int[{u}]] ]] ; In Omega_target    ; Integration Int_1 ; Jacobian JVol ; } } }
@@ -251,16 +251,17 @@ PostProcessing {
 PostOperation {
 	{ Name postop_fields_pos; NameOfPostProcessing postpro_diff ;
 			Operation {
-				
+
 		Print[ objective_local , OnElementsOf Omega, File "objective_local.pos"];
 		Print[ Etot , OnElementsOf Omega, File "Etot.pos"];
 		/* Print[ E0x , OnElementsOf Omega, File "E0x.pos"]; */
 		/* Print[ E0y , OnElementsOf Omega, File "E0y.pos"]; */
 		/* Print[ E0z , OnElementsOf Omega, File "E0z.pos"]; */
 		/* Print[ E0 , OnElementsOf Omega, File "E0.pos"]; */
-		/* Print[ Etotx , OnElementsOf Omega, File "Etotx.pos"]; */
-		/* Print[ Etoty , OnElementsOf Omega, File "Etoty.pos"]; */
-		/* Print[ Etotz , OnElementsOf Omega, File "Etotz.pos"]; */
+		Print[ Etot_norm , OnElementsOf Omega, File "Etot_norm.pos"];
+		Print[ Etotx , OnElementsOf Omega, File "Etotx.pos"];
+		Print[ Etoty , OnElementsOf Omega, File "Etoty.pos"];
+		Print[ Etotz , OnElementsOf Omega, File "Etotz.pos"];
 		/* Print[ Edif , OnElementsOf Omega, File "E.pos"]; */
 		/* Print[ Edifx , OnElementsOf Omega, File "Edifx.pos"]; */
 		/* Print[ Edify , OnElementsOf Omega, File "Edify.pos"]; */

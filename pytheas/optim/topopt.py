@@ -1,9 +1,11 @@
 import numpy as np
 import nlopt
 from scipy import interpolate
+from scipy.ndimage import gaussian_filter
 from matplotlib.tri import Triangulation
 from matplotlib.ticker import MaxNLocator
 import matplotlib.pyplot as plt
+from ..material import genmat
 
 # from pytheas.tools.plottools import *
 
@@ -107,6 +109,7 @@ class TopOpt:
     dp = 1e-11
     n_x, n_y, n_z = 100, 100, 1
     force_xsym = False
+    filter_param_function = "new"
 
     @property
     def nthres(self):
@@ -175,7 +178,7 @@ class TopOpt:
             )
         return w
 
-    def _filter_param(self, p):
+    def old_filter_param(self, p):
         self.fem.print_progress("Filtering")
         Xdes = np.array(self.fem.des[1].T)
         if self.rfilt == 0:
@@ -190,6 +193,53 @@ class TopOpt:
                 pfilt[i] = np.sum(w * pneig) / np.sum(w)
         return pfilt
 
+    def new_filter_param(self, p):
+        self.fem.print_progress("Filtering")
+        if self.rfilt == 0:
+            pfilt = p
+        else:
+            if hasattr(self.rfilt, "__len__"):
+                if len(self.rfilt) == 2:
+                    sigma = np.array(
+                        [
+                            np.sqrt(self.rfilt[0] * self.n_x),
+                            np.sqrt(self.rfilt[1] * self.n_y),
+                        ]
+                    )
+                else:
+                    if len(self.rfilt) == 3:
+                        sigma = np.array(
+                            [
+                                np.sqrt(self.rfilt[0] * self.n_x),
+                                np.sqrt(self.rfilt[1] * self.n_y),
+                                np.sqrt(self.rfilt[2] * self.n_z),
+                            ]
+                        )
+            else:
+                if self.fem.dim == 2:
+                    sigma = np.sqrt(self.rfilt * np.array([self.n_x, self.n_y]))
+                else:
+                    if self.fem.dim == 3:
+                        sigma = np.sqrt(
+                            self.rfilt * np.array([self.n_x, self.n_y, self.n_z])
+                        )
+
+            p_grid = self.mesh2grid(p)
+            p_filt_scipy = gaussian_filter(p_grid, sigma=sigma)
+            pfilt = self.grid2mesh(p_filt_scipy)
+        return pfilt
+
+    def _filter_param(self, p):
+        if self.filter_param_function == "old":
+            return self.old_filter_param(p)
+        else:
+            if self.filter_param_function == "new":
+                return self.new_filter_param(p)
+            else:
+                raise TypeError(
+                    "Wrong filter_param_function specified: choose between new and old"
+                )
+
     def filter_param(self, p, grad=True):
         g = None
         f = self._filter_param(p)
@@ -203,12 +253,16 @@ class TopOpt:
         qt = (qt + np.fliplr(qt)) / 2
         return self.grid2mesh(qt, interp_method=interp_method)
 
-    def random_pattern(self, mat):
+    def random_pattern(self, mat, discrete=False):
         im = mat.filtered_pattern[:, :, 0].T
         x_grid = np.linspace(self.grid[0][0], self.grid[0][-1], mat.n_x)
         y_grid = np.linspace(self.grid[1][0], self.grid[1][-1], mat.n_y)
-        x0 = self.grid2mesh(im, grid=(x_grid, y_grid))
-        return normalize(x0)
+        im_mesh = self.grid2mesh(im, grid=(x_grid, y_grid))
+        im_mesh = normalize(im_mesh)
+        if discrete:
+            return genmat.make_discrete_pattern(im_mesh, mat.threshold_val)
+        else:
+            return im_mesh
 
     def grid2mesh(self, val_grid, grid=None, interp_method="cubic"):
         xdes, ydes, zdes = self.fem.des[1].T
@@ -341,24 +395,25 @@ class TopOpt:
         print("#" * 60)
         # instanciation opt object, optimization algorithm
         opt = nlopt.opt(self.algorithm, nvar)
-        opt.set_lower_bounds(self.pmin)
-        opt.set_upper_bounds(self.pmax)
-        if self.typeopt is "max":
-            opt.set_max_objective(f_obj)
-        elif self.typeopt is "min":
-            opt.set_min_objective(f_obj)
-        else:
-            raise TypeError("Wrong typeopt specified: choose between max and min")
-        opt.set_maxeval(self.maxeval)
-        if self.stopval:
-            opt.set_stopval(self.stopval)
-        opt.set_xtol_rel(self.ptol_rel)
-        opt.set_ftol_rel(self.ftol_rel)
-        self.opt = opt
+
         ################################################################
         ############### OPTIMIZATION - global iterations ###############
         ################################################################
         for self.Nit in range(self.N0, self.N0 + self.Nitmax):
+            opt.set_lower_bounds(self.pmin)
+            opt.set_upper_bounds(self.pmax)
+            if self.typeopt is "max":
+                opt.set_max_objective(f_obj)
+            elif self.typeopt is "min":
+                opt.set_min_objective(f_obj)
+            else:
+                raise TypeError("Wrong typeopt specified: choose between max and min")
+            opt.set_maxeval(self.maxeval)
+            if self.stopval:
+                opt.set_stopval(self.stopval)
+            opt.set_xtol_rel(self.ptol_rel)
+            opt.set_ftol_rel(self.ftol_rel)
+            self.opt = opt
             self.Nit_loc = 0
             print("\n")
             print("Global iteration =  %s" % self.Nit)

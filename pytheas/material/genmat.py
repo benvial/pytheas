@@ -48,12 +48,14 @@ class MaterialDensity:
             p[:, -int(self.n_y / 2) :, :] = np.fliplr(p[:, 0 : int(self.n_y / 2), :])
         if self.sym8:
             assert self.n_x == self.n_y, "x and y sampling must be the same!"
-            p1 = p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :]
+            assert np.mod(self.n_x, 2) == 0, "n_x must be even!"
+            n_half = int(self.n_x / 2)
+            p1 = p[0:n_half, 0:n_half, :]
             p1 = 0.5 * (p1 + np.transpose(p1, axes=[1, 0, 2]))
-            p[0 : int(self.n_x / 2), 0 : int(self.n_y / 2), :] = p1
-            p[0 : int(self.n_x / 2), -int(self.n_y / 2) :, :] = np.fliplr(p1)
-            p[-int(self.n_x / 2) :, 0 : int(self.n_y / 2), :] = np.flipud(p1)
-            p[-int(self.n_x / 2) :, -int(self.n_y / 2) :, :] = np.flipud(np.fliplr(p1))
+            p[0:n_half, 0:n_half, :] = p1
+            p[0:n_half, -n_half:, :] = np.fliplr(p1)
+            p[-n_half:, 0:n_half, :] = np.flipud(p1)
+            p[-n_half:, -n_half:, :] = np.flipud(np.fliplr(p1))
         if self.indep_z:
             p = np.dstack([p[:, :, 0]] * self.n_z)
 

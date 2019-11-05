@@ -40,7 +40,6 @@ Group {
     Else
       Omega_target = Region[{ host }];
     EndIf
-    /*Omega_target    = Region[{layer1}];*/
       Omega_design = Region[{ design }];
 }
 // #############################################################################
@@ -104,12 +103,14 @@ Function {
 
     // Fields
 
-    If(ls_flag)
     hankel2[]    = Jn[$1, $2] - j[] *Yn[$1, $2];
     Rho[]        = Sqrt[(X[] - xs) ^ 2 + (Y[] - ys) ^ 2];
     GF[]         = -j[] / 4 * hankel2[0, k0 * Rho[]];
-    Rho_tar[]    = Sqrt[(x_target - xs) ^ 2 + (y_target - ys) ^ 2];
+    Rho_tar[]    = Sqrt[(X[] - x_target) ^ 2 + (Y[] - y_target) ^ 2];
     GF_tar[]     = -j[] / 4 * hankel2[0, k0 * Rho_tar[]];
+    Rho_on_tar[]    = Sqrt[(xs - x_target) ^ 2 + (ys - y_target) ^ 2];
+    GF_on_tar[]     = -j[] / 4 * hankel2[0, k0 * Rho_on_tar[]];
+    If(ls_flag)
     u_i[Omega_i] = GF[];
     A_beam[]     = 1;
     grad_u_i[]   = -k0 * j[] / 8
@@ -133,6 +134,8 @@ Function {
     EndIf
 
       u_i[Omega_pml] = 0.;
+
+
 
     If(ls_flag)
     grad_A_beam[Omega_i] = 0 * TensorDiag[1, 1, 0.];
@@ -213,13 +216,13 @@ Function {
 
 
     If(TE_flag)
-    dual[]       = Vector[ CompY[ $1 ], -CompX[ $1 ], 0 ] / (j[] *omega0 * mu0 * CompXX[mur[]]); // TE case H = dual[{d u}]
-    dual_tot[]   = dual[$1] + dual_i[] *CompXX[mur_annex[]] / CompXX[mur[]];
-    absorption[] = coef_Q[] *SquNorm[$1 + u_i[]];
+      dual[]       = Vector[ CompY[ $1 ], -CompX[ $1 ], 0 ] / (j[] *omega0 * mu0 * CompXX[mur[]]); // TE case H = dual[{d u}]
+      dual_tot[]   = dual[$1] + dual_i[] *CompXX[mur_annex[]] / CompXX[mur[]];
+      absorption[] = coef_Q[] *SquNorm[$1 + u_i[]];
     Else
-    dual[]       = Vector[ CompY[ $1 ], -CompX[ $1 ], 0 ] / (-j[] *omega0 * epsilon0 * CompXX[epsilonr[]]); // TM case E = dual[{d u}]
-    dual_tot[]   = -dual[$1] + dual_i[] *CompXX[epsilonr_annex[]] / CompXX[epsilonr[]];
-    absorption[] = coef_Q[] *( SquNorm[  CompX[dual_tot[$1]] ] + SquNorm[CompY[dual_tot[$1]] ] );
+      dual[]       = Vector[ CompY[ $1 ], -CompX[ $1 ], 0 ] / (-j[] *omega0 * epsilon0 * CompXX[epsilonr[]]); // TM case E = dual[{d u}]
+      dual_tot[]   = -dual[$1] + dual_i[] *CompXX[epsilonr_annex[]] / CompXX[epsilonr[]];
+      absorption[] = coef_Q[] *( SquNorm[  CompX[dual_tot[$1]] ] + SquNorm[CompY[dual_tot[$1]] ] );
 
     EndIf
 
@@ -228,24 +231,41 @@ Function {
     If(ls_flag)
     n2f_field[]      = $1 + u_i[];
     n2f_field_dual[] = dual_tot[$1];
-    ui_tar[]         = GF_tar[];
+    ui_on_tar[]         = GF_on_tar[];
     Else
     n2f_field[]      = $1;
     n2f_field_dual[] = dual[$1];
-    ui_tar[]         = 1;
+    ui_on_tar[]         = 1;
 
     /* n2f_field[]= $1 + u_i[] ;
      * n2f_field_dual[] = dual_tot[$1]; */
     EndIf
 
-    // Topology optimization
-    coef_obj[]       = 1 / (SquNorm[ui_tar[]] * Pi * r_target ^ 2);
+    /* // Topology optimization (no Diffraction)
+    coef_obj[]       = 1 / ((domX_R-domX_L) * (domY_T-domY_B) -hx_des*hy_des );
+    objective[]      = coef_obj[] *SquNorm[$1];
+    adj_source_int[] = -2 * coef_obj[] *(Conj[ $1 ]); // d_objective_du *ElementVol[] */
+
+
+    // Topology optimization (lens, max field)
+    coef_obj[]       = 1 / (SquNorm[ui_on_tar[]] * Pi * r_target ^ 2);
     objective[]      = coef_obj[] *SquNorm[$1 + u_i[]];
     adj_source_int[] = -2 * coef_obj[] *(Conj[ $1 + u_i[]]); // d_objective_du *ElementVol[]
+
+    /* // Topology optimization (illusion)
+    u_illusion[Omega_i] = GF_tar[];
+    u_illusion[Omega_pml] = 0.;
+
+    coef_obj[]       = 1000 / ((domX_R-domX_L) * (domY_T-domY_B) -hx_des*hy_des );
+    objective[]      = coef_obj[] *SquNorm[$1 + u_i[] - u_illusion[]];
+    adj_source_int[] = -2 * coef_obj[] *(Conj[ $1 + u_i[]- u_illusion[]]); // d_objective_du *ElementVol[] */
 
     If(TE_flag)
     db_deps[] = -k0 ^ 2 * u_i[];
     dA_deps[] = k0 ^ 2;
+
+    /* db_deps[] = -k0 ^ 2 *( u_i[]- u_illusion[]);
+    dA_deps[] = k0 ^ 2; */
     Else
     db_deps[] = 1 / CompXX[epsilonr[]] ^ 2 * grad_u_i[];
     dA_deps[] = -1 / CompXX[epsilonr[]] ^ 2;
@@ -522,6 +542,9 @@ PostProcessing {
     { Name postpro;
       NameOfFormulation helmoltz_scalar;
       Quantity {
+
+          /* { Name u_illusion_obj;Value { Local { [{ u } +u_i[] - u_illusion[]];  In Omega;Jacobian JVol;  } } } */
+          /* { Name u_illusion;Value { Local { [u_illusion[]];  In Omega;Jacobian JVol;  } } } */
           { Name check_adj_source;
             Value { Local { [adj_source_int[{ u }]];
                             In Omega;
@@ -907,6 +930,11 @@ PostOperation {
 
           Print [ u_tot, OnElementsOf Omega, File "u_tot.pos" ];
           Print [ u_i, OnElementsOf Omega, File "u_i.pos" ];
+          /* Print [ u_illusion_obj, OnElementsOf Omega, File "u_illusion_obj.pos" ]; */
+          /* Print [ u_illusion, OnElementsOf Omega, File "u_illusion.pos" ]; */
+
+
+
           /*Print [ vx_tot   , OnElementsOf Omega, File "vx_tot.pos" ];*/
           /*Print [ vy_tot   , OnElementsOf Omega, File "vy_tot.pos" ];*/
           /*Print [ v_tot   , OnElementsOf Omega, File "v_tot.pos" ];*/
