@@ -46,7 +46,25 @@ test:
 
 clean:
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
-	@rm -rf pygmsh.egg-info/ build/ dist/ tmp/
+	@rm -rf pytheas_pip.egg-info/ build/ dist/ tmp/
+	cd docs && make clean
+
+
+lstmp:
+	@find . -type d -name 'tmp*'
+
+
+rmtmp:
+	@find . -type d -name 'tmp*' | xargs rm -rf
+
+
+lsonelab:
+	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res'
+
+rmonelab:
+	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res' | xargs rm
+
+
 
 lint:
 	flake8 setup.py pytheas/ tests/*.py
