@@ -32,7 +32,7 @@ Function{
   ksearch = 2.*Pi/lambda0search;
 
   If (inclusion_flag)
-    
+
     epsilonr[incl]           = Complex[eps_incl_re,eps_incl_im] * TensorDiag[1,1,1];
     epsilonr[host] = Complex[eps_host_re,eps_host_im] * TensorDiag[1,1,1];
     /* epsilonr_xx[]  = Complex[ScalarField[XYZ[], 0, 1 ]{0}, ScalarField[XYZ[], 0, 1 ]{1}]; */
@@ -49,7 +49,18 @@ Function{
     epsilonr[Omega] =  TensorDiag[epsilonr_xx[],epsilonr_yy[],epsilonr_zz[]];
   EndIf
 
-  xsi[] = TensorDiag[1/CompYY[epsilonr[]],1/CompXX[epsilonr[]],0];
+  /* xsi[] = TensorDiag[1/CompYY[epsilonr[]],1/CompXX[epsilonr[]],0]; */
+  epsXX[]=CompXX[epsilonr[]];
+  epsYY[]=CompYY[epsilonr[]];
+  epsXY[]=CompXY[epsilonr[]];
+  epsYX[]=CompYX[epsilonr[]];
+  deteps[] = epsXX[]*epsYY[] - epsXY[]*epsYX[];
+  /* xsi[Omega] = Tensor[epsXX[], epsXX[],epsXX[]];  */
+  /* xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],1]; */
+
+  /* xsi[Omega] = Transpose[epsilonr[]]/Det[epsilonr[]]; */
+
+  xsi[Omega] = Transpose[epsilonr[]]/deteps[];
 
 		If (y_flag)
 			E[] = Vector[0,1,0] ;
@@ -230,8 +241,10 @@ PostProcessing {
 							{ Name vy; Value { Local {[CompY[{d u}]] ; In Omega; Jacobian JVol; } } }
               { Name Ix; Value { Integral { [CompX[1/epsilonr[]*{d u}]]  ; In host    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name Iy; Value { Integral { [CompY[1/epsilonr[]*{d u}]]  ; In host    ; Integration Int_1 ; Jacobian JVol ; } } }
-							{ Name I_inveps_xx; Value { Integral { [CompXX[1/epsilonr[]]]  ; In host    ; Integration Int_1 ; Jacobian JVol ; } } }
-          		{ Name I_inveps_yy; Value { Integral { [CompYY[1/epsilonr[]]]  ; In host    ; Integration Int_1 ; Jacobian JVol ; } } }
+						  { Name I_inveps_xx; Value { Integral { [CompXX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name I_inveps_yy; Value { Integral { [CompYY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name I_inveps_xy; Value { Integral { [CompXY[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
+              { Name I_inveps_yx; Value { Integral { [CompYX[xsi[]]]  ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
               { Name V; Value { Integral { [1]  ; In host    ; Integration Int_1 ; Jacobian JVol ; } } }
 
          }
@@ -271,10 +284,13 @@ Operation {
 	EndIf
 		Print [ Ix[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixx.txt"];
 		Print [ Iy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Phixy.txt"];
-		Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
-		Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
-		Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable,LastTimeStepOnly, File "Vol.txt"];
+
 	EndIf
+  Print [ I_inveps_xx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xx.txt"];
+  Print [ I_inveps_yy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yy.txt"];
+  Print [ I_inveps_yx[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_yx.txt"];
+  Print [ I_inveps_xy[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "I_inveps_xy.txt"];
+  Print [ V[Omega], OnElementsOf PrintPoint, Format SimpleTable, File "Vol.txt"];
 	}
 }
 

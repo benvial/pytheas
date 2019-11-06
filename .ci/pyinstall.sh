@@ -22,7 +22,7 @@ conda update -q --all
 conda info -a
 conda create -q -n testenv python=3
 source activate testenv
-conda install --yes -n testenv pytest pytest-cov nlopt
+conda install --yes -n testenv pytest pytest-cov nlopt numpy scipy
 # conda install --yes -n testenv cython swig pytest pytest-cov tectonic nlopt
 pip install -r requirements.txt
 pip install -e .
