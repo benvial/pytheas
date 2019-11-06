@@ -1,9 +1,9 @@
+./_downloads/05d8c2c1c6f5a30b1457c6bb291c7edf/plot_diffraction_efficiencies.py
 ./_downloads/1ad0efd1dde4b8ac2b79ce2161b182f9/auto_examples_jupyter.zip
-./_downloads/3ad4e6bc81cca75bc8c8c4bb878b1279/plot_refractive_index.py
-./_downloads/78979c3caa95729f07af00d1c767aa7d/plot_diffraction_efficiencies.ipynb
+./_downloads/3c0e5764c44915f2e3cb4acb59c6abf0/plot_diffraction_efficiencies.ipynb
 ./_downloads/90d8ffbe2f84af5ec9e20fd686996397/auto_examples_python.zip
-./_downloads/b0cbff650f75bcdf5d0e99f027c4921c/plot_refractive_index.ipynb
-./_downloads/fa7fc7b13469565449b774cd95f63ca6/plot_diffraction_efficiencies.py
+./_downloads/c387b874e5db31dd75679f0d79f02a42/plot_refractive_index.py
+./_downloads/dce8d6d6796432c09e960056ddcd8196/plot_refractive_index.ipynb
 ./_downloads/pytheas.pdf
 ./_images/sphx_glr_plot_diffraction_efficiencies_001.png
 ./_images/sphx_glr_plot_diffraction_efficiencies_thumb.png
@@ -99,7 +99,7 @@
 ./_static/favicon.ico
 ./_static/file.png
 ./_static/gallery.css
-./_static/jquery-3.2.1.js
+./_static/jquery-3.4.1.js
 ./_static/jquery.js
 ./_static/js/custom.js
 ./_static/js/jquery-1.11.0.min.js
