@@ -5,6 +5,8 @@
 
 Computation times
 =================
-**00:00.326** total execution time for **auto_examples_material** files:
+**00:00.204** total execution time for **auto_examples_material** files:
 
-- **00:00.326**: :ref:`sphx_glr_auto_examples_material_plot_refractive_index.py` (``plot_refractive_index.py``)
++------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_auto_examples_material_plot_refractive_index.py` (``plot_refractive_index.py``) | 00:00.204 | 0.0 MB |
++------------------------------------------------------------------------------------------------+-----------+--------+

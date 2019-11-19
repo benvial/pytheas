@@ -34,6 +34,7 @@ First we import the required modules and class
 
 
 
+
 Then we need to instanciate the class :py:class:`FemModel`:
 
 
@@ -41,6 +42,7 @@ Then we need to instanciate the class :py:class:`FemModel`:
 
 
     fem = Periodic2D()
+
 
 
 
@@ -101,6 +103,7 @@ We define here the opto-geometric parameters:
 
 
 
+
 We then initialize the model (copying files, etc...) and mesh the unit
 cell using gmsh
 
@@ -113,6 +116,7 @@ cell using gmsh
 
     fem.initialize()
     mesh = fem.make_mesh()
+
 
 
 
@@ -147,6 +151,7 @@ We use the :py:mod:`genmat` module to generate a material pattern
 
 
 
+
 We now assign the permittivity
 
 
@@ -162,6 +167,7 @@ We now assign the permittivity
 
 
 
+
 Now we're ready to compute the solution:
 
 
@@ -169,6 +175,7 @@ Now we're ready to compute the solution:
 
 
     fem.compute_solution()
+
 
 
 
@@ -199,6 +206,7 @@ Finally we compute the diffraction efficiencies, absorption and energy balance
 
 
 
+
 It is fairly easy to switch to TM polarization:
 
 
@@ -224,9 +232,10 @@ It is fairly easy to switch to TM polarization:
 
 
 
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.040 seconds)
+   **Total running time of the script:** ( 0 minutes  2.928 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:

@@ -12,7 +12,7 @@ Examples
 
 .. raw:: html
 
-    <div style='clear:both'></div>
+    <div class="sphx-glr-clear"></div>
 
 
 
@@ -34,9 +34,9 @@ generating material patterns.
 
 .. only:: html
 
-    .. figure:: /auto_examples/material/images/thumb/sphx_glr_plot_refractive_index_thumb.png
+ .. figure:: /auto_examples/material/images/thumb/sphx_glr_plot_refractive_index_thumb.png
 
-        :ref:`sphx_glr_auto_examples_material_plot_refractive_index.py`
+     :ref:`sphx_glr_auto_examples_material_plot_refractive_index.py`
 
 .. raw:: html
 
@@ -49,7 +49,7 @@ generating material patterns.
    /auto_examples/material/plot_refractive_index
 .. raw:: html
 
-    <div style='clear:both'></div>
+    <div class="sphx-glr-clear"></div>
 
 
 
@@ -72,9 +72,9 @@ diffraction efficiencies).
 
 .. only:: html
 
-    .. figure:: /auto_examples/periodic2D/images/thumb/sphx_glr_plot_diffraction_efficiencies_thumb.png
+ .. figure:: /auto_examples/periodic2D/images/thumb/sphx_glr_plot_diffraction_efficiencies_thumb.png
 
-        :ref:`sphx_glr_auto_examples_periodic2D_plot_diffraction_efficiencies.py`
+     :ref:`sphx_glr_auto_examples_periodic2D_plot_diffraction_efficiencies.py`
 
 .. raw:: html
 
@@ -87,7 +87,7 @@ diffraction efficiencies).
    /auto_examples/periodic2D/plot_diffraction_efficiencies
 .. raw:: html
 
-    <div style='clear:both'></div>
+    <div class="sphx-glr-clear"></div>
 
 
 

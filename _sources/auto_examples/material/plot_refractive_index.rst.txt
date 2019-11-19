@@ -30,6 +30,7 @@ data.
 
 
 
+
 We can get the refractive index from tabulated data or a formula using the
 database in the :py:mod:`pytheas.material` module.
 We will import the measured data from the reference `Johnson and Christy`_ [JC1972]_.
@@ -40,6 +41,7 @@ We first specify the file :code:`yamlFile` we want to import:
 
 
     yamlFile = "main/Au/Johnson.yml"
+
 
 
 
@@ -64,6 +66,7 @@ wavelength range to interpolate:
 
 
 
+
 Then get the refractive index data:
 
 
@@ -72,6 +75,7 @@ Then get the refractive index data:
 
     ncomplex = ri.get_complex_index(lambdas, yamlFile)
     epsilon = ncomplex ** 2
+
 
 
 
@@ -104,6 +108,7 @@ And finally plot it:
 
 
 
+
 .. [JC1972]
          (P. B. Johnson and R. W. Christy. Optical constants of the noble
           metals, Phys. Rev. B 6, 4370-4379 (1972)).
@@ -113,7 +118,7 @@ And finally plot it:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.326 seconds)
+   **Total running time of the script:** ( 0 minutes  0.204 seconds)
 
 
 .. _sphx_glr_download_auto_examples_material_plot_refractive_index.py:
