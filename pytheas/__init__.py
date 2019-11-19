@@ -13,6 +13,8 @@ __doc__ = __description__
 
 from .basefem import BaseFEM
 from .material import *
+from .material.refractiveindex import Materials
+from .material.genmat import MaterialDensity
 from .periodic2D import *
 from .scatt2D import *
 from .scatt3D import *
