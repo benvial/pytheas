@@ -14,7 +14,7 @@ fi
 
 
 install_reqs () {
-  while read requirement; do conda install --yes $requirement || pip install $requirement; done < $1
+  while read requirement; do conda install --yes $requirement || pip install -U $requirement; done < $1
 
 }
 #

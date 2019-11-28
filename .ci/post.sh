@@ -4,6 +4,7 @@
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
+  pip install -U sphinx_bootstrap_theme # update
   cd docs
   make html
   make latex

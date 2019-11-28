@@ -49,10 +49,10 @@ def test_per3D(verbose=False):
     effs = fem.diffraction_efficiencies()
     print("effs = ", effs)
     effs_ref = {
-        "T": np.array([[0.76047994]]),
-        "R": np.array([[0.20164799]]),
-        "Q": 0.03204735977931161,
-        "B": 0.9941752896290239,
+        "T": np.array([[0.796112]]),
+        "R": np.array([[0.18909322]]),
+        "Q": 0.01273080344897011,
+        "B": 0.9979360252786229,
     }
 
     for a, b in zip(effs.values(), effs_ref.values()):

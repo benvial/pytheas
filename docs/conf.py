@@ -27,6 +27,7 @@ import os
 from datetime import date
 import sphinx_gallery
 import pytheas
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -37,16 +38,17 @@ import pytheas
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.napoleon',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    # 'sphinx.ext.linkcode',
-    'sphinx.ext.intersphinx',
+    "sphinx.ext.napoleon",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.intersphinx",
     # 'sphinx.ext.todo',
     # 'sphinx.ext.coverage',
-    'sphinx.ext.mathjax',
-    'sphinx_gallery.gen_gallery',
-    'sphinx.ext.autodoc',
+    "sphinx.ext.mathjax",
+    "sphinx_gallery.gen_gallery",
+    "sphinx.ext.autodoc",
+    "sphinx_copybutton",
     # 'numpydoc',
     # 'sphinx_issues',
 ]
@@ -56,21 +58,21 @@ extensions = [
 # see https://github.com/numpy/numpydoc/issues/69
 numpydoc_class_members_toctree = False
 
-autodoc_default_flags = ['members', 'inherited-members']
-
+autodoc_default_options = {"members": True, "inherited-members": True}
 
 autosummary_generate = True
 
 sphinx_gallery_conf = {
     # path to your examples scripts
-    'examples_dirs': '../examples',
+    "examples_dirs": "../examples",
     # path where to save gallery generated examples
-    'gallery_dirs': 'auto_examples',
+    "gallery_dirs": "auto_examples",
     # directory where function granular galleries are stored
-    'backreferences_dir': 'gen_modules/backreferences',
-    'default_thumb_file': 'assets/logo_pytheas.png',
+    "backreferences_dir": "gen_modules/backreferences",
+    "default_thumb_file": "assets/logo_pytheas.png",
     # Modules for which function level galleries are created.
-    'doc_module': 'pytheas'}
+    "doc_module": "pytheas",
+}
 
 
 # # Napoleon settings
@@ -86,17 +88,18 @@ napoleon_use_ivar = False
 napoleon_use_param = True
 napoleon_use_rtype = True
 
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
 # source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
 project = pytheas.__name__
@@ -105,10 +108,11 @@ author = pytheas.__author__
 
 
 html_context = {
-    'show_gh_fork': True,
-    'ghrepo': u'benvial/pytheas',
-    'show_pip_install': False,
-    'piplink': ''
+    "description": pytheas.__description__,
+    "show_gh_fork": True,
+    "ghrepo": u"benvial/pytheas",
+    "show_pip_install": True,
+    "pipname": "pytheas-pip",
 }
 
 
@@ -117,7 +121,7 @@ html_context = {
 # built documents.
 #
 # The short X.Y version.
-version = ""  # pytheas.__version__
+version = pytheas.__version__
 # The full version, including alpha/beta/rc tags.
 release = pytheas.__version__  # + '-git'
 
@@ -131,10 +135,10 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_custom', '_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ["_custom", "_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
@@ -148,18 +152,15 @@ todo_include_todos = True
 
 html_theme = "bootstrap"
 html_theme_path = sphinx_bootstrap_theme.get_html_theme_path()
-html_static_path = ['_custom/static']
+html_static_path = ["_custom/static"]
 
 
 def setup(app):
-    app.add_stylesheet(
-        'https://use.fontawesome.com/releases/v5.0.13/css/all.css')
-    app.add_stylesheet('css/theme.css')
-    app.add_stylesheet('css/custom_styles.css')
-    app.add_stylesheet('css/custom_gallery.css')
-    app.add_stylesheet('css/custom_pygments.css')
+    app.add_stylesheet("css/theme.css")
+    app.add_stylesheet("css/custom_styles.css")
+    app.add_stylesheet("css/custom_gallery.css")
+    app.add_stylesheet("css/custom_pygments.css")
     app.add_javascript("js/custom.js")
-
 
 
 # Theme options are theme-specific and customize the look and feel of a theme
@@ -171,11 +172,9 @@ def setup(app):
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    'navbar_title': pytheas.__name__,
-
+    "navbar_title": pytheas.__name__,
     # Tab name for entire site. (Default: "Site")
-    'navbar_site_name': "Links",
-
+    "navbar_site_name": "Links",
     # A list of tuples containing pages or urls to link to.
     # Valid tuples should be in the following forms:
     #    (name, page)                 # a link to a page
@@ -183,25 +182,20 @@ html_theme_options = {
     #    (name, "http://example.com", True) # arbitrary absolute url
     # Note the "1" or "True" value above as the third argument to indicate
     # an arbitrary url.
-    'navbar_links': [
+    "navbar_links": [
         ("Documentation", "./reference"),
         ("Examples", "./auto_examples/index"),
         # ("Link", "http://example.com", True),
     ],
-
     # Render the next and previous page links in navbar. (Default: true)
-    'navbar_sidebarrel': False,
-
+    "navbar_sidebarrel": False,
     # Render the current pages TOC in the navbar. (Default: true)
-    'navbar_pagenav': False,
-
+    "navbar_pagenav": False,
     # Tab name for the current pages TOC. (Default: "Page")
-    'navbar_pagenav_name': "Page",
-
+    "navbar_pagenav_name": "Page",
     # Global TOC depth for "site" navbar tab. (Default: 1)
     # Switching to -1 shows all levels.
-    'globaltoc_depth': 1,
-
+    "globaltoc_depth": 1,
     # Include hidden TOCs in Site navbar?
     #
     # Note: If this is "false", you cannot have mixed ``:hidden:`` and
@@ -209,20 +203,16 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    'globaltoc_includehidden': "true",
-
+    "globaltoc_includehidden": "true",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
-    'navbar_class': "navbar navbar-default",
-
+    "navbar_class": "navbar navbar-default",
     # Fix navigation bar to top of page?
     # Values: "true" (default) or "false"
-    'navbar_fixed_top': "true",
-
+    "navbar_fixed_top": "true",
     # Location of link to source.
     # Options are "nav" (default), "footer" or anything else to exclude.
-    'source_link_position': "",
-
+    "source_link_position": "",
     # Bootswatch (http://bootswatch.com/) theme.
     #
     # Options are nothing (default) or the name of a valid theme
@@ -234,11 +224,10 @@ html_theme_options = {
     # Currently, the supported themes are:
     # - Bootstrap 2: https://bootswatch.com/2
     # - Bootstrap 3: https://bootswatch.com/3
-    'bootswatch_theme': "",
-
+    "bootswatch_theme": "",
     # Choose Bootstrap version.
     # Values: "3" (default) or "2" (in quotes)
-    'bootstrap_version': "3",
+    "bootstrap_version": "3",
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -252,7 +241,7 @@ html_theme_options = {
 # html_title = None
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
-#html_short_title = "Demo"
+# html_short_title = "Demo"
 
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
@@ -270,34 +259,36 @@ html_favicon = "./assets/favicon.ico"
 
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
-#html_last_updated_fmt = '%b %d, %Y'
+# html_last_updated_fmt = '%b %d, %Y'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
-#html_use_smartypants = True
+# html_use_smartypants = True
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
-html_sidebars = {'auto_examples/index': ['localtoc.html'],
-                 'reference': ['localtoc.html']}
+# html_sidebars = {}
+html_sidebars = {
+    "auto_examples/index": ["localtoc.html"],
+    "reference": ["localtoc.html"],
+}
 # html_sidebars = {'examples': ['localtoc.html']}
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+# html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_domain_indices = True
+# html_domain_indices = True
 
 # If false, no index is generated.
-#html_use_index = True
+# html_use_index = True
 
 # If true, the index is split into individual pages for each letter.
-#html_split_index = False
+# html_split_index = False
 
 # If true, links to the reST sources are added to the pages.
-#html_show_sourcelink = True
+# html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
-html_show_sphinx = True
+html_show_sphinx = False
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 html_show_copyright = True
@@ -305,15 +296,15 @@ html_show_copyright = True
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-#html_use_opensearch = ''
+# html_use_opensearch = ''
 
 # This is the file name suffix for HTML files (e.g. ".xhtml").
-#html_file_suffix = None
+# html_file_suffix = None
 
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = pytheas.__name__ + '_doc'
+htmlhelp_basename = pytheas.__name__ + "_doc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -322,15 +313,12 @@ latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     #
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     #
     # 'preamble': '',
-
     # Latex figure (float) alignment
     #
     # 'figure_align': 'htbp',
@@ -340,8 +328,13 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, pytheas.__name__ + '.tex', 'pytheas Documentation',
-     'Benjamin Vial', 'manual'),
+    (
+        master_doc,
+        pytheas.__name__ + ".tex",
+        "pytheas Documentation",
+        "Benjamin Vial",
+        "manual",
+    )
 ]
 
 
@@ -349,10 +342,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [
-    (master_doc, pytheas.__name__, 'pytheas Documentation',
-     [author], 1)
-]
+man_pages = [(master_doc, pytheas.__name__, "pytheas Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -361,11 +351,17 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'pytheas', 'pytheas Documentation',
-     author, pytheas.__name__, 'Python Electromagnetic Analysis and Simulation with the Finite Element Method',
-     'Science/Engineering'),
+    (
+        master_doc,
+        "pytheas",
+        "pytheas Documentation",
+        author,
+        pytheas.__name__,
+        pytheas.__description__,
+        "Science/Engineering",
+    )
 ]
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {"https://docs.python.org/": None}

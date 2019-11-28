@@ -1,21 +1,43 @@
+@import url('https://use.fontawesome.com/releases/v5.0.13/css/all.css');
+@font-face {
+  font-family: 'PT Sans Narrow';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('PT Sans Narrow'), local('PTSans-Narrow'), url(https://fonts.gstatic.com/s/ptsansnarrow/v11/BngRUXNadjH0qYEzV7ab-oWlsbCGwRg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Saira Regular'), local('Saira-Regular'), url(https://fonts.gstatic.com/s/saira/v4/memwYa2wxmKQyNknTZY.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Share Tech Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v9/J7aHnp1uDWRBEqV98dVQztYldFcLowEA.ttf) format('truetype');
+}
 div.sphx-glr-download a {
-  background-color: #40363c;
+  background-color: #443c3e;
   background-image: none;
   border-radius: 0px;
-  border: 0px solid #40363c;
-  color: #dddddd;
+  border: 0px solid #443c3e;
+  color: #ededed;
   display: inline-block;
   font-weight: bold;
-  padding: 1em;
+  padding: 0.8em;
   text-align: center;
-  font-size: 20px;
+  font-size: 12pt;
   max-width: 400px;
 }
 div.sphx-glr-download a:hover {
   box-shadow: none;
   text-decoration: none;
   background-image: none;
-  background-color: #1b1619;
+  background-color: #312b2d;
   max-width: 400px;
 }
 div.sphx-glr-download code.download {
@@ -26,14 +48,13 @@ div.sphx-glr-download code.download {
   border: none;
   background: none;
   color: #ffffff;
-  font-family: inherit;
   max-width: 400px;
-  font-family: "Play", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
+  font-family: "PT Sans Narrow", Helvetica, Arial, sans-serif;
+  font-size: 14pt;
 }
 .sphx-glr-thumbcontainer {
   background: #ffffff;
-  border: solid #dddddd 1px;
+  border: solid #ededed 1px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 0px;
@@ -51,7 +72,7 @@ div.sphx-glr-footer {
   text-align: center;
 }
 .sphx-glr-script-out .highlight pre {
-  background-color: #dddddd;
+  background-color: #ededed;
   border: 0;
   max-height: 30em;
   overflow: auto;
@@ -72,16 +93,16 @@ div.sphx-glr-footer {
 .rst-content .section > a > img {
   margin-bottom: 24px;
   background: #ffffff;
-  border: solid #dddddd 1px;
+  border: solid #ededed 1px;
 }
 .alert-info {
   background-image: none;
   background-color: #ffffff;
   border-color: #ffffff;
-  color: #40363c;
+  color: #443c3e;
   border-radius: 0px;
   border: 0px;
-  border-left: 4px solid #c26959;
+  border-left: 4px solid #4f7d67;
   border-right: none;
   padding-left: -4px;
   box-shadow: none;
@@ -89,9 +110,9 @@ div.sphx-glr-footer {
 }
 .sphx-glr-thumbcontainer[tooltip]:hover::before,
 .sphx-glr-thumbcontainer[tooltip]:hover::after {
-  background-color: #40363c;
+  background-color: #443c3e;
   border: none;
 }
 .sphx-glr-script-out .highlight pre {
-  background-color: #dddddd;
+  background-color: #ededed;
 }

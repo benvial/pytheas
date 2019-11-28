@@ -95,7 +95,7 @@ webdoc: less
 
 ## Show html doc in browser
 showdoc:
-	xdg-open ./docs/_build/html/index.html
+	$(BROWSER) ./docs/_build/html/index.html
 
 post:
 	bash .ci/post.sh
