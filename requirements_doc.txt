@@ -1,0 +1,8 @@
+tectonic
+doctr
+sphinx
+sphinx_bootstrap_theme
+sphinx_gallery
+Pillow
+codecov
+codacy-coverage

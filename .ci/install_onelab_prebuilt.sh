@@ -51,8 +51,8 @@ esac
 
 echo "installing gmsh"
 echo '----------------'
-wget -c http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
-tar -xvf gmsh.tgz
+wget -cq http://gmsh.info/bin/$GMSH_TGZ -O gmsh.tgz
+tar -xf gmsh.tgz
 rm gmsh.tgz
 mv $GMSH_NAME gmsh_tmp
 mv gmsh_tmp/bin/gmsh $ONELAB_PATH
@@ -67,8 +67,8 @@ rm -rf gmsh_tmp
 echo "installing getdp"
 echo '----------------'
 
-wget -c http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
-tar -xvf getdp.tgz
+wget -cq http://getdp.info/bin/$GETDP_TGZ -O getdp.tgz
+tar -xf getdp.tgz
 rm getdp.tgz
 mv $GETDP_NAME getdp_tmp
 mv getdp_tmp/bin/getdp $ONELAB_PATH

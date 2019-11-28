@@ -44,7 +44,7 @@ test:
 	pytest ./tests -s --cov=./
 
 
-clean:
+clean: rmonelab rmtmp
 	@find . | grep -E "(__pycache__|\.pyc|\.pyo$\)" | xargs rm -rf
 	@rm -rf pytheas_pip.egg-info/ build/ dist/ tmp/
 	cd docs && make clean
@@ -62,7 +62,7 @@ lsonelab:
 	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res'
 
 rmonelab:
-	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res' | xargs rm
+	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res' | xargs rm -f
 
 
 
