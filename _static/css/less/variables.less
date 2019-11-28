@@ -2,15 +2,26 @@
 
 
 
-@gray-base: rgb(64, 54, 60);
-@gray: rgb(161, 152, 164) ;
-@brand-primary: rgb(110, 155, 157);
-// @brand-primary: rgb(151, 107, 117);
-@brand-success: @brand-primary;
-@brand-info: rgb(126, 128, 153);
-@brand-warning: rgb(193, 172, 129);
-@brand-danger: rgb(194, 105, 89);
+
+@import url('https://use.fontawesome.com/releases/v5.0.13/css/all.css');
+
+@import url('https://fonts.googleapis.com/css?family=PT+Sans+Narrow|Saira|Share+Tech+Mono&display=swap');
+
+@gray-base: rgb(68, 60, 62);
+@gray: rgb(159, 151, 155) ;
+@brand-primary: rgb(190, 62, 81);
+@brand-success: rgb(218, 226, 72);
+@brand-info: rgb(122, 148, 109);
+@brand-warning: rgb(180, 94, 76);
+@brand-danger: rgb(79, 125, 103);
 @body-bg: rgb(255, 255, 255);
+
+
+@font-size-base: 14pt;
+
+@font-family-sans-serif: "Saira",  Helvetica, Arial, sans-serif;
+@font-family-serif: "PT Sans Narrow",   Helvetica, Arial, sans-serif;
+@font-family-monospace: "Share Tech Mono", "Courier New", monospace;
 
 @brand-primary-light: lighten(@brand-primary, 7%);
 @brand-primary-dark: darken(@brand-primary, 7%);
@@ -19,24 +30,22 @@
 @brand-warning-dark: darken(@brand-warning, 13.5%);
 @brand-danger-dark: darken(@brand-danger, 13.5%);
 
-@gray-dark: darken(@gray-base, 13.5%);
+@gray-dark: darken(@gray-base, 7%);
 
-@gray-darker: darken(@gray-dark, 13.5%);
+@gray-darker: darken(@gray-dark, 5%);
 @gray-light: lighten(@gray, 17%);
 @gray-lighter:  lighten(@gray-light, 13.5%);
 
-@body-bg-dark: darken(@body-bg, 13.5%);
+@body-bg-dark: darken(@body-bg, 7%);
+@body-bg-darker: darken(@body-bg-dark, 5%);
 
 
 @text-color: @gray-base;
 @link-color: @brand-danger;
 @link-hover-color: lighten(@link-color, 13.5%);
 @link-hover-decoration: underline;
-@font-family-sans-serif: "Play", "Helvetica Neue", Helvetica, Arial, sans-serif;
-@font-family-serif: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
-@font-family-monospace: Iosevka Term, Consolas, "Courier New", monospace;
+
 @font-family-base: @font-family-sans-serif;
-@font-size-base: 12px;
 @font-size-large: ceil((@font-size-base * 1.25));
 @font-size-small: ceil((@font-size-base * 0.85));
 @font-size-h1: floor((@font-size-base * 2.1));

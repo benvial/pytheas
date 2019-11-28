@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_styles.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_gallery.css" />
@@ -18,6 +18,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/custom.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
@@ -35,13 +37,13 @@
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
-    
-  <p></p>
 
-    
-    
+<p></p>
 
-  
+
+
+
+
 
   <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
     <div class="container">
@@ -54,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_pytheas_white.png"></span>
           pytheas</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,7 +111,7 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas</span></code>.BaseFEM<a class="headerlink" href="#pytheas-basefem" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pytheas.BaseFEM">
-<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">BaseFEM</code><a class="headerlink" href="#pytheas.BaseFEM" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">BaseFEM</code><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Finite Element models</p>
 <dl class="attribute">
 <dt id="pytheas.BaseFEM.Nix">
@@ -146,13 +148,13 @@
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.cleanup">
-<code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.cleanup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.cleanup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.cleanup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove gmsh/getdp/python generated files from the temporary folder</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.compute_solution">
-<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><em class="sig-param">res_list=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.compute_solution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><em class="sig-param">res_list=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.compute_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.compute_solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the solution of the FEM problem using getdp</p>
 </dd></dl>
 
@@ -186,7 +188,7 @@
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.get_qty">
-<code class="sig-name descname">get_qty</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.get_qty" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_qty</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.get_qty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.get_qty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a scalar quantity.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -225,7 +227,7 @@
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.initialize">
-<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.initialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the problem:
 - make dictionary of parameters
 - write this dictionary entries to a .dat file
@@ -234,14 +236,14 @@
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.make_param_dict">
-<code class="sig-name descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.make_param_dict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.make_param_dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.make_param_dict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build dictionary of parameters. This will be later written to a parameter.dat
 file that is meant to be read by both gmsh and getdp</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.mk_tmp_dir">
-<code class="sig-name descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.mk_tmp_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a temporary directory</p>
 </dd></dl>
 
@@ -303,7 +305,7 @@ file that is meant to be read by both gmsh and getdp</p>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postpro_choice">
-<code class="sig-name descname">postpro_choice</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_choice" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_choice</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.postpro_choice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.postpro_choice" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -317,7 +319,7 @@ file that is meant to be read by both gmsh and getdp</p>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postpro_fields">
-<code class="sig-name descname">postpro_fields</code><span class="sig-paren">(</span><em class="sig-param">filetype='txt'</em>, <em class="sig-param">postop='postop_fields'</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postpro_fields" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_fields</code><span class="sig-paren">(</span><em class="sig-param">filetype='txt'</em>, <em class="sig-param">postop='postop_fields'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.postpro_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.postpro_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the field maps and output to a file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -332,7 +334,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.postprocess">
-<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.postprocess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.postprocess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run getdp postoperation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -343,7 +345,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.ppcmd">
-<code class="sig-name descname">ppcmd</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.ppcmd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ppcmd</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.ppcmd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.ppcmd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a postprocessing command</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -376,13 +378,13 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.rm_tmp_dir">
-<code class="sig-name descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.rm_tmp_dir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the temporary directory</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.BaseFEM.update_params">
-<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.BaseFEM.update_params" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/basefem/basefem.html#BaseFEM.update_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.BaseFEM.update_params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the dictionary of parameters and the corresponding file</p>
 </dd></dl>
 
@@ -395,54 +397,44 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
       
   </div>
 </div>
-  <div class="container">
-    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
 </div>
-  <footer class="footer">
-        <div class="container">
+<footer class="footer">
+  <div class="container">
 
-            <div class="row">
-                <!-- <div class="col-sm-3">
-                
-                </div> -->
-                  <div class="col-sm-3">
-                  <div class="foot-fa">
-                    <a href=http://github.com/benvial/pytheas>
-                      <i class="fab fa-github fa-1x"></i>
-                      fork me on github
-                    </a>
-                  </div>
-                </div>
 
-            </div>
-            
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
         </div>
-        <div class="footer-copyright">
-          <p>
-              &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-          
-          </p>
-
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
         </div>
-
-    <!-- <div class="container">
-        <div class="text-center center-block">
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-python fa-3x">pip install me</i></a>
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-github fa-3x">fork me on github</i></a>
       </div>
 
-    </div> -->
-    <!-- <div class="container">
-      <p class="pull-right">
-        <a href="#">Back to top</a>
-        
-      </p>
-      <p>
-          &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-      </p>
-    </div> -->
-  </footer>
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
   </body>
 </html>

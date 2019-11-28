@@ -1,0 +1,748 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.basefem.basefem &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../.././reference.html">Documentation</a></li>
+                <li><a href="../../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html#indices-and-search">Indices and search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pytheas.basefem.basefem</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Author: Benjamin Vial</span>
+<span class="c1"># License: MIT</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Base class for Finite Element models</span>
+<span class="sd">====================================</span>
+
+<span class="sd">Define, solve and postprocess a FEM model using Gmsh_ and GetDP_.</span>
+
+<span class="sd"> .. _Gmsh:</span>
+<span class="sd">     http://gmsh.info/</span>
+<span class="sd"> .. _GetDP:</span>
+<span class="sd">     http://getdp.info/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">NearestNDInterpolator</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">femio</span>
+
+
+<span class="k">def</span> <span class="nf">get_file_path</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="BaseFEM"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM">[docs]</a><span class="k">class</span> <span class="nc">BaseFEM</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Base class for Finite Element models</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">epsilon0</span> <span class="o">=</span> <span class="mf">8.854187817e-12</span>  <span class="c1">#: flt: vacuum permittivity</span>
+    <span class="n">mu0</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">1e-7</span>  <span class="c1">#: flt: vacuum permeability</span>
+    <span class="n">cel</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">epsilon0</span> <span class="o">*</span> <span class="n">mu0</span><span class="p">))</span>  <span class="c1">#: flt: speed of light in vacuum</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">geom_filename_</span> <span class="o">=</span> <span class="s2">&quot;geometry.geo&quot;</span>  <span class="c1">#: str: Gmsh geometry filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pro_filename_</span> <span class="o">=</span> <span class="s2">&quot;main.pro&quot;</span>  <span class="c1">#: str: GetDP pro filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_filename_</span> <span class="o">=</span> <span class="s2">&quot;parameters.dat&quot;</span>  <span class="c1">#: str: GetDP pro filename</span>
+        <span class="c1">#: str: Gmsh geo filename for background mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh_filename_</span> <span class="o">=</span> <span class="s2">&quot;bg_mesh.geo&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># : bool: wether or not to use an inclusion geometry instead of a material distribution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inclusion_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjoint</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inclusion_filename_</span> <span class="o">=</span> <span class="s2">&quot;inclusion.geo&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_mesh</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span> <span class="o">=</span> <span class="s2">&quot;./tmp&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_pos</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">getdp_verbose</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#: str: GetDP verbose (int between 0 and 4)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gmsh_verbose</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#: str: Gmsh verbose (int between 0 and 4)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#: str: python verbose (int between 0 and 1)</span>
+        <span class="c1">#: flt: global mesh parameter</span>
+        <span class="c1">#: `MeshElementSize = lambda0/(parmesh*n)` `n`: refractive index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parmesh</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="c1">#: flt: design subdomain mesh parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parmesh_des</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="c1">#: flt: PMLs mesh parameter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parmesh_pml</span> <span class="o">=</span> <span class="mf">7.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parmesh_incl</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1">#: dimension of the problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quad_mesh_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extrude_mesh_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="o">=</span> <span class="s2">&quot;elements&quot;</span>
+        <span class="c1">#: int: number of x points for postprocessing field maps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matprop_pattern</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cplx_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;eps_&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span> <span class="o">=</span> <span class="n">get_file_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="s2">&quot;direct&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_periodicity</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span>
+
+    <span class="nd">@debug</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getdp_verbose</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gmsh_verbose</span> <span class="o">=</span> <span class="mi">4</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_debug</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">geom_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">geom_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">inclusion_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inclusion_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pro_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pro_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bg_mesh_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span><span class="p">,</span> <span class="s2">&quot;base&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content_geo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geom_filename</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content_pro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pro_filename</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content_bg_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh_filename</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1">#</span>
+    <span class="c1"># @property</span>
+    <span class="c1"># def param_dict(self):</span>
+    <span class="c1">#     return self.make_param_dict()</span>
+
+    <span class="c1"># @property</span>
+    <span class="c1"># def dir_path(self):</span>
+    <span class="c1">#     return os.path.dirname(os.path.abspath(__file__))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">content_par</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">make_inputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_dict</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_geo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geom_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_bg_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_pro</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pro_filename_</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">path_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;mesh.msh&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">celltype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_mesh_flag</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;quad&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">quad_mesh_flag</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;triangle&quot;</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">tmppath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getdp_verbose</span> <span class="o">&gt;=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">gmsh_verbose</span> <span class="ow">is</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">51</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sep</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseFEM.initialize"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the problem:</span>
+<span class="sd">        - make dictionary of parameters</span>
+<span class="sd">        - write this dictionary entries to a .dat file</span>
+<span class="sd">        - copy the .dat, .geo and .pro files to the temporary folder</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Initialization&quot;</span><span class="p">)</span>
+        <span class="c1"># tmp_name = tmp_dir.split(&quot;/&quot;)[2]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mk_tmp_dir</span><span class="p">()</span>
+
+        <span class="c1"># create tmp parameters files files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_param_dict</span><span class="p">()</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_filename_</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+        <span class="c1"># create tmp geo file</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_geo</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">geom_filename_</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+        <span class="c1"># create tmp geo file for background mesh</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh</span><span class="p">:</span>
+            <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">content_bg_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bg_mesh_filename_</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span>
+            <span class="p">)</span>
+        <span class="c1"># create tmp pro file</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_pro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pro_filename_</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span></div>
+        <span class="c1"># if self.inclusion_flag:</span>
+        <span class="c1">#     # create tmp geo inclusion file</span>
+        <span class="c1">#     femio.maketmp(self.content_incl, &quot;inclusion.geo&quot;, dirname=self.tmp_dir)</span>
+
+<div class="viewcode-block" id="BaseFEM.update_params"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.update_params">[docs]</a>    <span class="k">def</span> <span class="nf">update_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the dictionary of parameters and the corresponding file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Updating parameters&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">param_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_param_dict</span><span class="p">()</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_filename_</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFEM.cleanup"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.cleanup">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove gmsh/getdp/python generated files from the temporary folder&quot;&quot;&quot;</span>
+        <span class="n">trash</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*.msh&quot;</span><span class="p">,</span> <span class="s2">&quot;*.pre&quot;</span><span class="p">,</span> <span class="s2">&quot;*.res&quot;</span><span class="p">,</span> <span class="s2">&quot;*.dat&quot;</span><span class="p">,</span> <span class="s2">&quot;*.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;*.pyc&quot;</span><span class="p">,</span> <span class="s2">&quot;*.pos&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">trash</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="BaseFEM.mk_tmp_dir"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.mk_tmp_dir">[docs]</a>    <span class="k">def</span> <span class="nf">mk_tmp_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a temporary directory&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating temporary directory </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">FileExistsError</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">er</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Writing inside...&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="BaseFEM.rm_tmp_dir"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.rm_tmp_dir">[docs]</a>    <span class="k">def</span> <span class="nf">rm_tmp_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove the temporary directory&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removed temporary directory </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">er</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">er</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Skipping...&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="BaseFEM.make_param_dict"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.make_param_dict">[docs]</a>    <span class="k">def</span> <span class="nf">make_param_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build dictionary of parameters. This will be later written to a parameter.dat</span>
+<span class="sd">        file that is meant to be read by both gmsh and getdp&quot;&quot;&quot;</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">attr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;_&quot;</span><span class="p">]</span>
+        <span class="n">attr_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">attr_list</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">))]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">cpl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cplx_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">cpl</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">complex</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">attr_list</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;_re&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">real</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;_im&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">imag</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="c1"># special handling</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)):</span>
+                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;TE_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">==</span> <span class="s2">&quot;TE&quot;</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;inclusion_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inclusion_flag</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;adjoint_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adjoint</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;quad_mesh_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quad_mesh_flag</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;extrude_mesh_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extrude_mesh_flag</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;nodes_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="o">==</span> <span class="s2">&quot;nodes&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">param_dict</span></div>
+
+    <span class="k">def</span> <span class="nf">make_inclusion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">lcar</span><span class="o">=</span><span class="s2">&quot;lc_incl&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">points2geo</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">lcar</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inclusion_filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_design_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving nodes&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_nodes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">celltype</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_design_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving elements&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">celltype</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_eps_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">des_ID</span><span class="p">,</span> <span class="n">_eps_des</span><span class="p">,</span> <span class="n">posname</span><span class="o">=</span><span class="s2">&quot;eps_des&quot;</span><span class="p">):</span>
+        <span class="c1"># create a pos file to be read by getdp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Creating permittivity file &quot;</span> <span class="o">+</span> <span class="n">posname</span> <span class="o">+</span> <span class="s2">&quot;.pos&quot;</span><span class="p">)</span>
+        <span class="n">eps_des_pos</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">make_pos</span><span class="p">(</span>
+            <span class="n">des_ID</span><span class="p">,</span> <span class="n">_eps_des</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_mesh</span><span class="p">,</span> <span class="n">posname</span><span class="p">,</span> <span class="n">celltype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_des</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="n">eps_des_pos</span><span class="p">,</span> <span class="n">posname</span> <span class="o">+</span> <span class="s2">&quot;.pos&quot;</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">des_ID</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">posname</span><span class="p">):</span>
+        <span class="c1"># create a pos file to be read by getdp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Creating pos file &quot;</span> <span class="o">+</span> <span class="n">posname</span> <span class="o">+</span> <span class="s2">&quot;.pos&quot;</span><span class="p">)</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">make_pos</span><span class="p">(</span>
+            <span class="n">des_ID</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_mesh</span><span class="p">,</span> <span class="n">posname</span><span class="p">,</span> <span class="n">celltype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_des</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">maketmp</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">posname</span> <span class="o">+</span> <span class="s2">&quot;.pos&quot;</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tmp_dir</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_mesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_option</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Meshing model&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_periodicity</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Ignoring periodicity&quot;</span><span class="p">)</span>
+            <span class="n">igper</span> <span class="o">=</span> <span class="s2">&quot;-ignore_periodicity&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">igper</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">mesh_model</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_geo</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gmsh_verbose</span><span class="p">,</span>
+            <span class="n">other_option</span><span class="o">=</span><span class="n">other_option</span> <span class="o">+</span> <span class="n">igper</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content_mesh</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_info</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">content_mesh</span>
+
+    <span class="k">def</span> <span class="nf">make_mesh_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">nodes</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving mesh content&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">make_content_mesh_pos</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">celltype</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseFEM.compute_solution"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.compute_solution">[docs]</a>    <span class="k">def</span> <span class="nf">compute_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">res_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the solution of the FEM problem using getdp&quot;&quot;&quot;</span>
+        <span class="n">res_list</span> <span class="o">=</span> <span class="n">res_list</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;helmoltz_scalar&quot;</span><span class="p">,</span> <span class="s2">&quot;helmoltz_scalar_modal&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_epsilon_value</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_params</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Computing solution: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">+</span> <span class="s2">&quot; problem&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">==</span> <span class="s2">&quot;direct&quot;</span><span class="p">:</span>
+            <span class="n">argstr</span> <span class="o">=</span> <span class="s2">&quot;-petsc_prealloc 1500 -ksp_type preonly </span><span class="se">\</span>
+<span class="s2">                     -pc_type lu -pc_factor_mat_solver_type mumps&quot;</span>
+
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">res_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">==</span> <span class="s2">&quot;modal&quot;</span><span class="p">:</span>
+            <span class="n">argstr</span> <span class="o">=</span> <span class="s2">&quot;-slepc -eps_type krylovschur </span><span class="se">\</span>
+<span class="s2">                       -st_ksp_type preonly </span><span class="se">\</span>
+<span class="s2">                       -st_pc_type lu </span><span class="se">\</span>
+<span class="s2">                       -st_pc_factor_mat_solver_type mumps </span><span class="se">\</span>
+<span class="s2">                       -eps_max_it 300 </span><span class="se">\</span>
+<span class="s2">                       -eps_target 0.00001 </span><span class="se">\</span>
+<span class="s2">                       -eps_target_real </span><span class="se">\</span>
+<span class="s2">                       -eps_mpd 600 -eps_nev 400&quot;</span>
+
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">res_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Wrong analysis specified: choose between direct and modal&quot;</span><span class="p">)</span>
+
+        <span class="n">argstr</span> <span class="o">+=</span> <span class="s2">&quot; -cpu&quot;</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">solve_problem</span><span class="p">(</span>
+            <span class="n">resolution</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_pro</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getdp_verbose</span><span class="p">,</span>
+            <span class="n">path_pos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">path_pos</span><span class="p">,</span>
+            <span class="n">argstr</span><span class="o">=</span><span class="n">argstr</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFEM.ppcmd"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.ppcmd">[docs]</a>    <span class="k">def</span> <span class="nf">ppcmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a postprocessing command</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        postop : str</span>
+<span class="sd">            Name of the post operation as defined in the .pro file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">postpro_commands</span><span class="p">(</span>
+            <span class="n">postop</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_pro</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getdp_verbose</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFEM.postpro_choice"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.postpro_choice">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_choice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">filetype</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run a postprocessing command with either &#39;pos&#39; or &#39;txt&#39; file output.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Name of the post operation as defined in the .pro file.</span>
+<span class="sd">        filetype : str</span>
+<span class="sd">            File type to use (&#39;pos&#39; or &#39;txt&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">filetype</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;pos&quot;</span><span class="p">,</span> <span class="s2">&quot;txt&quot;</span><span class="p">}:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">filetype</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Wrong filetype specified: choose between txt and pos&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFEM.get_qty"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.get_qty">[docs]</a>    <span class="k">def</span> <span class="nf">get_qty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a scalar quantity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : str</span>
+<span class="sd">            Name of the txt file to load.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        qty : array</span>
+<span class="sd">            The quantity to be loaded.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="ow">is</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_node_table</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_qty_vect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="ow">is</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_node_table_vect</span><span class="p">(</span><span class="n">file_path</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table_vect</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">make_fdens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Making density function&quot;</span><span class="p">)</span>
+        <span class="n">n_x</span><span class="p">,</span> <span class="n">n_y</span><span class="p">,</span> <span class="n">n_z</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners_des</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corners_des</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y0</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">corners_des</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">n_x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">n_y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners_des</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">z0</span><span class="p">,</span> <span class="n">z1</span><span class="p">,</span> <span class="n">n_z</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">dz</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">z0</span><span class="p">,</span> <span class="n">z1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+            <span class="n">dz</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x0</span> <span class="o">+</span> <span class="n">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">dx</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">y0</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">dy</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_y</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">z0</span> <span class="o">+</span> <span class="n">dz</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z1</span> <span class="o">-</span> <span class="n">dz</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_z</span><span class="p">)</span>
+        <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">&quot;ij&quot;</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">xx</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">zz</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">fdens</span> <span class="o">=</span> <span class="n">NearestNDInterpolator</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">pattern</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">fdens</span>
+
+    <span class="k">def</span> <span class="nf">assign_material</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mat</span><span class="p">,</span> <span class="n">matprop</span><span class="p">,</span> <span class="n">density</span><span class="p">,</span> <span class="n">lambda0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Assigning materials&quot;</span><span class="p">)</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">mat_rand</span>
+        <span class="n">eps_nodes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">eps_pattern</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">nb_threshold</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">matprop</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">ncomplex</span> <span class="o">=</span> <span class="n">ri</span><span class="o">.</span><span class="n">get_complex_index</span><span class="p">(</span><span class="n">lambda0</span><span class="p">,</span> <span class="n">matprop</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ncomplex</span> <span class="o">=</span> <span class="n">matprop</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">eps_nodes</span><span class="p">[</span><span class="n">density</span> <span class="o">==</span> <span class="n">mat</span><span class="o">.</span><span class="n">threshold_val</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ncomplex</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="n">eps_pattern</span><span class="p">[</span><span class="n">pattern</span> <span class="o">==</span> <span class="n">mat</span><span class="o">.</span><span class="n">threshold_val</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">ncomplex</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">eps_nodes</span><span class="p">,</span> <span class="n">eps_pattern</span>
+
+    <span class="k">def</span> <span class="nf">get_mesh_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># get nodes and elements and their IDs in the design domain</span>
+        <span class="n">nodes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_nodes</span><span class="p">()</span>
+        <span class="n">els</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_design_elements</span><span class="p">()</span>
+        <span class="n">nodes_ID</span><span class="p">,</span> <span class="n">nodes_coords</span> <span class="o">=</span> <span class="n">nodes</span>
+        <span class="n">els_ID</span><span class="p">,</span> <span class="n">els_coords</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">els</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="ow">is</span> <span class="s2">&quot;elements&quot;</span><span class="p">:</span>
+            <span class="n">des</span> <span class="o">=</span> <span class="n">els_ID</span><span class="p">,</span> <span class="n">els_coords</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_des</span> <span class="ow">is</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span>
+            <span class="n">des</span> <span class="o">=</span> <span class="n">nodes_ID</span><span class="p">,</span> <span class="n">nodes_coords</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">els</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">des</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">des</span>
+        <span class="k">return</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">des</span>
+
+    <span class="k">def</span> <span class="nf">register_pattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">threshold_val</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pattern_</span> <span class="o">=</span> <span class="n">pattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold_val</span> <span class="o">=</span> <span class="n">threshold_val</span>
+        <span class="c1"># self.content_mesh = self.make_mesh_pos(self.els, self.nodes)</span>
+        <span class="c1"># define a density function from a pattern</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_fdens</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="c1"># interpolate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdens</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">des</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pattern</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="nf">update_epsilon_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Assigning materials&quot;</span><span class="p">)</span>
+        <span class="c1"># assign the permittivity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eps_des</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_pattern</span> <span class="o">=</span> <span class="n">assign_epsilon</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pattern_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">matprop_pattern</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span>
+        <span class="p">)</span>
+        <span class="c1"># create a pos file to be read by getdp</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_eps_pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">des</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eps_des</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">open_gmsh_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">pos_list</span> <span class="o">=</span> <span class="n">pos_list</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">&quot;*.pos&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Opening gmsh GUI&quot;</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">pos_list</span><span class="p">]</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">open_gmsh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_geo</span><span class="p">,</span> <span class="n">pos_list</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">postpro_eigenvalues</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_eigenvalues&quot;</span><span class="p">,</span> <span class="n">eig_file</span><span class="o">=</span><span class="s2">&quot;EigenValues.txt&quot;</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving eigenvalues&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">postop</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">eig_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_ev_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">postpro_eigenvectors</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;txt&quot;</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_eigenvectors&quot;</span><span class="p">,</span> <span class="n">eig_file</span><span class="o">=</span><span class="s2">&quot;EigenVectors.txt&quot;</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving eigenvectors&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postpro_choice</span><span class="p">(</span><span class="n">postop</span><span class="p">,</span> <span class="n">filetype</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">filetype</span> <span class="ow">is</span> <span class="s2">&quot;txt&quot;</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">eig_file</span><span class="p">)</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">u1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">imode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">):</span>
+                <span class="n">u1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">imode</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">u</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">imode</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+            <span class="k">return</span> <span class="n">u1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">get_spectral_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">eigval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_eigenvalues</span><span class="p">()</span>
+        <span class="n">eigvect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_eigenvectors</span><span class="p">()</span>
+        <span class="n">isort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigval</span><span class="p">)</span>
+        <span class="n">eigval</span> <span class="o">=</span> <span class="n">eigval</span><span class="p">[</span><span class="n">isort</span><span class="p">]</span>
+        <span class="n">eigvect</span> <span class="o">=</span> <span class="n">eigvect</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">(</span><span class="n">isort</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">eigval</span><span class="p">,</span> <span class="n">eigvect</span>
+
+    <span class="k">def</span> <span class="nf">postpro_norm_eigenvectors</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_norm_eigenvectors&quot;</span><span class="p">,</span> <span class="n">eig_file</span><span class="o">=</span><span class="s2">&quot;NormsEigenVectors.txt&quot;</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving eigenvector norms&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">postop</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">eig_file</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+
+<div class="viewcode-block" id="BaseFEM.postprocess"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.postprocess">[docs]</a>    <span class="k">def</span> <span class="nf">postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run getdp postoperation.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        postop : str</span>
+<span class="sd">            Name of the postoperation to run.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ppcmd</span><span class="p">(</span><span class="n">postop</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BaseFEM.postpro_fields"><a class="viewcode-back" href="../../../gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM.postpro_fields">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;txt&quot;</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_fields&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Compute the field maps and output to a file.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            filetype : str, default &quot;txt&quot;</span>
+<span class="sd">                Type of output files. Either &quot;txt&quot; (to be read by the method</span>
+<span class="sd">                get_field_map in python) or &quot;pos&quot; to be read by gmsh/getdp.</span>
+<span class="sd">            postop : str, default &quot;postop_fields&quot;</span>
+<span class="sd">                Name of the postoperation</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Postprocessing fields&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postpro_choice</span><span class="p">(</span><span class="n">postop</span><span class="p">,</span> <span class="n">filetype</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">postpro_fields_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_fields&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_fields</span><span class="p">(</span><span class="n">filetype</span><span class="o">=</span><span class="s2">&quot;pos&quot;</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="n">postop</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">postop</span><span class="o">=</span><span class="s2">&quot;postop_int_objective&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;objective.txt&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving objective&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjoint</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">postop</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+
+    <span class="k">def</span> <span class="nf">get_adjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;adjoint.txt&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving adjoint&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_qty</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_qty_vect</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_deq_deps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dEq_deps.txt&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Retrieving dEq_deps&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_qty</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_qty_vect</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">assign_epsilon</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">matprop</span><span class="p">,</span> <span class="n">threshold_val</span><span class="p">,</span> <span class="n">density</span><span class="p">):</span>
+    <span class="n">_eps_des</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">density</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+    <span class="n">eps_pattern</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ncomplex</span><span class="p">,</span> <span class="n">thres</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">matprop</span><span class="p">,</span> <span class="n">threshold_val</span><span class="p">):</span>
+        <span class="n">_eps_des</span><span class="p">[</span><span class="n">density</span> <span class="o">==</span> <span class="n">thres</span><span class="p">]</span> <span class="o">=</span> <span class="n">ncomplex</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">eps_pattern</span><span class="p">[</span><span class="n">pattern</span> <span class="o">==</span> <span class="n">thres</span><span class="p">]</span> <span class="o">=</span> <span class="n">ncomplex</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">_eps_des</span><span class="p">,</span> <span class="n">eps_pattern</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

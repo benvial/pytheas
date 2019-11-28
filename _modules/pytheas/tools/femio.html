@@ -1,0 +1,485 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.tools.femio &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../.././reference.html">Documentation</a></li>
+                <li><a href="../../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html#indices-and-search">Indices and search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pytheas.tools.femio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Tools for gmsh/getdp control and input/output.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">meshio</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="n">script_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">bin_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_path</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">)</span>
+
+<span class="n">gmsh</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;gmsh&quot;</span><span class="p">)</span>
+<span class="n">getdp</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;getdp&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">gmsh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">gmsh</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bin_path</span><span class="p">,</span> <span class="s2">&quot;gmsh&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">getdp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">getdp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bin_path</span><span class="p">,</span> <span class="s2">&quot;getdp&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_var_str</span><span class="p">(</span><span class="n">varname</span><span class="p">,</span> <span class="n">varvalue</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">varname</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">varvalue</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span> <span class="nf">append_inputs</span><span class="p">(</span><span class="n">str_to_append</span><span class="p">,</span> <span class="n">data_file</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">str_to_append</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">make_inputs</span><span class="p">(</span><span class="n">data_dict</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">make_var_str</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="n">S</span> <span class="o">+=</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="n">S</span>
+
+
+<span class="k">def</span> <span class="nf">write_inputs</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">data_file</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">data_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">f</span>
+
+
+<span class="k">def</span> <span class="nf">get_content</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">conts</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">conts</span>
+
+
+<span class="k">def</span> <span class="nf">maketmp</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">):</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">path</span>
+
+
+<div class="viewcode-block" id="mesh_model"><a class="viewcode-back" href="../../../gen_modules/pytheas.tools.femio.html#pytheas.tools.femio.mesh_model">[docs]</a><span class="k">def</span> <span class="nf">mesh_model</span><span class="p">(</span>
+    <span class="n">path_mesh</span><span class="p">,</span> <span class="n">path_geo</span><span class="p">,</span> <span class="n">mesh_format</span><span class="o">=</span><span class="s2">&quot;msh2&quot;</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">other_option</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Mesh the model using Gmsh_</span>
+
+<span class="sd">    .. _Gmsh:</span>
+<span class="sd">        http://gmsh.info/</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dim</span> <span class="o">=</span> <span class="n">dim</span> <span class="ow">or</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">list_dim</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">]</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">gmsh</span><span class="p">,</span> <span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">verbose</span><span class="p">),</span> <span class="s2">&quot;-format&quot;</span><span class="p">,</span> <span class="n">mesh_format</span><span class="p">,</span> <span class="n">path_geo</span><span class="p">]</span>
+    <span class="n">command</span> <span class="o">+=</span> <span class="n">list_dim</span> <span class="o">+</span> <span class="n">other_option</span><span class="o">.</span><span class="n">split</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="n">path_mesh</span><span class="p">]</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">solve_problem</span><span class="p">(</span><span class="n">resolution</span><span class="p">,</span> <span class="n">path_pro</span><span class="p">,</span> <span class="n">path_mesh</span><span class="p">,</span> <span class="n">path_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">argstr</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">getdp</span><span class="p">,</span>
+        <span class="s2">&quot;-v&quot;</span><span class="p">,</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">verbose</span><span class="p">),</span>
+        <span class="n">path_pro</span><span class="p">,</span>
+        <span class="s2">&quot;-pre&quot;</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="p">,</span>
+        <span class="s2">&quot;-msh&quot;</span><span class="p">,</span>
+        <span class="n">path_mesh</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">path_pos</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-gmshread&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">path_pos</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-cal&quot;</span><span class="p">,</span> <span class="s2">&quot;-v2&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">argstr</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">make_content_mesh_pos</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">dom</span><span class="p">,</span> <span class="n">celltype</span><span class="p">):</span>
+    <span class="n">nodes_ID</span><span class="p">,</span> <span class="n">nodes_coords</span> <span class="o">=</span> <span class="n">nodes</span>
+    <span class="n">els_ID</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">els_nodes_ID</span><span class="p">,</span> <span class="n">geom_ID_dom</span> <span class="o">=</span> <span class="n">els</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;$MeshFormat</span><span class="se">\n</span><span class="s2">2.2 0 8</span><span class="se">\n</span><span class="s2">$EndMeshFormat</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">nnodes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes_ID</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;$Nodes</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nnodes</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nnodes</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">nodes_coords</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nodes_ID</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;$EndNodes</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">nels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">els_ID</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;$Elements</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">nels</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;triangle&quot;</span><span class="p">:</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;quad&quot;</span><span class="p">:</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;tetra&quot;</span><span class="p">:</span>
+            <span class="n">s1</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">els_ID</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="o">+</span> <span class="n">s1</span>
+            <span class="o">+</span> <span class="s2">&quot; 2 &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dom</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">geom_ID_dom</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">els_nodes_ID</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot;$EndElements</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span> <span class="nf">get_nodes</span><span class="p">(</span><span class="n">path_mesh</span><span class="p">,</span> <span class="n">physical_ID</span><span class="p">,</span> <span class="n">celltype</span><span class="p">):</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">meshio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_mesh</span><span class="p">)</span>
+    <span class="n">phys_ID</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="n">celltype</span><span class="p">][</span><span class="s2">&quot;gmsh:physical&quot;</span><span class="p">]</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">phys_ID</span> <span class="o">==</span> <span class="n">physical_ID</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cells</span><span class="p">[</span><span class="n">celltype</span><span class="p">]</span>
+    <span class="n">els_nodes_ID</span> <span class="o">=</span> <span class="n">cell</span><span class="p">[</span><span class="n">domain</span><span class="p">]</span>
+    <span class="n">nodes_ID_domain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">els_nodes_ID</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="n">nodes_coords_domain</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">nodes_ID_domain</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes_ID_domain</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nodes_coords_domain</span>
+
+
+<span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="n">path_mesh</span><span class="p">,</span> <span class="n">physical_ID</span><span class="p">,</span> <span class="n">celltype</span><span class="p">):</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">meshio</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">path_mesh</span><span class="p">)</span>
+    <span class="n">phys_ID</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="n">celltype</span><span class="p">][</span><span class="s2">&quot;gmsh:physical&quot;</span><span class="p">]</span>
+    <span class="n">domain</span> <span class="o">=</span> <span class="n">phys_ID</span> <span class="o">==</span> <span class="n">physical_ID</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cell_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">is</span> <span class="n">celltype</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">cell_data</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;gmsh:physical&quot;</span><span class="p">])</span>
+    <span class="n">el_ID</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">domain</span><span class="p">))[</span><span class="n">domain</span><span class="p">]</span> <span class="o">+</span> <span class="n">n</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cells</span><span class="p">[</span><span class="n">celltype</span><span class="p">]</span>
+    <span class="n">els_nodes_ID</span> <span class="o">=</span> <span class="n">cell</span><span class="p">[</span><span class="n">domain</span><span class="p">]</span>
+    <span class="n">el_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">els_nodes_ID</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">el_ID</span><span class="p">,</span> <span class="n">el_center</span><span class="p">,</span> <span class="n">els_nodes_ID</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">make_pos</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">content_mesh</span><span class="p">,</span> <span class="n">viewname</span><span class="p">,</span> <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;nodes&quot;</span><span class="p">,</span> <span class="n">mesh_format</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">content_mesh</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">mesh_format</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">meshversion</span> <span class="o">=</span> <span class="s2">&quot;2.2 0 8&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">meshversion</span> <span class="o">=</span> <span class="s2">&quot;4.1 0 8&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;$MeshFormat</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s2">$EndMeshFormat</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshversion</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ID</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span>
+        <span class="n">str_start</span><span class="p">,</span> <span class="n">str_end</span> <span class="o">=</span> <span class="s2">&quot;$NodeData</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;$EndNodeData</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">elif</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;elements&quot;</span><span class="p">:</span>
+        <span class="n">str_start</span><span class="p">,</span> <span class="n">str_end</span> <span class="o">=</span> <span class="s2">&quot;$ElementData</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;$EndElementData</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">elif</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;elements_nodes&quot;</span><span class="p">:</span>
+        <span class="n">str_start</span><span class="p">,</span> <span class="n">str_end</span> <span class="o">=</span> <span class="s2">&quot;$ElementNodeData</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;$EndElementNodeData</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Wrong celltype specified: choose between nodes and elements&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">dat</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">imag</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;_real&quot;</span><span class="p">,</span> <span class="s2">&quot;_imag&quot;</span><span class="p">]):</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">str_start</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s1">&#39;1</span><span class="se">\n</span><span class="s1">&quot;&#39;</span> <span class="o">+</span> <span class="n">viewname</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;&quot;</span><span class="se">\n</span><span class="s1">1</span><span class="se">\n</span><span class="s1">0</span><span class="se">\n</span><span class="s1">3</span><span class="se">\n</span><span class="s1">0</span><span class="se">\n</span><span class="s1">1</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">idf</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="n">dat</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">celltype</span> <span class="ow">is</span> <span class="s2">&quot;elements_nodes&quot;</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">idf</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; 3 &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">idf</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="n">str_end</span>
+    <span class="k">return</span> <span class="n">s</span>
+
+
+<span class="k">def</span> <span class="nf">open_gmsh</span><span class="p">(</span><span class="n">path_mesh</span><span class="p">,</span> <span class="n">path_geo</span><span class="p">,</span> <span class="n">pos_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">pos_list</span> <span class="o">=</span> <span class="n">pos_list</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">gmsh</span><span class="p">,</span> <span class="n">path_geo</span><span class="p">,</span> <span class="n">path_mesh</span><span class="p">]</span> <span class="o">+</span> <span class="n">pos_list</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;-v&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">verbose</span><span class="p">),</span> <span class="s2">&quot;&amp;&quot;</span><span class="p">]</span>
+
+    <span class="c1"># subprocess.call(command, shell=True)</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">),</span> <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># os.system(&quot; &quot;.join(command))</span>
+
+
+<div class="viewcode-block" id="postpro_commands"><a class="viewcode-back" href="../../../gen_modules/pytheas.tools.femio.html#pytheas.tools.femio.postpro_commands">[docs]</a><span class="k">def</span> <span class="nf">postpro_commands</span><span class="p">(</span><span class="n">postop</span><span class="p">,</span> <span class="n">path_pro</span><span class="p">,</span> <span class="n">path_mesh</span><span class="p">,</span> <span class="n">path_pos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Generate a command list for postprocessing by GetDP (see main.pro</span>
+<span class="sd">    file in ./base folder for default available postprocessings, or to add</span>
+<span class="sd">    your own)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        postop (str): The name of the postoperation to perform.</span>
+<span class="sd">        path_pro (str): Path to the .pro file</span>
+<span class="sd">        path_mesh (str): Path to the .msh file</span>
+<span class="sd">        path_pos (str , optional): Path to a file to be read by ``gmshread``.</span>
+<span class="sd">        verbose (int): verbosity level</span>
+<span class="sd">        Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list : The list of strings to be oscommanded.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">path_res</span> <span class="o">=</span> <span class="n">path_pro</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.res&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">getdp</span>
+        <span class="o">+</span> <span class="s2">&quot; -v &quot;</span>
+        <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+        <span class="o">+</span> <span class="n">path_pro</span>
+        <span class="o">+</span> <span class="s2">&quot; -res &quot;</span>
+        <span class="o">+</span> <span class="n">path_res</span>
+        <span class="o">+</span> <span class="s2">&quot; -msh &quot;</span>
+        <span class="o">+</span> <span class="n">path_mesh</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">path_pos</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot; -gmshread &quot;</span> <span class="o">+</span> <span class="n">path_pos</span>
+    <span class="n">s</span> <span class="o">+=</span> <span class="s2">&quot; -pos &quot;</span> <span class="o">+</span> <span class="n">postop</span> <span class="o">+</span> <span class="s2">&quot; -v2&quot;</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">load_node_table</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">nodenumber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">nodenumber</span><span class="p">,</span> <span class="n">values</span>
+
+
+<span class="k">def</span> <span class="nf">load_table</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+
+
+<span class="c1"># def load_node_table_vect(filename):</span>
+<span class="c1">#     nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)</span>
+<span class="c1">#     values = np.loadtxt(filename, usecols=[1], skiprows=1) + 1j * np.loadtxt(</span>
+<span class="c1">#         filename, usecols=[2], skiprows=1</span>
+<span class="c1">#     )</span>
+<span class="c1">#     return nodenumber, values</span>
+
+
+<span class="k">def</span> <span class="nf">load_table_vect</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">vect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">comp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="n">j</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+        <span class="n">vect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">vect</span>
+
+
+<span class="k">def</span> <span class="nf">load_node_table_vect</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">nodenumber</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">vect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">comp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">3</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="n">j</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+        <span class="n">vect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nodenumber</span><span class="p">,</span> <span class="n">vect</span>
+
+
+<span class="k">def</span> <span class="nf">load_element_table_vect</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="c1"># nodenumber = np.loadtxt(filename, usecols=[0], skiprows=1)</span>
+    <span class="n">vect</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">comp</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">comp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">3</span><span class="p">],</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="n">j</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="p">)</span>
+        <span class="n">vect</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+    <span class="c1"># return nodenumber, vect</span>
+    <span class="k">return</span> <span class="n">vect</span>
+
+
+<span class="k">def</span> <span class="nf">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">load_ev_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+
+
+<span class="k">def</span> <span class="nf">points2geo</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">lc_incl</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="s2">&quot;./tmp.geo&quot;</span><span class="p">,</span> <span class="n">startpoint</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">points</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="c1"># lc_name = &quot;%s_lc&quot; % filename[0:3]</span>
+    <span class="c1"># Format</span>
+    <span class="c1"># Point(1) = {0, 0, 0, lc};</span>
+    <span class="c1"># fout.write(&quot;%s = 0.005;\n&quot; % lc_name)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">startpoint</span>
+    <span class="n">n_lines</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_lines</span><span class="p">):</span>
+        <span class="n">outputline</span> <span class="o">=</span> <span class="s2">&quot;Point(</span><span class="si">%i</span><span class="s2">) = { </span><span class="si">%8.8f</span><span class="s2">, </span><span class="si">%8.8f</span><span class="s2">, </span><span class="si">%8.8f</span><span class="s2">, </span><span class="si">%s</span><span class="s2">};</span><span class="se">\n</span><span class="s2"> &quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">j</span><span class="p">,</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="n">lc_incl</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outputline</span><span class="p">)</span>
+    <span class="c1"># gmsh bspline format</span>
+    <span class="c1"># Write out splinefit line</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+        <span class="s2">&quot;BSpline(</span><span class="si">%i</span><span class="s2">) = {</span><span class="si">%i</span><span class="s2">:</span><span class="si">%i</span><span class="s2">};</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">startpoint</span><span class="p">,</span> <span class="n">startpoint</span><span class="p">,</span> <span class="n">startpoint</span> <span class="o">+</span> <span class="n">n_lines</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

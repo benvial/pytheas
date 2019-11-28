@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_styles.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_gallery.css" />
@@ -18,6 +18,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/custom.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
@@ -35,13 +37,13 @@
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
-    
-  <p></p>
 
-    
-    
+<p></p>
 
-  
+
+
+
+
 
   <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
     <div class="container">
@@ -54,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_pytheas_white.png"></span>
           pytheas</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -109,7 +111,7 @@
 <h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas</span></code>.Periodic2D<a class="headerlink" href="#pytheas-periodic2d" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="pytheas.Periodic2D">
-<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">Periodic2D</code><span class="sig-paren">(</span><em class="sig-param">analysis='direct'</em>, <em class="sig-param">pola='TE'</em>, <em class="sig-param">A=1</em>, <em class="sig-param">lambda0=1</em>, <em class="sig-param">lambda_mesh=1</em>, <em class="sig-param">theta_deg=0</em>, <em class="sig-param">d=0.8</em>, <em class="sig-param">h_sup=1</em>, <em class="sig-param">h_sub=1</em>, <em class="sig-param">h_layer1=0.1</em>, <em class="sig-param">h_layer2=0.1</em>, <em class="sig-param">h_des=1.0</em>, <em class="sig-param">h_pmltop=1.0</em>, <em class="sig-param">h_pmlbot=1.0</em>, <em class="sig-param">a_pml=1</em>, <em class="sig-param">b_pml=1</em>, <em class="sig-param">eps_sup=(1+0j)</em>, <em class="sig-param">eps_sub=(1+0j)</em>, <em class="sig-param">eps_layer1=(1+0j)</em>, <em class="sig-param">eps_layer2=(1+0j)</em>, <em class="sig-param">eps_des=(1+0j)</em>, <em class="sig-param">eps_incl=(1+0j)</em>, <em class="sig-param">mu_incl=(1+0j)</em>, <em class="sig-param">mu_des=(1+0j)</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">Periodic2D</code><span class="sig-paren">(</span><em class="sig-param">analysis='direct'</em>, <em class="sig-param">pola='TE'</em>, <em class="sig-param">A=1</em>, <em class="sig-param">lambda0=1</em>, <em class="sig-param">lambda_mesh=1</em>, <em class="sig-param">theta_deg=0</em>, <em class="sig-param">d=0.8</em>, <em class="sig-param">h_sup=1</em>, <em class="sig-param">h_sub=1</em>, <em class="sig-param">h_layer1=0.1</em>, <em class="sig-param">h_layer2=0.1</em>, <em class="sig-param">h_des=1.0</em>, <em class="sig-param">h_pmltop=1.0</em>, <em class="sig-param">h_pmlbot=1.0</em>, <em class="sig-param">a_pml=1</em>, <em class="sig-param">b_pml=1</em>, <em class="sig-param">eps_sup=(1+0j)</em>, <em class="sig-param">eps_sub=(1+0j)</em>, <em class="sig-param">eps_layer1=(1+0j)</em>, <em class="sig-param">eps_layer2=(1+0j)</em>, <em class="sig-param">eps_des=(1+0j)</em>, <em class="sig-param">eps_incl=(1+0j)</em>, <em class="sig-param">mu_incl=(1+0j)</em>, <em class="sig-param">mu_des=(1+0j)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class for a finite element model of a 2D mono-periodic medium.</p>
 <p>The model consist of a single unit cell with quasi-periodic boundary conditions
 in the <span class="math notranslate nohighlight">\(x\)</span> direction enclosed with perfectly matched layers (PMLs)
@@ -168,13 +170,13 @@ Light comes from the top (travels along -y if normal incidence,
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.diffraction_efficiencies">
-<code class="sig-name descname">diffraction_efficiencies</code><span class="sig-paren">(</span><em class="sig-param">cplx_effs=False</em>, <em class="sig-param">orders=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.diffraction_efficiencies" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">diffraction_efficiencies</code><span class="sig-paren">(</span><em class="sig-param">cplx_effs=False</em>, <em class="sig-param">orders=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.diffraction_efficiencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.diffraction_efficiencies" title="Permalink to this definition">¶</a></dt>
 <dd><p>Postprocess diffraction efficiencies</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.get_field_map">
-<code class="sig-name descname">get_field_map</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.get_field_map" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_field_map</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.get_field_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.get_field_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a field map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -230,7 +232,7 @@ file that is meant to be read by both gmsh and getdp</p>
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.postpro_absorption">
-<code class="sig-name descname">postpro_absorption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.postpro_absorption" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_absorption</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.postpro_absorption"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.postpro_absorption" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the absorption coefficient</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -273,7 +275,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.postpro_fields_cuts">
-<code class="sig-name descname">postpro_fields_cuts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.postpro_fields_cuts" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">postpro_fields_cuts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.postpro_fields_cuts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.postpro_fields_cuts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the field cuts in substrate and superstarte</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -336,54 +338,44 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
       
   </div>
 </div>
-  <div class="container">
-    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
 </div>
-  <footer class="footer">
-        <div class="container">
+<footer class="footer">
+  <div class="container">
 
-            <div class="row">
-                <!-- <div class="col-sm-3">
-                
-                </div> -->
-                  <div class="col-sm-3">
-                  <div class="foot-fa">
-                    <a href=http://github.com/benvial/pytheas>
-                      <i class="fab fa-github fa-1x"></i>
-                      fork me on github
-                    </a>
-                  </div>
-                </div>
 
-            </div>
-            
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
         </div>
-        <div class="footer-copyright">
-          <p>
-              &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-          
-          </p>
-
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
         </div>
-
-    <!-- <div class="container">
-        <div class="text-center center-block">
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-python fa-3x">pip install me</i></a>
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-github fa-3x">fork me on github</i></a>
       </div>
 
-    </div> -->
-    <!-- <div class="container">
-      <p class="pull-right">
-        <a href="#">Back to top</a>
-        
-      </p>
-      <p>
-          &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-      </p>
-    </div> -->
-  </footer>
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
   </body>
 </html>

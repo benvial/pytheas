@@ -1,19 +1,12 @@
 @import "variables.less";
-@import url('https://fonts.googleapis.com/css?family=Montserrat');
-/* .wy-side-nav-search input[type=text] {
-    width: 100%;
-    border-radius: 0px;
-    padding: 5px @font-size-small;
-    border-color: @brand-primary;
-}
- */
+
 .dropdown-menu > li > a:hover,
 .navbar-default,
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .open > a {
   background-image: none;
   box-shadow: none;
-  font-family: "Play", sans-serif;
+  font-family: @font-family-sans-serif;
 }
 
 .navbar-default .navbar-nav > .active > a,
@@ -58,12 +51,12 @@ body {
 } */
 /* sidebar */
 .bs-sidenav {
-  margin-top: 30px;
+  margin-top: 25px;
   margin-bottom: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   text-shadow: none;
-  background-color: rgba(161, 152, 164, 0.15);
+  background-color: @body-bg-dark;
   border-radius: 0;
 }
 
@@ -77,7 +70,7 @@ body {
 .bs-sidenav .nav > li > a:focus,
 .bs-sidenav .nav > li > a:hover {
   text-decoration: none;
-  background-color: rgba(194, 105, 89, 0.1);
+  background-color: @body-bg-darker;
   box-sizing: border-box;
   border-left: 4px solid @brand-danger;
   border-right: none;
@@ -220,22 +213,10 @@ section.color-footer {
   text-decoration: none;
 }
 
-.footer .facebook:hover {
-  color: #0077e2;
-}
-
-.footer .google:hover {
-  color: #ef1a1a;
-}
-
-.footer .twitter:hover {
-  color: #00aced;
-}
-
 .foot-fa {
   padding-top: 10px;
   padding-bottom: 5px;
-  font-size: 24px;
+  font-size: @font-size-h3;
 }
 /* .footer i {
     margin-left: 10px;
@@ -325,7 +306,6 @@ dd {
 }
 
 dl:not(.docutils) dt:first-child {
-  padding-left: @font-size-small;
   margin-top: 0;
 }
 
@@ -342,7 +322,7 @@ dl:not(.docutils) dl dt {
 }
 
 dl:not(.docutils) dt {
-  display: table;
+  display: inline-block;
   margin: 5px 0;
   font-size: 90%;
   line-height: normal;
@@ -435,6 +415,10 @@ input {
   border-radius: 0;
   box-shadow: none;
   text-transform: uppercase;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: @font-family-sans-serif;
+  text-shadow: None;
 }
 /* .btn-outline{
   background-color: transparent;
@@ -448,4 +432,32 @@ input {
   right: 20px;
   display: none;
   padding: 13px;
+}
+
+.project-description {
+  font-size: @font-size-h4;
+  margin-top: 30pt;
+  margin-bottom: 45pt;
+}
+
+.viewcode-link::before {
+  font-size: @font-size-small;
+  content: "\f121";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.3em;
+  margin-left: 13px;
+}
+
+.viewcode-back::before {
+  font-size: @font-size-small;
+  content: "\f15c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.3em;
+  margin-left: 13px;
+}
+
+.navbar-text.navbar-version.pull-left {
+  visibility: hidden;
 }

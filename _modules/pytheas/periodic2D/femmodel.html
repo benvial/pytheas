@@ -1,0 +1,675 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.periodic2D.femmodel &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../.././reference.html">Documentation</a></li>
+                <li><a href="../../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html#indices-and-search">Indices and search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pytheas.periodic2D.femmodel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Author: Benjamin Vial</span>
+<span class="c1"># License: MIT</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">femio</span>
+<span class="kn">from</span> <span class="nn">..basefem</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="Periodic2D"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D">[docs]</a><span class="k">class</span> <span class="nc">Periodic2D</span><span class="p">(</span><span class="n">BaseFEM</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class for a finite element model of a 2D mono-periodic medium.</span>
+
+<span class="sd">    The model consist of a single unit cell with quasi-periodic boundary conditions</span>
+<span class="sd">    in the :math:`x` direction enclosed with perfectly matched layers (PMLs)</span>
+<span class="sd">    in the :math:`y` direction to truncate the semi infinite media. From top to bottom:</span>
+
+<span class="sd">    - PML top</span>
+<span class="sd">    - superstrate (incident medium)</span>
+<span class="sd">    - layer 2</span>
+<span class="sd">    - design layer: this is the layer containing the periodic pattern, can be continuous or discrete</span>
+<span class="sd">    - layer 1</span>
+<span class="sd">    - substrate</span>
+<span class="sd">    - PML bottom</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    analysis : str, default &quot;direct&quot;</span>
+<span class="sd">        Analysis type: either &quot;direct&quot; (plane wave) or</span>
+<span class="sd">        &quot;modal&quot; (spectral problem)</span>
+
+<span class="sd">    pola : str, default &quot;TE&quot;</span>
+<span class="sd">        Polarization case: either &quot;TE&quot; (E along z) or &quot;TM&quot; (H along z)</span>
+
+<span class="sd">    A : float, default 1</span>
+<span class="sd">        Incident plane wave amplitude</span>
+
+<span class="sd">    lambda0 : float, default 1</span>
+<span class="sd">        Incident plane wave wavelength in free space</span>
+
+<span class="sd">    lambda_mesh : float, default 1</span>
+<span class="sd">        Wavelength to use for meshing</span>
+
+<span class="sd">    theta_deg : float, default 0</span>
+<span class="sd">        Incident plane wave angle (in degrees).</span>
+<span class="sd">        Light comes from the top (travels along -y if normal incidence,</span>
+<span class="sd">        ``theta_deg=0`` is set)</span>
+
+<span class="sd">    d : float, default 0.8</span>
+<span class="sd">        Periodicity</span>
+
+<span class="sd">    h_sup : float, default 1</span>
+<span class="sd">        Thickness superstrate</span>
+
+<span class="sd">    h_sub : float, default 1</span>
+<span class="sd">        Thickness substrate</span>
+
+<span class="sd">    h_layer1 : float, default 0.1</span>
+<span class="sd">        Thickness layer 1</span>
+
+<span class="sd">    h_layer2 : float, default 0.1</span>
+<span class="sd">        Thickness layer 2</span>
+
+<span class="sd">    h_des : float, default 1</span>
+<span class="sd">        Thickness layer design</span>
+
+<span class="sd">    h_pmltop : float, default 1</span>
+<span class="sd">        Thickness pml top</span>
+
+<span class="sd">    h_pmlbot : float, default 1</span>
+<span class="sd">        Thickness pml bot</span>
+
+<span class="sd">    a_pml : float, default 1</span>
+<span class="sd">        PMLs complex y-stretching parameter, real part</span>
+
+<span class="sd">    b_pml : float, default 1</span>
+<span class="sd">        PMLs complex y-stretching parameter, imaginary part</span>
+
+<span class="sd">    eps_sup : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity superstrate</span>
+
+<span class="sd">    eps_sub : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity substrate</span>
+
+<span class="sd">    eps_layer1 : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity layer 1</span>
+
+<span class="sd">    eps_layer2 : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity layer 2</span>
+
+<span class="sd">    eps_des : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity layer design</span>
+
+<span class="sd">    eps_incl : complex, default (1 - 0 * 1j)</span>
+<span class="sd">        Permittivity inclusion</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">analysis</span><span class="o">=</span><span class="s2">&quot;direct&quot;</span><span class="p">,</span>
+        <span class="n">pola</span><span class="o">=</span><span class="s2">&quot;TE&quot;</span><span class="p">,</span>
+        <span class="n">A</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">lambda0</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">lambda_mesh</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">theta_deg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+        <span class="n">d</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">h_sup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">h_sub</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">h_layer1</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">h_layer2</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">h_des</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">h_pmltop</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">h_pmlbot</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+        <span class="n">a_pml</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">b_pml</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">eps_sup</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">eps_sub</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">eps_layer1</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">eps_layer2</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">eps_des</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">eps_incl</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">mu_incl</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+        <span class="n">mu_des</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">0</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span> <span class="o">=</span> <span class="n">get_file_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="n">analysis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="n">pola</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">A</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="n">lambda0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">=</span> <span class="n">lambda_mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="n">theta_deg</span>
+        <span class="c1"># opto-geometric parameters  -------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">=</span> <span class="n">h_sup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">=</span> <span class="n">h_sub</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">=</span> <span class="n">h_layer1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_layer2</span> <span class="o">=</span> <span class="n">h_layer2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span> <span class="o">=</span> <span class="n">h_des</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_pmltop</span> <span class="o">=</span> <span class="n">h_pmltop</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_pmlbot</span> <span class="o">=</span> <span class="n">h_pmlbot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_pml</span> <span class="o">=</span> <span class="n">a_pml</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pml</span> <span class="o">=</span> <span class="n">b_pml</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_sup</span> <span class="o">=</span> <span class="n">eps_sup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span> <span class="o">=</span> <span class="n">eps_sub</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_layer1</span> <span class="o">=</span> <span class="n">eps_layer1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_layer2</span> <span class="o">=</span> <span class="n">eps_layer2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="n">eps_des</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_incl</span> <span class="o">=</span> <span class="n">eps_incl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_incl</span> <span class="o">=</span> <span class="n">mu_incl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu_des</span> <span class="o">=</span> <span class="n">mu_des</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span> <span class="o">=</span> <span class="mi">4000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_incl</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aniso</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># if not isinstance(self.eps_layer1, complex):</span>
+        <span class="c1">#     raise TypeError(&quot;bar must be a complex number&quot;)</span>
+
+        <span class="c1"># postprocessing -------------------------------------------------</span>
+        <span class="c1"># int: number of diffraction orders</span>
+        <span class="c1"># for postprocessing diffraction efficiencies</span>
+        <span class="c1"># N_d_order = 0</span>
+        <span class="c1"># int: number of x integration points</span>
+        <span class="c1"># for postprocessing diffraction efficiencies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">npt_integ</span> <span class="o">=</span> <span class="mi">1000</span>
+        <span class="c1"># int: number of y slices points</span>
+        <span class="c1"># for postprocessing diffraction efficiencies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="c1"># flt:  such that `scan_dist  = min(h_sup, h_sub)/scan_dist_ratio`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist_ratio</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># modal analysis -------------------------------------------------</span>
+        <span class="c1"># int: number of eigenvalues searched for in modal analysis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neig</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="c1"># flt: wavelength around which to search eigenvalues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda0search</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># topology optimization   ------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjoint</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_tar</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t_tar</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">scan_dist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sub</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_sup</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist_ratio</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ycut_sub_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ycut_sub_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">scan_dist</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ycut_sup_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ycut_sup_max</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domX_L</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domX_R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domY_B</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_y</span>  <span class="c1"># - self.h_pmlbot</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domY_T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># + self.h_pmltop</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_y</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">corners_des</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_deg</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">omega0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cel</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">N_d_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">WRA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">WRA</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sup</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">WRA</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">WRA</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sup</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">WRA</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">WRA</span><span class="p">)))</span>
+
+    <span class="c1"># def make_param_dict(self):</span>
+    <span class="c1">#     param_dict = super().make_param_dict()</span>
+    <span class="c1">#     param_dict[&quot;aniso&quot;] = int(self.aniso)</span>
+    <span class="c1">#     return param_dict</span>
+
+<div class="viewcode-block" id="Periodic2D.postpro_absorption"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.postpro_absorption">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_absorption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Compute the absorption coefficient</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Q : float</span>
+<span class="sd">            Absorption coefficient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Postprocessing absorption&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_absorption&quot;</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;Q.txt&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
+        <span class="k">return</span> <span class="n">Q</span></div>
+
+<div class="viewcode-block" id="Periodic2D.postpro_fields_cuts"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.postpro_fields_cuts">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_fields_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Compute the field cuts in substrate and superstarte</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        u_diff_t : array-like</span>
+<span class="sd">            Transmitted field cuts</span>
+<span class="sd">        u_diff_r : array-like</span>
+<span class="sd">            Reflected field cuts</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">path_sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;sub_field_cuts.out&quot;</span><span class="p">)</span>
+        <span class="n">path_sup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;sup_field_cuts.out&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_sub</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_sub</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path_sup</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path_sup</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_fields_cuts&quot;</span><span class="p">)</span>
+        <span class="n">u_diff_t</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">path_sub</span><span class="p">)</span>
+        <span class="n">u_diff_r</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">path_sup</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">u_diff_t</span><span class="p">,</span> <span class="n">u_diff_r</span></div>
+
+<div class="viewcode-block" id="Periodic2D.get_field_map"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.get_field_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_field_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieve a field map.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            name : str {&#39;u&#39;, &#39;u_tot&#39;}</span>
+<span class="sd">                &#39;u&#39; (scattered field), &#39;u_tot&#39; (total field)</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            field : array, shape (self.Nix, self.Niy)</span>
+
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">))</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">)))</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">field</span></div>
+
+<div class="viewcode-block" id="Periodic2D.diffraction_efficiencies"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.diffraction_efficiencies">[docs]</a>    <span class="k">def</span> <span class="nf">diffraction_efficiencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cplx_effs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">orders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Postprocess diffraction efficiencies&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Processing diffraction efficiencies&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">==</span> <span class="s2">&quot;TE&quot;</span><span class="p">:</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span>
+        <span class="n">order_shift</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">No_ordre</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="n">order_shift</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="n">order_shift</span><span class="p">,</span>
+            <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">x_slice</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npt_integ</span><span class="p">)</span>
+        <span class="n">y_slice_t</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ycut_sub_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycut_sub_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">)</span>
+        <span class="n">y_slice_r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ycut_sup_min</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ycut_sup_max</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">)</span>
+        <span class="n">k_sub</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">sc</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+        <span class="n">k_sup</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">sc</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sup</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+        <span class="n">alpha_sup</span> <span class="o">=</span> <span class="o">-</span><span class="n">k_sup</span> <span class="o">*</span> <span class="n">sc</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
+        <span class="n">beta_sup</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">k_sup</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">alpha_sup</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)</span>
+        <span class="n">s_t</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="nb">complex</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">s_r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)),</span> <span class="nb">complex</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">Aeff_t</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">complex</span><span class="p">)</span>
+        <span class="n">Aeff_r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">complex</span><span class="p">)</span>
+
+        <span class="n">field_diff_t</span><span class="p">,</span> <span class="n">field_diff_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_fields_cuts</span><span class="p">()</span>
+
+        <span class="n">field_diff_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="n">field_diff_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npt_integ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">field_diff_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+            <span class="n">field_diff_r</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npt_integ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">alphat_t</span> <span class="o">=</span> <span class="n">alpha_sup</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">No_ordre</span>
+        <span class="n">alphat_r</span> <span class="o">=</span> <span class="n">alpha_sup</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">No_ordre</span>
+        <span class="n">betat_sup</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">k_sup</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">alphat_r</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">betat_sub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">sc</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">k_sub</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">alphat_t</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">m1</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">):</span>
+            <span class="n">slice_t</span> <span class="o">=</span> <span class="n">field_diff_t</span><span class="p">[</span><span class="n">m1</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">slice_r</span> <span class="o">=</span> <span class="n">field_diff_r</span><span class="p">[</span><span class="n">m1</span><span class="p">,</span> <span class="p">:]</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">expalpha_t</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">alphat_t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_slice</span><span class="p">)</span>
+                <span class="n">expalpha_r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">alphat_r</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_slice</span><span class="p">)</span>
+                <span class="n">s_t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">slice_t</span> <span class="o">*</span> <span class="n">expalpha_t</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_slice</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
+                <span class="n">s_r</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">slice_r</span> <span class="o">*</span> <span class="n">expalpha_r</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x_slice</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
+
+            <span class="n">Aeff_t</span><span class="p">[</span><span class="n">m1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">s_t</span> <span class="o">*</span> <span class="n">sc</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">betat_sub</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_slice_t</span><span class="p">[</span><span class="n">m1</span><span class="p">]))</span>
+            <span class="n">Aeff_r</span><span class="p">[</span><span class="n">m1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">s_r</span> <span class="o">*</span> <span class="n">sc</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+                <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">betat_sup</span> <span class="o">*</span> <span class="p">(</span><span class="n">y_slice_r</span><span class="p">[</span><span class="n">m1</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ycut_sup_min</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Aeff_r = -np.conj(Aeff_r)</span>
+
+        <span class="n">Beff_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Aeff_t</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">betat_sub</span> <span class="o">/</span> <span class="n">beta_sup</span> <span class="o">*</span> <span class="n">nu</span>
+        <span class="n">Beff_r</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Aeff_r</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">betat_sup</span> <span class="o">/</span> <span class="n">beta_sup</span>
+
+        <span class="c1"># print(Aeff_r)</span>
+        <span class="c1"># print(Aeff_t)</span>
+
+        <span class="n">rcplx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Aeff_r</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">tcplx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Aeff_t</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">Rorders</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Beff_r</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">Torders</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">Beff_t</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Rorders</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Torders</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_absorption</span><span class="p">()</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">T</span> <span class="o">+</span> <span class="n">R</span> <span class="o">+</span> <span class="n">Q</span>  <span class="c1"># energy balance</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">python_verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  Energy balance&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;    R            = &quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%0.6f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">R</span><span class="p">,</span>
+                <span class="s2">&quot;     (std slice2slice =&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%0.6e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sc</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Aeff_r</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+                <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;    T            = &quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%0.6f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">T</span><span class="p">,</span>
+                <span class="s2">&quot;     (std slice2slice =&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;</span><span class="si">%0.6e</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">sc</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">Aeff_t</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+                <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Q            = &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%0.6f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">Q</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    ------------------------&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Total        = &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%0.6f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">B</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">cplx_effs</span><span class="p">:</span>
+            <span class="n">R</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">rcplx</span><span class="p">,</span> <span class="n">tcplx</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">orders</span><span class="p">:</span>
+                <span class="n">R</span><span class="p">,</span> <span class="n">T</span> <span class="o">=</span> <span class="n">Rorders</span><span class="p">,</span> <span class="n">Torders</span>
+        <span class="n">eff</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">eff</span><span class="p">[</span><span class="s2">&quot;R&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span>
+        <span class="n">eff</span><span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span>
+        <span class="n">eff</span><span class="p">[</span><span class="s2">&quot;Q&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span>
+        <span class="n">eff</span><span class="p">[</span><span class="s2">&quot;B&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">B</span>
+        <span class="k">return</span> <span class="n">eff</span></div>
+
+    <span class="k">def</span> <span class="nf">pseudo_periodize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qt</span><span class="p">):</span>
+        <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+        <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">k0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">qtper</span> <span class="o">=</span> <span class="n">qt</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">qtper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">((</span><span class="n">qtper</span><span class="p">,</span> <span class="n">qt</span> <span class="o">*</span> <span class="n">coef</span> <span class="o">**</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">qtper</span>
+
+    <span class="k">def</span> <span class="nf">periodize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qt</span><span class="p">):</span>
+        <span class="n">qtper</span> <span class="o">=</span> <span class="n">qt</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">qtper</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">row_stack</span><span class="p">((</span><span class="n">qtper</span><span class="p">,</span> <span class="n">qt</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">qtper</span>
+
+    <span class="k">def</span> <span class="nf">plot_field_and_pattern</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fig</span><span class="p">,</span>
+        <span class="n">ax</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">,</span>
+        <span class="n">pattern</span><span class="p">,</span>
+        <span class="n">cmap_div</span><span class="p">,</span>
+        <span class="n">cmap_mat</span><span class="p">,</span>
+        <span class="n">cbar</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">vmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting field map&quot;</span><span class="p">)</span>
+        <span class="c1"># x = np.linspace(</span>
+        <span class="c1">#     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix</span>
+        <span class="c1"># )</span>
+        <span class="c1"># y = np.linspace(self.domY_B, self.domY_T, self.Niy)</span>
+
+        <span class="c1"># xx, yy = np.meshgrid(x, y)</span>
+        <span class="n">extent</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_div</span><span class="p">,</span>
+            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+            <span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">cbar</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">pattern</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_mat</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+            <span class="n">extent</span><span class="o">=</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">field</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;bilinear&quot;</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_div</span><span class="p">,</span>
+            <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span>
+            <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span>
+            <span class="n">extent</span><span class="o">=</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">plot_pattern_per</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">nper</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+        <span class="n">im1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+            <span class="n">pattern</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">extent</span><span class="o">=</span><span class="p">(</span>
+                <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">h_layer1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">h_des</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_fieldv_streamlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting vector field streamlines&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span>
+        <span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">)</span>
+        <span class="n">vlognorm</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vx</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">vy</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">Ndens</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">density</span> <span class="o">=</span> <span class="p">[</span><span class="n">Ndens</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">nper</span><span class="p">,</span> <span class="n">Ndens</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">]</span>
+        <span class="n">lw</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">vlognorm</span> <span class="o">/</span> <span class="n">vlognorm</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">streamplot</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="p">,</span>
+            <span class="n">vx</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">vy</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="n">lw</span><span class="p">,</span>
+            <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+            <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">,</span>
+            <span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;Fancy&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span><span class="p">))</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
-    <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_styles.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom_gallery.css" />
@@ -18,6 +18,8 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
     <script type="text/javascript" src="../_static/js/custom.js"></script>
     <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
@@ -35,13 +37,13 @@
 <script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
 
   </head><body>
-    
-  <p></p>
 
-    
-    
+<p></p>
 
-  
+
+
+
+
 
   <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
     <div class="container">
@@ -54,7 +56,7 @@
         </button>
         <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_pytheas_white.png"></span>
           pytheas</a>
-        <span class="navbar-text navbar-version pull-left"><b></b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -110,7 +112,7 @@
 <p>Shared utility functions used in pytheas.</p>
 <dl class="function">
 <dt id="pytheas.tools.utils.normalize">
-<code class="sig-prename descclassname">pytheas.tools.utils.</code><code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.tools.utils.normalize" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">pytheas.tools.utils.</code><code class="sig-name descname">normalize</code><span class="sig-paren">(</span><em class="sig-param">x</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/tools/utils.html#normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.tools.utils.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Normalize an array between 0 and 1</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -132,54 +134,44 @@
       
   </div>
 </div>
-  <div class="container">
-    <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
 </div>
-  <footer class="footer">
-        <div class="container">
+<footer class="footer">
+  <div class="container">
 
-            <div class="row">
-                <!-- <div class="col-sm-3">
-                
-                </div> -->
-                  <div class="col-sm-3">
-                  <div class="foot-fa">
-                    <a href=http://github.com/benvial/pytheas>
-                      <i class="fab fa-github fa-1x"></i>
-                      fork me on github
-                    </a>
-                  </div>
-                </div>
 
-            </div>
-            
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
         </div>
-        <div class="footer-copyright">
-          <p>
-              &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-            Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-          
-          </p>
-
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
         </div>
-
-    <!-- <div class="container">
-        <div class="text-center center-block">
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-python fa-3x">pip install me</i></a>
-          <a href="https://www.facebook.com/bootsnipp"><i class="fab fa-github fa-3x">fork me on github</i></a>
       </div>
 
-    </div> -->
-    <!-- <div class="container">
-      <p class="pull-right">
-        <a href="#">Back to top</a>
-        
-      </p>
-      <p>
-          &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;.<br/>
-        Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.<br/>
-      </p>
-    </div> -->
-  </footer>
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
   </body>
 </html>

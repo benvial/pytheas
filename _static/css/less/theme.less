@@ -3042,6 +3042,7 @@ fieldset[disabled] a.btn {
   color: @body-bg;
   background-color: #a198a4;
   border-color: #a198a4;
+    padding: 3px 12px;
 }
 .btn-default:focus,
 .btn-default.focus {
@@ -3423,7 +3424,7 @@ fieldset[disabled] .btn-link:focus {
 .btn-sm,
 .btn-group-sm > .btn {
   padding: 6px 9px;
-  font-size: @font-size-small;
+  font-size: ze-small;
   line-height: 1.5;
   border-radius: 3px;
 }
@@ -4445,8 +4446,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   margin-bottom: 19px;
 }
 .navbar-text {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  // margin-top: 20px;
+  // margin-bottom: 20px;
+  font-size: @font-size-base;
 }
 @media (min-width: 768px) {
   .navbar-text {
@@ -4473,6 +4475,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 }
 .navbar-default .navbar-brand {
   color: @body-bg;
+  font-size: @font-size-base;
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
@@ -6716,4 +6719,64 @@ button.close {
   .hidden-print {
     display: none !important;
   }
+}
+
+
+
+/* Copy buttons */
+a.copybtn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 1.3em;
+    height: 1.3em;
+    padding: .3em;
+	opacity: .3;
+	transition: opacity 0.5s;
+}
+
+div.highlight  {
+    position: relative;
+}
+
+.highlight:hover .copybtn {
+	opacity: 1;
+}
+
+/**
+ * A minimal CSS-only tooltip copied from:
+ *   https://codepen.io/mildrenben/pen/rVBrpK
+ *
+ * To use, write HTML like the following:
+ *
+ * <p class="o-tooltip--left" data-tooltip="Hey">Short</p>
+ */
+ .o-tooltip--left {
+  position: relative;
+ }
+
+ .o-tooltip--left:after {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    content: attr(data-tooltip);
+    padding: 2px;
+    top: 0;
+    left: 0;
+    background: grey;
+    font-size: 1.5rem;
+    color: white;
+    white-space: nowrap;
+    z-index: 2;
+    border-radius: 2px;
+    transform: translateX(-102%) translateY(0);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+}
+
+.o-tooltip--left:hover:after {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-100%) translateY(0);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
 }

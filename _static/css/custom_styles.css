@@ -1,23 +1,32 @@
+@import url('https://use.fontawesome.com/releases/v5.0.13/css/all.css');
 @font-face {
-  font-family: 'Montserrat';
+  font-family: 'PT Sans Narrow';
   font-style: normal;
   font-weight: 400;
-  src: local('Montserrat Regular'), local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v13/JTUSjIg1_i6t8kCHKm459Wlhzg.ttf) format('truetype');
+  font-display: swap;
+  src: local('PT Sans Narrow'), local('PTSans-Narrow'), url(https://fonts.gstatic.com/s/ptsansnarrow/v11/BngRUXNadjH0qYEzV7ab-oWlsbCGwRg.ttf) format('truetype');
 }
-/* .wy-side-nav-search input[type=text] {
-    width: 100%;
-    border-radius: 0px;
-    padding: 5px @font-size-small;
-    border-color: @brand-primary;
+@font-face {
+  font-family: 'Saira';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Saira Regular'), local('Saira-Regular'), url(https://fonts.gstatic.com/s/saira/v4/memwYa2wxmKQyNknTZY.ttf) format('truetype');
 }
- */
+@font-face {
+  font-family: 'Share Tech Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v9/J7aHnp1uDWRBEqV98dVQztYldFcLowEA.ttf) format('truetype');
+}
 .dropdown-menu > li > a:hover,
 .navbar-default,
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .open > a {
   background-image: none;
   box-shadow: none;
-  font-family: "Play", sans-serif;
+  font-family: "Saira", Helvetica, Arial, sans-serif;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .open > a {
@@ -44,24 +53,24 @@
   }
 }
 body {
-  font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "PT Sans Narrow", Helvetica, Arial, sans-serif;
   /* font-weight: 400; */
   line-height: 1.42857143;
-  color: #40363c;
+  color: #443c3e;
   padding-top: 40px;
-  font-size: 12px;
+  font-size: 14pt;
 }
 /* body {
   padding-top: 70px;
 } */
 /* sidebar */
 .bs-sidenav {
-  margin-top: 30px;
+  margin-top: 25px;
   margin-bottom: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   text-shadow: none;
-  background-color: rgba(161, 152, 164, 0.15);
+  background-color: #ededed;
   border-radius: 0;
 }
 .bs-sidenav .nav > li > a {
@@ -73,9 +82,9 @@ body {
 .bs-sidenav .nav > li > a:focus,
 .bs-sidenav .nav > li > a:hover {
   text-decoration: none;
-  background-color: rgba(194, 105, 89, 0.1);
+  background-color: #e0e0e0;
   box-sizing: border-box;
-  border-left: 4px solid #c26959;
+  border-left: 4px solid #4f7d67;
   border-right: none;
   padding-left: -4px;
 }
@@ -126,22 +135,22 @@ section p:last-child {
   margin-bottom: 0;
 }
 section.color-header {
-  background-color: #6e9b9d;
+  background-color: #be3e51;
   color: white;
 }
 section.color-footer {
-  background-color: #40363c;
+  background-color: #443c3e;
   color: white;
 }
 .footer {
   width: 100%;
   border-top: 1px solid #ccc;
-  background-color: #40363c;
+  background-color: #443c3e;
   color: white;
   padding-top: 30px;
 }
 .footer .footer-copyright {
-  background-color: #40363c;
+  background-color: #443c3e;
   padding-top: 3px;
   padding-bottom: 3px;
   text-align: center;
@@ -185,7 +194,7 @@ section.color-footer {
 .footer .social-networks {
   text-align: center;
   padding-top: 30px;
-  padding-bottom: 12px;
+  padding-bottom: 14pt;
 }
 .footer .social-networks a {
   font-size: 32px;
@@ -196,19 +205,10 @@ section.color-footer {
 .footer .social-networks a:hover {
   text-decoration: none;
 }
-.footer .facebook:hover {
-  color: #0077e2;
-}
-.footer .google:hover {
-  color: #ef1a1a;
-}
-.footer .twitter:hover {
-  color: #00aced;
-}
 .foot-fa {
   padding-top: 10px;
   padding-bottom: 5px;
-  font-size: 24px;
+  font-size: 21pt;
 }
 /* .footer i {
     margin-left: 10px;
@@ -290,7 +290,6 @@ dd {
   padding-left: 15px;
 }
 dl:not(.docutils) dt:first-child {
-  padding-left: 11px;
   margin-top: 0;
 }
 dl:not(.docutils) dl dt {
@@ -300,18 +299,18 @@ dl:not(.docutils) dl dt {
   border-left-width: medium;
   border-left-style: none;
   border-left-color: currentcolor;
-  border-left: solid 3px #ecebed;
+  border-left: solid 3px #eae8e9;
   background: #f4f3f4;
   color: #555;
 }
 dl:not(.docutils) dt {
-  display: table;
+  display: inline-block;
   margin: 5px 0;
   font-size: 90%;
   line-height: normal;
   background: #f4f3f4;
-  color: #6e9b9d;
-  border-top: solid 3px #6e9b9d;
+  color: #be3e51;
+  border-top: solid 3px #be3e51;
   padding: 5px;
   position: relative;
 }
@@ -338,7 +337,7 @@ span.pre a:hover {
   letter-spacing: -0.025em;
 } */
 code:hover {
-  color: #d5968b;
+  color: #6ea38a;
 }
 .reference.internal:hover {
   text-decoration: none;
@@ -383,9 +382,11 @@ input {
 }
 .btn {
   border-width: 3px;
+  text-transform: uppercase;
   border-radius: 0;
   box-shadow: none;
-  text-transform: uppercase;
+  font-family: "Saira", Helvetica, Arial, sans-serif;
+  text-shadow: None;
 }
 /* .btn-outline{
   background-color: transparent;
@@ -399,4 +400,28 @@ input {
   right: 20px;
   display: none;
   padding: 13px;
+}
+.project-description {
+  font-size: 18pt;
+  margin-top: 30pt;
+  margin-bottom: 45pt;
+}
+.viewcode-link::before {
+  font-size: 12pt;
+  content: "\f121";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.3em;
+  margin-left: 13px;
+}
+.viewcode-back::before {
+  font-size: 12pt;
+  content: "\f15c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  margin-right: 0.3em;
+  margin-left: 13px;
+}
+.navbar-text.navbar-version.pull-left {
+  visibility: hidden;
 }

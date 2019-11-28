@@ -9,6 +9,11 @@
 ./_images/sphx_glr_plot_diffraction_efficiencies_thumb.png
 ./_images/sphx_glr_plot_refractive_index_001.png
 ./_images/sphx_glr_plot_refractive_index_thumb.png
+./_modules/index.html
+./_modules/pytheas/basefem/basefem.html
+./_modules/pytheas/periodic2D/femmodel.html
+./_modules/pytheas/tools/femio.html
+./_modules/pytheas/tools/utils.html
 ./_sources/auto_examples/index.rst.txt
 ./_sources/auto_examples/material/plot_refractive_index.rst.txt
 ./_sources/auto_examples/material/sg_execution_times.rst.txt
@@ -85,6 +90,9 @@
 ./_static/bootswatch-3.3.7/united/bootstrap.min.css
 ./_static/bootswatch-3.3.7/yeti/bootstrap.min.css
 ./_static/broken_example.png
+./_static/copy-button.svg
+./_static/copybutton.css
+./_static/copybutton.js
 ./_static/css/custom_gallery.css
 ./_static/css/custom_pygments.css
 ./_static/css/custom_styles.css

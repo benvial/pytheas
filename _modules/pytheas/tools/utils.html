@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.tools.utils &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../.././reference.html">Documentation</a></li>
+                <li><a href="../../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../reference.html#indices-and-search">Indices and search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pytheas.tools.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Shared utility functions used in pytheas.&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">femio</span>
+<span class="kn">from</span> <span class="nn">..material</span> <span class="kn">import</span> <span class="n">genmat</span>
+
+
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../../gen_modules/pytheas.tools.utils.html#pytheas.tools.utils.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Normalize an array between 0 and 1</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array-like</span>
+<span class="sd">            the quantity to be normalized</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        x_norm : array-like</span>
+<span class="sd">            normalized array</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span></div>
+
+
+<span class="k">def</span> <span class="nf">between_range</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">xmin</span>
+
+
+<span class="k">def</span> <span class="nf">refine_mesh</span><span class="p">(</span>
+    <span class="n">fem</span><span class="p">,</span>
+    <span class="n">mat</span><span class="p">,</span>
+    <span class="n">lc_des</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">par</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">nmax</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">periodic_x</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">periodic_y</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">lc_bnd</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="n">mat_tmp</span> <span class="o">=</span> <span class="n">mat</span>
+    <span class="n">mat_tmp</span><span class="o">.</span><span class="n">ratio_filter</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="n">mat_tmp</span><span class="o">.</span><span class="n">pattern</span>
+    <span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">des</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">get_mesh_info</span><span class="p">()</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lc_des</span><span class="p">:</span>
+        <span class="n">lc_des</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">/</span> <span class="p">(</span><span class="n">fem</span><span class="o">.</span><span class="n">parmesh_des</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fem</span><span class="o">.</span><span class="n">eps_des</span><span class="o">.</span><span class="n">real</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">par</span><span class="p">:</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">smooth_factor</span><span class="p">,</span> <span class="n">fc_min</span><span class="p">,</span> <span class="n">fc_max</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">par</span><span class="p">):</span>
+        <span class="n">lc_min</span><span class="p">,</span> <span class="n">lc_max</span> <span class="o">=</span> <span class="n">lc_des</span> <span class="o">*</span> <span class="n">fc_min</span><span class="p">,</span> <span class="n">lc_des</span> <span class="o">*</span> <span class="n">fc_max</span>
+        <span class="k">if</span> <span class="n">fem</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">grad_pat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">pattern</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">grad_pat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">grad_pat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="n">pattern</span><span class="o">.</span><span class="n">shape</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">grad_pat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+            <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="n">grad_pat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">grad_pat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">grad_pat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+            <span class="p">)</span>
+
+        <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">genmat</span><span class="o">.</span><span class="n">filter_pattern</span><span class="p">(</span>
+            <span class="n">grad_pat_norm</span><span class="p">,</span> <span class="n">smooth_factor</span> <span class="o">*</span> <span class="n">mat_tmp</span><span class="o">.</span><span class="n">sigma</span>
+        <span class="p">)</span>
+        <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">grad_pat_norm</span><span class="p">)</span>
+        <span class="n">thres_grad</span> <span class="o">=</span> <span class="mf">1e-1</span>
+        <span class="n">grad_pat_norm</span><span class="p">[</span><span class="n">grad_pat_norm</span> <span class="o">&gt;</span> <span class="n">thres_grad</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">grad_pat_norm</span><span class="p">[</span><span class="n">grad_pat_norm</span> <span class="o">&lt;=</span> <span class="n">thres_grad</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">genmat</span><span class="o">.</span><span class="n">filter_pattern</span><span class="p">(</span>
+            <span class="n">grad_pat_norm</span><span class="p">,</span> <span class="n">smooth_factor</span> <span class="o">*</span> <span class="n">mat_tmp</span><span class="o">.</span><span class="n">sigma</span>
+        <span class="p">)</span>
+
+        <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">normalize</span><span class="p">(</span><span class="n">grad_pat_norm</span><span class="p">)</span>
+        <span class="n">grad_pat_norm</span> <span class="o">=</span> <span class="n">between_range</span><span class="p">(</span><span class="n">grad_pat_norm</span><span class="p">,</span> <span class="n">lc_min</span><span class="p">,</span> <span class="n">lc_max</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lc_bnd</span><span class="p">:</span>
+            <span class="n">lc_bnd</span> <span class="o">=</span> <span class="n">lc_min</span>  <span class="c1"># (lc_max + lc_min) / 2</span>
+        <span class="k">if</span> <span class="n">periodic_y</span><span class="p">:</span>
+            <span class="n">grad_pat_norm</span><span class="p">[:,</span> <span class="p">:</span><span class="n">nmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">lc_bnd</span>
+            <span class="n">grad_pat_norm</span><span class="p">[:,</span> <span class="o">-</span><span class="n">nmax</span><span class="p">:]</span> <span class="o">=</span> <span class="n">lc_bnd</span>
+        <span class="k">if</span> <span class="n">periodic_x</span><span class="p">:</span>
+            <span class="n">grad_pat_norm</span><span class="p">[:</span><span class="n">nmax</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">lc_bnd</span>
+            <span class="n">grad_pat_norm</span><span class="p">[</span><span class="o">-</span><span class="n">nmax</span><span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">lc_bnd</span>
+        <span class="n">fdens_grad</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">make_fdens</span><span class="p">(</span><span class="n">grad_pat_norm</span><span class="p">)</span>
+        <span class="n">density_grad</span> <span class="o">=</span> <span class="n">fdens_grad</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">fem</span><span class="o">.</span><span class="n">type_des</span> <span class="o">=</span> <span class="s2">&quot;nodes&quot;</span>
+        <span class="n">path_size_mesh</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">make_pos</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">density_grad</span><span class="p">,</span> <span class="s2">&quot;size_mesh&quot;</span><span class="p">)</span>
+        <span class="n">fem</span><span class="o">.</span><span class="n">type_des</span> <span class="o">=</span> <span class="s2">&quot;elements&quot;</span>
+        <span class="c1"># if it == 0:</span>
+        <span class="k">if</span> <span class="n">fem</span><span class="o">.</span><span class="n">dim</span> <span class="ow">is</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">mesh_model</span><span class="p">(</span>
+            <span class="n">fem</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">path_bg_mesh</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">fem</span><span class="o">.</span><span class="n">gmsh_verbose</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim</span>
+        <span class="p">)</span>
+
+        <span class="n">bgm</span> <span class="o">=</span> <span class="s2">&quot; -bgm </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path_size_mesh</span><span class="p">)</span>
+        <span class="n">bgm</span> <span class="o">+=</span> <span class="s2">&quot; -merge </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fem</span><span class="o">.</span><span class="n">path_bg_mesh</span><span class="p">)</span>
+        <span class="n">femio</span><span class="o">.</span><span class="n">mesh_model</span><span class="p">(</span>
+            <span class="n">fem</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">,</span>
+            <span class="n">fem</span><span class="o">.</span><span class="n">path_geo</span><span class="p">,</span>
+            <span class="n">other_option</span><span class="o">=</span><span class="n">bgm</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="n">fem</span><span class="o">.</span><span class="n">gmsh_verbose</span><span class="p">,</span>
+            <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">des</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">get_mesh_info</span><span class="p">()</span>
+        <span class="c1"># fem.content_mesh = fem.make_mesh_pos(els, nodes)</span>
+        <span class="n">fem</span><span class="o">.</span><span class="n">content_mesh</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">get_content</span><span class="p">(</span><span class="n">fem</span><span class="o">.</span><span class="n">path_mesh</span><span class="p">)</span>
+        <span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">fem</span><span class="o">.</span><span class="n">gmsh_verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;mesh refinement iteration :&quot;</span><span class="p">,</span> <span class="n">it</span><span class="p">)</span>
+        <span class="n">fem</span><span class="o">.</span><span class="n">nodes</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">els</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">des</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">,</span> <span class="n">els</span><span class="p">,</span> <span class="n">des</span>
+    <span class="k">return</span> <span class="n">fem</span>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+
+    </p>
+
+  </div>
+
+
+</footer>
+  </body>
+</html>
