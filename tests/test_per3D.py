@@ -56,4 +56,4 @@ def test_per3D(verbose=False):
     }
 
     for a, b in zip(effs.values(), effs_ref.values()):
-        npt.assert_almost_equal(a, b, decimal=3)
+        npt.assert_almost_equal(a, b, decimal=2)

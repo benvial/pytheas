@@ -76,8 +76,8 @@ class TwoScale3D(BaseFEM):
             +self.dz / 2,
         )
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
+    def _make_param_dict(self):
+        param_dict = super()._make_param_dict()
         # param_dict["save_solution"] = int(self.save_solution)
         param_dict["coupling_flag"] = int(self.coupling_flag)
         return param_dict
@@ -86,12 +86,12 @@ class TwoScale3D(BaseFEM):
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
-        self.print_progress("Computing solution: homogenization problem")
+        self._print_progress("Computing solution: homogenization problem")
         argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                  -pc_type lu -pc_factor_mat_solver_type mumps"
         for coord in ["x", "y", "z"]:
             resolution = "annex_" + coord
-            self.print_progress("     annex problem " + coord)
+            self._print_progress("     annex problem " + coord)
             femio.solve_problem(
                 resolution,
                 self.path_pro,
@@ -104,7 +104,7 @@ class TwoScale3D(BaseFEM):
             self.postprocess(postop)
 
     def compute_epsilon_eff(self):
-        self.print_progress("Postprocessing")
+        self._print_progress("Postprocessing")
         phi = np.zeros((3, 3), dtype=complex)
         int_eps = []
         for i1, ax1 in enumerate(["x", "y", "z"]):
@@ -124,17 +124,3 @@ class TwoScale3D(BaseFEM):
             print("#" * 33)
             print("effective permittivity tensor: \n", eps_eff)
         return eps_eff
-
-    #
-    # def postpro_fields(self, filetype="txt"):
-    #     """ Compute the field maps and output to a file.
-    #
-    #         Parameters
-    #         ----------
-    #         filetype : str, default "txt"
-    #             Type of output files. Either "txt" (to be read by the method
-    #             get_field_map in python) or "pos" to be read by gmsh/getdp.
-    #
-    #     """
-    #     self.print_progress("Postprocessing fields")
-    #     self.postpro_choice("postop_fields", filetype)

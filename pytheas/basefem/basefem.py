@@ -125,7 +125,7 @@ class BaseFEM:
     #
     # @property
     # def param_dict(self):
-    #     return self.make_param_dict()
+    #     return self._make_param_dict()
 
     # @property
     # def dir_path(self):
@@ -162,7 +162,7 @@ class BaseFEM:
     def tmppath(self, f):
         return os.path.join(self.tmp_dir, f)
 
-    def print_progress(self, s):
+    def _print_progress(self, s):
         if self.python_verbose:
             if self.getdp_verbose >= 3 or self.gmsh_verbose is 4:
                 sep = "-" * 51 + "\n"
@@ -171,18 +171,14 @@ class BaseFEM:
             print(sep + s)
 
     def initialize(self):
+        """Initialize the problem parameters.
         """
-        Initialize the problem:
-        - make dictionary of parameters
-        - write this dictionary entries to a .dat file
-        - copy the .dat, .geo and .pro files to the temporary folder
-        """
-        self.print_progress("Initialization")
+        self._print_progress("Initialization")
         # tmp_name = tmp_dir.split("/")[2]
         self.mk_tmp_dir()
 
         # create tmp parameters files files
-        self.param_dict = self.make_param_dict()
+        self.param_dict = self._make_param_dict()
         femio.maketmp(self.content_par, self.param_filename_, dirname=self.tmp_dir)
         # create tmp geo file
         femio.maketmp(self.content_geo, self.geom_filename_, dirname=self.tmp_dir)
@@ -201,8 +197,8 @@ class BaseFEM:
         """
         Update the dictionary of parameters and the corresponding file
         """
-        self.print_progress("Updating parameters")
-        self.param_dict = self.make_param_dict()
+        self._print_progress("Updating parameters")
+        self.param_dict = self._make_param_dict()
         femio.maketmp(self.content_par, self.param_filename_, dirname=self.tmp_dir)
 
     def cleanup(self):
@@ -243,7 +239,7 @@ class BaseFEM:
                 pass
         return
 
-    def make_param_dict(self):
+    def _make_param_dict(self):
         """Build dictionary of parameters. This will be later written to a parameter.dat
         file that is meant to be read by both gmsh and getdp"""
         param_dict = dict()
@@ -277,19 +273,31 @@ class BaseFEM:
         return param_dict
 
     def make_inclusion(self, points, lcar="lc_incl", **kwargs):
+        """Make a diffractive element geometry from points.
+
+        Parameters
+        ----------
+        points : array of size (Npoints, 2)
+            The points defining the simply connected 2D geometry of the object.
+        lcar : str (default "lc_incl")
+            Caracteristic length for the mesh.
+        **kwargs : dict
+            Extra arguments.
+
+        """
         femio.points2geo(points, lcar, output_path=self.inclusion_filename, **kwargs)
 
     def get_design_nodes(self):
-        self.print_progress("Retrieving nodes")
+        self._print_progress("Retrieving nodes")
         return femio.get_nodes(self.path_mesh, self.dom_des, self.celltype)
 
     def get_design_elements(self):
-        self.print_progress("Retrieving elements")
+        self._print_progress("Retrieving elements")
         return femio.get_elements(self.path_mesh, self.dom_des, self.celltype)
 
     def make_eps_pos(self, des_ID, _eps_des, posname="eps_des"):
         # create a pos file to be read by getdp
-        self.print_progress("Creating permittivity file " + posname + ".pos")
+        self._print_progress("Creating permittivity file " + posname + ".pos")
         eps_des_pos = femio.make_pos(
             des_ID, _eps_des, self.content_mesh, posname, celltype=self.type_des
         )
@@ -297,18 +305,33 @@ class BaseFEM:
 
     def make_pos(self, des_ID, val, posname):
         # create a pos file to be read by getdp
-        self.print_progress("Creating pos file " + posname + ".pos")
+        self._print_progress("Creating pos file " + posname + ".pos")
         pos = femio.make_pos(
             des_ID, val, self.content_mesh, posname, celltype=self.type_des
         )
         return femio.maketmp(pos, posname + ".pos", dirname=self.tmp_dir)
 
-    def make_mesh(self, other_option=""):
+    def make_mesh(self, other_option=None):
+        """Mesh the geometry using gmsh.
+
+        Parameters
+        ----------
+        other_option : str
+            Extra flag to pass to gmsh.
+
+        Returns
+        -------
+        str
+            The content of the .msh file.
+
+        """
+        other_option = other_option or ""
+
         if self.dim == 3:
             dim = [1, 2, 3]
         else:
             dim = [1, 2]
-        self.print_progress("Meshing model")
+        self._print_progress("Meshing model")
         if self.ignore_periodicity:
             print("Ignoring periodicity")
             igper = "-ignore_periodicity"
@@ -326,7 +349,7 @@ class BaseFEM:
         return self.content_mesh
 
     def make_mesh_pos(self, els, nodes):
-        self.print_progress("Retrieving mesh content")
+        self._print_progress("Retrieving mesh content")
         return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
     def compute_solution(self, res_list=None, **kwargs):
@@ -335,7 +358,7 @@ class BaseFEM:
         if self.pattern:
             self.update_epsilon_value()
         self.update_params()
-        self.print_progress("Computing solution: " + self.analysis + " problem")
+        self._print_progress("Computing solution: " + self.analysis + " problem")
         if self.analysis == "direct":
             argstr = "-petsc_prealloc 1500 -ksp_type preonly \
                      -pc_type lu -pc_factor_mat_solver_type mumps"
@@ -365,7 +388,7 @@ class BaseFEM:
             argstr=argstr,
         )
 
-    def ppcmd(self, postop):
+    def _ppcmd(self, postop):
         """Create a postprocessing command
 
         Parameters
@@ -377,7 +400,7 @@ class BaseFEM:
             postop, self.path_pro, self.path_mesh, self.path_pos, self.getdp_verbose
         )
 
-    def postpro_choice(self, name, filetype):
+    def _postpro_choice(self, name, filetype):
         """Run a postprocessing command with either 'pos' or 'txt' file output.
 
         Parameters
@@ -393,7 +416,7 @@ class BaseFEM:
         else:
             raise TypeError("Wrong filetype specified: choose between txt and pos")
 
-    def get_qty(self, filename):
+    def _get_qty(self, filename):
         """Retrieve a scalar quantity.
 
         Parameters
@@ -420,7 +443,7 @@ class BaseFEM:
             return femio.load_table_vect(file_path)
 
     def make_fdens(self, pattern):
-        self.print_progress("Making density function")
+        self._print_progress("Making density function")
         n_x, n_y, n_z = pattern.shape
         if len(self.corners_des) == 6:
             x0, x1, y0, y1, z0, z1 = self.corners_des
@@ -444,7 +467,7 @@ class BaseFEM:
         return fdens
 
     def assign_material(self, mat, matprop, density, lambda0):
-        self.print_progress("Assigning materials")
+        self._print_progress("Assigning materials")
         pattern = mat.mat_rand
         eps_nodes = np.zeros_like(density, dtype=complex)
         eps_pattern = np.zeros_like(pattern, dtype=complex)
@@ -481,7 +504,7 @@ class BaseFEM:
         self.pattern = True
 
     def update_epsilon_value(self):
-        self.print_progress("Assigning materials")
+        self._print_progress("Assigning materials")
         # assign the permittivity
         self._eps_des, self.eps_pattern = assign_epsilon(
             self.pattern_, self.matprop_pattern, self.threshold_val, self.density
@@ -490,15 +513,24 @@ class BaseFEM:
         self.path_pos = self.make_eps_pos(self.des[0], self._eps_des)
 
     def open_gmsh_gui(self, pos_list=None):
+        """Open gmsh GUI to visualize geometry and postprocessing results.
+
+        Parameters
+        ----------
+        pos_list : list
+            A list of .pos files giving the views to load. By default it will
+            render all the generated views.
+
+        """
         pos_list = pos_list or ["*.pos"]
-        self.print_progress("Opening gmsh GUI")
+        self._print_progress("Opening gmsh GUI")
         p = [self.tmppath(pos) for pos in pos_list]
         femio.open_gmsh(self.path_mesh, self.path_geo, pos_list=p)
 
     def postpro_eigenvalues(
         self, postop="postop_eigenvalues", eig_file="EigenValues.txt"
     ):
-        self.print_progress("Retrieving eigenvalues")
+        self._print_progress("Retrieving eigenvalues")
         self.postprocess(postop)
         filename = self.tmppath(eig_file)
         return femio.load_ev_timetable(filename)
@@ -506,8 +538,8 @@ class BaseFEM:
     def postpro_eigenvectors(
         self, filetype="txt", postop="postop_eigenvectors", eig_file="EigenVectors.txt"
     ):
-        self.print_progress("Retrieving eigenvectors")
-        self.postpro_choice(postop, filetype)
+        self._print_progress("Retrieving eigenvectors")
+        self._postpro_choice(postop, filetype)
         if filetype is "txt":
             filename = self.tmppath(eig_file)
             mode = femio.load_timetable(filename)
@@ -530,7 +562,7 @@ class BaseFEM:
     def postpro_norm_eigenvectors(
         self, postop="postop_norm_eigenvectors", eig_file="NormsEigenVectors.txt"
     ):
-        self.print_progress("Retrieving eigenvector norms")
+        self._print_progress("Retrieving eigenvector norms")
         self.postprocess(postop)
         filename = self.tmppath(eig_file)
         return np.sqrt(femio.load_timetable(filename))
@@ -543,7 +575,7 @@ class BaseFEM:
         postop : str
             Name of the postoperation to run.
         """
-        subprocess.call(self.ppcmd(postop))
+        subprocess.call(self._ppcmd(postop))
 
     def postpro_fields(self, filetype="txt", postop="postop_fields"):
         """ Compute the field maps and output to a file.
@@ -557,29 +589,29 @@ class BaseFEM:
                 Name of the postoperation
 
         """
-        self.print_progress("Postprocessing fields")
-        self.postpro_choice(postop, filetype)
+        self._print_progress("Postprocessing fields")
+        self._postpro_choice(postop, filetype)
 
     def postpro_fields_pos(self, postop="postop_fields"):
         return self.postpro_fields(filetype="pos", postop=postop)
 
     def get_objective(self, postop="postop_int_objective", filename="objective.txt"):
-        self.print_progress("Retrieving objective")
+        self._print_progress("Retrieving objective")
         if not self.adjoint:
             self.postprocess(postop)
         return femio.load_table(self.tmppath(filename)).real
 
     def get_adjoint(self, name="adjoint.txt"):
-        self.print_progress("Retrieving adjoint")
+        self._print_progress("Retrieving adjoint")
         if self.dim is 2:
-            return self.get_qty(name)
+            return self._get_qty(name)
         else:
             return self.get_qty_vect(name)
 
     def get_deq_deps(self, name="dEq_deps.txt"):
-        self.print_progress("Retrieving dEq_deps")
+        self._print_progress("Retrieving dEq_deps")
         if self.dim is 2:
-            return self.get_qty(name)
+            return self._get_qty(name)
         else:
             return self.get_qty_vect(name)
 

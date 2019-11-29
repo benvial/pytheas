@@ -93,6 +93,9 @@ less:
 webdoc: less
 	cd docs && make clean && make html
 
+webdoc-noplot:
+	cd docs && make clean && make html-noplot
+
 ## Show html doc in browser
 showdoc:
 	$(BROWSER) ./docs/_build/html/index.html

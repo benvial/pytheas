@@ -64,27 +64,7 @@ class BandDiag2D(BaseFEM):
         return -self.dx / 2, +self.dx / 2, -self.dy / 2, +self.dy / 2
 
     def compute_solution(self, **kwargs):
-        if self.pattern:
-            self.update_epsilon_value()
-        self.update_params()
-        self.print_progress("Computing solution")
-        argstr = "-slepc -eps_type krylovschur \
-                   -st_ksp_type preonly \
-                   -st_pc_type lu \
-                   -st_pc_factor_mat_solver_type mumps \
-                   -eps_max_it 300 \
-                   -eps_target 0.00001 \
-                   -eps_target_real \
-                   -eps_mpd 600 -eps_nev 400"
-        resolution = self.pola
-        femio.solve_problem(
-            resolution,
-            self.path_pro,
-            self.path_mesh,
-            verbose=self.getdp_verbose,
-            path_pos=self.path_pos,
-            argstr=argstr,
-        )
+        super().compute_solution(self, res_list=[resolution])
 
     def get_field_map(self, name):
         field = femio.load_table(self.tmppath(name))

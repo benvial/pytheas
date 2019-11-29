@@ -150,8 +150,8 @@ class Periodic3D(BaseFEM):
     #     N = self.d/self.lambda0 * (sc.sqrt([self.eps_L1, self.eps_L6]) - np.sin(self.theta))
     #     return int(max(N))
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
+    def _make_param_dict(self):
+        param_dict = super()._make_param_dict()
         layer_diopter = self.ancillary_problem()
 
         nb_layer = 6
@@ -227,7 +227,7 @@ class Periodic3D(BaseFEM):
         )
         return Q.real
 
-    def postpro_fields_cuts(self):
+    def _postpro_fields_cuts(self):
         npt_integ = self.ninterv_integ + 1
         nb_slice = self.nb_slice
         path_t = self.tmppath("Etot_XYcut.out")
@@ -252,7 +252,7 @@ class Periodic3D(BaseFEM):
         self.postprocess("postop_epsilon" + " -order 2")
 
     def diffraction_efficiencies(self):
-        Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2 = self.postpro_fields_cuts()
+        Ex_r2, Ey_r2, Ez_r2, Ex_t2, Ey_t2, Ez_t2 = self._postpro_fields_cuts()
         npt_integ = self.ninterv_integ + 1
         # print('gmsh cuts done !')
         period_x, period_y = self.period_x, self.period_y

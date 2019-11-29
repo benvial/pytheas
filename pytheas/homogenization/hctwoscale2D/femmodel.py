@@ -60,7 +60,7 @@ class HighContrast2D(TwoScale2D):
         return eps_eff
 
     def postpro_coefs_mu(self):
-        self.print_progress("Retrieving expansion coefficients")
+        self._print_progress("Retrieving expansion coefficients")
         self.postprocess("postop_coefs_mu")
         filename = self.tmppath("Coefs_mu.txt")
         return femio.load_timetable(filename)

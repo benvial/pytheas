@@ -179,7 +179,7 @@ class TopOpt:
         return w
 
     def old_filter_param(self, p):
-        self.fem.print_progress("Filtering")
+        self.fem._print_progress("Filtering")
         Xdes = np.array(self.fem.des[1].T)
         if self.rfilt == 0:
             pfilt = p
@@ -194,7 +194,7 @@ class TopOpt:
         return pfilt
 
     def new_filter_param(self, p):
-        self.fem.print_progress("Filtering")
+        self.fem._print_progress("Filtering")
         if self.rfilt == 0:
             pfilt = p
         else:
@@ -286,7 +286,7 @@ class TopOpt:
         return v
 
     def make_epsilon(self, p, filt=True, proj=True, grad=False):
-        self.fem.print_progress("Building permittivity")
+        self.fem._print_progress("Building permittivity")
         p_filt, dp_filt_dp = (
             self.filter_param(p, grad=grad) if filt else (p, np.ones_like(p))
         )
@@ -327,7 +327,7 @@ class TopOpt:
         return deq_deps
 
     def get_sensitivity(self, p, filt=True, proj=True, interp_method="cubic"):
-        self.fem.print_progress("Retrieving sensitivity")
+        self.fem._print_progress("Retrieving sensitivity")
         adjoint = self.get_adjoint()
         deq_deps = self.get_deq_deps(interp_method=interp_method)
         _, depsilon_dp = self.make_epsilon(p, filt=filt, proj=proj, grad=True)

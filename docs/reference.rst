@@ -12,8 +12,18 @@
 ..    :depth: 2
 
 
+====================
+Installation
+====================
+
+The easiest way to get started is to install via `PyPi`_:
+
+.. _PyPi: https://pypi.org/project/pytheas-pip
 
 
+.. code-block::
+
+  pip install pytheas-pip
 
 
 ==========
@@ -112,9 +122,14 @@ Classes
 
 
 ==================
-Indices and search
+Appendix
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+:ref:`Index<genindex>`
+===============================
+
+:ref:`Modules index<modindex>`
+===============================
+
+:ref:`Search page<search>`
+===============================

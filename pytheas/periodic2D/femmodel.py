@@ -245,10 +245,15 @@ class Periodic2D(BaseFEM):
         WRA[3] = a * (np.sqrt(self.eps_sub.real) - b)
         return int(max(abs(WRA)))
 
-    # def make_param_dict(self):
-    #     param_dict = super().make_param_dict()
+    # def _make_param_dict(self):
+    #     param_dict = super()._make_param_dict()
     #     param_dict["aniso"] = int(self.aniso)
     #     return param_dict
+
+    def compute_solution(self):
+        """Compute the solution of the FEM problem using getdp"""
+        res_list = ["helmoltz_scalar", "helmoltz_scalar_modal"]
+        super().compute_solution(res_list=res_list)
 
     def postpro_absorption(self):
         """ Compute the absorption coefficient
@@ -258,12 +263,12 @@ class Periodic2D(BaseFEM):
         Q : float
             Absorption coefficient
         """
-        self.print_progress("Postprocessing absorption")
+        self._print_progress("Postprocessing absorption")
         self.postprocess("postop_absorption")
         Q = femio.load_table(self.tmppath("Q.txt")).real
         return Q
 
-    def postpro_fields_cuts(self):
+    def _postpro_fields_cuts(self):
         """ Compute the field cuts in substrate and superstarte
 
         Returns
@@ -285,17 +290,17 @@ class Periodic2D(BaseFEM):
         return u_diff_t, u_diff_r
 
     def get_field_map(self, name):
-        """ Retrieve a field map.
+        """Retrieve a field map.
 
-            Parameters
-            ----------
-            name : str {'u', 'u_tot'}
-                'u' (scattered field), 'u_tot' (total field)
+        Parameters
+        ----------
+        name : str
+            Choose between "u" (scattered field), "u_tot" (total field)
 
-            Returns
-            -------
-            field : array, shape (self.Nix, self.Niy)
-
+        Returns
+        -------
+        array
+            A 2D complex array of shape (`Nix`, `Niy`)
 
         """
         field = femio.load_table(self.tmppath(name + ".txt"))
@@ -303,8 +308,24 @@ class Periodic2D(BaseFEM):
         return field
 
     def diffraction_efficiencies(self, cplx_effs=False, orders=False):
-        """Postprocess diffraction efficiencies"""
-        self.print_progress("Processing diffraction efficiencies")
+        """Postprocess diffraction efficiencies.
+
+        Parameters
+        ----------
+        cplx_effs : bool
+            If `True`, return complex coefficients (amplitude reflection and transmission).
+            If `False`, return real coefficients (power reflection and transmission)
+        orders : bool
+            If `True`, computes the transmission and reflection for all the propagating diffraction orders.
+            If `False`, returns the sum of all the propagating diffraction orders.
+
+        Returns
+        -------
+        dict
+            A dictionary containing the diffraction efficiencies.
+
+        """
+        self._print_progress("Processing diffraction efficiencies")
         if self.pola == "TE":
             nu = 1
         else:
@@ -328,7 +349,7 @@ class Periodic2D(BaseFEM):
         Aeff_t = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
         Aeff_r = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
 
-        field_diff_t, field_diff_r = self.postpro_fields_cuts()
+        field_diff_t, field_diff_r = self._postpro_fields_cuts()
 
         field_diff_t = np.transpose(
             field_diff_t.reshape(self.npt_integ, self.nb_slice, order="F")
@@ -431,7 +452,7 @@ class Periodic2D(BaseFEM):
         vmax=None,
     ):
 
-        self.print_progress("Plotting field map")
+        self._print_progress("Plotting field map")
         # x = np.linspace(
         #     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
         # )
@@ -497,7 +518,7 @@ class Periodic2D(BaseFEM):
         fig.colorbar(im1, fraction=0.046, pad=0.04)
 
     def plot_fieldv_streamlines(self, ax, vx, vy, cmap):
-        self.print_progress("Plotting vector field streamlines")
+        self._print_progress("Plotting vector field streamlines")
         x = np.linspace(
             self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix
         )

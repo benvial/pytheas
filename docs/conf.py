@@ -172,7 +172,7 @@ def setup(app):
 # theme further.
 html_theme_options = {
     # Navigation bar title. (Default: ``project`` value)
-    "navbar_title": pytheas.__name__,
+    "navbar_title": project,
     # Tab name for entire site. (Default: "Site")
     "navbar_site_name": "Links",
     # A list of tuples containing pages or urls to link to.
@@ -304,7 +304,7 @@ html_show_copyright = True
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = pytheas.__name__ + "_doc"
+htmlhelp_basename = project + "_doc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -330,9 +330,9 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        pytheas.__name__ + ".tex",
-        "pytheas Documentation",
-        "Benjamin Vial",
+        project + ".tex",
+        project + " Documentation",
+        author,
         "manual",
     )
 ]
@@ -342,7 +342,7 @@ latex_documents = [
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-man_pages = [(master_doc, pytheas.__name__, "pytheas Documentation", [author], 1)]
+man_pages = [(master_doc, project, project + " Documentation", [author], 1)]
 
 
 # -- Options for Texinfo output -------------------------------------------
@@ -353,10 +353,10 @@ man_pages = [(master_doc, pytheas.__name__, "pytheas Documentation", [author], 1
 texinfo_documents = [
     (
         master_doc,
-        "pytheas",
-        "pytheas Documentation",
+        project,
+        project + " Documentation",
         author,
-        pytheas.__name__,
+        project,
         pytheas.__description__,
         "Science/Engineering",
     )

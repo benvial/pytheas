@@ -201,7 +201,7 @@ def ell_shapes(mat_grid, rloc=None, rwidth=None, m=2):
     N = np.shape(mat_grid)[1:4]
     for i in range(3):
         rcoords = 0
-        if N[i] is not 1:
+        if N[i] != 1:
             rcoords = mat_grid[i] / (N[i] - 1) - 0.5
         coords1 += ((rcoords - rloc[i]) / (1 * rwidth[i])) ** m
     # return np.exp(-sum(coords1))

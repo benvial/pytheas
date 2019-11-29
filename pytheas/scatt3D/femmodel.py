@@ -129,8 +129,8 @@ class Scatt3D(BaseFEM):
             +self.hz_des / 2,
         )
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
+    def _make_param_dict(self):
+        param_dict = super()._make_param_dict()
         return param_dict
 
     def compute_solution(self, **kwargs):
@@ -138,5 +138,5 @@ class Scatt3D(BaseFEM):
         return super().compute_solution(res_list=res_list)
 
     def postpro_epsilon(self):
-        self.print_progress("Postprocessing permittivity")
+        self._print_progress("Postprocessing permittivity")
         self.postprocess("postop_epsilon" + " -order 2")

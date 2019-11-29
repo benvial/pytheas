@@ -145,8 +145,8 @@ class Scatt2D(BaseFEM):
     def omega0(self):
         return 2.0 * np.pi * self.cel / self.lambda0
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
+    def _make_param_dict(self):
+        param_dict = super()._make_param_dict()
         param_dict["ls_flag"] = int(self.ls_flag)
         param_dict["beam_flag"] = int(self.beam_flag)
         param_dict["target_flag"] = int(self.target_flag)
@@ -238,28 +238,28 @@ class Scatt2D(BaseFEM):
         return u, u_tot, u_i
 
     def postpro_coupling_angle(self):
-        self.print_progress("Angular sweep for coupling coeffs")
+        self._print_progress("Angular sweep for coupling coeffs")
         self.postprocess("postop_coupling_coeffs_angle")
         filename = self.tmppath("coupling_coeffs.txt")
         tmp = femio.load_timetable(filename)
         return tmp.reshape((self.Ni_theta, self.neig))
 
     def postpro_fourrier_coefs_angle(self):
-        self.print_progress("Fourrier coefficients for coupling")
+        self._print_progress("Fourrier coefficients for coupling")
         self.postprocess("postop_coupling_coeffs_fourrier_series")
         filename = self.tmppath("coupling_coeffs_fs.txt")
         tmp = femio.load_timetable(filename)
         return tmp.reshape((2 * self.M_fs + 1, self.neig))
 
     def postpro_modal_coupling(self):
-        self.print_progress("QNMs coupling coeffs")
+        self._print_progress("QNMs coupling coeffs")
         self.postprocess("postop_mode_coupling")
         filename = self.tmppath("mode_coupling.txt")
         tmp = femio.load_timetable(filename)
         return tmp  # .reshape((self.Ni_theta, self.neig))
 
     def postpro_modal_coupling_int(self):
-        self.print_progress("QNMs coupling coeffs integrand")
+        self._print_progress("QNMs coupling coeffs integrand")
         self.postprocess("postop_mode_coupling_int")
         mode = femio.load_timetable(self.tmppath("mode_coupling_int.txt"))
         u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
@@ -270,6 +270,6 @@ class Scatt2D(BaseFEM):
 
     def get_deq_deps(self):
         if self.pola is "TE":
-            return self.get_qty("dEq_deps.txt")
+            return self._get_qty("dEq_deps.txt")
         else:
-            return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
+            return self._get_qty("dEq_deps_x.txt"), self._get_qty("dEq_deps_y.txt")

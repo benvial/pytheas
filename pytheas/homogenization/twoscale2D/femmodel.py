@@ -55,8 +55,8 @@ class TwoScale2D(BaseFEM):
         # + self.h_pmltop
         return self.dy / 2
 
-    def make_param_dict(self):
-        param_dict = super().make_param_dict()
+    def _make_param_dict(self):
+        param_dict = super()._make_param_dict()
         param_dict["y_flag"] = int(self.y_flag)
         param_dict["save_solution"] = int(self.save_solution)
         param_dict["aniso"] = int(self.aniso)
@@ -68,7 +68,7 @@ class TwoScale2D(BaseFEM):
         super().compute_solution(res_list=res_list)
 
     def postprocessing(self):
-        self.print_progress("Postprocessing")
+        self._print_progress("Postprocessing")
         self.postprocess("postop")
 
     def get_phi(self):
@@ -126,7 +126,7 @@ class TwoScale2D(BaseFEM):
         return eps_eff
 
     def get_deq_deps(self):
-        return self.get_qty("dEq_deps_x.txt"), self.get_qty("dEq_deps_y.txt")
+        return self._get_qty("dEq_deps_x.txt"), self._get_qty("dEq_deps_y.txt")
 
     def postpro_circ(self):
         for s in ["sol", "vx", "vy"]:
@@ -148,7 +148,7 @@ class TwoScale2D(BaseFEM):
 
     #
     # def get_laplacian_psi(self, interp_method="nearest"):
-    #     deq_deps = self.get_qty("dx_psi.txt"), self.get_qty("dy_psi.txt")
+    #     deq_deps = self._get_qty("dx_psi.txt"), self._get_qty("dy_psi.txt")
     #     x_grid, y_grid = self.grid
     #
     #     deq_deps_x, deq_deps_y = deq_deps

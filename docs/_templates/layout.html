@@ -59,11 +59,8 @@
     <p>
       {{project}} version {{version}}.
       {%- if show_copyright %}
-      {%- if hasdoc('copyright') %}
-      {% trans path=pathto('copyright'), copyright=copyright|e %}&copy; <a href="{{ path }}">Copyright</a> {{ copyright }}. {% endtrans %}
-      {%- else %}
-      {% trans copyright=copyright|e %}&copy; Copyright {{ copyright }}. {% endtrans %}
-      {%- endif %}
+      <p>
+      {% trans copyright=copyright|e %}&copy {{ copyright }} {% endtrans %}
       {%- endif %}
       {%- if last_updated %}
       {% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}. {% endtrans %}
@@ -72,7 +69,7 @@
       {% trans sphinx_version=sphinx_version|e %}Created using <a href="http://sphinx-doc.org/">Sphinx</a> {{ sphinx_version }}.{% endtrans %}<br />
       {%- endif %}
 
-    </p>
+
 
   </div>
 
