@@ -23,9 +23,8 @@ fem = Scatt2D()
 fem.rm_tmp_dir()
 ##############################################################################
 
-# We define here the opto-geometric parameters:
+# We define first the opto-geometric parameters:
 
-# opto-geometric parameters  -------------------------------------------
 mum = 1  #: flt: the scale of the problem (here micrometers)
 fem.lambda0 = 0.6 * mum  #: flt: incident wavelength
 fem.pola = "TE"  #: str: polarization (TE or TM)
@@ -46,16 +45,11 @@ fem.parmesh_incl = 10
 fem.parmesh = 10
 fem.parmesh_pml = fem.parmesh * 2 / 3
 
-fem.Nix = 201
-fem.Niy = 201
-# fem.getdp_verbose = 4
-# fem.gmsh_verbose = 4
-# fem.python_verbose = 1
+fem.Nix = 101
+fem.Niy = 101
 
 ##############################################################################
 # Here we define an ellipsoidal rod as the scatterer:
-
-fem.inclusion_flag = True
 
 
 def ellipse(Rinclx, Rincly, rot_incl, x0, y0):
@@ -71,10 +65,11 @@ def ellipse(Rinclx, Rincly, rot_incl, x0, y0):
 
 
 rod = ellipse(0.4 * mum, 0.2 * mum, 0, 0, 0)
+fem.inclusion_flag = True
 
 
 ##############################################################################
-# Initialize, mesh and  compute the solution:
+# Initialize, build the scatterer, mesh and  compute the solution:
 
 fem.initialize()
 fem.make_inclusion(rod)
@@ -103,7 +98,7 @@ plt.tight_layout()
 # Do a near to far field transform and get the normalized scattering width:
 
 ff = fem.postpro_fields_n2f()
-theta = np.linspace(0, 2 * pi, 100)
+theta = np.linspace(0, 2 * pi, 51)
 scs = fem.normalized_scs(ff, theta)
 
 

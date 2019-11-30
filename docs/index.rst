@@ -1,39 +1,56 @@
 .. pytheas documentation master file
 
-.. title:: Home
-
-.. raw:: html
 
 
-  <div class="project-description">
+.. only:: latex
 
-.. include:: ../README.rst
-  :start-after: inclusion-marker-do-not-remove
+  =====
+  FIX
+  =====
+  
+  ===============
+  Introduction
+  ===============
+  
+  .. include:: ../README.rst
+    :start-after: inclusion-marker-do-not-remove
 
-.. raw:: html
+.. only:: html
 
-  </div>
+  .. title:: Home
 
-.. raw:: html
+  .. raw:: html
 
-  <div class="clearer">
-    <div class="row">
-      <div class="col-md-6">
-        <p class="button">
-          <a type="button" class="btn btn-primary" href="reference.html">
-            Read the doc
-          </a>
-          </p>
-          </div>
-          <div class="col-md-6">
-          <p class="button">
-          <a type="button" class="btn btn-primary" href="auto_examples/index.html">
-            Browse examples
-          </a>
-          </p>
-        </div>
+
+    <div class="project-description">
+
+  .. include:: ../README.rst
+    :start-after: inclusion-marker-do-not-remove
+
+  .. raw:: html
+
     </div>
-  </div>
+
+  .. raw:: html
+
+    <div class="clearer">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="button">
+            <a type="button" class="btn btn-primary" href="reference.html">
+              Read the doc
+            </a>
+            </p>
+            </div>
+            <div class="col-md-6">
+            <p class="button">
+            <a type="button" class="btn btn-primary" href="auto_examples/index.html">
+              Browse examples
+            </a>
+            </p>
+          </div>
+      </div>
+    </div>
 
 
 

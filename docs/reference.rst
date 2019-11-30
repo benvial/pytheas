@@ -23,13 +23,19 @@
   .. image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
      :alt: Code style: black
      
+     
+  |
+  
+  ------------------------------------------------------------------
 
-.. _pytheas_api_reference:
 
 
-====================
+
+.. _pytheas_installation:
+
+============
 Installation
-====================
+============
 
 The easiest way to get started is to install via `PyPi`_:
 
@@ -40,12 +46,25 @@ The easiest way to get started is to install via `PyPi`_:
 
   pip install pytheas-pip
 
+  
+.. only:: html
+   
+  |
+  
+  ------------------------------------------------------------------
+  
+  
+    
+.. _pytheas_api_reference:
 
 ==========
 User guide
 ==========
 
-The complete project is documented for every submodule.
+
+.. only:: html
+
+  The documentation is also available in `pdf <_downloads/pytheas.pdf>`_.
 
 
 :mod:`pytheas.periodic2D`: 2D metamaterials
@@ -65,8 +84,11 @@ Classes
 
   Periodic2D
 
-------------------------------------------------------------------
-
+.. only:: html
+   
+  |
+  
+  ------------------------------------------------------------------
 
 :mod:`pytheas.scatt2D`: 2D scattering
 =====================================
@@ -86,8 +108,11 @@ Classes
   Scatt2D
   
 
-------------------------------------------------------------------
-
+.. only:: html
+   
+  |
+  
+  ------------------------------------------------------------------
 
 :mod:`pytheas.tools`: tools and utilities
 =========================================
@@ -107,17 +132,23 @@ Submodules
   femio
   utils
 
-------------------------------------------------------------------
 
-==================
-Appendix
-==================
 
-:ref:`Index<genindex>`
-===============================
+.. only:: html
+   
+  |
+  
+  ------------------------------------------------------------------
 
-:ref:`Modules index<modindex>`
-===============================
+  ==================
+  Appendix
+  ==================
 
-:ref:`Search page<search>`
-===============================
+  :ref:`Index<genindex>`
+  ===============================
+
+  :ref:`Modules index<modindex>`
+  ===============================
+
+  :ref:`Search page<search>`
+  ===============================

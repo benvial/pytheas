@@ -27,6 +27,16 @@ import os
 from datetime import date
 import sphinx_gallery
 import pytheas
+from parseless import LessVars, sphinxcol
+
+# General information about the project.
+project = pytheas.__name__
+copyright = pytheas.__copyright__
+author = pytheas.__author__
+
+
+lessfile = "_custom/static/css/less/variables.less"
+less = LessVars(lessfile)
 
 # -- General configuration ------------------------------------------------
 
@@ -71,7 +81,7 @@ sphinx_gallery_conf = {
     "backreferences_dir": "gen_modules/backreferences",
     "default_thumb_file": "assets/logo_pytheas.png",
     # Modules for which function level galleries are created.
-    "doc_module": "pytheas",
+    "doc_module": project,
 }
 
 
@@ -100,11 +110,6 @@ source_suffix = ".rst"
 
 # The master toctree document.
 master_doc = "index"
-
-# General information about the project.
-project = pytheas.__name__
-copyright = pytheas.__copyright__
-author = pytheas.__author__
 
 
 html_context = {
@@ -138,7 +143,7 @@ language = None
 exclude_patterns = ["_custom", "_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = "sphinx"
+pygments_style = "trac"
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
@@ -203,7 +208,7 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    "globaltoc_includehidden": "false",
+    "globaltoc_includehidden": "true",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
     "navbar_class": "navbar navbar-default",
@@ -309,7 +314,174 @@ htmlhelp_basename = project + "_doc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
+latex_engine = 'xelatex'
+latex_logo = "assets/logo_pytheas.png"
+# latex_toplevel_sectioning = 'section'
+
+TitleColor = less.latex_code("TitleColor", "brand-primary")
+InnerLinkColor = less.latex_code("InnerLinkColor", "brand-danger")
+OuterLinkColor = less.latex_code("OuterLinkColor", "brand-danger")
+VerbatimColor = sphinxcol("VerbatimColor", (0.95, 0.95, 0.95))
+noteBorderColor = sphinxcol("noteBorderColor", (0.8, 0.8, 0.8))
+gray_base = less.fmtvar("gray-base")
+
+sphinxsetup = [TitleColor, InnerLinkColor, OuterLinkColor, VerbatimColor, noteBorderColor]
+
+sphinxsetup.append("verbatimwithframe=false")
+sphinxsetup = ",".join(sphinxsetup)
+
+
+fontpkg = r"""
+\usepackage{cmbright}
+\PassOptionsToPackage{no-math}{fontspec}
+\setmainfont[Path = ../../assets/fonts/Saira/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic, Kerning=On,Mapping=tex-text]{Saira.ttf}
+\setsansfont[Path = ../../assets/fonts/PT_Sans_Narrow/,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold]{PTSansNarrow.ttf}
+\setmonofont[Path = ../../assets/fonts/Share_Tech_Mono/]{ShareTechMono-Regular.ttf}
+
+\usepackage[italic]{mathastext}
+\usepackage{isomath}
+"""
+
+fncychap ='\\usepackage[Bjornstrup]{fncychap}'
+
+def definecolor(name, rgbvals):
+    return "\definecolor{{{}}}".format(name) + "{rgb}" + "{{{},{},{}}}".format(*rgbvals)
+
+gray_base_ = definecolor("gray_base", gray_base)
+
+chap = r"""
+\renewcommand*{\arraystretch}{1.4}
+\setlength{\fboxsep}{10pt}
+\makeatletter
+\ChNameVar{\raggedleft\Large\rm}   
+\ChNumVar{\raggedleft\bfseries\Huge\rm}
+\ChTitleVar{\color{TitleColor}\raggedleft\sffamily\bfseries\Huge}
+\ChRuleWidth{2pt}
+\ChNameUpperCase
+\renewcommand{\DOCH}{
+    \setlength{\fboxsep}{20pt}
+    \setlength{\fboxrule}{0pt} 
+    \raggedleft
+    
+\fcolorbox{gray_base}{gray_base}{\color{white}\CNoV\thechapter}\par\nobreak
+\vskip 10\p@}
+\renewcommand{\DOTI}[1]{\CTV\FmTi{#1}\par\nobreak\vskip 40\p@}
+\renewcommand{\DOTIS}[1]{\CTV\FmTi{#1}\par\nobreak\vskip 40\p@}
+\makeatother
+"""
+
+preamble= r"""
+\usepackage{colortbl}
+\arrayrulecolor{sphinxnoteBorderColor}
+\makeatletter
+\newcommand{\globalcolor}[1]{%
+  \color{#1}\global\let\default@color\current@color
+}
+\makeatother
+
+\AtBeginDocument{\globalcolor{gray_base}}
+
+"""
+# 
+# \usepackage[titles]{tocloft}
+# \cftsetpnumwidth {1.25cm}\cftsetrmarg{1.5cm}
+# \setlength{\cftchapnumwidth}{0.75cm}
+# \setlength{\cftsecindent}{\cftchapnumwidth}
+# \setlength{\cftsecnumwidth}{1.25cm}
+
+
+
+headers = r"""
+\usepackage{ fancyhdr}
+\makeatletter
+
+\let\oldheadrule\headrule% Copy \headrule into \oldheadrule
+\renewcommand{\headrule}{\color{sphinxnoteBorderColor}\oldheadrule}% Add colour to \headrule
+\renewcommand{\headrulewidth}{0.5pt}
+\let\oldfootrule\footrule
+\renewcommand{\footrule}{\color{sphinxnoteBorderColor}\oldfootrule}
+\renewcommand{\footrulewidth}{0.5pt}
+   \fancypagestyle{normal}{
+    \fancyhf{}
+   % FIXME: this presupposes "twoside".
+   % If "oneside" class option, there are warnings in LaTeX log.
+    \fancyfoot[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\thepage}}
+    \fancyfoot[LO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\nouppercase{\rightmark}}}
+    \fancyfoot[RE]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\nouppercase{\leftmark}}}
+    \fancyhead[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily \@title\sphinxheadercomma\py@release}}
+    \renewcommand{\headrulewidth}{0.4pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+    }
+
+   \fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\thepage}}
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+    }
+    
+\makeatother
+"""
+
+
+title=r"""
+\makeatletter
+\renewcommand{\sphinxmaketitle}{%
+  \let\sphinxrestorepageanchorsetting\relax
+  \ifHy@pageanchor\def\sphinxrestorepageanchorsetting{\Hy@pageanchortrue}\fi
+  \hypersetup{pageanchor=false}% avoid duplicate destination warnings
+  \begin{titlepage}%
+    \let\footnotesize\small
+    \let\footnoterule\relax
+      \begingroup % for PDF information dictionary
+       \def\endgraf{ }\def\and{\& }%
+       \pdfstringdefDisableCommands{\def\\{, }}% overwrite hyperref setup
+       \hypersetup{pdfauthor={\@author}, pdftitle={\@title}}%
+      \endgroup
+    \begin{flushright}%
+      \sphinxlogo
+      \py@HeaderFamily
+      {\Huge \@title \par}
+      {\itshape\LARGE \py@release\releaseinfo \par}
+      \vfill
+      {\LARGE
+        \begin{tabular}[t]{c}
+          \@author
+        \end{tabular}\kern-\tabcolsep
+        \par}
+      \vfill\vfill
+      {\large
+       \@date \par
+       \vfill
+       \py@authoraddress \par
+      }%
+    \end{flushright}%\par
+    \@thanks
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \let\thanks\relax\let\maketitle\relax
+  %\gdef\@thanks{}\gdef\@author{}\gdef\@title{}
+  \clearpage
+  \ifdefined\sphinxbackoftitlepage\sphinxbackoftitlepage\fi
+  \if@openright\cleardoublepage\else\clearpage\fi
+  \sphinxrestorepageanchorsetting
+}
+\makeatother
+"""
+
+preamble += chap  + gray_base_  + headers + title
+
 latex_elements = {
+    "transition":"",
+    "preamble": preamble,
+    "sphinxsetup": sphinxsetup,
+    "fontpkg": fontpkg,
+    "fncychap": fncychap,
     # The paper size ('letterpaper' or 'a4paper').
     #
     # 'papersize': 'letterpaper',
@@ -328,13 +500,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (
-        master_doc,
-        project + ".tex",
-        project + " Documentation",
-        author,
-        "manual",
-    )
+    (master_doc, project + ".tex", project + " Documentation", author, "manual")
 ]
 
 

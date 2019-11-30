@@ -133,11 +133,22 @@ latex:
 	@echo "Run \`make' in that directory to run these through (pdf)latex" \
 	      "(use \`make latexpdf' here to do that automatically)."
 
+latexpdf: export SPHX_GLR_THEME = $(theme)
 latexpdf:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo "Running LaTeX files through pdflatex..."
 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
+
+
+latexpdf-noplots: export SPHX_GLR_THEME = $(theme)
+latexpdf-noplots:
+	$(SPHINXBUILD) -D plot_gallery=0  -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
+	@echo "Running LaTeX files through pdflatex..."
+	$(MAKE) -C $(BUILDDIR)/latex all-pdf
+	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
+
+
 
 latexpdfja:
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex

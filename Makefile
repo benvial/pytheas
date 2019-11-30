@@ -96,6 +96,15 @@ webdoc: less
 webdoc-noplot: less
 	cd docs && make clean && make html-noplot
 
+latexpdf:
+	cd docs && make latexpdf
+
+
+latexpdf-noplots:
+	cd docs && make latexpdf-noplots
+	cp docs/_build/latex/pytheas.pdf docs/_build/html/_downloads/pytheas.pdf 
+		
+
 ## Show html doc in browser
 showdoc:
 	$(BROWSER) ./docs/_build/html/index.html

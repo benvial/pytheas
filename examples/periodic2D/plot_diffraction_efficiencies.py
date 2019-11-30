@@ -17,7 +17,7 @@ from pytheas import genmat
 from pytheas import Periodic2D
 
 ##############################################################################
-# Then we need to instanciate the class :py:class:`FemModel`:
+# Then we need to instanciate the class :py:class:`Periodic2D`:
 
 fem = Periodic2D()
 
@@ -36,7 +36,6 @@ fem = Periodic2D()
 #
 # We define here the opto-geometric parameters:
 
-# opto-geometric parameters  -------------------------------------------
 mum = 1e-6  #: flt: the scale of the problem (here micrometers)
 fem.d = 0.4 * mum  #: flt: period
 fem.h_sup = 1.0 * mum  #: flt: "thickness" superstrate
