@@ -4,7 +4,7 @@
 
 .. raw:: html
 
-  <div class="col-md-12 col-md-offset-3">
+
   <div class="project-description">
 
 .. include:: ../README.rst
@@ -34,7 +34,7 @@
         </div>
     </div>
   </div>
-  </div>
+
 
 
 .. toctree::

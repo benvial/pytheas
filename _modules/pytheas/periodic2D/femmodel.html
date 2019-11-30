@@ -72,12 +72,7 @@
      href="../../../index.html">Links <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../reference.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../reference.html#indices-and-search">Indices and search</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Examples</a></li>
-</ul>
-</ul>
+      aria-labelledby="dLabelGlobalToc"></ul>
 </li>
               
             
@@ -353,10 +348,15 @@
         <span class="n">WRA</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">WRA</span><span class="p">)))</span>
 
-    <span class="c1"># def make_param_dict(self):</span>
-    <span class="c1">#     param_dict = super().make_param_dict()</span>
+    <span class="c1"># def _make_param_dict(self):</span>
+    <span class="c1">#     param_dict = super()._make_param_dict()</span>
     <span class="c1">#     param_dict[&quot;aniso&quot;] = int(self.aniso)</span>
     <span class="c1">#     return param_dict</span>
+
+<div class="viewcode-block" id="Periodic2D.compute_solution"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.compute_solution">[docs]</a>    <span class="k">def</span> <span class="nf">compute_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the solution of the FEM problem using getdp&quot;&quot;&quot;</span>
+        <span class="n">res_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;helmoltz_scalar&quot;</span><span class="p">,</span> <span class="s2">&quot;helmoltz_scalar_modal&quot;</span><span class="p">]</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">compute_solution</span><span class="p">(</span><span class="n">res_list</span><span class="o">=</span><span class="n">res_list</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Periodic2D.postpro_absorption"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.postpro_absorption">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_absorption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Compute the absorption coefficient</span>
@@ -366,12 +366,12 @@
 <span class="sd">        Q : float</span>
 <span class="sd">            Absorption coefficient</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Postprocessing absorption&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Postprocessing absorption&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_absorption&quot;</span><span class="p">)</span>
         <span class="n">Q</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;Q.txt&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">real</span>
         <span class="k">return</span> <span class="n">Q</span></div>
 
-<div class="viewcode-block" id="Periodic2D.postpro_fields_cuts"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.postpro_fields_cuts">[docs]</a>    <span class="k">def</span> <span class="nf">postpro_fields_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_postpro_fields_cuts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Compute the field cuts in substrate and superstarte</span>
 
 <span class="sd">        Returns</span>
@@ -390,20 +390,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_fields_cuts&quot;</span><span class="p">)</span>
         <span class="n">u_diff_t</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">path_sub</span><span class="p">)</span>
         <span class="n">u_diff_r</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="n">path_sup</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">u_diff_t</span><span class="p">,</span> <span class="n">u_diff_r</span></div>
+        <span class="k">return</span> <span class="n">u_diff_t</span><span class="p">,</span> <span class="n">u_diff_r</span>
 
 <div class="viewcode-block" id="Periodic2D.get_field_map"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.get_field_map">[docs]</a>    <span class="k">def</span> <span class="nf">get_field_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Retrieve a field map.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a field map.</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            name : str {&#39;u&#39;, &#39;u_tot&#39;}</span>
-<span class="sd">                &#39;u&#39; (scattered field), &#39;u_tot&#39; (total field)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            Choose between &quot;u&quot; (scattered field), &quot;u_tot&quot; (total field)</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            field : array, shape (self.Nix, self.Niy)</span>
-
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        array</span>
+<span class="sd">            A 2D complex array of shape (`Nix`, `Niy`)</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">))</span>
@@ -411,8 +411,24 @@
         <span class="k">return</span> <span class="n">field</span></div>
 
 <div class="viewcode-block" id="Periodic2D.diffraction_efficiencies"><a class="viewcode-back" href="../../../gen_modules/pytheas.Periodic2D.html#pytheas.Periodic2D.diffraction_efficiencies">[docs]</a>    <span class="k">def</span> <span class="nf">diffraction_efficiencies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cplx_effs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">orders</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Postprocess diffraction efficiencies&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Processing diffraction efficiencies&quot;</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Postprocess diffraction efficiencies.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cplx_effs : bool</span>
+<span class="sd">            If `True`, return complex coefficients (amplitude reflection and transmission).</span>
+<span class="sd">            If `False`, return real coefficients (power reflection and transmission)</span>
+<span class="sd">        orders : bool</span>
+<span class="sd">            If `True`, computes the transmission and reflection for all the propagating diffraction orders.</span>
+<span class="sd">            If `False`, returns the sum of all the propagating diffraction orders.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A dictionary containing the diffraction efficiencies.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Processing diffraction efficiencies&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">==</span> <span class="s2">&quot;TE&quot;</span><span class="p">:</span>
             <span class="n">nu</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
@@ -436,7 +452,7 @@
         <span class="n">Aeff_t</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">complex</span><span class="p">)</span>
         <span class="n">Aeff_r</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">N_d_order</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="nb">complex</span><span class="p">)</span>
 
-        <span class="n">field_diff_t</span><span class="p">,</span> <span class="n">field_diff_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">postpro_fields_cuts</span><span class="p">()</span>
+        <span class="n">field_diff_t</span><span class="p">,</span> <span class="n">field_diff_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_postpro_fields_cuts</span><span class="p">()</span>
 
         <span class="n">field_diff_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
             <span class="n">field_diff_t</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npt_integ</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s2">&quot;F&quot;</span><span class="p">)</span>
@@ -539,7 +555,7 @@
         <span class="n">vmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting field map&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting field map&quot;</span><span class="p">)</span>
         <span class="c1"># x = np.linspace(</span>
         <span class="c1">#     self.nper * self.domX_L, self.nper * self.domX_R, self.nper * self.Nix</span>
         <span class="c1"># )</span>
@@ -605,7 +621,7 @@
         <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.046</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">plot_fieldv_streamlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">vx</span><span class="p">,</span> <span class="n">vy</span><span class="p">,</span> <span class="n">cmap</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting vector field streamlines&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Plotting vector field streamlines&quot;</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span>
         <span class="p">)</span>
@@ -663,9 +679,10 @@
   <div class="footer-copyright">
     <p>
       pytheas version 1.1.1.
-      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
 
-    </p>
+
 
   </div>
 

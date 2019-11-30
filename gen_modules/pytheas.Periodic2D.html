@@ -25,8 +25,8 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pytheas.tools.femio" href="pytheas.tools.femio.html" />
-    <link rel="prev" title="User guide" href="../reference.html" />
+    <link rel="next" title="pytheas.Scatt2D" href="pytheas.Scatt2D.html" />
+    <link rel="prev" title="Project status" href="../reference.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -74,12 +74,7 @@
      href="../index.html">Links <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../reference.html">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../reference.html#indices-and-search">Indices and search</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">Examples</a></li>
-</ul>
-</ul>
+      aria-labelledby="dLabelGlobalToc"></ul>
 </li>
               
             
@@ -164,14 +159,30 @@ Light comes from the top (travels along -y if normal incidence,
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.compute_solution">
-<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><em class="sig-param">res_list=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.compute_solution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.compute_solution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.compute_solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the solution of the FEM problem using getdp</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.diffraction_efficiencies">
 <code class="sig-name descname">diffraction_efficiencies</code><span class="sig-paren">(</span><em class="sig-param">cplx_effs=False</em>, <em class="sig-param">orders=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.diffraction_efficiencies"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.diffraction_efficiencies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Postprocess diffraction efficiencies</p>
+<dd><p>Postprocess diffraction efficiencies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cplx_effs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If <cite>True</cite>, return complex coefficients (amplitude reflection and transmission).
+If <cite>False</cite>, return real coefficients (power reflection and transmission)</p></li>
+<li><p><strong>orders</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If <cite>True</cite>, computes the transmission and reflection for all the propagating diffraction orders.
+If <cite>False</cite>, returns the sum of all the propagating diffraction orders.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary containing the diffraction efficiencies.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -180,27 +191,10 @@ Light comes from the top (travels along -y if normal incidence,
 <dd><p>Retrieve a field map.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str {'u'</em><em>, </em><em>'u_tot'}</em>) – ‘u’ (scattered field), ‘u_tot’ (total field)</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Choose between “u” (scattered field), “u_tot” (total field)</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>field</strong></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>array, shape (self.Nix, self.Niy)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pytheas.Periodic2D.get_qty">
-<code class="sig-name descname">get_qty</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.get_qty" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieve a scalar quantity.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the txt file to load.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>qty</strong> – The quantity to be loaded.</p>
+<dd class="field-even"><p>A 2D complex array of shape (<cite>Nix</cite>, <cite>Niy</cite>)</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>array</p>
@@ -211,23 +205,57 @@ Light comes from the top (travels along -y if normal incidence,
 <dl class="method">
 <dt id="pytheas.Periodic2D.initialize">
 <code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.initialize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize the problem:
-- make dictionary of parameters
-- write this dictionary entries to a .dat file
-- copy the .dat, .geo and .pro files to the temporary folder</p>
+<dd><p>Initialize the problem parameters.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pytheas.Periodic2D.make_param_dict">
-<code class="sig-name descname">make_param_dict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.make_param_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build dictionary of parameters. This will be later written to a parameter.dat
-file that is meant to be read by both gmsh and getdp</p>
+<dt id="pytheas.Periodic2D.make_inclusion">
+<code class="sig-name descname">make_inclusion</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">lcar='lc_incl'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.make_inclusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a diffractive element geometry from points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>array of size</em><em> (</em><em>Npoints</em><em>, </em><em>2</em><em>)</em>) – The points defining the simply connected 2D geometry of the object.</p></li>
+<li><p><strong>lcar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> (</em><em>default &quot;lc_incl&quot;</em><em>)</em>) – Caracteristic length for the mesh.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Extra arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Periodic2D.make_mesh">
+<code class="sig-name descname">make_mesh</code><span class="sig-paren">(</span><em class="sig-param">other_option=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.make_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh the geometry using gmsh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other_option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Extra flag to pass to gmsh.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of the .msh file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="pytheas.Periodic2D.mk_tmp_dir">
 <code class="sig-name descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a temporary directory</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Periodic2D.open_gmsh_gui">
+<code class="sig-name descname">open_gmsh_gui</code><span class="sig-paren">(</span><em class="sig-param">pos_list=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.open_gmsh_gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open gmsh GUI to visualize geometry and postprocessing results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of .pos files giving the views to load. By default it will
+render all the generated views.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -240,20 +268,6 @@ file that is meant to be read by both gmsh and getdp</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pytheas.Periodic2D.postpro_choice">
-<code class="sig-name descname">postpro_choice</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">filetype</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.postpro_choice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run a postprocessing command with either ‘pos’ or ‘txt’ file output.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</p></li>
-<li><p><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – File type to use (‘pos’ or ‘txt’)</p></li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -274,38 +288,12 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 </dd></dl>
 
 <dl class="method">
-<dt id="pytheas.Periodic2D.postpro_fields_cuts">
-<code class="sig-name descname">postpro_fields_cuts</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pytheas/periodic2D/femmodel.html#Periodic2D.postpro_fields_cuts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Periodic2D.postpro_fields_cuts" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the field cuts in substrate and superstarte</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p><strong>u_diff_t</strong> (<em>array-like</em>) – Transmitted field cuts</p></li>
-<li><p><strong>u_diff_r</strong> (<em>array-like</em>) – Reflected field cuts</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
 <dt id="pytheas.Periodic2D.postprocess">
 <code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.postprocess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run getdp postoperation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the postoperation to run.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="pytheas.Periodic2D.ppcmd">
-<code class="sig-name descname">ppcmd</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Periodic2D.ppcmd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a postprocessing command</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the post operation as defined in the .pro file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,7 +314,7 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
 
 <div class="section" id="examples-using-pytheas-periodic2d">
 <h2>Examples using <code class="docutils literal notranslate"><span class="pre">pytheas.Periodic2D</span></code><a class="headerlink" href="#examples-using-pytheas-periodic2d" title="Permalink to this headline">¶</a></h2>
-<div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction of a plane wave a mono-periodic grating and calcul..."><div class="figure align-default" id="id1">
+<div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction of a plane wave by a mono-periodic grating and cal..."><div class="figure align-default" id="id1">
 <img alt="../_images/sphx_glr_plot_diffraction_efficiencies_thumb.png" src="../_images/sphx_glr_plot_diffraction_efficiencies_thumb.png" />
 <p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/periodic2D/plot_diffraction_efficiencies.html#sphx-glr-auto-examples-periodic2d-plot-diffraction-efficiencies-py"><span class="std std-ref">Simulating diffraction by a 2D metamaterial</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
 </div>
@@ -369,9 +357,10 @@ get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
   <div class="footer-copyright">
     <p>
       pytheas version 1.1.1.
-      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
 
-    </p>
+
 
   </div>
 

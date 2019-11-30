@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Simulating diffraction by an object in 2D &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="prev" title="Simulating diffraction by a 2D metamaterial" href="../periodic2D/plot_diffraction_efficiencies.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../.././reference.html">Documentation</a></li>
+                <li><a href="../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-scatt2d-plot-scatt-cyl-py"><span class="std std-ref">here</span></a> to download the full example code</p>
+</div>
+<div class="sphx-glr-example-title section" id="simulating-diffraction-by-an-object-in-2d">
+<span id="sphx-glr-auto-examples-scatt2d-plot-scatt-cyl-py"></span><h1>Simulating diffraction by an object in 2D<a class="headerlink" href="#simulating-diffraction-by-an-object-in-2d" title="Permalink to this headline">¶</a></h1>
+<p>Finite element simulation of the diffraction by an object illuminated by a plane
+wave or a line source. Calculation of scattering width and
+getting the field maps.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">pytheas</span> <span class="kn">import</span> <span class="n">Scatt2D</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">ion</span><span class="p">()</span>
+
+<span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+</pre></div>
+</div>
+<p>Then we need to instanciate the class <code class="xref py py-class docutils literal notranslate"><span class="pre">Scatt2D</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span> <span class="o">=</span> <span class="n">Scatt2D</span><span class="p">()</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">rm_tmp_dir</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We define here the opto-geometric parameters:</span>
+
+<span class="c1"># opto-geometric parameters  -------------------------------------------</span>
+<span class="n">mum</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TE&quot;</span>  <span class="c1">#: str: polarization (TE or TM)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">30.0</span>  <span class="c1"># 0: coming from top (y&gt;0)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: x thickness box</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: y thickness box</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">h_pml</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span>  <span class="c1">#: flt: thickness pml</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">space2pml_L</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">space2pml_R</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">space2pml_T</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">space2pml_B</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity design box</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">eps_host</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">eps_incl</span> <span class="o">=</span> <span class="mf">11.0</span> <span class="o">-</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+<span class="c1">#: mesh parameters, correspond to a mesh size of lambda_mesh/(n*parmesh),</span>
+<span class="c1">#: where n is the refractive index of the medium</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">parmesh_des</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">parmesh_incl</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">parmesh</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">parmesh_pml</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">parmesh</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
+
+<span class="n">fem</span><span class="o">.</span><span class="n">Nix</span> <span class="o">=</span> <span class="mi">201</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">Niy</span> <span class="o">=</span> <span class="mi">201</span>
+<span class="c1"># fem.getdp_verbose = 4</span>
+<span class="c1"># fem.gmsh_verbose = 4</span>
+<span class="c1"># fem.python_verbose = 1</span>
+</pre></div>
+</div>
+<p>Here we define an ellipsoidal rod as the scatterer:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">inclusion_flag</span> <span class="o">=</span> <span class="kc">True</span>
+
+
+<span class="k">def</span> <span class="nf">ellipse</span><span class="p">(</span><span class="n">Rinclx</span><span class="p">,</span> <span class="n">Rincly</span><span class="p">,</span> <span class="n">rot_incl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rot_incl</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rot_incl</span><span class="p">)</span>
+    <span class="n">Rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">]])</span>
+    <span class="n">nt</span> <span class="o">=</span> <span class="mi">360</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">pi</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">nt</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Rinclx</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Rincly</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Rot</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]))</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="n">y0</span>
+    <span class="k">return</span> <span class="n">points</span>
+
+
+<span class="n">rod</span> <span class="o">=</span> <span class="n">ellipse</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span><span class="p">,</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">mum</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Initialize, mesh and  compute the solution:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">make_inclusion</span><span class="p">(</span><span class="n">rod</span><span class="p">)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">make_mesh</span><span class="p">()</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">compute_solution</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Get the electric field and plot it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">postpro_fields</span><span class="p">()</span>
+<span class="n">u_tot</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">get_field_map</span><span class="p">(</span><span class="s2">&quot;u_tot.txt&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">E</span> <span class="o">=</span> <span class="n">u_tot</span><span class="o">.</span><span class="n">real</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;RdBu_r&quot;</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">fem</span><span class="o">.</span><span class="n">domX_L</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">domX_R</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">domY_B</span><span class="p">,</span> <span class="n">fem</span><span class="o">.</span><span class="n">domY_T</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rod</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rod</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$x$ ($\rm \mu$m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$y$ ($\rm \mu$m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Electric Field (real part) (V/m)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_scatt_cyl_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_scatt_cyl_001.png" />
+<p>Do a near to far field transform and get the normalized scattering width:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">postpro_fields_n2f</span><span class="p">()</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">scs</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">normalized_scs</span><span class="p">(</span><span class="n">ff</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theta</span> <span class="o">/</span> <span class="n">pi</span><span class="p">,</span> <span class="n">scs</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;#699545&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\theta$ (rad)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot; Normalized scattering width $\sigma/\lambda$&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="s2">&quot;$\pi/2$&quot;</span><span class="p">,</span> <span class="s2">&quot;$\pi$&quot;</span><span class="p">,</span> <span class="s2">&quot;$3\pi/2$&quot;</span><span class="p">,</span> <span class="s2">&quot;$2\pi$&quot;</span><span class="p">])</span>
+
+<span class="n">scs_integ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">scs</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalized SCS&quot;</span><span class="p">,</span> <span class="n">scs_integ</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="../../_images/sphx_glr_plot_scatt_cyl_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_scatt_cyl_002.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normalized SCS 0.025727174259510977
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.454 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-scatt2d-plot-scatt-cyl-py">
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/5a83efafec657320a05a148e705585d0/plot_scatt_cyl.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_scatt_cyl.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/38b08e4a79d25c18fd33767a7888d0ee/plot_scatt_cyl.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_scatt_cyl.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
+
+
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

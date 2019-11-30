@@ -1,11 +1,11 @@
-:mod:`pytheas`.BaseFEM
+:mod:`pytheas`.Scatt2D
 =============================
 
 .. currentmodule:: pytheas
 
-.. autoclass:: BaseFEM
+.. autoclass:: Scatt2D
 
-.. include:: backreferences/pytheas.BaseFEM.examples
+.. include:: backreferences/pytheas.Scatt2D.examples
 
 .. raw:: html
 

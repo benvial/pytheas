@@ -10,7 +10,7 @@
 Simulating diffraction by a 2D metamaterial
 ===========================================
 
-Finite element simulation of the diffraction of a plane wave a mono-periodic
+Finite element simulation of the diffraction of a plane wave by a mono-periodic
 grating and calculation of diffraction efficiencies.
 
 First we import the required modules and class
@@ -19,9 +19,6 @@ First we import the required modules and class
 .. code-block:: default
 
 
-
-    # Code source: Benjamin Vial
-    # License: MIT
 
     import numpy as np
     import matplotlib.pyplot as plt
@@ -235,7 +232,7 @@ It is fairly easy to switch to TM polarization:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.366 seconds)
+   **Total running time of the script:** ( 0 minutes  2.367 seconds)
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:

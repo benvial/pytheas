@@ -3,16 +3,13 @@
 Simulating diffraction by a 2D metamaterial
 ===========================================
 
-Finite element simulation of the diffraction of a plane wave a mono-periodic
+Finite element simulation of the diffraction of a plane wave by a mono-periodic
 grating and calculation of diffraction efficiencies.
 """
 
 ##############################################################################
 # First we import the required modules and class
 
-
-# Code source: Benjamin Vial
-# License: MIT
 
 import numpy as np
 import matplotlib.pyplot as plt

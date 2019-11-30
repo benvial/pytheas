@@ -17,9 +17,6 @@ data.
 .. code-block:: default
 
 
-    # Code source: Benjamin Vial
-    # License: MIT
-
     import numpy as np
     from pytheas import refractiveindex as ri
     import matplotlib.pyplot as plt
@@ -58,11 +55,20 @@ wavelength range to interpolate:
 
 
     bounds = ri.get_wl_range(yamlFile)
-    lambdas = np.linspace(bounds[0], bounds[1], 300)
+    print(bounds[0], bounds[1])
+    lambdas = np.linspace(0.4, 0.8, 300)
 
 
 
 
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    0.1879 1.937
 
 
 
@@ -89,15 +95,13 @@ And finally plot it:
 .. code-block:: default
 
 
-    plt.close("all")
     fig, ax = plt.subplots(1, figsize=(6, 4))
-    plt.plot(lambdas, epsilon.real, "r-", label=r"Re($\varepsilon$)")
-    plt.plot(lambdas, epsilon.imag, "b--", label=r"Im($\varepsilon$)")
-    plt.xlabel(r"$\lambda$ ($\mu m$)")
-    plt.title("complex permittivity from " + yamlFile[5:][:-4])
-    plt.legend(loc=0)
-    plt.show()
-
+    ax.plot(lambdas, epsilon.real, "-", c="#ad4453", label=r"Re($\varepsilon$)")
+    ax.plot(lambdas, epsilon.imag, "--", c="#44ad84", label=r"Im($\varepsilon$)")
+    ax.set_xlabel(r"$\lambda$ ($\mu m$)")
+    ax.set_title("complex permittivity from " + yamlFile[5:][:-4])
+    ax.legend(loc=0)
+    plt.tight_layout()
 
 
 
@@ -109,16 +113,17 @@ And finally plot it:
 
 
 
-.. [JC1972]
-         (P. B. Johnson and R. W. Christy. Optical constants of the noble
-          metals, Phys. Rev. B 6, 4370-4379 (1972)).
+.. [JC1972] (P. B. Johnson and R. W. Christy.
+            Optical constants of the noble metals,
+            Phys. Rev. B 6, 4370-4379 (1972)).
+
 .. _`Johnson and Christy`:
     https://doi.org/10.1103/PhysRevB.6.4370
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.210 seconds)
+   **Total running time of the script:** ( 0 minutes  0.250 seconds)
 
 
 .. _sphx_glr_download_auto_examples_material_plot_refractive_index.py:

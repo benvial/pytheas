@@ -1,0 +1,427 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.scatt2D.femmodel &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../../../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../../../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href="../../.././reference.html">Documentation</a></li>
+                <li><a href="../../.././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <h1>Source code for pytheas.scatt2D.femmodel</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># Author: Benjamin Vial</span>
+<span class="c1"># License: MIT</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Finite Element model of 2D media</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">..tools</span> <span class="kn">import</span> <span class="n">femio</span>
+<span class="kn">from</span> <span class="nn">..basefem</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="Scatt2D"><a class="viewcode-back" href="../../../gen_modules/pytheas.Scatt2D.html#pytheas.Scatt2D">[docs]</a><span class="k">class</span> <span class="nc">Scatt2D</span><span class="p">(</span><span class="n">BaseFEM</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class for a finite element model of a 2D medium&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dir_path</span> <span class="o">=</span> <span class="n">get_file_path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
+        <span class="c1">#: str: analysys type (either &quot;direct&quot; or &quot;modal&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">=</span> <span class="s2">&quot;direct&quot;</span>
+        <span class="c1">#: str: polarisation of the incident plane wave</span>
+        <span class="c1">#: (either &quot;TE&quot; or &quot;TM&quot;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TE&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_incl</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># Incident plane wave parameters</span>
+        <span class="c1">#: flt: incident plane wave amplitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1">#: flt: incident plane wave wavelength in free space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1">#: flt: wavelength to use for meshing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_mesh</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="c1">#: flt : incident plane wave angle (in degrees).</span>
+        <span class="c1">#: Light comes from the top</span>
+        <span class="c1">#: (travels along -y if normal incidence, `theta_deg=0` is set)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_deg</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1">#: line source position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ls_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xs</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ys</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#: beam?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">beam_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">waist</span> <span class="o">=</span> <span class="mf">1.5</span>
+
+        <span class="c1"># opto-geometric parameters  -------------------------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">h_pml</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1">#: flt: thickness pml</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1">#: flt: x - thickness scattering box (design)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1">#: flt: y - thickness scattering box</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, real part</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_pml</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: PMLs parameter, imaginary part</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_host</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_sub</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity substrate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_des</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity scattering box</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps_incl</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: permittivity inclusion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dom_des</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1">#: design domain number (check .geo/.pro files)</span>
+
+        <span class="c1"># postprocessing -------------------------------------------------</span>
+        <span class="c1">#: coords of point for PostProcessing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xpp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ypp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="c1">#: int: number of theta points for computing the angular dependance</span>
+        <span class="c1">#: of the modal coupling coefficients</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ni_theta</span> <span class="o">=</span> <span class="mi">45</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">M_fs</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nibox_x</span> <span class="o">=</span> <span class="mi">500</span>  <span class="c1">#: int: number of x interpolation points on the design box</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nibox_y</span> <span class="o">=</span> <span class="mi">500</span>  <span class="c1">#: int: number of y interpolation points on the design box</span>
+        <span class="c1">#: int: number of x interpolation points for near to far field calculations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_x</span> <span class="o">=</span> <span class="mi">500</span>
+        <span class="c1">#: int: number of y interpolation points for near to far field calculations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_y</span> <span class="o">=</span> <span class="mi">500</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rat_n2f</span> <span class="o">=</span> <span class="mf">0.95</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inclusion_filename_</span> <span class="o">=</span> <span class="s2">&quot;inclusion0.geo&quot;</span>
+
+        <span class="c1">#: int: number of y slices points</span>
+        <span class="c1">#: for postprocessing diffraction efficiencies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nb_slice</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="c1">#: flt:  such that `scan_dist  = min(h_sup, hsub)/scan_dist_ratio`</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scan_dist_ratio</span> <span class="o">=</span> <span class="mi">5</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_R</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_B</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span>
+
+        <span class="c1">#: int: number of x points for postprocessing field maps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nper</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="c1"># modal analysis -------------------------------------------------</span>
+        <span class="c1">#: int: number of eigenvalues searched for in modal analysis</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neig</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="c1">#: flt: wavelength around which to search eigenvalues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda0search</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># topology optimization   ------------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjoint</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_target</span> <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_target</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_target</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">corners_des</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domX_L</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_L</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domX_R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hx_des</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_R</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domY_B</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_B</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">domY_T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hy_des</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">space2pml_T</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Xn2f_L</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_L</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rat_n2f</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Xn2f_R</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domX_R</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rat_n2f</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Yn2f_B</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domY_B</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rat_n2f</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Yn2f_T</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">domY_T</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rat_n2f</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">180.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_deg</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">omega0</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cel</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+
+    <span class="k">def</span> <span class="nf">_make_param_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">param_dict</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_make_param_dict</span><span class="p">()</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;ls_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ls_flag</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;beam_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">beam_flag</span><span class="p">)</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="s2">&quot;target_flag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_flag</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">param_dict</span>
+
+    <span class="k">def</span> <span class="nf">postpro_fields_box</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">path_T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_box_T.out&quot;</span><span class="p">)</span>
+        <span class="n">path_L</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_box_L.out&quot;</span><span class="p">)</span>
+        <span class="n">path_R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_box_R.out&quot;</span><span class="p">)</span>
+        <span class="n">path_B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_box_B.out&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_fields_box&quot;</span><span class="p">)</span>
+        <span class="n">u_T</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">path_T</span><span class="p">)</span>
+        <span class="n">u_R</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">path_R</span><span class="p">)</span>
+        <span class="n">u_B</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">path_B</span><span class="p">)</span>
+        <span class="n">u_L</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">path_L</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">==</span> <span class="s2">&quot;modal&quot;</span><span class="p">:</span>
+            <span class="n">u_T</span> <span class="o">=</span> <span class="n">u_T</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nibox_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+            <span class="n">u_B</span> <span class="o">=</span> <span class="n">u_B</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nibox_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+            <span class="n">u_L</span> <span class="o">=</span> <span class="n">u_L</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nibox_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+            <span class="n">u_R</span> <span class="o">=</span> <span class="n">u_R</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nibox_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">u_T</span><span class="p">,</span> <span class="n">u_B</span><span class="p">,</span> <span class="n">u_L</span><span class="p">,</span> <span class="n">u_R</span>
+
+    <span class="k">def</span> <span class="nf">postpro_fields_n2f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_fields_n2f&quot;</span><span class="p">)</span>
+        <span class="n">u_out</span><span class="p">,</span> <span class="n">vx_out</span><span class="p">,</span> <span class="n">vy_out</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_n2f_</span><span class="si">{0}</span><span class="s2">.out&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span>
+            <span class="n">vx</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_dual_x_n2f_</span><span class="si">{0}</span><span class="s2">.out&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="n">vy</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;field_dual_y_n2f_</span><span class="si">{0}</span><span class="s2">.out&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis</span> <span class="o">==</span> <span class="s2">&quot;modal&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">):</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_x</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_y</span>
+                <span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+                <span class="n">vx</span> <span class="o">=</span> <span class="n">vx</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+                <span class="n">vy</span> <span class="o">=</span> <span class="n">vy</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+            <span class="n">u_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">u</span>
+            <span class="n">vx_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">vx</span>
+            <span class="n">vy_out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">vy</span>
+        <span class="k">return</span> <span class="n">u_out</span><span class="p">,</span> <span class="n">vx_out</span><span class="p">,</span> <span class="n">vy_out</span>
+
+    <span class="k">def</span> <span class="nf">normalized_scs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ff</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+
+        <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Xn2f_L</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xn2f_R</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_x</span><span class="p">)</span>
+        <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Yn2f_B</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yn2f_T</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nin2f_y</span><span class="p">)</span>
+        <span class="n">nu0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon0</span><span class="p">)</span>
+        <span class="n">k0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda0</span>
+
+        <span class="n">x</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="n">xi</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xn2f_L</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Xn2f_R</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="n">xi</span><span class="p">}</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yn2f_T</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="n">yi</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="n">yi</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">Yn2f_B</span><span class="p">}</span>
+        <span class="n">nx</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">ny</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span>
+        <span class="n">Ez</span><span class="p">,</span> <span class="n">Hx</span><span class="p">,</span> <span class="n">Hy</span> <span class="o">=</span> <span class="n">ff</span>
+
+        <span class="n">Itheta</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">theta</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="n">I</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">loc</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">loc</span> <span class="o">==</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">loc</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">):</span>
+                    <span class="n">l</span> <span class="o">=</span> <span class="n">xi</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">l</span> <span class="o">=</span> <span class="n">yi</span>
+                <span class="n">expo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">k0</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span><span class="p">))</span>
+                <span class="n">J</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">nu0</span> <span class="o">*</span> <span class="p">(</span><span class="n">nx</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">Hy</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">-</span> <span class="n">ny</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">Hx</span><span class="p">[</span><span class="n">loc</span><span class="p">])</span>
+                    <span class="o">-</span> <span class="p">(</span><span class="n">ny</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">c</span> <span class="o">+</span> <span class="n">nx</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">Ez</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span>
+                <span class="p">)</span> <span class="o">*</span> <span class="n">expo</span>
+                <span class="n">I</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">trapz</span><span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span>
+            <span class="n">Itheta</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Itheta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_field_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="nf">get_field_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_field_on_point&quot;</span><span class="p">)</span>
+        <span class="n">u_tot</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;u_tot_point.txt&quot;</span><span class="p">))</span>
+        <span class="n">u_i</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;u_i_point.txt&quot;</span><span class="p">))</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;u_point.txt&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">u_tot</span><span class="p">,</span> <span class="n">u_i</span>
+
+    <span class="k">def</span> <span class="nf">postpro_coupling_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Angular sweep for coupling coeffs&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_coupling_coeffs_angle&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;coupling_coeffs.txt&quot;</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Ni_theta</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">postpro_fourrier_coefs_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;Fourrier coefficients for coupling&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_coupling_coeffs_fourrier_series&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;coupling_coeffs_fs.txt&quot;</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">M_fs</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">postpro_modal_coupling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;QNMs coupling coeffs&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_mode_coupling&quot;</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;mode_coupling.txt&quot;</span><span class="p">)</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tmp</span>  <span class="c1"># .reshape((self.Ni_theta, self.neig))</span>
+
+    <span class="k">def</span> <span class="nf">postpro_modal_coupling_int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_print_progress</span><span class="p">(</span><span class="s2">&quot;QNMs coupling coeffs integrand&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="s2">&quot;postop_mode_coupling_int&quot;</span><span class="p">)</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">femio</span><span class="o">.</span><span class="n">load_timetable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tmppath</span><span class="p">(</span><span class="s2">&quot;mode_coupling_int.txt&quot;</span><span class="p">))</span>
+        <span class="n">u1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">mode</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">Niy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">imode</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neig</span><span class="p">):</span>
+            <span class="n">u1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">imode</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">u</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">imode</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">u1</span>
+
+    <span class="k">def</span> <span class="nf">get_deq_deps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pola</span> <span class="ow">is</span> <span class="s2">&quot;TE&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_qty</span><span class="p">(</span><span class="s2">&quot;dEq_deps.txt&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_qty</span><span class="p">(</span><span class="s2">&quot;dEq_deps_x.txt&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_qty</span><span class="p">(</span><span class="s2">&quot;dEq_deps_y.txt&quot;</span><span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
+
+
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

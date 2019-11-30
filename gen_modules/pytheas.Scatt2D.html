@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pytheas.Scatt2D &#8212; pytheas 1.1.1 documentation</title>
+    <link rel="stylesheet" href="../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_styles.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom_pygments.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <script type="text/javascript" src="../_static/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/custom.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pytheas.tools.femio" href="pytheas.tools.femio.html" />
+    <link rel="prev" title="pytheas.Periodic2D" href="pytheas.Periodic2D.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<script type="text/javascript" src="../_static/js/jquery-1.11.0.min.js "></script>
+<script type="text/javascript" src="../_static/js/jquery-fix.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-3.3.7/js/bootstrap.min.js "></script>
+<script type="text/javascript" src="../_static/bootstrap-sphinx.js "></script>
+
+  </head><body>
+
+<p></p>
+
+
+
+
+
+
+  <div id="navbar" class="navbar navbar-default navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../index.html"><span><img src="../_static/logo_pytheas_white.png"></span>
+          pytheas</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.1.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+                <li><a href=".././reference.html">Documentation</a></li>
+                <li><a href=".././auto_examples/index.html">Examples</a></li>
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../index.html">Links <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"></ul>
+</li>
+              
+            
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="body col-md-12 content" role="main">
+      
+  <div class="section" id="pytheas-scatt2d">
+<h1><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas</span></code>.Scatt2D<a class="headerlink" href="#pytheas-scatt2d" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pytheas.Scatt2D">
+<em class="property">class </em><code class="sig-prename descclassname">pytheas.</code><code class="sig-name descname">Scatt2D</code><a class="reference internal" href="../_modules/pytheas/scatt2D/femmodel.html#Scatt2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pytheas.Scatt2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class for a finite element model of a 2D medium</p>
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.A">
+<code class="sig-name descname">A</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.A" title="Permalink to this definition">¶</a></dt>
+<dd><p>incident plane wave amplitude</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Ni_theta">
+<code class="sig-name descname">Ni_theta</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Ni_theta" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of theta points for computing the angular dependance
+of the modal coupling coefficients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Nibox_x">
+<code class="sig-name descname">Nibox_x</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Nibox_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of x interpolation points on the design box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Nibox_y">
+<code class="sig-name descname">Nibox_y</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Nibox_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of y interpolation points on the design box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Nin2f_x">
+<code class="sig-name descname">Nin2f_x</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Nin2f_x" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of x interpolation points for near to far field calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Nin2f_y">
+<code class="sig-name descname">Nin2f_y</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Nin2f_y" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of y interpolation points for near to far field calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.Nix">
+<code class="sig-name descname">Nix</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.Nix" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of x points for postprocessing field maps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.a_pml">
+<code class="sig-name descname">a_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.a_pml" title="Permalink to this definition">¶</a></dt>
+<dd><p>PMLs parameter, real part</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.analysis">
+<code class="sig-name descname">analysis</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>analysys type (either “direct” or “modal”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.b_pml">
+<code class="sig-name descname">b_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.b_pml" title="Permalink to this definition">¶</a></dt>
+<dd><p>PMLs parameter, imaginary part</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.beam_flag">
+<code class="sig-name descname">beam_flag</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.beam_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>beam?</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.cleanup">
+<code class="sig-name descname">cleanup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.cleanup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove gmsh/getdp/python generated files from the temporary folder</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.compute_solution">
+<code class="sig-name descname">compute_solution</code><span class="sig-paren">(</span><em class="sig-param">res_list=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.compute_solution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the solution of the FEM problem using getdp</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.dom_des">
+<code class="sig-name descname">dom_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.dom_des" title="Permalink to this definition">¶</a></dt>
+<dd><p>design domain number (check .geo/.pro files)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.eps_des">
+<code class="sig-name descname">eps_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.eps_des" title="Permalink to this definition">¶</a></dt>
+<dd><p>permittivity scattering box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.eps_host">
+<code class="sig-name descname">eps_host</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.eps_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>permittivity host</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.eps_incl">
+<code class="sig-name descname">eps_incl</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.eps_incl" title="Permalink to this definition">¶</a></dt>
+<dd><p>permittivity inclusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.eps_sub">
+<code class="sig-name descname">eps_sub</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.eps_sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>permittivity substrate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.h_pml">
+<code class="sig-name descname">h_pml</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.h_pml" title="Permalink to this definition">¶</a></dt>
+<dd><p>thickness pml</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.hx_des">
+<code class="sig-name descname">hx_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.hx_des" title="Permalink to this definition">¶</a></dt>
+<dd><p>x - thickness scattering box (design)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.hy_des">
+<code class="sig-name descname">hy_des</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.hy_des" title="Permalink to this definition">¶</a></dt>
+<dd><p>y - thickness scattering box</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the problem parameters.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.lambda0">
+<code class="sig-name descname">lambda0</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.lambda0" title="Permalink to this definition">¶</a></dt>
+<dd><p>incident plane wave wavelength in free space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.lambda0search">
+<code class="sig-name descname">lambda0search</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.lambda0search" title="Permalink to this definition">¶</a></dt>
+<dd><p>wavelength around which to search eigenvalues</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.lambda_mesh">
+<code class="sig-name descname">lambda_mesh</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.lambda_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>wavelength to use for meshing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.ls_flag">
+<code class="sig-name descname">ls_flag</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.ls_flag" title="Permalink to this definition">¶</a></dt>
+<dd><p>line source position</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.make_inclusion">
+<code class="sig-name descname">make_inclusion</code><span class="sig-paren">(</span><em class="sig-param">points</em>, <em class="sig-param">lcar='lc_incl'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.make_inclusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a diffractive element geometry from points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>array of size</em><em> (</em><em>Npoints</em><em>, </em><em>2</em><em>)</em>) – The points defining the simply connected 2D geometry of the object.</p></li>
+<li><p><strong>lcar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em> (</em><em>default &quot;lc_incl&quot;</em><em>)</em>) – Caracteristic length for the mesh.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Extra arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.make_mesh">
+<code class="sig-name descname">make_mesh</code><span class="sig-paren">(</span><em class="sig-param">other_option=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.make_mesh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mesh the geometry using gmsh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other_option</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Extra flag to pass to gmsh.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The content of the .msh file.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.mk_tmp_dir">
+<code class="sig-name descname">mk_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.mk_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a temporary directory</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.nb_slice">
+<code class="sig-name descname">nb_slice</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.nb_slice" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of y slices points
+for postprocessing diffraction efficiencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.neig">
+<code class="sig-name descname">neig</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.neig" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of eigenvalues searched for in modal analysis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.open_gmsh_gui">
+<code class="sig-name descname">open_gmsh_gui</code><span class="sig-paren">(</span><em class="sig-param">pos_list=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.open_gmsh_gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open gmsh GUI to visualize geometry and postprocessing results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list of .pos files giving the views to load. By default it will
+render all the generated views.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.pola">
+<code class="sig-name descname">pola</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.pola" title="Permalink to this definition">¶</a></dt>
+<dd><p>polarisation of the incident plane wave
+(either “TE” or “TM”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.postpro_fields">
+<code class="sig-name descname">postpro_fields</code><span class="sig-paren">(</span><em class="sig-param">filetype='txt'</em>, <em class="sig-param">postop='postop_fields'</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.postpro_fields" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the field maps and output to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filetype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>default &quot;txt&quot;</em>) – Type of output files. Either “txt” (to be read by the method
+get_field_map in python) or “pos” to be read by gmsh/getdp.</p></li>
+<li><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>, </em><em>default &quot;postop_fields&quot;</em>) – Name of the postoperation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.postprocess">
+<code class="sig-name descname">postprocess</code><span class="sig-paren">(</span><em class="sig-param">postop</em><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.postprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run getdp postoperation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>postop</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the postoperation to run.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.rm_tmp_dir">
+<code class="sig-name descname">rm_tmp_dir</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.rm_tmp_dir" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the temporary directory</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.scan_dist_ratio">
+<code class="sig-name descname">scan_dist_ratio</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.scan_dist_ratio" title="Permalink to this definition">¶</a></dt>
+<dd><p>such that <cite>scan_dist  = min(h_sup, hsub)/scan_dist_ratio</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.theta_deg">
+<code class="sig-name descname">theta_deg</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.theta_deg" title="Permalink to this definition">¶</a></dt>
+<dd><p>incident plane wave angle (in degrees).
+Light comes from the top
+(travels along -y if normal incidence, <cite>theta_deg=0</cite> is set)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>flt</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pytheas.Scatt2D.update_params">
+<code class="sig-name descname">update_params</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pytheas.Scatt2D.update_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the dictionary of parameters and the corresponding file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.xpp">
+<code class="sig-name descname">xpp</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.xpp" title="Permalink to this definition">¶</a></dt>
+<dd><p>coords of point for PostProcessing</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pytheas.Scatt2D.ypp">
+<code class="sig-name descname">ypp</code><em class="property"> = None</em><a class="headerlink" href="#pytheas.Scatt2D.ypp" title="Permalink to this definition">¶</a></dt>
+<dd><p>coords of point for PostProcessing</p>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="examples-using-pytheas-scatt2d">
+<h2>Examples using <code class="docutils literal notranslate"><span class="pre">pytheas.Scatt2D</span></code><a class="headerlink" href="#examples-using-pytheas-scatt2d" title="Permalink to this headline">¶</a></h2>
+<div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction by an object illuminated by a plane  wave or a lin..."><div class="figure align-default" id="id1">
+<img alt="../_images/sphx_glr_plot_scatt_cyl_thumb.png" src="../_images/sphx_glr_plot_scatt_cyl_thumb.png" />
+<p class="caption"><span class="caption-text"><a class="reference internal" href="../auto_examples/scatt2D/plot_scatt_cyl.html#sphx-glr-auto-examples-scatt2d-plot-scatt-cyl-py"><span class="std std-ref">Simulating diffraction by an object in 2D</span></a></span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</div>
+</div><div class="clearer"></div></div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<div class="container">
+  <a id="back-to-top" href="#" class="btn btn-primary btn-lg back-to-top" role="button" title="Click to return on the top page" data-toggle="tooltip" data-placement="left"><span class="glyphicon glyphicon-chevron-up"></span></a>
+</div>
+<footer class="footer">
+  <div class="container">
+
+
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2 text-center">
+        <div class="foot-fa">
+          <a href=https://pypi.org/project/pytheas-pip>
+            <i class="fab fa-python"></i>
+            pip install me
+          </a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="foot-fa">
+          <a href=https://github.com/benvial/pytheas>
+            <i class="fab fa-github fa-1x"></i>
+            fork me on github
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="footer-copyright">
+    <p>
+      pytheas version 1.1.1.
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
+
+
+
+  </div>
+
+
+</footer>
+  </body>
+</html>

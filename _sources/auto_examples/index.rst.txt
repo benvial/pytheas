@@ -68,7 +68,7 @@ diffraction efficiencies).
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction of a plane wave a mono-periodic grating and calcul...">
+    <div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction of a plane wave by a mono-periodic grating and cal...">
 
 .. only:: html
 
@@ -85,6 +85,43 @@ diffraction efficiencies).
    :hidden:
 
    /auto_examples/periodic2D/plot_diffraction_efficiencies
+.. raw:: html
+
+    <div class="sphx-glr-clear"></div>
+
+
+
+.. _sphx_glr_auto_examples_scatt2D:
+
+.. _scatt2D_examples:
+
+Scattering 2D examples
+-------------------------
+
+Examples to show how to simulate a the 2D scattering off an object subject to a 
+plane wave or line source harmonic excitation.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Finite element simulation of the diffraction by an object illuminated by a plane  wave or a lin...">
+
+.. only:: html
+
+ .. figure:: /auto_examples/scatt2D/images/thumb/sphx_glr_plot_scatt_cyl_thumb.png
+
+     :ref:`sphx_glr_auto_examples_scatt2D_plot_scatt_cyl.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/scatt2D/plot_scatt_cyl
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>

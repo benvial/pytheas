@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>User guide &#8212; pytheas 1.1.1 documentation</title>
+    <title>Project status &#8212; pytheas 1.1.1 documentation</title>
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/gallery.css" />
@@ -74,12 +74,7 @@
      href="index.html">Links <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">User guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#indices-and-search">Indices and search</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_examples/index.html">Examples</a></li>
-</ul>
-</ul>
+      aria-labelledby="dLabelGlobalToc"></ul>
 </li>
               
             
@@ -107,29 +102,51 @@
   <div class="row">
       <div class="col-md-3">
         <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
-<li><a class="reference internal" href="#">User guide</a><ul>
+<li><a class="reference internal" href="#">Project status</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#user-guide">User guide</a><ul>
 <li><a class="reference internal" href="#module-pytheas.periodic2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.periodic2D</span></code>: 2D metamaterials</a><ul>
 <li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code>: 2D scattering</a><ul>
+<li><a class="reference internal" href="#id1">Classes</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-pytheas.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.tools</span></code>: tools and utilities</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-pytheas.basefem"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.basefem</span></code>: boilerplate class for FEM models</a><ul>
-<li><a class="reference internal" href="#id1">Classes</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#appendix">Appendix</a><ul>
+<li><a class="reference internal" href="#index"><span class="xref std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="#modules-index"><span class="xref std std-ref">Modules index</span></a></li>
+<li><a class="reference internal" href="#search-page"><span class="xref std std-ref">Search page</span></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#indices-and-search">Indices and search</a></li>
 </ul>
 
         </div>
       </div>
     <div class="body col-md-9 content" role="main">
       
-  <span class="target" id="pytheas-api-reference"></span><div class="section" id="user-guide">
+  <div class="section" id="project-status">
+<h1>Project status<a class="headerlink" href="#project-status" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://travis-ci.org/benvial/pytheas"><img alt="Travis CI build status (Linux)" src="https://img.shields.io/travis/benvial/pytheas/master.svg?style=for-the-badge" /></a>
+<a class="reference external image-reference" href="https://codecov.io/github/benvial/pytheas?branch=master"><img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/benvial/pytheas.svg?style=for-the-badge" /></a>
+<a class="reference external image-reference" href="https://app.codacy.com/app/benvial/pytheas/dashboard"><img alt="Codacy grade" src="https://img.shields.io/codacy/grade/e27821fb6289410b8f58338c7e0bc686.svg?style=for-the-badge" /></a>
+<img alt="Licence: MIT" src="https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge" />
+<img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge" />
+</div>
+<div class="section" id="installation">
+<span id="pytheas-api-reference"></span><h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>The easiest way to get started is to install via <a class="reference external" href="https://pypi.org/project/pytheas-pip">PyPi</a>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pytheas</span><span class="o">-</span><span class="n">pip</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="user-guide">
 <h1>User guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
 <p>The complete project is documented for every submodule.</p>
 <div class="section" id="module-pytheas.periodic2D">
@@ -157,6 +174,31 @@ of the diffraction efficiencies, absorption and energy balance.</p></li>
 </table>
 </div>
 </div>
+<hr class="docutils" />
+<div class="section" id="module-pytheas.scatt2D">
+<span id="pytheas-scatt2d-2d-scattering"></span><h2><a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a>: 2D scattering<a class="headerlink" href="#module-pytheas.scatt2D" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#module-pytheas.scatt2D" title="pytheas.scatt2D"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.scatt2D</span></code></a> module implements the resolution of the
+scalar wave equation for TE and TM polarization in 2D:</p>
+<ul class="simple">
+<li><p>subject to an incident plane wave or line source (diffraction problem)</p></li>
+<li><p>eigenvalues and eigenmodes (modal analysis)</p></li>
+</ul>
+<div class="section" id="id1">
+<h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="gen_modules/pytheas.Scatt2D.html#pytheas.Scatt2D" title="pytheas.Scatt2D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Scatt2D</span></code></a>()</p></td>
+<td><p>A class for a finite element model of a 2D medium</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr class="docutils" />
 <div class="section" id="module-pytheas.tools">
 <span id="pytheas-tools-tools-and-utilities"></span><h2><a class="reference internal" href="#module-pytheas.tools" title="pytheas.tools"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.tools</span></code></a>: tools and utilities<a class="headerlink" href="#module-pytheas.tools" title="Permalink to this headline">¶</a></h2>
 <p>Input/output and utilities.</p>
@@ -178,35 +220,19 @@ of the diffraction efficiencies, absorption and energy balance.</p></li>
 </table>
 </div>
 </div>
-<div class="section" id="module-pytheas.basefem">
-<span id="pytheas-basefem-boilerplate-class-for-fem-models"></span><h2><a class="reference internal" href="#module-pytheas.basefem" title="pytheas.basefem"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.basefem</span></code></a>: boilerplate class for FEM models<a class="headerlink" href="#module-pytheas.basefem" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#module-pytheas.basefem" title="pytheas.basefem"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pytheas.basefem</span></code></a> module implements a base class common for FEM
-models using <a class="reference external" href="http://gmsh.info/">Gmsh</a> and <a class="reference external" href="http://getdp.info/">GetDP</a>. This should be used as a parent class and
-not directly.</p>
-<div class="section" id="id1">
-<h3>Classes<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="gen_modules/pytheas.BaseFEM.html#pytheas.BaseFEM" title="pytheas.BaseFEM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseFEM</span></code></a>()</p></td>
-<td><p>Base class for Finite Element models</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
 </div>
 <hr class="docutils" />
-<div class="section" id="indices-and-search">
-<h1>Indices and search<a class="headerlink" href="#indices-and-search" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+<div class="section" id="appendix">
+<h1>Appendix<a class="headerlink" href="#appendix" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="index">
+<h2><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a><a class="headerlink" href="#index" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="modules-index">
+<h2><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Modules index</span></a><a class="headerlink" href="#modules-index" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="search-page">
+<h2><a class="reference internal" href="search.html"><span class="std std-ref">Search page</span></a><a class="headerlink" href="#search-page" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -245,9 +271,10 @@ not directly.</p>
   <div class="footer-copyright">
     <p>
       pytheas version 1.1.1.
-      &copy; Copyright Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt;. 
+      <p>
+      &copy Copyright (c) 2017-2019, Benjamin Vial &lt;benjamin.vial84@gmail.com&gt; 
 
-    </p>
+
 
   </div>
 
