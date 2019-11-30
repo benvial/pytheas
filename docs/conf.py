@@ -203,7 +203,7 @@ html_theme_options = {
     # will break.
     #
     # Values: "true" (default) or "false"
-    "globaltoc_includehidden": "true",
+    "globaltoc_includehidden": "false",
     # HTML navbar class (Default: "navbar") to attach to <div> element.
     # For black navbar, do "navbar navbar-inverse"
     "navbar_class": "navbar navbar-default",

@@ -93,7 +93,7 @@ less:
 webdoc: less
 	cd docs && make clean && make html
 
-webdoc-noplot:
+webdoc-noplot: less
 	cd docs && make clean && make html-noplot
 
 ## Show html doc in browser

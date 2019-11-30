@@ -74,6 +74,7 @@ class Scatt2D(BaseFEM):
         #: int: number of y interpolation points for near to far field calculations
         self.Nin2f_y = 500
         self.rat_n2f = 0.95
+        self.inclusion_filename_ = "inclusion0.geo"
 
         #: int: number of y slices points
         #: for postprocessing diffraction efficiencies
@@ -228,7 +229,7 @@ class Scatt2D(BaseFEM):
 
     def get_field_map(self, name):
         field = femio.load_table(self.tmppath(name))
-        return np.flipud(field.reshape((self.Niy, self.Nix)).T)
+        return np.flipud(field.reshape((self.Niy, self.Nix)))
 
     def get_field_point(self):
         self.postprocess("postop_field_on_point")

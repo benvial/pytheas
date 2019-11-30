@@ -109,7 +109,7 @@ loopholes[0] = tag_des;
   For k In {1:nb_incl}
   tag_incl=1000*(k);
   /* name = Sprintf("ellipse", k); */
-    Include Sprintf("ellipse%g.geo", k-1);
+    Include Sprintf("inclusion%g.geo", k-1);
     Line Loop(tag_incl) = {tag_incl};
     Plane Surface(tag_incl) = {tag_incl};
     loopholes[k]=tag_incl;

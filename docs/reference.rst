@@ -1,15 +1,28 @@
 
+====================
+Project status
+====================
+
+.. image:: https://img.shields.io/travis/benvial/pytheas/master.svg?style=for-the-badge
+   :target: https://travis-ci.org/benvial/pytheas
+   :alt: Travis CI build status (Linux)
+
+.. image:: https://img.shields.io/codecov/c/github/benvial/pytheas.svg?style=for-the-badge
+   :target: https://codecov.io/github/benvial/pytheas?branch=master
+   :alt: Code Coverage
+
+.. image:: https://img.shields.io/codacy/grade/e27821fb6289410b8f58338c7e0bc686.svg?style=for-the-badge
+   :target: https://app.codacy.com/app/benvial/pytheas/dashboard
+   :alt: Codacy grade
+
+.. image:: https://img.shields.io/github/license/mashape/apistatus.svg?style=for-the-badge
+   :alt: Licence: MIT
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
+   :alt: Code style: black
+   
 
 .. _pytheas_api_reference:
-
-
-..
-.. pytheas :ref:`examples-index`
-.. -----------------------------
-
-
-.. .. contents:: Table of Contents
-..    :depth: 2
 
 
 ====================
@@ -50,7 +63,28 @@ Classes
 
   Periodic2D
 
+------------------------------------------------------------------
 
+
+:mod:`pytheas.scatt2D`: 2D scattering
+=====================================
+
+.. automodule:: pytheas.scatt2D
+  :no-members:
+  :no-inherited-members:
+
+Classes
+-------
+.. currentmodule:: pytheas
+
+.. autosummary::
+  :toctree: gen_modules/
+  :template: class.rst
+
+  Scatt2D
+  
+
+------------------------------------------------------------------
 
 
 :mod:`pytheas.tools`: tools and utilities
@@ -71,55 +105,7 @@ Submodules
   femio
   utils
 
-
-
-
-:mod:`pytheas.basefem`: boilerplate class for FEM models
-========================================================
-
-.. automodule:: pytheas.basefem
-  :no-members:
-  :no-inherited-members:
-
-Classes
--------
-.. currentmodule:: pytheas
-
-.. autosummary::
-  :toctree: gen_modules/
-  :template: class.rst
-
-  BaseFEM
-
-
-
-
-
-
-
-.. -------------------------------------
-..
-.. :mod:`pytheas.scatt2D`: 2D scattering
-.. =====================================
-..
-.. .. automodule:: pytheas.scatt2D
-..   :no-members:
-..   :no-inherited-members:
-..
-.. Classes
-.. -------
-.. .. currentmodule:: pytheas
-..
-.. .. autosummary::
-..   :toctree: gen_modules/
-..   :template: class.rst
-..
-..   scatt2D.FemModel
-
-
-
--------------------------------------
-
+------------------------------------------------------------------
 
 ==================
 Appendix
