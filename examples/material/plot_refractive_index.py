@@ -7,9 +7,6 @@ Retrieve and plot the refractive index of a material in the refractiveindex.info
 data.
 """
 
-# Code source: Benjamin Vial
-# License: MIT
-
 import numpy as np
 from pytheas import refractiveindex as ri
 import matplotlib.pyplot as plt
@@ -28,7 +25,8 @@ yamlFile = "main/Au/Johnson.yml"
 # wavelength range to interpolate:
 
 bounds = ri.get_wl_range(yamlFile)
-lambdas = np.linspace(bounds[0], bounds[1], 300)
+print(bounds[0], bounds[1])
+lambdas = np.linspace(0.4, 0.8, 300)
 
 ##############################################################################
 # Then get the refractive index data:
@@ -39,20 +37,20 @@ epsilon = ncomplex ** 2
 ##############################################################################
 # And finally plot it:
 
-plt.close("all")
 fig, ax = plt.subplots(1, figsize=(6, 4))
-plt.plot(lambdas, epsilon.real, "r-", label=r"Re($\varepsilon$)")
-plt.plot(lambdas, epsilon.imag, "b--", label=r"Im($\varepsilon$)")
-plt.xlabel(r"$\lambda$ ($\mu m$)")
-plt.title("complex permittivity from " + yamlFile[5:][:-4])
-plt.legend(loc=0)
-plt.show()
-
+ax.plot(lambdas, epsilon.real, "-", c="#ad4453", label=r"Re($\varepsilon$)")
+ax.plot(lambdas, epsilon.imag, "--", c="#44ad84", label=r"Im($\varepsilon$)")
+ax.set_xlabel(r"$\lambda$ ($\mu m$)")
+ax.set_title("complex permittivity from " + yamlFile[5:][:-4])
+ax.legend(loc=0)
+plt.tight_layout()
 
 ############################################################################
 #
-# .. [JC1972]
-#          (P. B. Johnson and R. W. Christy. Optical constants of the noble
-#           metals, Phys. Rev. B 6, 4370-4379 (1972)).
+#
+# .. [JC1972] (P. B. Johnson and R. W. Christy.
+#             Optical constants of the noble metals,
+#             Phys. Rev. B 6, 4370-4379 (1972)).
+#
 # .. _`Johnson and Christy`:
 #     https://doi.org/10.1103/PhysRevB.6.4370

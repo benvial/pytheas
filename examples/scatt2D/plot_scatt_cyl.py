@@ -11,6 +11,7 @@ getting the field maps.
 import numpy as np
 import matplotlib.pyplot as plt
 from pytheas import Scatt2D
+
 plt.ion()
 
 pi = np.pi
@@ -85,14 +86,14 @@ fem.compute_solution()
 # Get the electric field and plot it:
 
 
-fem.postpro_fields() 
+fem.postpro_fields()
 u_tot = fem.get_field_map("u_tot.txt")
-fig ,ax = plt.subplots()
+fig, ax = plt.subplots()
 E = u_tot.real
-plt.imshow(E,cmap="RdBu_r",extent=(fem.domX_L,fem.domX_R,fem.domY_B,fem.domY_T))
-plt.plot(rod[0],rod[1],"w")
-plt.xlabel(r"$x$ (μm)")
-plt.ylabel(r"$y$ (μm)")
+plt.imshow(E, cmap="RdBu_r", extent=(fem.domX_L, fem.domX_R, fem.domY_B, fem.domY_T))
+plt.plot(rod[0], rod[1], "w")
+plt.xlabel(r"$x$ ($\rm \mu$m)")
+plt.ylabel(r"$y$ ($\rm \mu$m)")
 plt.title(r"Electric Field (real part) (V/m)")
 plt.colorbar()
 plt.tight_layout()
@@ -102,16 +103,16 @@ plt.tight_layout()
 # Do a near to far field transform and get the normalized scattering width:
 
 ff = fem.postpro_fields_n2f()
-theta = np.linspace(0,2*pi,100)
+theta = np.linspace(0, 2 * pi, 100)
 scs = fem.normalized_scs(ff, theta)
 
 
-fig ,ax = plt.subplots()
-plt.plot(theta/pi, scs, "-", c="#699545")
+fig, ax = plt.subplots()
+plt.plot(theta / pi, scs, "-", c="#699545")
 plt.xlabel(r"$\theta$ (rad)")
 plt.ylabel(r" Normalized scattering width $\sigma/\lambda$")
-ax.xaxis.set_ticks([0,0.5,1, 1.5, 2])
+ax.xaxis.set_ticks([0, 0.5, 1, 1.5, 2])
 ax.xaxis.set_ticklabels(["0", "$\pi/2$", "$\pi$", "$3\pi/2$", "$2\pi$"])
 
-scs_integ = np.trapz(scs,theta)/(2*pi)
-print("Normalized SCS", scs_integ)  
+scs_integ = np.trapz(scs, theta) / (2 * pi)
+print("Normalized SCS", scs_integ)
