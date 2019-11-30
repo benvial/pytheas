@@ -352,7 +352,7 @@ class BaseFEM:
         self._print_progress("Retrieving mesh content")
         return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
-    def compute_solution(self, res_list=None, **kwargs):
+    def compute_solution(self, res_list=None):
         """Compute the solution of the FEM problem using getdp"""
         res_list = res_list or ["helmoltz_scalar", "helmoltz_scalar_modal"]
         if self.pattern:

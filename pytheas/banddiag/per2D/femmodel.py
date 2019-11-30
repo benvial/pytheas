@@ -63,8 +63,8 @@ class BandDiag2D(BaseFEM):
     def corners_des(self):
         return -self.dx / 2, +self.dx / 2, -self.dy / 2, +self.dy / 2
 
-    def compute_solution(self, **kwargs):
-        super().compute_solution(self, res_list=[self.pola])
+    def compute_solution(self):
+        super().compute_solution(res_list=[None, self.pola])
 
     def get_field_map(self, name):
         field = femio.load_table(self.tmppath(name))
