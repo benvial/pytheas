@@ -1,4 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+import os
+
+
+def export(name, color1, color2):
+    with open("{}.svg".format(name), "w") as svg:
+        svg.write(logo.format(color1, color2))
+
+
+def make_png(name, size, output=None):
+    if output:
+        os.system("inkscape -z -e {2}.png -w {1} -h {1} {0}.svg".format(name, size, output))
+    else:
+        os.system("inkscape -z -e {0}.png -w {1} -h {1} {0}.svg".format(name, size))
+
+logo = r"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
@@ -57,7 +71,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <rect
-       style="opacity:1;fill:#a198a4;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4700"
        width="49.803402"
        height="5.6722016"
@@ -66,7 +80,7 @@
        ry="2.8361008"
        rx="1.2313955" />
     <rect
-       style="opacity:1;fill:#a198a4;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4700-6"
        width="28.309956"
        height="5.6722031"
@@ -75,7 +89,7 @@
        ry="2.8361015"
        rx="1.2313955" />
     <rect
-       style="opacity:1;fill:#a198a4;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4700-6-5"
        width="13.869048"
        height="5.6722064"
@@ -84,10 +98,38 @@
        ry="2.8361032"
        rx="0.89556044" />
     <path
-       style="opacity:1;fill:#976b75;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="opacity:1;fill:{1};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="M 32.441444,1.1692091 C 29.489839,1.1284375 2.8991764,29.516135 4.4687181,31.093499 c 1.7095655,1.718084 55.2210939,2.920796 55.9454539,0 C 61.128472,28.213252 36.218817,1.2214128 32.441444,1.1692091 Z"
        id="rect4700-9-1"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ssss" />
   </g>
 </svg>
+"""
+
+# rgb(177, 57, 89)
+if __name__ == "__main__":
+    os.system("rm -f *.svg *.png")
+
+    color1 = "#A198A4"
+    color2 = "#b13959"
+    name = "logo_pytheas"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)
+    make_png(name, 32, output="favicon")
+    os.system("cp favicon.png favicon.ico")
+
+    color1 = "#ffffff"
+    color2 = "#ffffff"
+    name = "logo_pytheas_white"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)
+
+    color1 = "#000000"
+    color2 = "#000000"
+    name = "logo_pytheas_black"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)

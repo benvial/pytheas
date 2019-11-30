@@ -64,7 +64,8 @@ lsonelab:
 rmonelab:
 	@find . -type f -name '*.pos' -o -name '*.pre' -o -name '*.msh' -o -name '*.res' | xargs rm -f
 
-
+icons:
+	cd docs/assets/icons && python gen.py
 
 lint:
 	flake8 setup.py pytheas/ tests/*.py

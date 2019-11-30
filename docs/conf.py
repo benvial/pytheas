@@ -21,9 +21,10 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 # import sphinx_rtd_theme
-import sphinx_bootstrap_theme
 import sys
 import os
+sys.path.insert(0, os.path.abspath('.'))
+import sphinx_bootstrap_theme
 from datetime import date
 import sphinx_gallery
 import pytheas
@@ -79,7 +80,7 @@ sphinx_gallery_conf = {
     "gallery_dirs": "auto_examples",
     # directory where function granular galleries are stored
     "backreferences_dir": "gen_modules/backreferences",
-    "default_thumb_file": "assets/logo_pytheas.png",
+    "default_thumb_file": "assets/icons/logo_pytheas.png",
     # Modules for which function level galleries are created.
     "doc_module": project,
 }
@@ -250,12 +251,12 @@ html_theme_options = {
 
 # (Optional) Logo. Should be small enough to fit the navbar (ideally 24x24).
 # Path should be relative to the ``_static`` files directory.
-html_logo = "./assets/logo_pytheas_white.png"
+html_logo = "./assets/icons/logo_pytheas_white.png"
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-html_favicon = "./assets/favicon.ico"
+html_favicon = "./assets/icons/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -315,7 +316,7 @@ htmlhelp_basename = project + "_doc"
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_engine = 'xelatex'
-latex_logo = "assets/logo_pytheas.png"
+latex_logo = "assets/icons/logo_pytheas.png"
 # latex_toplevel_sectioning = 'section'
 
 TitleColor = less.latex_code("TitleColor", "brand-primary")
@@ -446,7 +447,7 @@ title=r"""
     \begin{flushright}%
       \sphinxlogo
       \py@HeaderFamily
-      {\Huge \@title \par}
+      {\color{TitleColor}\Huge \@title \par}
       {\itshape\LARGE \py@release\releaseinfo \par}
       \vfill
       {\LARGE

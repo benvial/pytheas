@@ -12,6 +12,7 @@ or the text color of an inverted design.
 
 
 #A198A4
+rgb(161, 152, 164)
 Mountain Mist
 Light accent
 
@@ -20,6 +21,7 @@ Accent colors can be used to bring attention to design elements by contrasting
 
 
 #976B75
+rgb(150, 107, 117)
 Bazaar
 Main brand color
 
@@ -28,6 +30,7 @@ This color should be eye-catching but not harsh. It can be liberally applied
 
 
 #C26959
+rgb(194, 105, 89)
 Fuzzy Wuzzy Brown
 Dark accent
 
@@ -36,6 +39,7 @@ Another accent color to consider. Not all colors have to be used - sometimes
 
 
 #40363C
+rgb(64, 54, 60)
 Thunder
 Dark shades
 
