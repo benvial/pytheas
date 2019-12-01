@@ -12,20 +12,17 @@ else
   export EXT=sh
 fi
 
-
+## install requirements with conda, if not found use pip
 install_reqs () {
   while read requirement; do conda install --yes $requirement || pip install -U $requirement; done < $1
-
 }
-#
-#
+
+
 wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
 bash miniconda.$EXT -b -p $HOME/miniconda
 hash -r
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge
-
-
 conda info -a
 conda create -q -n testenv python=3
 source activate testenv

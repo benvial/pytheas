@@ -5,11 +5,22 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
   pip install -U sphinx_bootstrap_theme # update
+  
+  source ./.ci/texlive/texlive_install.sh
   cd docs
   make html
   make latex
-  tectonic --version
-  tectonic ./_build/latex/pytheas.tex
+  
+  # Texliveonfly will download packages automatically
+  texliveonfly ./_build/latex/pytheas.tex
+  make latexpdf
+  
+  export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
+  tlmgr list --only-installed | grep -oP 'i \K.+?(?=:)'
+  
+  ## tectonic
+  # tectonic --version
+  # tectonic ./_build/latex/pytheas.tex
   mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
   cd ..
   doctr deploy . --built-docs docs/_build/html

@@ -8,7 +8,7 @@ from testutils import *
 def model(verbose=False):
     fem = TwoScale2D()
     fem.rm_tmp_dir()
-    fem.parmesh = 50
+    fem.parmesh = 5
     fem.lambda0 = fem.dx
     fem.eps_des = 1
     # opto-geometric parameters  -------------------------------------------

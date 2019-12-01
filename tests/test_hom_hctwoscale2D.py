@@ -26,7 +26,7 @@ def model(verbose=False):
     fem.rm_tmp_dir()
     fem.eps_incl = 50 - 1j
     fem.eps_host = 2
-    fem.parmesh = 10
+    fem.parmesh = 5
     fem.inclusion_flag = True
     fem.inclusion_filename_ = "inclusion.geo"
     fem.neig = 20

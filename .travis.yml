@@ -1,6 +1,4 @@
 
-
-
 matrix:
   include:
   - os: linux
@@ -23,6 +21,12 @@ branches:
 
 notifications:
   email: false
+
+cache:
+  directories:
+    - /tmp/texlive
+    - $HOME/.texlive
+
 
 env:
   global:

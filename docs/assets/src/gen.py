@@ -1,0 +1,135 @@
+import os
+
+
+def export(name, color1, color2):
+    with open("{}.svg".format(name), "w") as svg:
+        svg.write(logo.format(color1, color2))
+
+
+def make_png(name, size, output=None):
+    if output:
+        os.system("inkscape -z -e {2}.png -w {1} -h {1} {0}.svg".format(name, size, output))
+    else:
+        os.system("inkscape -z -e {0}.png -w {1} -h {1} {0}.svg".format(name, size))
+
+logo = r"""<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64"
+   height="64"
+   id="svg4152"
+   version="1.1"
+   inkscape:version="0.92.2 2405546, 2018-03-11"
+   viewBox="0 0 64 64"
+   sodipodi:docname="logo_pytheas.svg"
+   inkscape:export-filename="/home/bench/Codes/python/packages/pytheas/docs/assets/logo_pytheas.svg.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs4154" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.7781746"
+     inkscape:cx="23.737087"
+     inkscape:cy="31.015749"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1014"
+     inkscape:window-x="0"
+     inkscape:window-y="28"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata4157">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <rect
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4700"
+       width="49.803402"
+       height="5.6722016"
+       x="7.2604561"
+       y="36.906109"
+       ry="2.8361008"
+       rx="1.2313955" />
+    <rect
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4700-6"
+       width="28.309956"
+       height="5.6722031"
+       x="18.007179"
+       y="46.328232"
+       ry="2.8361015"
+       rx="1.2313955" />
+    <rect
+       style="opacity:1;fill:{0};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect4700-6-5"
+       width="13.869048"
+       height="5.6722064"
+       x="25.227634"
+       y="55.750366"
+       ry="2.8361032"
+       rx="0.89556044" />
+    <path
+       style="opacity:1;fill:{1};fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0;stroke-linecap:butt;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 32.441444,1.1692091 C 29.489839,1.1284375 2.8991764,29.516135 4.4687181,31.093499 c 1.7095655,1.718084 55.2210939,2.920796 55.9454539,0 C 61.128472,28.213252 36.218817,1.2214128 32.441444,1.1692091 Z"
+       id="rect4700-9-1"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssss" />
+  </g>
+</svg>
+"""
+
+# rgb(177, 57, 89)
+if __name__ == "__main__":
+    os.system("rm -f *.svg *.png")
+
+    color1 = "#A198A4"
+    color2 = "#b13959"
+    name = "logo_pytheas"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)
+    make_png(name, 32, output="favicon")
+    os.system("cp favicon.png favicon.ico")
+
+    color1 = "#ffffff"
+    color2 = "#ffffff"
+    name = "logo_pytheas_white"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)
+
+    color1 = "#000000"
+    color2 = "#000000"
+    name = "logo_pytheas_black"
+    size = 600
+    export(name, color1, color2)
+    make_png(name, size)
