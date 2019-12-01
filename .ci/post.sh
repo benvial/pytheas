@@ -15,7 +15,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   make latex
   cd ./_build/latex/
   # Texliveonfly will download packages automatically
-  texliveonfly pytheas.tex
+  texliveonfly -c xelatex pytheas.tex
   cd ../..
   make latexpdf
   
