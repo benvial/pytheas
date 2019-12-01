@@ -317,6 +317,7 @@ htmlhelp_basename = project + "_doc"
 
 latex_engine = 'xelatex'
 latex_logo = "assets/icons/logo_pytheas.png"
+latex_use_xindy = False
 # latex_toplevel_sectioning = 'section'
 
 TitleColor = less.latex_code("TitleColor", "brand-primary")
