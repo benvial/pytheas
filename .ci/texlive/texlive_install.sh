@@ -22,6 +22,7 @@ fi
 
 # Just including texlua so the cache check above works
 tlmgr install luatex
+tlmgr install xetex
 
 # We specify the directory in which it is located texlive_packages
 tlmgr install $(sed 's/\s*#.*//;/^\s*$/d' texlive/texlive_packages)
