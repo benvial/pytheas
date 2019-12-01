@@ -7,17 +7,17 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   pip install -U sphinx_bootstrap_theme # update
   
   cd .ci
-  
   source ./texlive/texlive_install.sh
   cd ..
   cd docs
-  make html
   make latex
   cd ./_build/latex/
   # Texliveonfly will download packages automatically
   texliveonfly -c xelatex pytheas.tex
   cd ../..
+  make clean
   make latexpdf
+  make html
   
   export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
   tlmgr list --only-installed | grep -oP 'i \K.+?(?=:)'
