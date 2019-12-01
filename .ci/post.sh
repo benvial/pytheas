@@ -6,7 +6,10 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   set -e
   pip install -U sphinx_bootstrap_theme # update
   
-  source ./.ci/texlive/texlive_install.sh
+  cd .ci
+  
+  source ./texlive/texlive_install.sh
+  cd ..
   cd docs
   make html
   make latex
