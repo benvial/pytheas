@@ -13,9 +13,10 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   cd docs
   make html
   make latex
-  
+  cd ./_build/latex/
   # Texliveonfly will download packages automatically
-  texliveonfly ./_build/latex/pytheas.tex
+  texliveonfly pytheas.tex
+  cd ../..
   make latexpdf
   
   export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
