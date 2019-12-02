@@ -73,7 +73,14 @@
      href="../../index.html">Links <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"></ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Project status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#user-guide">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#appendix">Appendix</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -124,9 +131,8 @@ getting the field maps.</p>
 <span class="n">fem</span><span class="o">.</span><span class="n">rm_tmp_dir</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We define here the opto-geometric parameters:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># We define first the opto-geometric parameters:</span>
 
-<span class="c1"># opto-geometric parameters  -------------------------------------------</span>
 <span class="n">mum</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">lambda0</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: incident wavelength</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">pola</span> <span class="o">=</span> <span class="s2">&quot;TE&quot;</span>  <span class="c1">#: str: polarization (TE or TM)</span>
@@ -147,18 +153,12 @@ getting the field maps.</p>
 <span class="n">fem</span><span class="o">.</span><span class="n">parmesh</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">parmesh_pml</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">parmesh</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span>
 
-<span class="n">fem</span><span class="o">.</span><span class="n">Nix</span> <span class="o">=</span> <span class="mi">201</span>
-<span class="n">fem</span><span class="o">.</span><span class="n">Niy</span> <span class="o">=</span> <span class="mi">201</span>
-<span class="c1"># fem.getdp_verbose = 4</span>
-<span class="c1"># fem.gmsh_verbose = 4</span>
-<span class="c1"># fem.python_verbose = 1</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">Nix</span> <span class="o">=</span> <span class="mi">101</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">Niy</span> <span class="o">=</span> <span class="mi">101</span>
 </pre></div>
 </div>
 <p>Here we define an ellipsoidal rod as the scatterer:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">inclusion_flag</span> <span class="o">=</span> <span class="kc">True</span>
-
-
-<span class="k">def</span> <span class="nf">ellipse</span><span class="p">(</span><span class="n">Rinclx</span><span class="p">,</span> <span class="n">Rincly</span><span class="p">,</span> <span class="n">rot_incl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ellipse</span><span class="p">(</span><span class="n">Rinclx</span><span class="p">,</span> <span class="n">Rincly</span><span class="p">,</span> <span class="n">rot_incl</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">y0</span><span class="p">):</span>
     <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rot_incl</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rot_incl</span><span class="p">)</span>
     <span class="n">Rot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">]])</span>
     <span class="n">nt</span> <span class="o">=</span> <span class="mi">360</span>
@@ -171,9 +171,10 @@ getting the field maps.</p>
 
 
 <span class="n">rod</span> <span class="o">=</span> <span class="n">ellipse</span><span class="p">(</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span><span class="p">,</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">mum</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">fem</span><span class="o">.</span><span class="n">inclusion_flag</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
-<p>Initialize, mesh and  compute the solution:</p>
+<p>Initialize, build the scatterer, mesh and  compute the solution:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">make_inclusion</span><span class="p">(</span><span class="n">rod</span><span class="p">)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">make_mesh</span><span class="p">()</span>
@@ -197,7 +198,7 @@ getting the field maps.</p>
 <img alt="../../_images/sphx_glr_plot_scatt_cyl_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_scatt_cyl_001.png" />
 <p>Do a near to far field transform and get the normalized scattering width:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ff</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">postpro_fields_n2f</span><span class="p">()</span>
-<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pi</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
 <span class="n">scs</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">normalized_scs</span><span class="p">(</span><span class="n">ff</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
 
 
@@ -214,10 +215,10 @@ getting the field maps.</p>
 </div>
 <img alt="../../_images/sphx_glr_plot_scatt_cyl_002.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_plot_scatt_cyl_002.png" />
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normalized SCS 0.025727174259510977
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Normalized SCS 0.02572717419074843
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  16.454 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  17.162 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-scatt2d-plot-scatt-cyl-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/5a83efafec657320a05a148e705585d0/plot_scatt_cyl.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_scatt_cyl.py</span></code></a></p>

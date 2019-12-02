@@ -52,9 +52,8 @@ Then we need to instanciate the class :py:class:`Scatt2D`:
 .. code-block:: default
 
 
-    # We define here the opto-geometric parameters:
+    # We define first the opto-geometric parameters:
 
-    # opto-geometric parameters  -------------------------------------------
     mum = 1  #: flt: the scale of the problem (here micrometers)
     fem.lambda0 = 0.6 * mum  #: flt: incident wavelength
     fem.pola = "TE"  #: str: polarization (TE or TM)
@@ -75,11 +74,8 @@ Then we need to instanciate the class :py:class:`Scatt2D`:
     fem.parmesh = 10
     fem.parmesh_pml = fem.parmesh * 2 / 3
 
-    fem.Nix = 201
-    fem.Niy = 201
-    # fem.getdp_verbose = 4
-    # fem.gmsh_verbose = 4
-    # fem.python_verbose = 1
+    fem.Nix = 101
+    fem.Niy = 101
 
 
 
@@ -93,8 +89,6 @@ Here we define an ellipsoidal rod as the scatterer:
 
 .. code-block:: default
 
-
-    fem.inclusion_flag = True
 
 
     def ellipse(Rinclx, Rincly, rot_incl, x0, y0):
@@ -110,6 +104,7 @@ Here we define an ellipsoidal rod as the scatterer:
 
 
     rod = ellipse(0.4 * mum, 0.2 * mum, 0, 0, 0)
+    fem.inclusion_flag = True
 
 
 
@@ -119,7 +114,7 @@ Here we define an ellipsoidal rod as the scatterer:
 
 
 
-Initialize, mesh and  compute the solution:
+Initialize, build the scatterer, mesh and  compute the solution:
 
 
 .. code-block:: default
@@ -175,7 +170,7 @@ Do a near to far field transform and get the normalized scattering width:
 
 
     ff = fem.postpro_fields_n2f()
-    theta = np.linspace(0, 2 * pi, 100)
+    theta = np.linspace(0, 2 * pi, 51)
     scs = fem.normalized_scs(ff, theta)
 
 
@@ -201,7 +196,7 @@ Do a near to far field transform and get the normalized scattering width:
 
  .. code-block:: none
 
-    Normalized SCS 0.025727174259510977
+    Normalized SCS 0.02572717419074843
 
 
 
@@ -209,7 +204,7 @@ Do a near to far field transform and get the normalized scattering width:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  16.454 seconds)
+   **Total running time of the script:** ( 0 minutes  17.162 seconds)
 
 
 .. _sphx_glr_download_auto_examples_scatt2D_plot_scatt_cyl.py:

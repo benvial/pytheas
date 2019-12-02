@@ -74,7 +74,14 @@
      href="../../index.html">Links <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"></ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">Project status</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#user-guide">User guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html#appendix">Appendix</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Examples</a></li>
+</ul>
+</ul>
 </li>
               
             
@@ -117,7 +124,7 @@ grating and calculation of diffraction efficiencies.</p>
 <span class="kn">from</span> <span class="nn">pytheas</span> <span class="kn">import</span> <span class="n">Periodic2D</span>
 </pre></div>
 </div>
-<p>Then we need to instanciate the class <code class="xref py py-class docutils literal notranslate"><span class="pre">FemModel</span></code>:</p>
+<p>Then we need to instanciate the class <code class="xref py py-class docutils literal notranslate"><span class="pre">Periodic2D</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fem</span> <span class="o">=</span> <span class="n">Periodic2D</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -134,8 +141,7 @@ in the <span class="math notranslate nohighlight">\(y\)</span> direction to trun
 <li><p>PML bottom</p></li>
 </ul>
 <p>We define here the opto-geometric parameters:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># opto-geometric parameters  -------------------------------------------</span>
-<span class="n">mum</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mum</span> <span class="o">=</span> <span class="mf">1e-6</span>  <span class="c1">#: flt: the scale of the problem (here micrometers)</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: period</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_sup</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; superstrate</span>
 <span class="n">fem</span><span class="o">.</span><span class="n">h_sub</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">mum</span>  <span class="c1">#: flt: &quot;thickness&quot; substrate</span>
@@ -215,7 +221,7 @@ cell using gmsh</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>efficiencies TM {&#39;R&#39;: 0.2052478291947634, &#39;T&#39;: 0.7359213200135426, &#39;Q&#39;: 0.05719724751542301, &#39;B&#39;: 0.998366396723729}
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.367 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.455 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-periodic2d-plot-diffraction-efficiencies-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/05d8c2c1c6f5a30b1457c6bb291c7edf/plot_diffraction_efficiencies.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_diffraction_efficiencies.py</span></code></a></p>
