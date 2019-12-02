@@ -363,10 +363,7 @@ fontpkg = r"""
 
 fncychap ='\\usepackage[Bjornstrup]{fncychap}'
 
-def definecolor(name, rgbvals):
-    return "\definecolor{{{}}}".format(name) + "{rgb}" + "{{{},{},{}}}".format(*rgbvals)
 
-gray_base_ = definecolor("gray_base", gray_base)
 
 chap = r"""
 \renewcommand*{\arraystretch}{1.4}
@@ -424,17 +421,17 @@ headers = r"""
     \fancyhf{}
    % FIXME: this presupposes "twoside".
    % If "oneside" class option, there are warnings in LaTeX log.
-    \fancyfoot[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\thepage}}
-    \fancyfoot[LO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\nouppercase{\rightmark}}}
-    \fancyfoot[RE]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\nouppercase{\leftmark}}}
-    \fancyhead[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily \@title\sphinxheadercomma\py@release}}
+    \fancyfoot[LE,RO]{{\color{headfootColor}\py@HeaderFamily\thepage}}
+    \fancyfoot[LO]{{\color{headfootColor}\py@HeaderFamily\nouppercase{\rightmark}}}
+    \fancyfoot[RE]{{\color{headfootColor}\py@HeaderFamily\nouppercase{\leftmark}}}
+    \fancyhead[LE,RO]{{\color{headfootColor}\py@HeaderFamily \@title\sphinxheadercomma\py@release}}
     \renewcommand{\headrulewidth}{0.4pt}
     \renewcommand{\footrulewidth}{0.4pt}
     }
 
    \fancypagestyle{plain}{
     \fancyhf{}
-    \fancyfoot[LE,RO]{{\color{sphinxnoteBorderColor}\py@HeaderFamily\thepage}}
+    \fancyfoot[LE,RO]{{\color{headfootColor}\py@HeaderFamily\thepage}}
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0.4pt}
     }
@@ -488,7 +485,14 @@ title=r"""
 \makeatother
 """
 
-preamble += chap  + gray_base_  + headers + title
+def definecolor(name, rgbvals):
+    return "\definecolor{{{}}}".format(name) + "{rgb}" + "{{{},{},{}}}".format(*rgbvals)
+
+
+gray_base_ = definecolor("gray_base", gray_base)
+headfootColor = definecolor("headfootColor", (0.7, 0.7, 0.7))
+
+preamble += chap  + gray_base_ + headfootColor  + headers + title
 
 latex_elements = {
     "transition":"",

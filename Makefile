@@ -103,8 +103,8 @@ latexpdf:
 
 latexpdf-noplots:
 	cd docs && make latexpdf-noplots
-	cp docs/_build/latex/pytheas.pdf docs/_build/html/_downloads/pytheas.pdf 
-		
+	cp docs/_build/latex/pytheas.pdf docs/_build/html/_downloads/pytheas.pdf
+
 
 ## Show html doc in browser
 showdoc:
@@ -114,3 +114,8 @@ post:
 	bash .ci/post.sh
 
 save: clean style gh
+
+
+## Install onelab local version (stable, linux only!)
+onelab-local:
+	bash .ci/install_onelab_prebuilt.sh linux $(PWD)/pytheas/tools/bin stable

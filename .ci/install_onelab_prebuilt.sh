@@ -8,8 +8,8 @@ ONELAB_PATH=$2
 VERSION="$3"
 
 if [ $VERSION == "stable" ]; then
-  export GMSH_VERSION="4.0.1"
-  export GETDP_VERSION="3.0.2"
+  export GMSH_VERSION="4.4.1"
+  export GETDP_VERSION="3.2.0"
 elif [ $VERSION == "dev" ]; then
   export GMSH_VERSION="git"
   export GETDP_VERSION="git"
