@@ -4,6 +4,7 @@ sphinx
 sphinx_bootstrap_theme
 sphinx_gallery
 sphinx-copybutton
+memory_profiler
 Pillow
 codecov
 codacy-coverage

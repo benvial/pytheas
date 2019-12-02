@@ -1,24 +1,63 @@
 @import url('https://use.fontawesome.com/releases/v5.0.13/css/all.css');
 @font-face {
-  font-family: 'PT Sans Narrow';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('PT Sans Narrow'), local('PTSans-Narrow'), url(https://fonts.gstatic.com/s/ptsansnarrow/v11/BngRUXNadjH0qYEzV7ab-oWlsbCGwRg.ttf) format('truetype');
+  font-family: "Iosevka Term";
+  src: url("../fonts/IosevkaTerm/iosevka-term-bolditalic.ttf");
+  font-weight: bold;
+  font-style: italic, oblique;
 }
 @font-face {
-  font-family: 'Saira';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Saira Regular'), local('Saira-Regular'), url(https://fonts.gstatic.com/s/saira/v4/memwYa2wxmKQyNknTZY.ttf) format('truetype');
+  font-family: "Iosevka Term";
+  src: url("../fonts/IosevkaTerm/iosevka-term-italic.ttf");
+  font-style: italic, oblique;
 }
 @font-face {
-  font-family: 'Share Tech Mono';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Share Tech Mono'), local('ShareTechMono-Regular'), url(https://fonts.gstatic.com/s/sharetechmono/v9/J7aHnp1uDWRBEqV98dVQztYldFcLowEA.ttf) format('truetype');
+  font-family: "Iosevka Term";
+  src: url("../fonts/IosevkaTerm/iosevka-term-bold.ttf");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Iosevka Term";
+  src: url("../fonts/IosevkaTerm/iosevka-term-regular.ttf");
+}
+@font-face {
+  font-family: "Saira";
+  src: url("../fonts/Saira/Saira-BoldItalic.ttf");
+  font-weight: bold;
+  font-style: italic, oblique;
+}
+@font-face {
+  font-family: "Saira";
+  src: url("../fonts/Saira/Saira-Italic.ttf");
+  font-style: italic, oblique;
+}
+@font-face {
+  font-family: "Saira";
+  src: url("../fonts/Saira/Saira-Bold.ttf");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "Saira";
+  src: url("../fonts/Saira/Saira-Regular.ttf");
+}
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/PT_Sans/PTSans-BoldItalic.ttf");
+  font-weight: bold;
+  font-style: italic, oblique;
+}
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/PT_Sans/PTSans-Italic.ttf");
+  font-style: italic, oblique;
+}
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/PT_Sans/PTSans-Bold.ttf");
+  font-weight: bold;
+}
+@font-face {
+  font-family: "PT Sans";
+  src: url("../fonts/PT_Sans/PTSans-Regular.ttf");
 }
 .dropdown-menu > li > a:hover,
 .navbar-default,
@@ -57,7 +96,7 @@ div.body {
   max-width: 1800px;
 }
 body {
-  font-family: PT Sans Narrow, Helvetica, Arial, sans-serif;
+  font-family: PT Sans, Helvetica, Arial, sans-serif;
   /* font-weight: 400; */
   line-height: 1.42857143;
   color: #40363c;

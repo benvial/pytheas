@@ -5,26 +5,36 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
   pip install -U sphinx_bootstrap_theme # update
-  
-  cd .ci
+
+  #### for of sphinx-gallery
+  git clone https://github.com/benvial/sphinx-gallery
+  cd sphinx-gallery
+  git checkout download_link_note_only_html
+  pip install -r requirements.txt
+  pip install -e .
+  ####
+
+  cd ../.ci
   source ./texlive/texlive_install.sh
   cd ..
   cd docs
   make latex
   cd ./_build/latex/
-  # Texliveonfly will download packages automatically
+  # Texliveonfly will download missing packages automatically
   texliveonfly -c xelatex pytheas.tex
   cd ../..
   make clean
   make latexpdf
   make html
-  
+
   export PATH=/tmp/texlive/bin/x86_64-linux:$PATH
   tlmgr list --only-installed | grep -oP 'i \K.+?(?=:)'
-  
+
   ## tectonic
   # tectonic --version
   # tectonic ./_build/latex/pytheas.tex
+
+
   mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
   cd ..
   doctr deploy . --built-docs docs/_build/html

@@ -63,6 +63,12 @@ html-noplot: export SPHX_GLR_THEME = $(theme)
 html-noplot:
 	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
+	@echo "Copying fonts."
+	cp -r ./assets/fonts/ $(BUILDDIR)/html/_static
+	@echo
+	@echo "Cleaning up unnecessary files."
+	rm -rf $(BUILDDIR)/html/_static/bootstrap-2* $(BUILDDIR)/html/_static/bootswatch-2* $(BUILDDIR)/html/_static/css/less
+	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 html_abort_on_example_error: export SPHX_GLR_THEME = $(theme)
@@ -74,6 +80,12 @@ html_abort_on_example_error:
 html: export SPHX_GLR_THEME = $(theme)
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	@echo
+	@echo "Copying fonts."
+	cp -r ./assets/fonts/ $(BUILDDIR)/html/_static
+	@echo
+	@echo "Cleaning up unnecessary files."
+	rm -rf $(BUILDDIR)/html/_static/bootstrap-2* $(BUILDDIR)/html/_static/bootswatch-2* $(BUILDDIR)/html/_static/css/less
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 

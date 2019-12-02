@@ -7,12 +7,12 @@
 import json
 
 class LessVars():
-    
+
     def __init__(self, lessfile):
         self.lessfile = lessfile
         self.variables = self.getvars()
-        
-            
+
+
     def getvars(self):
         with open(self.lessfile) as f:
             lines = f.readlines()  # list containing lines of file
@@ -23,10 +23,12 @@ class LessVars():
                 if line:
                     data = [item.strip() for item in line.split(":")]
                     if line.split(" ")[0] != "@import":
-                        # name = data[0].split
-                        key = data[0].split("@")[1]
-                        value = data[-1].split(";")[0]
-                        variables[key] = value
+                        if line.split(" ")[0] != "@font-face":
+                            if line.split(" ")[0][0] =="@":
+                                # name = data[0].split
+                                key = data[0].split("@")[1]
+                                value = data[-1].split(";")[0]
+                                variables[key] = value
         return variables
 
 
@@ -42,7 +44,7 @@ class LessVars():
 
 def sphinxcol(latex_var, vfmt):
     return r"{}".format(latex_var) + "={rgb}" + "{{{},{},{}}}".format(*vfmt)
-        
+
 
 if __name__ == "__main__":
 

@@ -81,6 +81,8 @@ sphinx_gallery_conf = {
     # directory where function granular galleries are stored
     "backreferences_dir": "gen_modules/backreferences",
     "default_thumb_file": "assets/icons/logo_pytheas.png",
+    'download_all_examples': False,
+    'show_memory': True,
     # Modules for which function level galleries are created.
     "doc_module": project,
 }
@@ -339,11 +341,21 @@ fontpkg = r"""
 \setmainfont[Path = ../../assets/fonts/Saira/,
     UprightFont = *-Regular,
     BoldFont = *-Bold,
-    ItalicFont = *-Italic, Kerning=On,Mapping=tex-text]{Saira.ttf}
-\setsansfont[Path = ../../assets/fonts/PT_Sans_Narrow/,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic,
+    Kerning=On,Mapping=tex-text]{Saira.ttf}
+\setsansfont[Path = ../../assets/fonts/PT_Sans/,
     UprightFont = *-Regular,
-    BoldFont = *-Bold]{PTSansNarrow.ttf}
-\setmonofont[Path = ../../assets/fonts/Share_Tech_Mono/]{ShareTechMono-Regular.ttf}
+    BoldFont = *-Bold,
+    ItalicFont = *-Italic,
+    BoldItalicFont = *-BoldItalic,
+    BoldFont = *-Bold]{PTSans.ttf}
+\setmonofont[Path = ../../assets/fonts/IosevkaTerm/,
+    UprightFont = *-regular,
+    BoldFont = *-bold,
+    ItalicFont = *-italic,
+    BoldItalicFont = *-bolditalic,
+    BoldFont = *-bold]{iosevka-term.ttf}
 
 \usepackage[italic]{mathastext}
 \usepackage{isomath}
@@ -360,16 +372,16 @@ chap = r"""
 \renewcommand*{\arraystretch}{1.4}
 \setlength{\fboxsep}{10pt}
 \makeatletter
-\ChNameVar{\raggedleft\Large\rm}   
+\ChNameVar{\raggedleft\Large\rm}
 \ChNumVar{\raggedleft\bfseries\Huge\rm}
 \ChTitleVar{\color{TitleColor}\raggedleft\sffamily\bfseries\Huge}
 \ChRuleWidth{2pt}
 \ChNameUpperCase
 \renewcommand{\DOCH}{
     \setlength{\fboxsep}{20pt}
-    \setlength{\fboxrule}{0pt} 
+    \setlength{\fboxrule}{0pt}
     \raggedleft
-    
+
 \fcolorbox{gray_base}{gray_base}{\color{white}\CNoV\thechapter}\par\nobreak
 \vskip 10\p@}
 \renewcommand{\DOTI}[1]{\CTV\FmTi{#1}\par\nobreak\vskip 40\p@}
@@ -389,7 +401,7 @@ preamble= r"""
 \AtBeginDocument{\globalcolor{gray_base}}
 
 """
-# 
+#
 # \usepackage[titles]{tocloft}
 # \cftsetpnumwidth {1.25cm}\cftsetrmarg{1.5cm}
 # \setlength{\cftchapnumwidth}{0.75cm}
@@ -426,7 +438,7 @@ headers = r"""
     \renewcommand{\headrulewidth}{0pt}
     \renewcommand{\footrulewidth}{0.4pt}
     }
-    
+
 \makeatother
 """
 
