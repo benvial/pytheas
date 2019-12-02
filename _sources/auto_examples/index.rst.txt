@@ -128,23 +128,6 @@ plane wave or line source harmonic excitation.
 
 
 
-.. only :: html
-
- .. container:: sphx-glr-footer
-    :class: sphx-glr-footer-gallery
-
-
-  .. container:: sphx-glr-download
-
-    :download:`Download all examples in Python source code: auto_examples_python.zip <//home/travis/build/benvial/pytheas/docs/auto_examples/auto_examples_python.zip>`
-
-
-
-  .. container:: sphx-glr-download
-
-    :download:`Download all examples in Jupyter notebooks: auto_examples_jupyter.zip <//home/travis/build/benvial/pytheas/docs/auto_examples/auto_examples_jupyter.zip>`
-
-
 .. only:: html
 
  .. rst-class:: sphx-glr-signature

@@ -1,10 +1,12 @@
-.. note::
-    :class: sphx-glr-download-link-note
+.. only:: html
 
-    Click :ref:`here <sphx_glr_download_auto_examples_scatt2D_plot_scatt_cyl.py>` to download the full example code
-.. rst-class:: sphx-glr-example-title
+    .. note::
+        :class: sphx-glr-download-link-note
 
-.. _sphx_glr_auto_examples_scatt2D_plot_scatt_cyl.py:
+        Click :ref:`here <sphx_glr_download_auto_examples_scatt2D_plot_scatt_cyl.py>`     to download the full example code
+    .. rst-class:: sphx-glr-example-title
+
+    .. _sphx_glr_auto_examples_scatt2D_plot_scatt_cyl.py:
 
 
 Simulating diffraction by an object in 2D
@@ -204,7 +206,9 @@ Do a near to far field transform and get the normalized scattering width:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  17.162 seconds)
+   **Total running time of the script:** ( 0 minutes  14.830 seconds)
+
+**Estimated memory usage:**  16 MB
 
 
 .. _sphx_glr_download_auto_examples_scatt2D_plot_scatt_cyl.py:
