@@ -6,3 +6,4 @@ pygmsh
 PyYAML
 parse
 nlopt
+pyonelab
