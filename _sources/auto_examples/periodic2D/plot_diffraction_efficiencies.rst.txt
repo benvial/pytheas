@@ -233,9 +233,9 @@ It is fairly easy to switch to TM polarization:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.446 seconds)
+   **Total running time of the script:** ( 0 minutes  2.533 seconds)
 
-**Estimated memory usage:**  13 MB
+**Estimated memory usage:**  14 MB
 
 
 .. _sphx_glr_download_auto_examples_periodic2D_plot_diffraction_efficiencies.py:
@@ -250,7 +250,7 @@ It is fairly easy to switch to TM polarization:
   .. container:: binder-badge
 
     .. image:: https://mybinder.org/badge_logo.svg
-      :target: https://mybinder.org/v2/gh/benvial.github.io/pytheas/master?filepath=notebooks/auto_examples/periodic2D/plot_diffraction_efficiencies.ipynb
+      :target: https://mybinder.org/v2/gh/benvial/pytheas/master?filepath=notebooks/auto_examples/periodic2D/plot_diffraction_efficiencies.ipynb
       :width: 150 px
 
 

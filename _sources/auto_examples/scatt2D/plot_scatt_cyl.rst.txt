@@ -206,7 +206,7 @@ Do a near to far field transform and get the normalized scattering width:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  13.320 seconds)
+   **Total running time of the script:** ( 0 minutes  13.824 seconds)
 
 **Estimated memory usage:**  16 MB
 
@@ -223,7 +223,7 @@ Do a near to far field transform and get the normalized scattering width:
   .. container:: binder-badge
 
     .. image:: https://mybinder.org/badge_logo.svg
-      :target: https://mybinder.org/v2/gh/benvial.github.io/pytheas/master?filepath=notebooks/auto_examples/scatt2D/plot_scatt_cyl.ipynb
+      :target: https://mybinder.org/v2/gh/benvial/pytheas/master?filepath=notebooks/auto_examples/scatt2D/plot_scatt_cyl.ipynb
       :width: 150 px
 
 

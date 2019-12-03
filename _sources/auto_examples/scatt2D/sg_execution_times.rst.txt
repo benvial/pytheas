@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:13.320** total execution time for **auto_examples_scatt2D** files:
+**00:13.824** total execution time for **auto_examples_scatt2D** files:
 
 +---------------------------------------------------------------------------------+-----------+---------+
-| :ref:`sphx_glr_auto_examples_scatt2D_plot_scatt_cyl.py` (``plot_scatt_cyl.py``) | 00:13.320 | 15.9 MB |
+| :ref:`sphx_glr_auto_examples_scatt2D_plot_scatt_cyl.py` (``plot_scatt_cyl.py``) | 00:13.824 | 15.8 MB |
 +---------------------------------------------------------------------------------+-----------+---------+
