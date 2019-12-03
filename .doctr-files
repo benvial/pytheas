@@ -73,10 +73,6 @@
 ./_static/bootswatch-3.3.7/united/bootstrap.min.css
 ./_static/bootswatch-3.3.7/yeti/bootstrap.min.css
 ./_static/broken_example.png
-./_static/broken_stamp.svg
-./_static/copy-button.svg
-./_static/copybutton.css
-./_static/copybutton.js
 ./_static/css/custom_gallery.css
 ./_static/css/custom_pygments.css
 ./_static/css/custom_styles.css
@@ -137,12 +133,16 @@
 ./auto_examples/periodic2D/sg_execution_times.html
 ./auto_examples/scatt2D/plot_scatt_cyl.html
 ./auto_examples/scatt2D/sg_execution_times.html
+./binder/requirements.txt
 ./gen_modules/pytheas.Periodic2D.html
 ./gen_modules/pytheas.Scatt2D.html
 ./gen_modules/pytheas.tools.femio.html
 ./gen_modules/pytheas.tools.utils.html
 ./genindex.html
 ./index.html
+./notebooks/auto_examples/material/plot_refractive_index.ipynb
+./notebooks/auto_examples/periodic2D/plot_diffraction_efficiencies.ipynb
+./notebooks/auto_examples/scatt2D/plot_scatt_cyl.ipynb
 ./objects.inv
 ./py-modindex.html
 ./reference.html

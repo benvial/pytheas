@@ -119,16 +119,7 @@
 <span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
-
-<span class="n">script_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">bin_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_path</span><span class="p">,</span> <span class="s2">&quot;bin&quot;</span><span class="p">)</span>
-
-<span class="n">gmsh</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;gmsh&quot;</span><span class="p">)</span>
-<span class="n">getdp</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;getdp&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">gmsh</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">gmsh</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bin_path</span><span class="p">,</span> <span class="s2">&quot;gmsh&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">getdp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">getdp</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bin_path</span><span class="p">,</span> <span class="s2">&quot;getdp&quot;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pyonelab</span> <span class="kn">import</span> <span class="n">gmsh</span><span class="p">,</span> <span class="n">getdp</span>
 
 
 <span class="k">def</span> <span class="nf">make_var_str</span><span class="p">(</span><span class="n">varname</span><span class="p">,</span> <span class="n">varvalue</span><span class="p">):</span>
