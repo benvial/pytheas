@@ -10,7 +10,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   pip install -U pip git+https://github.com/sphinx-gallery/sphinx-gallery.git
   ####
 
-  cd ../.ci
+  cd .ci
   source ./texlive/texlive_install.sh
   cd ..
   cd docs

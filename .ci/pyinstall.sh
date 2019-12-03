@@ -19,7 +19,7 @@ install_reqs () {
 
 
 wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
-bash miniconda.$EXT -b -p $HOME/miniconda
+bash miniconda.$EXT -b -p $CONDA_BASE_PATH
 hash -r
 conda config --set always_yes yes --set changeps1 no
 conda config --add channels conda-forge

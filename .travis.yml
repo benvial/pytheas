@@ -4,10 +4,14 @@ matrix:
   - os: linux
     dist: xenial
     env:
+      PY=3.8
       MINICONDA=Miniconda3-latest-Linux-x86_64.sh
+      CONDA_BASE_PATH=$HOME/miniconda
   - os: osx
     env:
+      PY=3.8
       MINICONDA=Miniconda3-latest-MacOSX-x86_64.sh
+      CONDA_BASE_PATH=$HOME/miniconda
       DYLD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/pytheas/tools/bin:$DYLD_LIBRARY_PATH
   # - os: windows
   #   env:
@@ -23,10 +27,37 @@ notifications:
   email: false
 
 cache:
+  timeout: 1000
+  apt: true
   directories:
     - /tmp/texlive
     - $HOME/.texlive
+    - $HOME/.cache/pip
+    - $CONDA_BASE_PATH
 
+before_cache:
+  # Remove things that are not needed in subsequent builds.
+  - rm -rf ${CONDA_BASE_PATH}/conda-bld
+  - rm -rf ${CONDA_BASE_PATH}/locks
+  - rm -rf ${CONDA_BASE_PATH}/pkgs
+  - rm -rf ${CONDA_BASE_PATH}/var
+  - rm -rf ${CONDA_BASE_PATH}/envs/*/conda-bld
+  - rm -rf ${CONDA_BASE_PATH}/envs/*/locks
+  - rm -rf ${CONDA_BASE_PATH}/envs/*/pkgs
+  - rm -rf ${CONDA_BASE_PATH}/envs/*/var
+
+before_install:
+  # Check for existence of files to determine if cache exists
+  # If the dir doesn't exist, but is slated to be cached later,
+  # Travis unhelpfully creates it, which then causes "dir already exists"
+  # errors when you go to actually install the thing, so we must non-intuitively
+  # delete the file before re-creating it later.
+  - if [ -f $CONDA_BASE_PATH/bin/python$PY ]; then
+      echo "cached miniconda found -- nothing to do";
+    else
+      NOT_CACHED_CONDA=1;
+      rm -rf $CONDA_BASE_PATH;
+    fi
 
 env:
   global:
