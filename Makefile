@@ -21,13 +21,16 @@ tag:
 	git tag v$(VERSION)
 	git push --tags
 
-pipy: setup.py
+pipy: package
+	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
+	twine upload dist/*
+
+package: setup.py
 	@if [ "$(shell git rev-parse --abbrev-ref HEAD)" != "master" ]; then exit 1; fi
 	rm -f dist/*
 	rm -rf pytheas/tools/bin
 	python3 setup.py sdist
 	python3 setup.py bdist_wheel --universal
-	twine upload dist/*
 
 
 gh:

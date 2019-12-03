@@ -1,1 +1,1 @@
-pytheas-pip
+git+git://github.com/benvial/pytheas@master

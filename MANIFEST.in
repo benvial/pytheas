@@ -1,3 +1,6 @@
+
+
+recursive-include pytheas/material/database *
 recursive-include pytheas *.pro
 recursive-include pytheas *.geo
 include README.rst

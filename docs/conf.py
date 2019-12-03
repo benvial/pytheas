@@ -87,7 +87,7 @@ sphinx_gallery_conf = {
     "doc_module": project,
     'binder': {'org': 'benvial',
            'repo': 'pytheas',
-           'branch': 'master',
+           'branch': 'gh-pages',
            'binderhub_url': 'https://mybinder.org',
            'dependencies': './binder/requirements.txt',
            'notebooks_dir': 'notebooks',
