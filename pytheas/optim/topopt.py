@@ -79,6 +79,7 @@ class TopOpt:
         self.param_history = []
         self.tot_obj_history = []
         self.fem = fem
+        self.verbose = 1
 
     ###########################################
     ##########  OPTIMIZATION PARAMETERS  ######
@@ -389,10 +390,11 @@ class TopOpt:
 
     def main_loop_topopt(self, f_obj, p0):
         nvar = len(p0)
-        print("\n")
-        print("#" * 60)
-        print("Topology optimization with %s variables" % nvar)
-        print("#" * 60)
+        if self.verbose:
+            print("\n")
+            print("#" * 60)
+            print("Topology optimization with %s variables" % nvar)
+            print("#" * 60)
         # instanciation opt object, optimization algorithm
         opt = nlopt.opt(self.algorithm, nvar)
 
@@ -415,15 +417,17 @@ class TopOpt:
             opt.set_ftol_rel(self.ftol_rel)
             self.opt = opt
             self.Nit_loc = 0
-            print("\n")
-            print("Global iteration =  %s" % self.Nit)
-            print("#" * 60)
+            if self.verbose:
+                print("\n")
+                print("Global iteration =  %s" % self.Nit)
+                print("#" * 60)
             self.beta = 2 ** self.Nit
             # optimize it!
             try:
                 popt = self.opt.optimize(p0)
             except nlopt.ForcedStop:
-                print("Forced stop...")
+                if self.verbose:
+                    print("Forced stop...")
                 loc_obj = np.array(self.tot_obj_history[-self.Nit_loc :])
                 loc_vars = np.array(self.param_history[-self.Nit_loc :])
                 lb_ind = loc_vars >= self.opt.get_lower_bounds()
@@ -438,26 +442,27 @@ class TopOpt:
                 popt = loc_vars[index]
 
             opt_f = self.opt.last_optimum_value()
-
-            print(popt)
-            print("-" * 45)
-            print("   optimum   = ", opt_f)
             result_code = self.opt.last_optimize_result()
             s0, s = opt_message(result_code)
-            print(s0)
-            print(s)
+            if self.verbose:
+                print(popt)
+                print("-" * 45)
+                print("   optimum   = ", opt_f)
+                print(s0)
+                print(s)
             # re-initialize for next global iteration
             p0 = np.copy(popt)
         return popt, opt_f, opt
 
     def threshold_design(self, f_obj, p):
-        print("\n")
-        print("Final design")
-        print("#" * 60)
         p_thres = self.get_threshold_design(p)
         opt_thres = f_obj(p_thres, np.array([]), filt=False)
-        print("-" * 45)
-        print("   optimum   = ", opt_thres)
+        if self.verbose:
+            print("\n")
+            print("Final design")
+            print("#" * 60)
+            print("-" * 45)
+            print("   optimum   = ", opt_thres)
         return p_thres, opt_thres
 
     def get_threshold_design(self, p):
