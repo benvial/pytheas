@@ -6,12 +6,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   set -e
   pip install -U sphinx_bootstrap_theme # update
 
-  #### for of sphinx-gallery
-  git clone https://github.com/benvial/sphinx-gallery
-  cd sphinx-gallery
-  git checkout download_link_note_only_html
-  pip install -r requirements.txt
-  pip install -e .
+  #### sphinx-gallery from git
+  pip install -U pip git+https://github.com/sphinx-gallery/sphinx-gallery.git
   ####
 
   cd ../.ci

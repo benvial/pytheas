@@ -85,6 +85,14 @@ sphinx_gallery_conf = {
     'show_memory': True,
     # Modules for which function level galleries are created.
     "doc_module": project,
+    'binder': {'org': 'benvial.github.io',
+           'repo': 'pytheas',
+           'branch': 'master',
+           'binderhub_url': 'https://mybinder.org',
+           'dependencies': './binder/requirements.txt',
+           'notebooks_dir': 'notebooks',
+           'use_jupyter_lab': False,
+           },
 }
 
 
