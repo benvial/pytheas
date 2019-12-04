@@ -233,7 +233,7 @@ It is fairly easy to switch to TM polarization:
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.151 seconds)
+   **Total running time of the script:** ( 0 minutes  3.376 seconds)
 
 **Estimated memory usage:**  14 MB
 

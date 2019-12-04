@@ -133,6 +133,7 @@
 ./auto_examples/periodic2D/sg_execution_times.html
 ./auto_examples/scatt2D/plot_scatt_cyl.html
 ./auto_examples/scatt2D/sg_execution_times.html
+./binder/apt.txt
 ./binder/requirements.txt
 ./gen_modules/pytheas.Periodic2D.html
 ./gen_modules/pytheas.Scatt2D.html
