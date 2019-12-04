@@ -26,6 +26,9 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   make html
   
   mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
+  
+  
+  cp ./binder/apt.txt ./_build/html/binder
 
 
   ## tectonic
