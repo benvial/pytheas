@@ -94,6 +94,8 @@ less:
 	lessc custom_pygments.less  ../custom_pygments.css;\
 
 
+
+
 webdoc: less
 	cd docs && make clean && make html
 
@@ -107,6 +109,14 @@ latexpdf:
 latexpdf-noplots:
 	cd docs && make latexpdf-noplots
 	cp docs/_build/latex/pytheas.pdf docs/_build/html/_downloads/pytheas.pdf
+
+deploydoc: clean webdoc latexpdf
+	git add -A
+	git commit -a -m "update docs"
+	git checkout gh-pages
+	git merge master
+	git push origin gh-pages
+	git checkout master
 
 
 ## Show html doc in browser
