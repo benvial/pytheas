@@ -90,7 +90,7 @@ pre {
 }
 /* Comment */
 .highlight .err {
-  border: 1px solid #FF0000;
+  border: 1px solid #ff0000;
 }
 /* Error */
 .highlight .k {
@@ -132,7 +132,7 @@ pre {
 }
 /* Comment.Special */
 .highlight .gd {
-  color: #A00000;
+  color: #a00000;
 }
 /* Generic.Deleted */
 .highlight .ge {
@@ -140,7 +140,7 @@ pre {
 }
 /* Generic.Emph */
 .highlight .gr {
-  color: #FF0000;
+  color: #ff0000;
 }
 /* Generic.Error */
 .highlight .gh {
@@ -149,7 +149,7 @@ pre {
 }
 /* Generic.Heading */
 .highlight .gi {
-  color: #00A000;
+  color: #00a000;
 }
 /* Generic.Inserted */
 .highlight .go {

@@ -478,8 +478,8 @@ a.copybtn {
   right: 2px;
   width: 1.3em;
   height: 1.3em;
-  padding: 0.3em;
-  opacity: 0.3;
+  padding: .3em;
+  opacity: .3;
   transition: opacity 0.5s;
 }
 div.highlight {
