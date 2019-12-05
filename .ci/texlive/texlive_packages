@@ -15,7 +15,6 @@ luaotfload
 # texliveonfly does not detect the following packages automatically
 minted fvextra upquote lineno xstring framed caption
 
-
 ae
 amscls
 amsfonts
@@ -55,6 +54,7 @@ babelbib
 bibtex
 bibtex.x86_64-linux
 bookman
+bookmark
 capt-of
 caption
 carlisle
@@ -103,6 +103,8 @@ glyphlist
 graphics
 graphics-cfg
 graphics-def
+grfext
+grffile
 gsftopk
 gsftopk.x86_64-linux
 helvetic
@@ -137,6 +139,7 @@ hyphen-welsh
 hyphenex
 ifplatform
 iftex
+infwarerr
 isomath
 knuth-lib
 knuth-local
@@ -153,6 +156,7 @@ latex-fonts
 latexconfig
 latexmk
 latexmk.x86_64-linux
+letltxmacro
 lineno
 lithuanian
 lm
