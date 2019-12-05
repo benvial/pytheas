@@ -17,18 +17,38 @@ install_reqs () {
   while read requirement; do conda install --yes $requirement || pip install -U $requirement; done < $1
 }
 
+# Check for existence of files to determine if cache exists
+# If the dir doesn't exist, but is slated to be cached later,
+# Travis unhelpfully creates it, which then causes "dir already exists"
+# errors when you go to actually install the thing, so we must non-intuitively
+# delete the file before re-creating it later.
+if [ -d $HOME/miniconda/envs/testenv ]; then
+  echo "cached miniconda environment found -- nothing to do";
+  CACHED_ENV=1;
+else
+  echo "cached miniconda environment not found";
+  rm -rf $CONDA_BASE_PATH;
+fi
+# if we don't have a cached conda environment then build one, otherwise just activate the cached one
+if [ "$CACHED_ENV" ]; then
+    echo ">>> Using cached environment";
+    source activate testenv
+else
+   echo ">>> Building python environment";
+    wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
+    bash miniconda.$EXT -b -p $CONDA_BASE_PATH
+    hash -r
+    conda config --set always_yes yes --set changeps1 no
+    conda config --add channels conda-forge
+    conda info -a
+    conda create -q -n testenv python=$PY
+    source activate testenv
+    install_reqs requirements.txt
+    install_reqs requirements_test.txt
+    install_reqs requirements_doc.txt
+    conda update -n testenv -q --all
+fi
 
-wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
-bash miniconda.$EXT -b -p $CONDA_BASE_PATH
-hash -r
-conda config --set always_yes yes --set changeps1 no
-conda config --add channels conda-forge
-conda info -a
-conda create -q -n testenv python=3
-source activate testenv
-install_reqs requirements.txt
-install_reqs requirements_test.txt
-install_reqs requirements_doc.txt
 pip install -e .
-conda update -n testenv -q --all
+
 mkdir $HOME/.matplotlib && touch $HOME/.matplotlib/matplotlibrc && echo "backend:Agg" > $HOME/.matplotlib/matplotlibrc

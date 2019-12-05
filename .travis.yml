@@ -46,19 +46,6 @@ before_cache:
   - rm -rf ${CONDA_BASE_PATH}/envs/*/pkgs
   - rm -rf ${CONDA_BASE_PATH}/envs/*/var
 
-before_install:
-  # Check for existence of files to determine if cache exists
-  # If the dir doesn't exist, but is slated to be cached later,
-  # Travis unhelpfully creates it, which then causes "dir already exists"
-  # errors when you go to actually install the thing, so we must non-intuitively
-  # delete the file before re-creating it later.
-  - if [ -f $CONDA_BASE_PATH/bin/python$PY ]; then
-      echo "cached miniconda found -- nothing to do";
-    else
-      NOT_CACHED_CONDA=1;
-      rm -rf $CONDA_BASE_PATH;
-    fi
-
 env:
   global:
     # Doctr deploy key for benvial/pytheas
