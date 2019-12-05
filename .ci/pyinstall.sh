@@ -31,7 +31,7 @@ else
   rm -rf $CONDA_BASE_PATH;
 fi
 
-# unset CACHED_ENV
+unset CACHED_ENV
 # if we don't have a cached conda environment then build one, otherwise just activate the cached one
 if [ "$CACHED_ENV" ]; then
     echo ">>> Using cached environment";
@@ -47,8 +47,8 @@ else
     conda create -q -n testenv python=$PY
     source activate testenv
     install_reqs requirements.txt
-    install_reqs requirements_test.txt
-    install_reqs requirements_doc.txt
+    pip install -r requirements_doc.txt
+    pip install -r requirements_test.txt
     conda update -n testenv -q --all
 fi
 

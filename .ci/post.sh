@@ -5,6 +5,8 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
 
+  
+
 
   if [  -d $HOME/.texlive  ]; then
     echo "cached texlive found -- nothing to do";

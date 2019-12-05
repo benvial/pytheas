@@ -1,9 +1,8 @@
-doctr
-sphinx
 sphinx-bootstrap-theme
+sphinx
 git+https://github.com/sphinx-gallery/sphinx-gallery.git
 sphinx-copybutton
 memory-profiler
-Pillow
 codecov
 codacy-coverage
+doctr
