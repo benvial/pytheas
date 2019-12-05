@@ -3,6 +3,7 @@
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   sudo apt-get update
   sudo apt-get install libglu1-mesa
+  sudo apt-get install node-less
 fi
 
 
@@ -36,7 +37,7 @@ if [ "$CACHED_ENV" ]; then
     echo ">>> Using cached environment";
     source activate testenv
 else
-   echo ">>> Building python environment";
+    echo ">>> Building python environment";
     wget -q https://repo.continuum.io/miniconda/$MINICONDA -O miniconda.$EXT;
     bash miniconda.$EXT -b -p $CONDA_BASE_PATH
     hash -r

@@ -84,3 +84,6 @@ gen_modules/
 auto_examples/
 .pytest_cache/
 .hypothesis/
+
+# Docs css (we use less to generate those):
+docs/_custom/static/css/*.css

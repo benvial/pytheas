@@ -13,11 +13,20 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
     echo "cached texlive not found";
   fi
 
+
+cd docs
+make clean
+make less
+
 unset CACHED_TEX
   ####
 if [ "$CACHED_TEX" ]; then
-    echo "cached texlive found -- nothing to do";
+    echo ">>> Using cached environment";
 
+    make latexpdf
+
+  else
+    echo ">>> Building python environment";
     cd .ci
     source ./texlive/texlive_install.sh
     cd ..
@@ -28,12 +37,9 @@ if [ "$CACHED_TEX" ]; then
     texliveonfly -c xelatex pytheas.tex
     cd ../..
 
-  else
-    cd docs
-    make clean
-    make latexpdf
-    make html
   fi
+
+  make html
 
   mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
 

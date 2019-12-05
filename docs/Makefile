@@ -59,6 +59,18 @@ clean:
 	rm -rf tutorials/
 	rm -rf gen_modules/
 
+
+less:
+	cd _custom/static/css/less;\
+	lessc theme.less  ../theme.css;\
+	lessc custom_styles.less  ../custom_styles.css;\
+	lessc custom_gallery.less  ../custom_gallery.css;\
+	lessc custom_pygments.less  ../custom_pygments.css;\
+
+
+
+
+
 html-noplot: export SPHX_GLR_THEME = $(theme)
 html-noplot:
 	$(SPHINXBUILD) -D plot_gallery=0 -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
