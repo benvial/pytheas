@@ -5,8 +5,8 @@
 
 Computation times
 =================
-**00:03.303** total execution time for **auto_examples_periodic2D** files:
+**00:02.551** total execution time for **auto_examples_periodic2D** files:
 
 +------------------------------------------------------------------------------------------------------------------+-----------+---------+
-| :ref:`sphx_glr_auto_examples_periodic2D_plot_diffraction_efficiencies.py` (``plot_diffraction_efficiencies.py``) | 00:03.303 | 13.7 MB |
+| :ref:`sphx_glr_auto_examples_periodic2D_plot_diffraction_efficiencies.py` (``plot_diffraction_efficiencies.py``) | 00:02.551 | 13.5 MB |
 +------------------------------------------------------------------------------------------------------------------+-----------+---------+

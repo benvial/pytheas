@@ -73,6 +73,9 @@
 ./_static/bootswatch-3.3.7/united/bootstrap.min.css
 ./_static/bootswatch-3.3.7/yeti/bootstrap.min.css
 ./_static/broken_example.png
+./_static/copy-button.svg
+./_static/copybutton.css
+./_static/copybutton.js
 ./_static/css/custom_gallery.css
 ./_static/css/custom_pygments.css
 ./_static/css/custom_styles.css
