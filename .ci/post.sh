@@ -21,16 +21,15 @@ make less
 unset CACHED_TEX
   ####
 if [ "$CACHED_TEX" ]; then
-    echo ">>> Using cached environment";
+    echo ">>> Using cached tex environment";
 
     make latexpdf
 
   else
-    echo ">>> Building python environment";
-    cd .ci
+    echo ">>> Building tex environment";
+    cd ../.ci
     source ./texlive/texlive_install.sh
-    cd ..
-    cd docs
+    cd ../docs
     make latex
     cd ./_build/latex/
     # Texliveonfly will download missing packages automatically
