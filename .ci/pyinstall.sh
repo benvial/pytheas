@@ -29,6 +29,8 @@ else
   echo "cached miniconda environment not found";
   rm -rf $CONDA_BASE_PATH;
 fi
+
+unset CACHED_ENV
 # if we don't have a cached conda environment then build one, otherwise just activate the cached one
 if [ "$CACHED_ENV" ]; then
     echo ">>> Using cached environment";

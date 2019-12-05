@@ -1,10 +1,9 @@
-# tectonic
 doctr
 sphinx
-sphinx_bootstrap_theme
-sphinx_gallery
+sphinx-bootstrap-theme
+git+https://github.com/sphinx-gallery/sphinx-gallery.git
 sphinx-copybutton
-memory_profiler
+memory-profiler
 Pillow
 codecov
 codacy-coverage

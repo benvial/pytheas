@@ -4,26 +4,36 @@
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   source activate testenv
   set -e
-  pip install -U -r requirements_doc.txt
 
-  #### sphinx-gallery from git
-  pip install -U pip git+https://github.com/sphinx-gallery/sphinx-gallery.git
+
+  if [  -d $HOME/.texlive  ]; then
+    echo "cached texlive found -- nothing to do";
+    CACHED_TEX=1;
+  else
+    echo "cached texlive not found";
+  fi
+
+unset CACHED_TEX
   ####
+if [ "$CACHED_TEX" ]; then
+    echo "cached texlive found -- nothing to do";
 
-  cd .ci
-  source ./texlive/texlive_install.sh
-  cd ..
-  cd docs
-  make latex
-  cd ./_build/latex/
-  # Texliveonfly will download missing packages automatically
-  texliveonfly -c xelatex pytheas.tex
-  cd ../..
+    cd .ci
+    source ./texlive/texlive_install.sh
+    cd ..
+    cd docs
+    make latex
+    cd ./_build/latex/
+    # Texliveonfly will download missing packages automatically
+    texliveonfly -c xelatex pytheas.tex
+    cd ../..
 
-
-  make clean
-  make latexpdf
-  make html
+  else
+    cd docs
+    make clean
+    make latexpdf
+    make html
+  fi
 
   mv ./_build/latex/pytheas.pdf ./_build/html/_downloads/pytheas.pdf
 
