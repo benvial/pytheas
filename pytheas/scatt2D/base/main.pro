@@ -10,6 +10,7 @@ Group {
     pmlLR  = Region[3];
     host   = Region[{ 4, 7 }];
     design = Region[5];
+    Omega_pml = Region[{ pmlC, pmlTB, pmlLR }];
 
     If(target_flag)
     target_circle = Region[7];
@@ -17,12 +18,11 @@ Group {
     If(inclusion_flag)
     incl         = Region[6];
     Omega_source = Region[{ incl, design }];
-    Omega_i      = Region[{ host, design, incl }];
+    Omega_i      = Region[{ host, design, incl,Omega_pml }];
     Else
       Omega_source = Region[{ design }];
-    Omega_i = Region[{ host, design }];
+    Omega_i = Region[{ host, design,Omega_pml }];
     EndIf
-      Omega_pml = Region[{ pmlC, pmlTB, pmlLR }];
     Omega_nosource = Region[{ host, pmlC, pmlTB, pmlLR }];
     Omega = Region[{ Omega_source, Omega_nosource }];
 
@@ -133,7 +133,7 @@ Function {
 
     EndIf
 
-      u_i[Omega_pml] = 0.;
+      /* u_i[Omega_pml] = 0.; */
 
 
 
@@ -147,7 +147,7 @@ Function {
     EndIf
 
     EndIf
-      grad_A_beam[Omega_pml] = 0 * TensorDiag[1, 1, 0.];
+      /* grad_A_beam[Omega_pml] = 0 * TensorDiag[1, 1, 0.]; */
 
 
     /*FIXME: for the beam case there is an extra term in source
