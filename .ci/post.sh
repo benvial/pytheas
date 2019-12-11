@@ -16,7 +16,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then
   make clean
   make less
 
-  # unset CACHED_TEX
+  unset CACHED_TEX
 
   if [ "$CACHED_TEX" ]; then
       echo ">>> Using cached Tex environment";
