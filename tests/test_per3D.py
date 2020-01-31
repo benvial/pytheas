@@ -41,7 +41,7 @@ def model(verbose=False):
     return fem
 
 
-def test_per3D(verbose=False):
+def test_per3D(verbose=True):
     fem = model(verbose=verbose)
     mat = pattern(xsym=True, ysym=True)
     fem.register_pattern(mat.pattern, mat._threshold_val)

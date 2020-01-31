@@ -47,20 +47,22 @@ Function{
 	gamma0           = k0*Cos[theta_0];
 	Pinc             =  0.5*Ae*Ae*Sqrt[epsilon0/mu0] * Cos[theta_0];
 
-	epsilon[L_1]  = Complex[eps_L1_re , eps_L1_im] * TensorDiag[1,1,1];
-	epsilon[L_2]  = Complex[eps_L2_re , eps_L2_im] * TensorDiag[1,1,1];
-	epsilon[L_4]  = Complex[eps_L4_re , eps_L4_im] * TensorDiag[1,1,1];
-	epsilon[L_5]  = Complex[eps_L5_re , eps_L5_im] * TensorDiag[1,1,1];
-	epsilon[L_6]  = Complex[eps_L6_re , eps_L6_im] * TensorDiag[1,1,1];
-	epsilon[Omega_design]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * TensorDiag[1,1,1];
-	/* epsilon[Omega_design]          = Complex[eps_L3_re , eps_L3_im] * TensorDiag[1,1,1]; */
+	Id3[] = TensorDiag[1,1,1];
+
+	epsilon[L_1]  = Complex[eps_L1_re , eps_L1_im] * Id3[];
+	epsilon[L_2]  = Complex[eps_L2_re , eps_L2_im] * Id3[];
+	epsilon[L_4]  = Complex[eps_L4_re , eps_L4_im] * Id3[];
+	epsilon[L_5]  = Complex[eps_L5_re , eps_L5_im] * Id3[];
+	epsilon[L_6]  = Complex[eps_L6_re , eps_L6_im] * Id3[];
+	epsilon[Omega_design]    = Complex[ScalarField[XYZ[], 0, 1]{0}  ,ScalarField[XYZ[], 0, 1 ]{1} ]  * Id3[];
+	/* epsilon[Omega_design]          = Complex[eps_L3_re , eps_L3_im] * Id3[]; */
 
 
-	mu[Omega_no_pml]       = TensorDiag[1,1,1];
-	nu[Omega_no_pml]       = TensorDiag[1,1,1];
+	mu[Omega_no_pml]       = Id3[];
+	nu[Omega_no_pml]       = Id3[];
 /*
-	mu[L_3]       = TensorDiag[1,1,1];
-	nu[L_3]       = TensorDiag[1,1,1]; */
+	mu[L_3]       = Id3[];
+	nu[L_3]       = Id3[]; */
 
 	gamma[Omega_super] = Complex[gamma_super_re , gamma_super_im];
 	gamma[Omega_subs]  = Complex[gamma_subs_re  , gamma_subs_im ];
@@ -119,9 +121,9 @@ Function{
 
 	epsilon_annex[PMLbot]       = eps_L6_re*TensorDiag[sz[]*sy/sx,sx*sz[]/sy,sx*sy/sz[]];
 	epsilon_annex[PMLtop]       = eps_L1_re*TensorDiag[sz[]*sy/sx,sx*sz[]/sy,sx*sy/sz[]];
-	epsilon_annex[Omega_source] = Complex[eps_L1_re , eps_L1_im] * TensorDiag[1,1,1];
-	epsilon_annex[L_1]          = Complex[eps_L1_re , eps_L1_im] * TensorDiag[1,1,1];
-	epsilon_annex[L_6]          = Complex[eps_L6_re , eps_L6_im] * TensorDiag[1,1,1];
+	epsilon_annex[Omega_source] = Complex[eps_L1_re , eps_L1_im] * Id3[];
+	epsilon_annex[L_1]          = Complex[eps_L1_re , eps_L1_im] * Id3[];
+	epsilon_annex[L_6]          = Complex[eps_L6_re , eps_L6_im] * Id3[];
 
 	source[]         = k0^2*(epsilon[]-epsilon_annex[])*Ecm[];//(nm/1.e-9)^2*
 
