@@ -127,10 +127,14 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
 
 def get_nodes(path_mesh, physical_ID, celltype):
     mesh = meshio.read(path_mesh)
-    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
+    # phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
+    celltype_index = 2
+    if celltype == "quad":
+        celltype_index = 3
+    phys_ID = mesh.cell_data["gmsh:physical"][celltype_index]
     domain = phys_ID == physical_ID
-    cell = mesh.cells[celltype]
-    els_nodes_ID = cell[domain]
+    cell = mesh.cells[celltype_index]
+    els_nodes_ID = cell.data[domain]
     nodes_ID_domain = np.unique(els_nodes_ID.flatten())
     nodes_coords_domain = mesh.points[nodes_ID_domain]
     return nodes_ID_domain + 1, nodes_coords_domain
@@ -138,16 +142,19 @@ def get_nodes(path_mesh, physical_ID, celltype):
 
 def get_elements(path_mesh, physical_ID, celltype):
     mesh = meshio.read(path_mesh)
-    phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
+    celltype_index = 2
+    if celltype == "quad":
+        celltype_index = 3
+    phys_ID = mesh.cell_data["gmsh:physical"][celltype_index]
     domain = phys_ID == physical_ID
     n = 1
-    for k in mesh.cell_data.keys():
-        if k is celltype:
+    for ik, cell in enumerate(mesh.cells):
+        if cell.type is celltype:
             n += 0
         else:
-            n += len(mesh.cell_data[k]["gmsh:physical"])
+            n += len(mesh.cell_data["gmsh:physical"][ik])
     el_ID = np.arange(0, len(domain))[domain] + n
-    cell = mesh.cells[celltype]
+    cell = mesh.cells[celltype_index].data
     els_nodes_ID = cell[domain]
     el_center = np.mean(mesh.points[els_nodes_ID], axis=1)
     return el_ID, el_center, els_nodes_ID + 1, None
