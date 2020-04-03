@@ -1,4 +1,4 @@
-// This code was created by pygmsh v6.0.2.
+// This code was created by pygmsh vunknown.
 SetFactory("OpenCASCADE");
 Include "parameters.dat";
 lc_des = lambda0/(Sqrt[eps_des_re]*parmesh_des);

@@ -147,7 +147,7 @@ class Periodic3D(BaseFEM):
 
     # @property
     # def N_d_order(self):
-    #     N = self.d/self.lambda0 * (sc.sqrt([self.eps_L1, self.eps_L6]) - np.sin(self.theta))
+    #     N = self.d/self.lambda0 * (np.sqrt([self.eps_L1, self.eps_L6]) - np.sin(self.theta))
     #     return int(max(N))
 
     def _make_param_dict(self):
@@ -287,26 +287,26 @@ class Periodic3D(BaseFEM):
         layer_diopter[0]["epsilon"] = self.eps_L1
         layer_diopter[1]["epsilon"] = self.eps_L6
         layer_diopter[0]["kp"] = (
-            2 * np.pi / lambda0 * sc.sqrt(layer_diopter[0]["epsilon"])
+            2 * np.pi / lambda0 * np.sqrt(layer_diopter[0]["epsilon"])
         )
         layer_diopter[1]["kp"] = (
-            2 * np.pi / lambda0 * sc.sqrt(layer_diopter[1]["epsilon"])
+            2 * np.pi / lambda0 * np.sqrt(layer_diopter[1]["epsilon"])
         )
-        layer_diopter[0]["gamma"] = sc.sqrt(
+        layer_diopter[0]["gamma"] = np.sqrt(
             layer_diopter[0]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
         )
-        layer_diopter[1]["gamma"] = sc.sqrt(
+        layer_diopter[1]["gamma"] = np.sqrt(
             layer_diopter[1]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
         )
 
         for nt in range(0, Nb_ordre):
             for mt in range(0, Nb_ordre):
-                gammatt[nt, mt] = sc.sqrt(
+                gammatt[nt, mt] = np.sqrt(
                     layer_diopter[-1]["kp"] ** 2 - alphat[nt] ** 2 - betat[mt] ** 2
                 )
         for nr in range(0, Nb_ordre):
             for mr in range(0, Nb_ordre):
-                gammatr[nr, mr] = sc.sqrt(
+                gammatr[nr, mr] = np.sqrt(
                     layer_diopter[0]["kp"] ** 2 - alphat[nr] ** 2 - betat[mr] ** 2
                 )
 
@@ -458,9 +458,9 @@ class Periodic3D(BaseFEM):
         alpha0 = k0 * np.sin(self.theta_0) * np.cos(self.phi_0)
         beta0 = k0 * np.sin(self.theta_0) * np.sin(self.phi_0)
         gamma0 = k0 * np.cos(self.theta_0)
-        # gamma02 = sc.sqrt(k0 ** 2 - alpha0 ** 2 - beta0 ** 2)
+        # gamma02 = np.sqrt(k0 ** 2 - alpha0 ** 2 - beta0 ** 2)
         Ae = 1.0
-        # Ah = Ae * sc.sqrt(self.epsilon0 / self.mu0)
+        # Ah = Ae * np.sqrt(self.epsilon0 / self.mu0)
 
         Ex0 = Ae * (
             np.cos(self.psi_0) * np.cos(self.theta_0) * np.cos(self.phi_0)
@@ -498,8 +498,8 @@ class Periodic3D(BaseFEM):
         ####   SET Interface and transport matrices  ####
         #################################################
         for i_prop in range(0, nb_layer_diopter):
-            layer_diopter[i_prop]["kp"] = k0 * sc.sqrt(layer_diopter[i_prop]["epsilon"])
-            layer_diopter[i_prop]["gamma"] = sc.sqrt(
+            layer_diopter[i_prop]["kp"] = k0 * np.sqrt(layer_diopter[i_prop]["epsilon"])
+            layer_diopter[i_prop]["gamma"] = np.sqrt(
                 layer_diopter[i_prop]["kp"] ** 2 - alpha0 ** 2 - beta0 ** 2
             )
             layer_diopter[i_prop]["mu"] = 1

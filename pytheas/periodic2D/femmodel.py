@@ -336,18 +336,18 @@ class Periodic2D(BaseFEM):
             self.N_d_order + order_shift,
             2 * self.N_d_order + 1,
         )
-        x_slice = sc.linspace(-self.d / 2, self.d / 2, self.npt_integ)
-        y_slice_t = sc.linspace(self.ycut_sub_min, self.ycut_sub_max, self.nb_slice)
-        y_slice_r = sc.linspace(self.ycut_sup_min, self.ycut_sup_max, self.nb_slice)
-        k_sub = 2 * np.pi * sc.sqrt(self.eps_sub) / self.lambda0
-        k_sup = 2 * np.pi * sc.sqrt(self.eps_sup) / self.lambda0
-        alpha_sup = -k_sup * sc.sin(self.theta)
-        beta_sup = sc.sqrt(k_sup ** 2 - alpha_sup ** 2)
-        # beta_sub = sc.sqrt(k_sub ** 2 - alpha_sup ** 2)
-        s_t = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
-        s_r = sc.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
-        Aeff_t = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
-        Aeff_r = sc.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
+        x_slice = np.linspace(-self.d / 2, self.d / 2, self.npt_integ)
+        y_slice_t = np.linspace(self.ycut_sub_min, self.ycut_sub_max, self.nb_slice)
+        y_slice_r = np.linspace(self.ycut_sup_min, self.ycut_sup_max, self.nb_slice)
+        k_sub = 2 * np.pi * np.sqrt(self.eps_sub) / self.lambda0
+        k_sup = 2 * np.pi * np.sqrt(self.eps_sup) / self.lambda0
+        alpha_sup = -k_sup * np.sin(self.theta)
+        beta_sup = np.sqrt(k_sup ** 2 - alpha_sup ** 2)
+        # beta_sub = np.sqrt(k_sub ** 2 - alpha_sup ** 2)
+        s_t = np.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
+        s_r = np.zeros((1, (2 * self.N_d_order + 1)), complex)[0, :]
+        Aeff_t = np.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
+        Aeff_r = np.zeros((self.nb_slice, 2 * self.N_d_order + 1), complex)
 
         field_diff_t, field_diff_r = self._postpro_fields_cuts()
 
@@ -359,20 +359,20 @@ class Periodic2D(BaseFEM):
         )
         alphat_t = alpha_sup + 2 * np.pi / (self.d) * No_ordre
         alphat_r = alpha_sup + 2 * np.pi / (self.d) * No_ordre
-        betat_sup = np.conj(sc.sqrt(k_sup ** 2 - alphat_r ** 2))
-        betat_sub = np.conj(sc.sqrt(k_sub ** 2 - alphat_t ** 2))
+        betat_sup = np.conj(np.sqrt(k_sup ** 2 - alphat_r ** 2))
+        betat_sub = np.conj(np.sqrt(k_sub ** 2 - alphat_t ** 2))
         for m1 in range(0, self.nb_slice):
             slice_t = field_diff_t[m1, :]
             slice_r = field_diff_r[m1, :]
 
             for k in range(0, 2 * self.N_d_order + 1):
-                expalpha_t = sc.exp(-1j * alphat_t[k] * x_slice)
-                expalpha_r = sc.exp(-1j * alphat_r[k] * x_slice)
-                s_t[k] = sc.trapz(slice_t * expalpha_t, x=x_slice) / self.d
-                s_r[k] = sc.trapz(slice_r * expalpha_r, x=x_slice) / self.d
+                expalpha_t = np.exp(-1j * alphat_t[k] * x_slice)
+                expalpha_r = np.exp(-1j * alphat_r[k] * x_slice)
+                s_t[k] = np.trapz(slice_t * expalpha_t, x=x_slice) / self.d
+                s_r[k] = np.trapz(slice_r * expalpha_r, x=x_slice) / self.d
 
-            Aeff_t[m1, :] = s_t * sc.exp(-1j * betat_sub * (y_slice_t[m1]))
-            Aeff_r[m1, :] = s_r * sc.exp(
+            Aeff_t[m1, :] = s_t * np.exp(-1j * betat_sub * (y_slice_t[m1]))
+            Aeff_r[m1, :] = s_r * np.exp(
                 1j * betat_sup * (y_slice_r[m1] - (self.ycut_sup_min - self.scan_dist))
             )
 
@@ -399,14 +399,14 @@ class Periodic2D(BaseFEM):
                 "    R            = ",
                 "%0.6f" % R,
                 "     (std slice2slice =",
-                "%0.6e" % sc.std(np.sum(Aeff_r.real, axis=1)),
+                "%0.6e" % np.std(np.sum(Aeff_r.real, axis=1)),
                 ")",
             )
             print(
                 "    T            = ",
                 "%0.6f" % T,
                 "     (std slice2slice =",
-                "%0.6e" % sc.std(np.sum(Aeff_t.real, axis=1)),
+                "%0.6e" % np.std(np.sum(Aeff_t.real, axis=1)),
                 ")",
             )
             print("    Q            = ", "%0.6f" % Q)

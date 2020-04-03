@@ -128,9 +128,8 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
 def get_nodes(path_mesh, physical_ID, celltype):
     mesh = meshio.read(path_mesh)
     # phys_ID = mesh.cell_data[celltype]["gmsh:physical"]
-    celltype_index = 2
-    if celltype == "quad":
-        celltype_index = 3
+    types_cells = [_.type for _ in mesh.cells]
+    celltype_index = [i for i, _ in enumerate(types_cells) if _ == celltype][0]
     phys_ID = mesh.cell_data["gmsh:physical"][celltype_index]
     domain = phys_ID == physical_ID
     cell = mesh.cells[celltype_index]
@@ -142,9 +141,8 @@ def get_nodes(path_mesh, physical_ID, celltype):
 
 def get_elements(path_mesh, physical_ID, celltype):
     mesh = meshio.read(path_mesh)
-    celltype_index = 2
-    if celltype == "quad":
-        celltype_index = 3
+    types_cells = [_.type for _ in mesh.cells]
+    celltype_index = [i for i, _ in enumerate(types_cells) if _ == celltype][0]
     phys_ID = mesh.cell_data["gmsh:physical"][celltype_index]
     domain = phys_ID == physical_ID
     n = 1

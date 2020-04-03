@@ -26,7 +26,7 @@ def model(verbose=False):
     fem.eps_L4 = 1 - 0.0 * 1j  #: flt: permittivity layer 4
     fem.eps_L5 = 1 - 0.0 * 1j  #: flt: permittivity layer 5
     fem.parmesh_des = 6
-    fem.parmesh = 15
+    fem.parmesh = 6
     fem.parmesh_pml = fem.parmesh * 2 / 3
     fem.N_d_order = 0
     fem.el_order = 2  #: int: order of basis function (1 or 2)
@@ -41,7 +41,7 @@ def model(verbose=False):
     return fem
 
 
-def test_per3D(verbose=True):
+def test_per3D(verbose=False):
     fem = model(verbose=verbose)
     mat = pattern(xsym=True, ysym=True)
     fem.register_pattern(mat.pattern, mat._threshold_val)

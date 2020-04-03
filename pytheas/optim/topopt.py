@@ -279,6 +279,7 @@ class TopOpt:
         xdes, ydes, zdes = self.fem.des[1].T
         points = np.vstack((xdes, ydes)).T
         x_grid, y_grid = self.grid
+        valdes = np.require(valdes, requirements=["OWNDATA"])
         valdes.flags.writeable = True
         xg, yg = np.meshgrid(x_grid, y_grid)
         v = interpolate.griddata(
