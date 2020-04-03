@@ -1,6 +1,6 @@
 sphinx-bootstrap-theme
 sphinx
-git+https://github.com/sphinx-gallery/sphinx-gallery.git
+sphinx-gallery
 sphinx-copybutton
 memory-profiler
 codecov

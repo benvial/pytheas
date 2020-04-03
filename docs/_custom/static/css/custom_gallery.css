@@ -60,24 +60,24 @@
   src: url("../fonts/PT_Sans/PTSans-Regular.ttf");
 }
 div.sphx-glr-download a {
-  background-color: #40363c;
-  background-image: none;
-  border-radius: 0px;
-  border: 0px solid #40363c;
-  color: #ededed;
-  display: inline-block;
-  font-weight: bold;
-  padding: 0.8em;
-  text-align: center;
-  font-size: 12pt;
-  max-width: 400px;
+  background-color: #40363c !important;
+  background-image: none !important;
+  border-radius: 0px !important;
+  border: 0px solid #40363c !important;
+  color: #ededed !important;
+  display: inline-block !important;
+  font-weight: bold !important;
+  padding: 0.8em !important;
+  text-align: center !important;
+  font-size: 12pt !important;
+  max-width: 400px !important;
 }
 div.sphx-glr-download a:hover {
-  box-shadow: none;
-  text-decoration: none;
-  background-image: none;
-  background-color: #2d262a;
-  max-width: 400px;
+  box-shadow: none !important;
+  text-decoration: none !important;
+  background-image: none !important;
+  background-color: #2d262a !important;
+  max-width: 400px !important;
 }
 div.sphx-glr-download code.download {
   display: inline-block;
@@ -111,7 +111,7 @@ div.sphx-glr-footer {
   text-align: center;
 }
 .sphx-glr-script-out .highlight pre {
-  background-color: #ededed;
+  background-color: #f7f7f7 !important;
   border: 0;
   max-height: 30em;
   overflow: auto;
@@ -151,7 +151,4 @@ div.sphx-glr-footer {
 .sphx-glr-thumbcontainer[tooltip]:hover::after {
   background-color: #40363c;
   border: none;
-}
-.sphx-glr-script-out .highlight pre {
-  background-color: #ededed;
 }
