@@ -73,7 +73,7 @@ Thumbs.db
 *.pyc
 *.dat
 *.npz
-
+pytheas/scatt3D/base/geometry.geo
 
 # data, tmp and pycache #
 ###################
