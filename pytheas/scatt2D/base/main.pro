@@ -785,6 +785,12 @@ PostProcessing {
 // #############################################################################
 
 PostOperation {
+  { Name postop_fields_plane; NameOfPostProcessing postpro ;
+    Operation {
+     Print[u_tot  , OnLine {{domX_L,yplane,0}{domX_R, yplane, 0}} {npt_integ-1}, File "u_tot_ref_plane.out" ,	Format SimpleTable];
+
+    }
+  }
     /*------------ Diffraction problem -----------------*/
     { Name postop_u_target;
       NameOfPostProcessing postpro;

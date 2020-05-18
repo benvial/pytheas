@@ -112,6 +112,8 @@ class TopOpt:
     force_xsym = False
     filter_param_function = "new"
 
+    callback = None
+
     @property
     def nthres(self):
         return len(self.eps_interp)
@@ -196,7 +198,9 @@ class TopOpt:
 
     def new_filter_param(self, p):
         self.fem._print_progress("Filtering")
-        if self.rfilt == 0:
+        isfilt = np.array(self.rfilt) == 0
+        nofilt = isfilt.all()
+        if nofilt:
             pfilt = p
         else:
             if hasattr(self.rfilt, "__len__"):
@@ -403,6 +407,8 @@ class TopOpt:
         ############### OPTIMIZATION - global iterations ###############
         ################################################################
         for self.Nit in range(self.N0, self.N0 + self.Nitmax):
+
+            self.beta = 2 ** self.Nit
             opt.set_lower_bounds(self.pmin)
             opt.set_upper_bounds(self.pmax)
             if self.typeopt is "max":
@@ -422,7 +428,6 @@ class TopOpt:
                 print("\n")
                 print("Global iteration =  %s" % self.Nit)
                 print("#" * 60)
-            self.beta = 2 ** self.Nit
             # optimize it!
             try:
                 popt = self.opt.optimize(p0)
@@ -453,6 +458,8 @@ class TopOpt:
                 print(s)
             # re-initialize for next global iteration
             p0 = np.copy(popt)
+            if self.callback:
+                self.callback(self)
         return popt, opt_f, opt
 
     def threshold_design(self, f_obj, p):

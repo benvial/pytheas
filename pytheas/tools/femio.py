@@ -189,7 +189,7 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
 
 def open_gmsh(path_mesh, path_geo, pos_list=None, verbose=2):
     pos_list = pos_list or []
-    command = [gmsh, path_geo, path_mesh] + pos_list + ["-v", str(verbose), "&"]
+    command = [gmsh, path_geo, path_mesh] + pos_list + ["-n", "-v", str(verbose), "&"]
 
     # subprocess.call(command, shell=True)
     subprocess.call(" ".join(command), shell=True)
@@ -262,6 +262,11 @@ def load_table_vect(filename):
             )
         vect.append(comp)
     return vect
+
+
+def load_table_tens(filename):
+    a = np.loadtxt(filename)[3:]
+    return (a[:9] + 1j * a[9:]).reshape((3, 3))
 
 
 def load_node_table_vect(filename):

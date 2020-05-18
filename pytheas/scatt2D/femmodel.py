@@ -102,6 +102,8 @@ class Scatt2D(BaseFEM):
         self.x_target = 0
         self.y_target = 0
 
+        self.yplane = 0
+
     @property
     def corners_des(self):
         return -self.hx_des / 2, +self.hx_des / 2, -self.hy_des / 2, +self.hy_des / 2
@@ -152,6 +154,13 @@ class Scatt2D(BaseFEM):
         param_dict["beam_flag"] = int(self.beam_flag)
         param_dict["target_flag"] = int(self.target_flag)
         return param_dict
+
+    def get_field_ref_plane(self):
+        self.postprocess("postop_fields_plane")
+        u_tot = femio.load_table(self.tmppath("u_tot_ref_plane.out"))
+        # u_i = femio.load_table(self.tmppath("u_i_point.txt"))
+        # u = femio.load_table(self.tmppath("u_point.txt"))
+        return u_tot
 
     def postpro_fields_box(self):
         path_T = self.tmppath("field_box_T.out")
