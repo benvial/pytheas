@@ -919,12 +919,12 @@ PostOperation {
     { Name postop_fields_pos;
       NameOfPostProcessing postpro;
       Operation {
-          Print [ u, OnElementsOf Omega, File "u.pos" ];
+          /* Print [ u, OnElementsOf Omega, File "u.pos" ]; */
 
           /* Print [ u_int   , OnElementsOf Omega, File "u_int.pos" ];
            * Print [ u_elvol   , OnElementsOf Omega, File "u_elvol.pos" ]; */
 
-          Print [ epsilonr, OnElementsOf design, File "epsilonr.pos" ];
+          /* Print [ epsilonr, OnElementsOf design, File "epsilonr.pos" ]; */
           /* Print [ epsilonr_annex   , OnElementsOf Omega, File "epsilonr_annex.pos" ]; */
           /* Print [ u_diff   , OnElementsOf Omega, File "u_diff.pos" ]; */
           /*Print [ u_sqnorm   , OnElementsOf Omega_pml, File "u_sqnorm.pos" ]; */
@@ -932,10 +932,11 @@ PostOperation {
 
           /*Print [ vx_diff   , OnElementsOf Omega, File "vx_diff.pos" ];*/
           /*Print [ vy_diff   , OnElementsOf Omega, File "vy_diff.pos" ];*/
-          Print [ u_tot_norm, OnElementsOf Omega, File "u_tot_norm.pos" ];
+          /* Print [ u_tot_norm, OnElementsOf Omega, File "u_tot_norm.pos" ]; */
+          Print [ u_tot_sqnorm, OnElementsOf Omega, File "u_tot_sqnorm.pos" ];
 
           Print [ u_tot, OnElementsOf Omega, File "u_tot.pos" ];
-          Print [ u_i, OnElementsOf Omega, File "u_i.pos" ];
+          /* Print [ u_i, OnElementsOf Omega, File "u_i.pos" ]; */
           /* Print [ u_illusion_obj, OnElementsOf Omega, File "u_illusion_obj.pos" ]; */
           /* Print [ u_illusion, OnElementsOf Omega, File "u_illusion.pos" ]; */
 
