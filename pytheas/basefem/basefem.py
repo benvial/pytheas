@@ -77,6 +77,7 @@ class BaseFEM:
         self.analysis = "direct"
         self.ignore_periodicity = False
         self._debug = False
+        self.npt_integ = 200
 
     @property
     def debug(self):

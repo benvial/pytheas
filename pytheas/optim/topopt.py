@@ -184,7 +184,9 @@ class TopOpt:
     def old_filter_param(self, p):
         self.fem._print_progress("Filtering")
         Xdes = np.array(self.fem.des[1].T)
-        if self.rfilt == 0:
+        isfilt = np.array(self.rfilt) == 0
+        nofilt = isfilt.all()
+        if nofilt:
             pfilt = p
         else:
             pfilt = np.zeros_like(p)
@@ -230,7 +232,7 @@ class TopOpt:
                         )
 
             p_grid = self.mesh2grid(p)
-            p_filt_scipy = gaussian_filter(p_grid, sigma=sigma)
+            p_filt_scipy = gaussian_filter(p_grid, sigma=np.flipud(sigma))
             pfilt = self.grid2mesh(p_filt_scipy)
         return pfilt
 
