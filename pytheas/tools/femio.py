@@ -11,6 +11,8 @@ import numpy as np
 import shutil
 from pyonelab import gmsh, getdp
 
+from subprocess import PIPE, run
+
 
 def make_var_str(varname, varvalue):
     s = varname + " = " + str(varvalue) + ";"
@@ -84,7 +86,11 @@ def solve_problem(resolution, path_pro, path_mesh, path_pos=None, verbose=0, arg
     if path_pos:
         command += ["-gmshread"] + path_pos.split()
     command += ["-cal", "-v2"] + argstr.split()
-    subprocess.call(command)
+    result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+
+    print(result.stdout)
+    # print(result.sterr)
+    return result
 
 
 def make_content_mesh_pos(nodes, els, dom, celltype):
@@ -102,11 +108,11 @@ def make_content_mesh_pos(nodes, els, dom, celltype):
     s += "$Elements\n"
     s += str(nels) + "\n"
     for i in range(nels):
-        if celltype is "triangle":
+        if celltype == "triangle":
             s1 = str(2)
-        elif celltype is "quad":
+        elif celltype == "quad":
             s1 = str(3)
-        elif celltype is "tetra":
+        elif celltype == "tetra":
             s1 = str(4)
         s += (
             str(els_ID[i])
@@ -147,7 +153,7 @@ def get_elements(path_mesh, physical_ID, celltype):
     domain = phys_ID == physical_ID
     n = 1
     for ik, cell in enumerate(mesh.cells):
-        if cell.type is celltype:
+        if cell.type == celltype:
             n += 0
         else:
             n += len(mesh.cell_data["gmsh:physical"][ik])
@@ -167,11 +173,11 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
             meshversion = "4.1 0 8"
         s = "$MeshFormat\n{}\n$EndMeshFormat\n".format(meshversion)
     N = len(ID)
-    if celltype is "nodes":
+    if celltype == "nodes":
         str_start, str_end = "$NodeData\n", "$EndNodeData\n"
-    elif celltype is "elements":
+    elif celltype == "elements":
         str_start, str_end = "$ElementData\n", "$EndElementData\n"
-    elif celltype is "elements_nodes":
+    elif celltype == "elements_nodes":
         str_start, str_end = "$ElementNodeData\n", "$EndElementNodeData\n"
     else:
         raise TypeError("Wrong celltype specified: choose between nodes and elements")
@@ -179,7 +185,7 @@ def make_pos(ID, data, content_mesh, viewname, celltype="nodes", mesh_format=2):
         s += str_start
         s += '1\n"' + viewname + name + '"\n1\n0\n3\n0\n1\n' + str(N) + "\n"
         for idf, value in zip(ID, dat):
-            if celltype is "elements_nodes":
+            if celltype == "elements_nodes":
                 s += str(int(idf)) + " 3 " + (str(value.real) + " ") * 3 + "\n"
             else:
                 s += str(int(idf)) + " " + str(value.real) + "\n"

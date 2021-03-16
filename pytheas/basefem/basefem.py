@@ -21,6 +21,8 @@ import numpy as np
 from scipy.interpolate import NearestNDInterpolator
 from ..tools import femio
 
+from subprocess import PIPE, run
+
 
 def get_file_path(f):
     return os.path.dirname(os.path.abspath(f))
@@ -165,7 +167,7 @@ class BaseFEM:
 
     def _print_progress(self, s):
         if self.python_verbose:
-            if self.getdp_verbose >= 3 or self.gmsh_verbose is 4:
+            if self.getdp_verbose >= 3 or self.gmsh_verbose == 4:
                 sep = "-" * 51 + "\n"
             else:
                 sep = ""
@@ -353,12 +355,13 @@ class BaseFEM:
         self._print_progress("Retrieving mesh content")
         return femio.make_content_mesh_pos(nodes, els, self.dom_des, self.celltype)
 
-    def compute_solution(self, res_list=None):
+    def compute_solution(self, res_list=None, update=True):
         """Compute the solution of the FEM problem using getdp"""
         res_list = res_list or ["helmoltz_scalar", "helmoltz_scalar_modal"]
         if self.pattern:
             self.update_epsilon_value()
-        self.update_params()
+        if update:
+            self.update_params()
         self._print_progress("Computing solution: " + self.analysis + " problem")
         if self.analysis == "direct":
             argstr = "-petsc_prealloc 200 -ksp_type preonly \
@@ -380,7 +383,7 @@ class BaseFEM:
             raise TypeError("Wrong analysis specified: choose between direct and modal")
 
         argstr += " -cpu"
-        femio.solve_problem(
+        self.return_result = femio.solve_problem(
             resolution,
             self.path_pro,
             self.path_mesh,
@@ -431,14 +434,14 @@ class BaseFEM:
             The quantity to be loaded.
         """
         file_path = self.tmppath(filename)
-        if self.type_des is "nodes":
+        if self.type_des == "nodes":
             return femio.load_node_table(file_path)[1]
         else:
             return femio.load_table(file_path)
 
     def get_qty_vect(self, filename):
         file_path = self.tmppath(filename)
-        if self.type_des is "nodes":
+        if self.type_des == "nodes":
             return femio.load_node_table_vect(file_path)[1]
         else:
             return femio.load_table_vect(file_path)
@@ -487,9 +490,9 @@ class BaseFEM:
         els = self.get_design_elements()
         nodes_ID, nodes_coords = nodes
         els_ID, els_coords, _, _ = els
-        if self.type_des is "elements":
+        if self.type_des == "elements":
             des = els_ID, els_coords
-        elif self.type_des is "nodes":
+        elif self.type_des == "nodes":
             des = nodes_ID, nodes_coords
         self.nodes, self.els, self.des = nodes, els, des
         return nodes, els, des
@@ -541,7 +544,7 @@ class BaseFEM:
     ):
         self._print_progress("Retrieving eigenvectors")
         self._postpro_choice(postop, filetype)
-        if filetype is "txt":
+        if filetype == "txt":
             filename = self.tmppath(eig_file)
             mode = femio.load_timetable(filename)
             u1 = np.zeros((self.Nix, self.Niy, self.neig), dtype=complex)
@@ -576,7 +579,11 @@ class BaseFEM:
         postop : str
             Name of the postoperation to run.
         """
-        subprocess.call(self._ppcmd(postop))
+        # subprocess.call(self._ppcmd(postop))
+        command = self._ppcmd(postop)
+        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
+        self.return_result_postpro = result
+        return result
 
     def postpro_fields(self, filetype="txt", postop="postop_fields"):
         """ Compute the field maps and output to a file.
@@ -604,14 +611,14 @@ class BaseFEM:
 
     def get_adjoint(self, name="adjoint.txt"):
         self._print_progress("Retrieving adjoint")
-        if self.dim is 2:
+        if self.dim == 2:
             return self._get_qty(name)
         else:
             return self.get_qty_vect(name)
 
     def get_deq_deps(self, name="dEq_deps.txt"):
         self._print_progress("Retrieving dEq_deps")
-        if self.dim is 2:
+        if self.dim == 2:
             return self._get_qty(name)
         else:
             return self.get_qty_vect(name)

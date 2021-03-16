@@ -453,7 +453,7 @@ class TopOpt:
             result_code = self.opt.last_optimize_result()
             s0, s = opt_message(result_code)
             if self.verbose:
-                print(popt)
+                # print(popt)
                 print("-" * 45)
                 print("   optimum   = ", opt_f)
                 print(s0)

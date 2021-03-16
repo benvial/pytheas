@@ -79,9 +79,6 @@ Function{
 
     /* xsi[Omega] = TensorDiag[1/CompYY[epsilonr[]], 1/CompXX[epsilonr[]],111]; */
 
-
-
-
 		If (y_flag)
 			E[] = Vector[0,1,0] ;
 		Else

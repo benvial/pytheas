@@ -919,7 +919,7 @@ PostOperation {
     { Name postop_fields_pos;
       NameOfPostProcessing postpro;
       Operation {
-          /* Print [ u, OnElementsOf Omega, File "u.pos" ]; */
+          Print [ u, OnElementsOf Omega, File "u.pos" ];
 
           /* Print [ u_int   , OnElementsOf Omega, File "u_int.pos" ];
            * Print [ u_elvol   , OnElementsOf Omega, File "u_elvol.pos" ]; */
@@ -950,14 +950,14 @@ PostOperation {
     { Name postop_fields_txt;
       NameOfPostProcessing postpro;
       Operation {
-          /* Print [ u , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
-           * { Niy-1, Nix-1} ,Format SimpleTable, File "u.txt" ];
-           * Print [ u_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
-           * { Niy-1, Nix-1} ,Format SimpleTable, File "u_diff.txt" ];
-           * Print [ vx_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
-           * { Niy-1, Nix-1} ,Format SimpleTable, File "vx_diff.txt" ];
-           * Print [ vy_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
-           * { Niy-1, Nix-1} ,Format SimpleTable, File "vy_diff.txt" ]; */
+          Print [ u , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+           { Niy-1, Nix-1} ,Format SimpleTable, File "u.txt" ];
+          /*   Print [ u_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+            { Niy-1, Nix-1} ,Format SimpleTable, File "u_diff.txt" ];
+            Print [ vx_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+            { Niy-1, Nix-1} ,Format SimpleTable, File "vx_diff.txt" ];
+            Print [ vy_diff , OnPlane    { { domX_L,domY_B,0 } { domX_L,domY_T,0 } { domX_R,domY_B,0 } }
+            { Niy-1, Nix-1} ,Format SimpleTable, File "vy_diff.txt" ]; */
           Print [ u_tot, OnPlane    { { domX_L, domY_B, 0 } { domX_L, domY_T, 0 } { domX_R, domY_B, 0 } }
             { Niy - 1, Nix - 1 }, Format SimpleTable, File "u_tot.txt" ];
 

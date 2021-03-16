@@ -501,6 +501,8 @@ PostProcessing {
             { Name objective   ; Value { Local { [objective[{u}]] ; In Omega; Jacobian JVol; } } }
             { Name int_objective  ; Value { Integral { [objective[{u}]] ; In Omega    ; Integration Int_1 ; Jacobian JVol ; } } }
             { Name u   ; Value { Local { [ {u}    ] ; In Omega; Jacobian JVol; } } }
+            { Name norm_u   ; Value { Local { [ Norm[{u}]    ] ; In Omega; Jacobian JVol; } } }
+            { Name ui   ; Value { Local { [ u_i[]    ] ; In Omega; Jacobian JVol; } } }
             { Name u1   ; Value { Local { [ u_1[]    ] ; In Omega; Jacobian JVol; } } }
             { Name epsilonr   ; Value { Local { [ CompZZ[epsilonr[] ]   ] ; In Omega; Jacobian JVol; } } }
             { Name u_diff   ; Value { Local { [ {u}+u_1_d[]     ] ; In Omega; Jacobian JVol; } } }
@@ -631,8 +633,11 @@ PostOperation {
             Print [ u   , OnElementsOf Omega, File "u.pos" ];
             Print [ epsilonr   , OnElementsOf Omega, File "epsilonr.pos" ];
             Print [ u_tot   , OnElementsOf Omega, File "u_tot.pos" ];
-            /* Print [ u_diff   , OnElementsOf Omega, File "u_diff.pos" ];
-            Print [ vx_diff   , OnElementsOf Omega, File "vx_diff.pos" ];
+            Print [ u_diff   , OnElementsOf Omega, File "u_diff.pos" ];
+            Print [ u1   , OnElementsOf Omega, File "u_1.pos" ];
+            Print [ ui   , OnElementsOf Omega, File "ui.pos" ];
+            Print [ norm_u   , OnElementsOf Omega, File "norm_u.pos" ];
+            /* Print [ vx_diff   , OnElementsOf Omega, File "vx_diff.pos" ];
             Print [ vy_diff   , OnElementsOf Omega, File "vy_diff.pos" ];
             Print [ vx_tot   , OnElementsOf Omega, File "vx_tot.pos" ];
             Print [ vy_tot   , OnElementsOf Omega, File "vy_tot.pos" ];

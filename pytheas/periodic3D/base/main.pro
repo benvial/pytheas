@@ -209,9 +209,9 @@ FunctionSpace {
   { Name Hcurl; Type Form1;
     BasisFunction {
       { Name sn; NameOfCoef un; Function BF_Edge;
-        Support Region[{Omega}]; Entity EdgesOf[All]; }
+        Support Region[{Omega}]; Entity EdgesOf[Omega]; }
      { Name sn2; NameOfCoef un2; Function BF_Edge_2E;
-        Support Region[{Omega}]; Entity EdgesOf[All]; }
+        Support Region[{Omega}]; Entity EdgesOf[Omega]; }
 				If (el_order== 2)
 							{ Name sn3; NameOfCoef un3; Function BF_Edge_3F_b;
 				         Support Region[Omega]; Entity FacetsOf[Omega, Not SurfBloch]; }
@@ -323,6 +323,11 @@ PostOperation {
 			Operation {
 		Print[ Etot , OnElementsOf Omega, File "Etot.pos"];
 		Print[ Ecal , OnElementsOf Omega, File "E.pos"];
+		Print[ Ecal_x , OnElementsOf Omega, File "Ecal_x.pos"];
+		Print[ Ecal_y , OnElementsOf Omega, File "Ecal_y.pos"];
+		Print[ Ecal_z , OnElementsOf Omega, File "Ecal_z.pos"];
+		
+		
 			}
 	}
 
